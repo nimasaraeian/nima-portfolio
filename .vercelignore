@@ -1,0 +1,8 @@
+# فایل‌های غیرضروری برای deployment
+node_modules/
+.next/
+.git/
+README.md
+*.log
+.env*
+.vercel/
