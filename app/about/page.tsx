@@ -33,7 +33,7 @@ export default function AboutPage() {
           }}>
             <img 
               src="/image/nima-bw.jpg" 
-              alt="Nima Saraeian"
+              alt="Nima Saraeian نیما سرائیان"
               style={{
                 width: '100%',
                 height: '100%',
@@ -50,7 +50,7 @@ export default function AboutPage() {
             color: '#ffffff',
             fontFamily: 'Times New Roman, serif'
           }}>
-            Nima Saraeian
+            Nima Saraeian نیما سرائیان
           </h1>
           
           <div style={{

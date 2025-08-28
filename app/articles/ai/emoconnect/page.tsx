@@ -51,6 +51,7 @@ export default function EmoConnectPage() {
 
       <p>
         In our study, using EmoConnect improved mutual agreement between people by 25%, and 60% of participants in a real-world study reported fewer conflicts and better relationships. This research shows that artificial intelligence can be a powerful tool for building healthier relationships online.
+        <a href="https://www.academia.edu/143442468/AI_Enhanced_Emotional_Communication_The_EmoConnect_Model_for_Bridging_Human_Relationships_Digitally" target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', fontWeight: 'bold', textDecoration: 'underline' }}>Read the full study here</a>.
       </p>
 
       <hr style={{ margin: '2rem 0', borderColor: '#374151' }} />

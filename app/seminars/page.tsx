@@ -21,22 +21,97 @@ export default function SeminarsPage() {
     }
   }, [selectedImage]);
 
-  // تولید خودکار لیست عکس‌ها
-  const seminars = Array.from({ length: 29 }, (_, i) => ({
-    id: i + 2,
-    src: `/image/nimasaraeian${i + 2}.jpg`,
-    title: `Seminar #${i + 2}`,
-    date: 2025 - Math.floor(i / 3), // تاریخ نسبی فقط نمونه‌ای
-    location: `Istanbul ${i + 2}`,
-  }));
+  // تولید خودکار لیست عکس‌ها با Alt tags بهینه
+  const seminars = Array.from({ length: 29 }, (_, i) => {
+    const imageNumber = i + 2;
+    // برخی عکس‌ها .JPG و برخی .jpg هستند
+    const extension = imageNumber >= 26 ? '.JPG' : '.jpg';
+    
+    // Alt tags بهینه برای SEO - شامل نام فارسی و انگلیسی
+    const altTexts = [
+      `Nima Saraeian نیما سرائیان presenting AI and Digital Psychology at International Conference ${imageNumber}`,
+      `Dr. Nima Saraeian نیما سرائیان seminar on Consumer Behavior and Psychometrics ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان keynote speech about AI-Powered Psychological Analysis ${imageNumber}`,
+      `Seminar by Nima Saraeian نیما سرائیان on Digital Psychology and Behavioral Analytics ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان presenting research on Emotional Intelligence and AI ${imageNumber}`,
+      `Dr. Nima Saraeian نیما سرائیان workshop on UX Psychology and Neural Feedback ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان conference presentation on Personality Models and AI ${imageNumber}`,
+      `Seminar about Psychometrics and AI by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان speaking about SelfCode and Digital Psychology ${imageNumber}`,
+      `AI Ethics seminar presented by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان presenting Aesthlyzer AI platform ${imageNumber}`,
+      `Digital Psychology conference by Dr. Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان seminar on Emotion AI and Consumer Behavior ${imageNumber}`,
+      `AI-Powered Content Specialist presentation by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان workshop on Neural Feedback and Psychology ${imageNumber}`,
+      `Seminar about Personality Models in AI by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان presenting Psychometrics research ${imageNumber}`,
+      `SelfCode platform demonstration by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `AI Ethics in Psychology seminar by Dr. Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Nima Saraeian نیما سرائیان presenting Aesthlyzer AI analysis ${imageNumber}`,
+      `Digital Psychology insights by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Emotion AI seminar presented by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `AI Content Specialist workshop by Dr. Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Neural Feedback research by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Personality Models in AI by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Psychometrics seminar by Dr. Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `SelfCode AI platform by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `AI Ethics presentation by Nima Saraeian نیما سرائیان ${imageNumber}`,
+      `Aesthlyzer demonstration by Dr. Nima Saraeian نیما سرائیان ${imageNumber}`
+    ];
+    
+    return {
+      id: imageNumber,
+      src: `/image/nimasaraeian${imageNumber}${extension}`,
+      title: `Nima Saraeian Seminar ${imageNumber}`,
+      alt: altTexts[i % altTexts.length],
+      date: 2025 - Math.floor(i / 3),
+      location: `International Conference ${imageNumber}`,
+      description: `Nima Saraeian presenting on AI, Digital Psychology, and Innovation at international conference ${imageNumber}`,
+    };
+  });
+
+  // Schema.org برای تصاویر - شامل نام فارسی
+  const imageSchema = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": "Nima Saraeian نیما سرائیان International Seminars & Talks",
+    "description": "Collection of seminar and conference presentations by Nima Saraeian نیما سرائیان on AI, Digital Psychology, and Innovation",
+    "url": "https://www.nimasaraeian.com/seminars",
+    "image": seminars.map(seminar => ({
+      "@type": "ImageObject",
+      "url": `https://www.nimasaraeian.com${seminar.src}`,
+      "name": seminar.title,
+      "description": seminar.description,
+      "altText": seminar.alt,
+      "width": 800,
+      "height": 600,
+      "datePublished": `${seminar.date}-01-01`,
+      "author": {
+        "@type": "Person",
+        "name": "Nima Saraeian نیما سرائیان",
+        "alternateName": "نیما سرائیان",
+        "jobTitle": "AI & Digital Psychology Expert",
+        "url": "https://www.nimasaraeian.com"
+      }
+    }))
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden">
+      {/* Schema.org JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(imageSchema),
+        }}
+      />
+      
       {/* بک‌گراند مدرن */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08)_0%,transparent_70%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08)_0%,transparent_70%)]"></div>
 
       {/* ذرات معلق */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(30)].map((_, i) => (
           <div
             key={i}
@@ -56,10 +131,10 @@ export default function SeminarsPage() {
       <div className="relative z-10 pt-24 pb-16 px-4">
         {/* هدر */}
         <div className="max-w-6xl mx-auto text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-snug drop-shadow-lg">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-snug drop-shadow-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
             International Seminars & Talks
           </h1>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto font-light">
+          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto font-light" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
             Presentations on <span className="font-semibold text-white">AI</span>, 
             <span className="font-semibold text-white"> Digital Psychology</span>, and 
             <span className="font-semibold text-white"> Innovation</span> across global conferences.
@@ -83,7 +158,7 @@ export default function SeminarsPage() {
                 <div className="relative bg-gradient-to-br from-gray-800/70 to-gray-900/50 rounded-2xl border border-white/10 backdrop-blur-lg overflow-hidden hover:border-white/30 transition-all duration-700">
                   <Image
                     src={seminar.src}
-                    alt={seminar.title}
+                    alt={seminar.alt}
                     width={800}
                     height={600}
                     placeholder="blur"
@@ -91,6 +166,7 @@ export default function SeminarsPage() {
                     className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-1000"
                     loading="lazy"
                     quality={85}
+                    title={seminar.title}
                   />
                   {/* اطلاعات روی عکس */}
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-end">
@@ -108,17 +184,18 @@ export default function SeminarsPage() {
         {/* مودال */}
         {selectedImage && (
           <div
-            className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-50 flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-40 flex items-center justify-center p-6"
             onClick={() => setSelectedImage(null)}
           >
             <div className="relative max-w-6xl max-h-full">
               <Image
                 src={selectedImage}
-                alt="Seminar Image"
+                alt="Nima Saraeian Seminar Presentation - High Resolution View"
                 width={1400}
                 height={1000}
                 className="max-w-full max-h-full object-contain rounded-3xl shadow-2xl border border-white/20"
                 quality={95}
+                title="Nima Saraeian Seminar - Full Resolution"
               />
               <button
                 className="absolute top-6 right-6 w-12 h-12 bg-black/60 backdrop-blur-lg rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-all duration-300 border border-white/20 text-xl font-bold"

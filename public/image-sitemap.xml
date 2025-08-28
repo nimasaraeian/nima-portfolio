@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- تصاویر اصلی سایت -->
+  <url>
+    <loc>https://www.nimasaraeian.com/</loc>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nima-bw.jpg</image:loc>
+      <image:title>Nima Saraeian نیما سرائیان - AI & Digital Psychology Expert</image:title>
+      <image:caption>Nima Saraeian نیما سرائیان, AI-driven psychological researcher and digital psychology expert</image:caption>
+      <image:geo_location>International</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/signature-white.png</image:loc>
+      <image:title>Nima Saraeian نیما سرائیان Signature</image:title>
+      <image:caption>Professional signature of Nima Saraeian نیما سرائیان</image:caption>
+    </image:image>
+  </url>
+
+  <!-- صفحه About -->
+  <url>
+    <loc>https://www.nimasaraeian.com/about</loc>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nima-pic.png</image:loc>
+      <image:title>Nima Saraeian نیما سرائیان Professional Photo</image:title>
+      <image:caption>Professional headshot of Nima Saraeian نیما سرائیان, AI & Digital Psychology Expert</image:caption>
+    </image:image>
+  </url>
+
+  <!-- تصاویر Seminars -->
+  <url>
+    <loc>https://www.nimasaraeian.com/seminars</loc>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian2.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 2 - AI and Digital Psychology</image:title>
+      <image:caption>Nima Saraeian presenting AI and Digital Psychology at International Conference 2</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian3.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 3 - Consumer Behavior and Psychometrics</image:title>
+      <image:caption>Dr. Nima Saraeian seminar on Consumer Behavior and Psychometrics 3</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian4.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 4 - AI-Powered Psychological Analysis</image:title>
+      <image:caption>Nima Saraeian keynote speech about AI-Powered Psychological Analysis 4</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian5.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 5 - Digital Psychology and Behavioral Analytics</image:title>
+      <image:caption>Seminar by Nima Saraeian on Digital Psychology and Behavioral Analytics 5</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian6.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 6 - Emotional Intelligence and AI</image:title>
+      <image:caption>Nima Saraeian presenting research on Emotional Intelligence and AI 6</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian7.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 7 - UX Psychology and Neural Feedback</image:title>
+      <image:caption>Dr. Nima Saraeian workshop on UX Psychology and Neural Feedback 7</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian8.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 8 - Personality Models and AI</image:title>
+      <image:caption>Nima Saraeian conference presentation on Personality Models and AI 8</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian9.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 9 - Psychometrics and AI</image:title>
+      <image:caption>Seminar about Psychometrics and AI by Nima Saraeian 9</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/nimasaraeian10.jpg</image:loc>
+      <image:title>Nima Saraeian Seminar 10 - SelfCode and Digital Psychology</image:title>
+      <image:caption>Nima Saraeian speaking about SelfCode and Digital Psychology 10</image:caption>
+      <image:geo_location>International Conference</image:geo_location>
+    </image:image>
+  </url>
+
+  <!-- تصاویر مقالات AI -->
+  <url>
+    <loc>https://www.nimasaraeian.com/articles/ai</loc>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/emotionai.JPG</image:loc>
+      <image:title>Emotion AI Research by Nima Saraeian</image:title>
+      <image:caption>Research on Emotion AI and psychological analysis by Dr. Nima Saraeian</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/Neuralfeedback.jpg</image:loc>
+      <image:title>Neural Feedback Research - Nima Saraeian</image:title>
+      <image:caption>Neural feedback and psychology research by Nima Saraeian</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/psychometrics.JPG</image:loc>
+      <image:title>Psychometrics Research - Nima Saraeian</image:title>
+      <image:caption>Psychometrics and AI research by Dr. Nima Saraeian</image:caption>
+    </image:image>
+  </url>
+
+  <!-- تصاویر پروژه‌ها -->
+  <url>
+    <loc>https://www.nimasaraeian.com/projects</loc>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/SELPHLYZE_LOGO_HIGH_RES.png</image:loc>
+      <image:title>Selphlyze Platform Logo</image:title>
+      <image:caption>Selphlyze - AI-powered psychological analysis platform founded by Nima Saraeian</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.nimasaraeian.com/image/aesthlyzerjpg.jpg</image:loc>
+      <image:title>Aesthlyzer AI Platform</image:title>
+      <image:caption>Aesthlyzer AI platform for aesthetic analysis by Nima Saraeian</image:caption>
+    </image:image>
+  </url>
+
+</urlset>
+

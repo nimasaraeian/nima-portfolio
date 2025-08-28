@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface Project {
   id: number;
   icon: string;
@@ -29,23 +31,21 @@ export default function ProjectsPage() {
       id: 1,
       icon: '🧠',
       title: 'Selphlyze',
-      subtitle: 'AI-Powered Psychometric Platform',
+      subtitle: 'AI-Powered Psychometric Platform - Developed & Operated by Artificial Intelligence',
       description:
-        'Selphlyze is an AI-powered psychometric platform developed to analyze personality, emotion, and cognitive patterns.',
-      features: ['ShadowTrace', 'EmoConnect', 'PsyClock'],
-      technologies: ['AI/ML', 'Psychology', 'UX Design'],
+        'Selphlyze is a revolutionary AI-powered psychometric platform that analyzes personality, emotional patterns, and cognitive behaviors through advanced artificial intelligence algorithms. This platform is entirely developed and operated by AI systems, providing users with deep psychological insights, personality profiling, and behavioral analysis. Create your unique SelfCode and discover comprehensive insights about your psychological makeup, cognitive style, decision-making patterns, and emotional intelligence through our sophisticated AI-driven assessment tools.',
+      features: [
+        'ShadowTrace AI Algorithm - Deep personality analysis',
+        'EmoConnect System - Emotional intelligence mapping', 
+        'PsyClock Analysis - Cognitive tempo assessment',
+        'AI-Generated Personality Profiling',
+        'Behavioral Pattern Recognition by AI',
+        'Real-time Psychological Insights',
+        'Comprehensive SelfCode Generation',
+        'AI-Powered Decision Making Analysis'
+      ],
+      technologies: ['Advanced AI/ML', 'Deep Learning', 'Psychology', 'React', 'Node.js', 'MongoDB', 'Neural Networks'],
       status: 'In Development',
-    },
-    {
-      id: 2,
-      icon: '🌐',
-      title: 'PsyBridge',
-      subtitle: 'Communication Analysis Tool',
-      description:
-        'A communication analysis tool for couples and teams. Leverages emotional tone analysis to detect patterns.',
-      features: ['Tone Analysis', 'Dialogue Segmentation', 'Real-time Suggestions'],
-      technologies: ['NLP', 'Emotion AI', 'Communication'],
-      status: 'Prototype',
     },
   ];
 
@@ -100,8 +100,8 @@ export default function ProjectsPage() {
     <main className="min-h-screen bg-black text-white pt-20 px-6">
         <div className="max-w-screen-xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold mb-4">Projects & Innovations</h1>
-            <p className="text-gray-400 max-w-xl mx-auto">
+            <h1 className="text-5xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>Projects & Innovations</h1>
+            <p className="text-gray-400 max-w-xl mx-auto" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               Exploring the intersection of AI, psychology, and human behavior through innovative digital solutions.
             </p>
           </div>
@@ -117,45 +117,75 @@ export default function ProjectsPage() {
           </div>
 
           <section className="mb-20">
-            <h2 className="text-3xl font-semibold mb-8 text-center">Featured Projects</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <h2 className="text-3xl font-semibold mb-8 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>Featured Project</h2>
+            <div className="flex justify-center">
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="bg-gray-900 border border-gray-700 rounded-2xl p-6 hover:border-gray-500 transition"
+                  className="bg-gray-900 border border-gray-700 rounded-2xl p-8 hover:border-gray-500 transition max-w-4xl w-full"
                 >
                   <div className="flex justify-between items-center mb-4">
-                    <div className="text-3xl">{project.icon}</div>
+                    <div className="flex items-center">
+                      <Image 
+                        src="/image/SELPHLYZE_LOGO_HIGH_RES.png" 
+                        alt="Selphlyze Logo" 
+                        width={80} 
+                        height={80}
+                        className="mr-4"
+                      />
+                    </div>
                     <span
                       className={`px-3 py-1 rounded-full text-sm text-white ${getStatusColor(project.status)}`}
                     >
                       {project.status}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-400 italic mb-4">{project.subtitle}</p>
-                  <p className="text-gray-300 mb-4">{project.description}</p>
-                  <div className="mb-3">
-                    <strong>Features:</strong>
-                    <ul className="list-disc list-inside text-gray-400">
+                  <h3 className="text-4xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.title}</h3>
+                  <p className="text-gray-400 italic mb-6 text-xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.subtitle}</p>
+                  <p className="text-gray-300 mb-6 leading-relaxed text-base" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.description}</p>
+                  <div className="mb-6">
+                    <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI-Powered Features:</strong>
+                    <ul className="list-disc list-inside text-gray-400 mt-2 space-y-1">
                       {project.features.map((f, i) => (
-                        <li key={i}>{f}</li>
+                        <li key={i} style={{ fontFamily: 'Times New Roman, Times, serif' }}>{f}</li>
                       ))}
                     </ul>
                   </div>
-                  <div>
-                    <strong>Technologies:</strong>
-                    <div className="flex flex-wrap gap-2 mt-1">
+                  <div className="mb-6">
+                    <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI Technologies:</strong>
+                    <div className="flex flex-wrap gap-2 mt-2">
                       {project.technologies.map((t, i) => (
                         <span
                           key={i}
-                          className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-xs border border-gray-600"
+                          className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm border border-gray-600"
+                          style={{ fontFamily: 'Times New Roman, Times, serif' }}
                         >
                           {t}
                         </span>
                       ))}
                     </div>
                   </div>
+                  
+                  {/* Special Link for Selphlyze */}
+                  {project.title === 'Selphlyze' && (
+                    <div className="mt-6 text-center">
+                      <a
+                        href="https://www.selphlyze.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+                        style={{ fontFamily: 'Times New Roman, Times, serif' }}
+                      >
+                        🧠 Experience Selphlyze AI Platform
+                      </a>
+                      <p className="text-sm text-gray-400 mt-3" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                        Discover your psychological profile through advanced AI analysis
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                        ✨ Powered entirely by Artificial Intelligence
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nima Saraeian - AI & Digital Psychology Expert Website
+
+This is the official website of Nima Saraeian (نیما سرائیان), an AI-driven psychological researcher and digital psychology expert. The website showcases research, projects, and insights in the intersection of AI, psychology, and human behavior.
+
+**Live Site**: [https://www.nimasaraeian.com](https://www.nimasaraeian.com)
+
+## Features
+
+- 🤖 **AI-Powered Content Generation**: Daily articles in psychology, AI, marketing, and daily insights
+- 🧠 **Psychology Research**: Latest insights in digital psychology and behavioral analytics
+- 🤖 **AI Technology**: Research and applications in artificial intelligence
+- 📈 **Marketing & Branding**: Consumer behavior and digital marketing strategies
+- 🌟 **Daily Insights**: Personal development and life skills content
+- 📱 **Responsive Design**: Optimized for all devices
+- 🔍 **SEO Optimized**: Full meta tags, structured data, and sitemaps
+- 🌐 **Persian & English**: Bilingual content support
+
+## Content Generation System
+
+The website features an automated content generation system powered by OpenAI GPT-4:
+
+- **Daily Articles**: 4 new articles every day at 6 AM Tehran time
+- **Categories**: Psychology, AI, Marketing, Daily Insights
+- **Quality**: 1000+ words per article, professionally written
+- **SEO**: Automatic meta tags, structured data, and sitemap updates
+- **Management**: Admin interface at `/admin/content`
 
 ## Getting Started
 
-First, run the development server:
+First, set up your environment:
 
 ```bash
+# Install dependencies
+npm install
+
+# Set up OpenAI API key
+echo "OPENAI_API_KEY=your_key_here" > .env.local
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Content Management
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Access the content management system at `/admin/content`:
+
+```bash
+# Generate content manually
+npm run generate-content
+
+# Test content generation
+npm run content-manual
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the content generation system, see:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Content Generation Guide](CONTENT-GENERATION-GUIDE.md) - Complete system documentation
+- [Admin Interface](/admin/content) - Content management system
+- [API Documentation](/api/generate-content) - Content generation API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+The website is deployed on Vercel:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Production**: [https://www.nimasaraeian.com](https://www.nimasaraeian.com)
+- **Vercel Dashboard**: [Vercel Platform](https://vercel.com)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Technology Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Styling**: Tailwind CSS
+- **Content**: OpenAI GPT-4 integration
+- **Deployment**: Vercel
+- **SEO**: Next-sitemap, structured data, meta tags
+- **Languages**: TypeScript, JavaScript
+
+## Contact
+
+- **Website**: [https://www.nimasaraeian.com](https://www.nimasaraeian.com)
+- **Email**: nimasaraeian65@gmail.com
+- **LinkedIn**: [linkedin.com/in/nima.saraeian](https://www.linkedin.com/in/nima.saraeian)

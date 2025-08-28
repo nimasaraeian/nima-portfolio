@@ -1,19 +1,18 @@
-// app/articles/data.ts
-export const articles = [
-  {
-    slug: 'ai-in-psychology',
-    title: 'AI in Psychology: Opportunities and Risks',
-    excerpt: 'Exploring how AI is transforming psychological practices...',
-    content: `# AI in Psychology
+// Auto-generated articles index
+export interface ArticleData {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: 'psychology' | 'ai' | 'marketing' | 'daily';
+  tags: string[];
+  publishedAt: string;
+  wordCount: number;
+  imageUrl?: string;
+  href: string;
+}
 
-AI is increasingly being used to enhance diagnostics, therapy, and behavioral prediction. This article explores...`
-  },
-  {
-    slug: 'consumer-behavior-ai',
-    title: 'Understanding Consumer Behavior with AI',
-    excerpt: 'How machine learning decodes purchase patterns...',
-    content: `# Consumer Behavior
-
-Consumer behavior analysis with AI allows brands to predict trends...`
-  }
+export const articles: ArticleData[] = [
+  // Articles will be automatically generated and added here
 ];
+
+export default articles;

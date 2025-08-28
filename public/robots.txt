@@ -1,4 +1,27 @@
+# Robots.txt برای سایت Nima Saraeian
+# https://www.nimasaraeian.com
+
+# دسترسی عمومی
 User-agent: *
 Allow: /
 
-Sitemap: https://nimasaraeian.com/sitemap.xml
+# دسترسی به تصاویر و media
+Allow: /image/
+Allow: /public/image/
+Allow: /seminars/
+
+# دسترسی به فایل‌های مهم
+Allow: /robots.txt
+Allow: /sitemap.xml
+Allow: /googlea749cf479c48223f.html
+
+# Host
+Host: https://www.nimasaraeian.com
+
+# Sitemaps
+Sitemap: https://www.nimasaraeian.com/sitemap.xml
+Sitemap: https://www.nimasaraeian.com/image-sitemap.xml
+Sitemap: https://www.nimasaraeian.com/articles-sitemap.xml
+
+# Crawl-delay برای ربات‌های محترم
+Crawl-delay: 1
