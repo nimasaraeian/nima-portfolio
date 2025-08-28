@@ -6,28 +6,10 @@ const nextConfig = {
   env: {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
-
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-        ],
-      },
-    ];
-  },
+  
+  // تنظیمات برای جلوگیری از redirect loop
+  trailingSlash: false,
+  poweredByHeader: false,
 };
 
 module.exports = nextConfig;
