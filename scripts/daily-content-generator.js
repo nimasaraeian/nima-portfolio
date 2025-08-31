@@ -9,10 +9,11 @@ require('dotenv').config();
 // تابع تولید و ذخیره مقالات روزانه
 async function generateAndSaveDailyContent() {
   console.log('🚀 Starting daily content generation...');
-  console.log(`📅 Date: ${new Date().toLocaleDateString('fa-IR')}`);
+  console.log(`📅 Date: ${new Date().toLocaleDateString('tr-TR')}`);
+  console.log(`⏰ Time: ${new Date().toLocaleTimeString('tr-TR')}`);
   
   try {
-    // تولید مقالات برای تمام دسته‌ها
+    // تولید یک مقاله جدید برای امروز
     const articles = await generateDailyArticles();
     
     console.log(`✅ Generated ${articles.length} articles successfully`);
@@ -29,6 +30,9 @@ async function generateAndSaveDailyContent() {
     // به‌روزرسانی sitemap
     updateSitemap(articles);
     
+    // به‌روزرسانی صفحه مقالات
+    updateArticlesPage(articles);
+    
     console.log('🎉 Daily content generation completed successfully!');
     
   } catch (error) {
@@ -40,7 +44,7 @@ async function generateAndSaveDailyContent() {
 function updateArticlesIndex(articles) {
   const indexFile = path.join(process.cwd(), 'app', 'articles', 'data.ts');
   
-  let indexContent = `// Auto-generated articles index
+  let indexContent = `// Auto-generated articles index - Updated: ${new Date().toISOString()}
 export interface ArticleData {
   id: string;
   title: string;
@@ -111,11 +115,39 @@ function updateSitemap(articles) {
   console.log('🗺️ Updated articles sitemap');
 }
 
-// تنظیم زمانبندی - هر روز ساعت 6 صبح
-const schedule = '0 6 * * *'; // Cron format: هر روز ساعت 6 صبح
+// به‌روزرسانی صفحه مقالات
+function updateArticlesPage(articles) {
+  const articlesPageFile = path.join(process.cwd(), 'app', 'articles', 'page.tsx');
+  
+  // خواندن فایل فعلی
+  let currentContent = fs.readFileSync(articlesPageFile, 'utf8');
+  
+  // اضافه کردن مقالات جدید به بخش مربوطه
+  for (const article of articles) {
+    const cardEntry = `            { title: "${article.title}", image: "${article.imageUrl}", href: "/articles/${article.category}/${article.id}" },`;
+    
+    // پیدا کردن بخش مناسب برای اضافه کردن
+    if (article.category === 'ai') {
+      const aiSection = currentContent.indexOf('AI Articles');
+      if (aiSection !== -1) {
+        const insertPos = currentContent.indexOf(']', aiSection);
+        if (insertPos !== -1) {
+          currentContent = currentContent.slice(0, insertPos) + cardEntry + '\n' + currentContent.slice(insertPos);
+        }
+      }
+    }
+  }
+  
+  fs.writeFileSync(articlesPageFile, currentContent);
+  console.log('📄 Updated articles page');
+}
+
+// تنظیم زمانبندی - هر روز ساعت 8 صبح به وقت ترکیه
+const schedule = '0 8 * * *'; // Cron format: هر روز ساعت 8 صبح
 
 console.log('⏰ Setting up daily content generation schedule...');
-console.log(`📅 Schedule: ${schedule} (Every day at 6:00 AM)`);
+console.log(`📅 Schedule: ${schedule} (Every day at 8:00 AM Turkey time)`);
+console.log(`🌍 Timezone: Europe/Istanbul`);
 
 // راه‌اندازی cron job
 cron.schedule(schedule, () => {
@@ -123,7 +155,7 @@ cron.schedule(schedule, () => {
   generateAndSaveDailyContent();
 }, {
   scheduled: true,
-  timezone: "Asia/Tehran" // زمان تهران
+  timezone: "Europe/Istanbul" // زمان ترکیه
 });
 
 // اجرای اولیه برای تست
@@ -136,6 +168,7 @@ process.on('SIGINT', () => {
   console.log('\n👋 Stopping content generator...');
   process.exit(0);
 });
+
 
 
 
