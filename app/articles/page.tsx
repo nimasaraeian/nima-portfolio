@@ -91,15 +91,7 @@ export default function ArticlesPage() {
           borderColor="border-yellow-500/30"
         />
 
-        {/* Admin Panel Link */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/admin/content"
-            className="inline-block px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-          >
-            🛠️ مدیریت تولید محتوا
-          </Link>
-        </div>
+
       </div>
     </main>
   );
