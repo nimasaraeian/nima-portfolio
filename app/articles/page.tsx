@@ -117,10 +117,10 @@ function Section({ title, description, cards, bgColor, borderColor }: {
           <Link key={index} href={card.href}>
             <div className="group bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105 border border-gray-700 hover:border-gray-500">
               <div className="aspect-video overflow-hidden">
-                <img 
-                  src={card.image} 
-                  alt={card.title} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
               <div className="p-4">

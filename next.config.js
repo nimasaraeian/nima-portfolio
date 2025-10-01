@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['openai']
-  },
+  serverExternalPackages: ['openai'],
   env: {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },

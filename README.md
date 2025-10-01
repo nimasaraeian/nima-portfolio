@@ -1,6 +1,6 @@
-# Nima Saraeian - AI & Digital Psychology Expert Website
+# Nima Saraeian - AI Marketing Strategist Website
 
-This is the official website of Nima Saraeian (نیما سرائیان), an AI-driven psychological researcher and digital psychology expert. The website showcases research, projects, and insights in the intersection of AI, psychology, and human behavior.
+This is the official website of Nima Saraeian (نیما سرائیان), an AI Marketing Strategist specializing in the intersection of artificial intelligence, consumer psychology, and digital branding. The website showcases business examples, marketing strategies, and AI-driven solutions across various industries.
 
 **Live Site**: [https://www.nimasaraeian.com](https://www.nimasaraeian.com)
 
@@ -23,7 +23,6 @@ The website features an automated content generation system powered by OpenAI GP
 - **Categories**: Psychology, AI, Marketing, Daily Insights
 - **Quality**: 1000+ words per article, professionally written
 - **SEO**: Automatic meta tags, structured data, and sitemap updates
-- **Management**: Admin interface at `/admin/content`
 
 ## Getting Started
 
@@ -44,7 +43,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Content Management
 
-Access the content management system at `/admin/content`:
+Generate content manually using scripts:
 
 ```bash
 # Generate content manually
@@ -59,7 +58,6 @@ npm run content-manual
 To learn more about the content generation system, see:
 
 - [Content Generation Guide](CONTENT-GENERATION-GUIDE.md) - Complete system documentation
-- [Admin Interface](/admin/content) - Content management system
 - [API Documentation](/api/generate-content) - Content generation API
 
 ## Deployment

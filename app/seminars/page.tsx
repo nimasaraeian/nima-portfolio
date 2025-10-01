@@ -167,6 +167,8 @@ export default function SeminarsPage() {
                     loading="lazy"
                     quality={85}
                     title={seminar.title}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    unoptimized
                   />
                   {/* اطلاعات روی عکس */}
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex items-end">
@@ -196,6 +198,8 @@ export default function SeminarsPage() {
                 className="max-w-full max-h-full object-contain rounded-3xl shadow-2xl border border-white/20"
                 quality={95}
                 title="Nima Saraeian Seminar - Full Resolution"
+                sizes="100vw"
+                unoptimized
               />
               <button
                 className="absolute top-6 right-6 w-12 h-12 bg-black/60 backdrop-blur-lg rounded-full flex items-center justify-center text-white hover:bg-black/80 transition-all duration-300 border border-white/20 text-xl font-bold"

@@ -6,8 +6,17 @@
   "functions": {
     "app/**/*.tsx": {
       "maxDuration": 30
+    },
+    "app/api/generate-daily-content/route.ts": {
+      "maxDuration": 300
     }
   },
+  "crons": [
+    {
+      "path": "/api/generate-daily-content",
+      "schedule": "0 8 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

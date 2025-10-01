@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ContentGenerationStatus {
   isGenerating: boolean;
@@ -93,10 +93,11 @@ export default function ContentManager() {
     }
   };
 
-  // بررسی وضعیت در ابتدا
-  useState(() => {
+  // بررسی وضعیت در ابتدا (فقط کلاینت)
+  useEffect(() => {
     checkSystemStatus();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -228,12 +229,6 @@ export default function ContentManager() {
             className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
           >
             📚 مشاهده مقالات
-          </button>
-          <button
-            onClick={() => window.open('/admin/content', '_blank')}
-            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
-          >
-            ⚙️ تنظیمات بیشتر
           </button>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Psychology Articles - Nima Saraeian',
@@ -23,12 +22,6 @@ export default function PsychologyArticlesPage() {
           <p className="text-gray-500 mb-8">
             مقالات روانشناسی به صورت خودکار تولید می‌شوند
           </p>
-          <Link 
-            href="/admin/content" 
-            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
-            مدیریت تولید محتوا
-          </Link>
         </div>
       </div>
     </main>

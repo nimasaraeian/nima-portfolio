@@ -68,8 +68,8 @@ export default function AboutPage() {
             marginBottom: '30px',
             fontFamily: 'Times New Roman, serif'
           }}>
-            Digital Psychology Researcher<br />
-            AI & Consumer Behavior Specialist
+            AI Marketing Strategist<br />
+            Consumer Psychology & Digital Branding Expert
           </p>
         </section>
 
@@ -93,7 +93,7 @@ export default function AboutPage() {
             marginBottom: '25px',
             fontFamily: 'Times New Roman, serif'
           }}>
-            Welcome! I'm a multidisciplinary thinker at the intersection of <strong style={{ color: '#ffffff' }}>digital psychology</strong>, <strong style={{ color: '#ffffff' }}>AI-powered consumer behavior</strong>, and <strong style={{ color: '#ffffff' }}>data-driven marketing</strong>. With over 12 years of experience in executive roles and academic research, I've devoted my career to understanding how technology, human behavior, and innovation shape the digital experience.
+            Welcome! I'm an AI Marketing Strategist at the intersection of <strong style={{ color: '#ffffff' }}>artificial intelligence</strong>, <strong style={{ color: '#ffffff' }}>consumer psychology</strong>, and <strong style={{ color: '#ffffff' }}>digital branding</strong>. With more than 12 years of executive experience and academic research, I specialize in using AI to decode consumer behavior and design data-driven marketing strategies.
           </p>
           
           <p style={{
@@ -103,7 +103,7 @@ export default function AboutPage() {
             marginBottom: '25px',
             fontFamily: 'Times New Roman, serif'
           }}>
-            My academic background includes a <strong style={{ color: '#b0b0b0' }}>Master's in E-Commerce</strong> and a current deep focus on AI-enhanced psychometrics, consumer decision-making, and UX behavior analytics. I'm the creator of <strong style={{ color: '#ffffff' }}>Selflyzer</strong>, an AI-powered platform designed to decode psychological patterns, predict user behavior, and empower both individuals and organizations through data-informed insights.
+            My academic journey includes a <strong style={{ color: '#b0b0b0' }}>Master's in E-Commerce</strong> and a deep focus on AI-powered psychometrics, predictive analytics, and consumer decision-making. As the creator of <strong style={{ color: '#ffffff' }}>Selflyzer</strong>, I design frameworks that not only uncover emotional and cognitive patterns but also transform them into actionable insights for marketing, branding, and business growth.
           </p>
         </section>
 
@@ -150,7 +150,7 @@ export default function AboutPage() {
                 lineHeight: '1.5',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                A dynamic psychological blueprint powered by AI
+                An AI-driven psychological blueprint for consumer profiling and strategic segmentation
               </p>
             </div>
             
@@ -178,7 +178,7 @@ export default function AboutPage() {
                 lineHeight: '1.5',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                A model for uncovering unconscious emotional drivers
+                A model for uncovering unconscious drivers behind purchasing decisions
               </p>
             </div>
             
@@ -206,7 +206,7 @@ export default function AboutPage() {
                 lineHeight: '1.5',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                A relationship AI module enhancing emotional communication
+                A relationship AI module that enhances brand–consumer communication and emotional engagement
               </p>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function AboutPage() {
             fontFamily: 'Times New Roman, serif',
             color: '#e0e0e0'
           }}>
-            My mission is to bring science, empathy, and AI together to shape smarter digital environments — whether it's improving product recommendation systems, tailoring UX for mental well-being, or helping people make better career and relationship choices through self-knowledge.
+            My mission is to bring AI, psychology, and marketing strategy together to build smarter campaigns, more empathetic consumer experiences, and human-centered digital ecosystems.
           </p>
 
           <div style={{
@@ -251,7 +251,7 @@ export default function AboutPage() {
               color: '#ffffff',
               fontFamily: 'Times New Roman, serif'
             }}>
-              "I believe that technology should serve the soul, not just the market."
+              "I believe that the future of marketing lies not in louder ads, but in deeper understanding."
             </p>
           </div>
         </section>
@@ -274,7 +274,7 @@ export default function AboutPage() {
             color: '#cccccc',
             fontFamily: 'Times New Roman, serif'
           }}>
-            If you're interested in the future of AI, mental health, psychographic data, and ethical technology, you're in the right place.
+            If you're passionate about the future of AI in marketing, consumer analytics, and behavior-driven strategy, you're in the right place.
           </p>
 
           <a 

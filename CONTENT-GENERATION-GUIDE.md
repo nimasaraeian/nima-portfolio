@@ -27,9 +27,9 @@ CONTENT_GENERATION_ENABLED=true
 npm install openai cron node-cron
 ```
 
-### 3. Access Content Manager
+### 3. Run Content Generator
 
-Navigate to `/admin/content` to access the content management interface.
+Use the API or scripts to generate content.
 
 ## ⚙️ Configuration
 
@@ -56,10 +56,7 @@ const schedule = '0 6 * * *'; // Cron format: Daily at 6 AM
 
 ### Generate Content Manually
 
-1. Go to `/admin/content`
-2. Enter your OpenAI API key
-3. Click "Generate Daily Content"
-4. Wait for completion (typically 2-3 minutes)
+Use the scripts or API endpoint to generate content manually.
 
 ### API Endpoint
 
@@ -80,10 +77,8 @@ app/
 │   ├── marketing/     # Marketing articles
 │   ├── daily/         # Daily insights
 │   └── data.ts        # Auto-generated index
-├── api/
-│   └── generate-content/  # Content generation API
-└── admin/
-    └── content/           # Management interface
+└── api/
+    └── generate-content/  # Content generation API
 
 lib/
 └── content-generator.ts   # Core generation logic
@@ -170,19 +165,17 @@ public/
 
 ## 🛡️ Security Features
 
-- API key stored locally only
-- Authentication required for manual generation
+- API key stored in environment variables only
 - No external data transmission
-- Protected admin interface
 - Rate limiting protection
+- Secure API endpoints
 
 ## 📊 Monitoring & Status
 
 ### Check System Status
-- Visit `/admin/content`
-- Click "Check Status"
-- View generation history
-- Monitor error logs
+- Review generation logs in terminal
+- Check generated files in articles directories
+- Monitor API responses
 
 ### Logs
 System logs are displayed in the terminal when running the cron job:
@@ -285,6 +278,22 @@ This content generation system is part of your website project and follows the s
 ---
 
 **Note**: This system generates high-quality, original content using OpenAI's GPT-4. All generated content is automatically published to your website and should be reviewed for accuracy and appropriateness before publication.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

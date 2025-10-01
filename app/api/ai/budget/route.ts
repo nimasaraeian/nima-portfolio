@@ -1,0 +1,11 @@
+import { NextResponse } from 'next/server'
+import { mockBudgetAllocation } from '@/lib/ai'
+
+export async function POST(req: Request) {
+  const body = await req.json()
+  const { monthlyBudgetUSD, objectives, channels } = body || {}
+  const data = mockBudgetAllocation({ monthlyBudgetUSD, objectives, channels })
+  return NextResponse.json(data)
+}
+
+

@@ -1,9 +1,13 @@
 import OpenAI from 'openai';
 
-// تنظیمات OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization to avoid throwing at build time if the key is missing
+function getOpenAIClient(): OpenAI {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not set. Add it in Vercel Project Settings > Environment Variables.');
+  }
+  return new OpenAI({ apiKey });
+}
 
 // تعریف انواع مقالات
 export interface Article {
@@ -106,6 +110,7 @@ export async function generateArticle(category: keyof typeof CATEGORIES): Promis
   IMAGE_PROMPT: [Detailed description for generating a relevant cover image]`;
 
   try {
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
@@ -163,6 +168,7 @@ export async function generateArticle(category: keyof typeof CATEGORIES): Promis
 async function generateArticleImage(prompt: string, category: string, title: string): Promise<string> {
   try {
     // استفاده از DALL-E برای تولید تصویر
+    const openai = getOpenAIClient();
     const imageResponse = await openai.images.generate({
       model: "dall-e-3",
       prompt: `${prompt}. Professional, modern, clean design. Suitable for ${category} article. High quality, detailed.`,
