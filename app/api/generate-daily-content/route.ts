@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateDailyArticles, saveArticleToFile } from '../../../lib/content-generator';
 import fs from 'fs';
 import path from 'path';
 
@@ -16,6 +15,10 @@ export async function GET(request: NextRequest) {
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json({ success: false, message: 'OPENAI_API_KEY is not set' }, { status: 200 });
     }
+    
+    // Dynamic import to avoid build-time errors
+    const { generateDailyArticles, saveArticleToFile } = await import('../../../lib/content-generator');
+    
     // تولید یک مقاله جدید برای امروز
     const articles = await generateDailyArticles();
     
