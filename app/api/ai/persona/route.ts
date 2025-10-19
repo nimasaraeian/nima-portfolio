@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { mockPersonaInsights } from '@/lib/ai'
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   const body = await req.json()
   const { industry, geography, seedKeywords, competitors } = body || {}

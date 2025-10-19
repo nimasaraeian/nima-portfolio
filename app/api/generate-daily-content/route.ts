@@ -3,6 +3,10 @@ import { generateDailyArticles, saveArticleToFile } from '../../../lib/content-g
 import fs from 'fs';
 import path from 'path';
 
+// Force dynamic rendering - don't pre-render at build time
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   console.log('🚀 Daily content generation API called');
   console.log(`📅 Date: ${new Date().toLocaleDateString('en-US')}`);

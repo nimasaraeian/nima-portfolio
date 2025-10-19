@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { mockBudgetAllocation } from '@/lib/ai'
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   const body = await req.json()
   const { monthlyBudgetUSD, objectives, channels } = body || {}
