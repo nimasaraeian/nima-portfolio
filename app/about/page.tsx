@@ -293,67 +293,6 @@ export default function AboutPage() {
               </div>
             </div>
             
-            {/* Nekras Group */}
-            <div style={{
-              padding: '30px 25px',
-              borderRadius: '15px',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              textAlign: 'center',
-              backgroundColor: '#1a1a1a',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.borderColor = '#10b981';
-              e.target.style.transform = 'translateY(-5px)';
-              e.target.style.boxShadow = '0 10px 25px rgba(16, 185, 129, 0.3)';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = 'none';
-            }}
-            onClick={() => window.open('https://nekrasgroup.com', '_blank')}
-            >
-              <div style={{ marginBottom: '15px' }}>
-                <img 
-                  src="/image/nekrasgroup.png" 
-                  alt="NEKRAS GROUP Logo" 
-                  style={{
-                    width: '80px',
-                    height: '80px',
-                    objectFit: 'contain'
-                  }}
-                />
-              </div>
-              <h3 style={{
-                fontSize: '1.4rem',
-                fontWeight: '600',
-                marginBottom: '15px',
-                color: '#ffffff',
-                fontFamily: 'Times New Roman, serif'
-              }}>
-                Nekras Group
-              </h3>
-              <p style={{
-                fontSize: '0.95rem',
-                margin: '0 0 20px 0',
-                color: '#c0c0c0',
-                lineHeight: '1.5',
-                fontFamily: 'Times New Roman, serif'
-              }}>
-                Strategic business consulting and digital transformation solutions for modern enterprises
-              </p>
-              <div style={{
-                fontSize: '0.8rem',
-                color: '#10b981',
-                fontWeight: '600',
-                fontFamily: 'Times New Roman, serif'
-              }}>
-                Click to visit →
-              </div>
-            </div>
-            
             {/* Lotus Business School */}
             <div style={{
               padding: '30px 25px',
