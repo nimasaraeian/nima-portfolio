@@ -50,10 +50,10 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Email</h3>
                     <a 
-                      href="mailto:nimasaraeian65@gmail.com"
+                      href="mailto:info@nimasaraeian.com"
                       className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
-                      nimasaraeian65@gmail.com
+                      info@nimasaraeian.com
                     </a>
                   </div>
                 </div>
@@ -193,7 +193,7 @@ export default function ContactPage() {
 
             <div className="mt-6 p-4 bg-blue-900/20 border border-blue-700 rounded-lg">
               <p className="text-sm text-blue-300">
-                <strong>Note:</strong> For urgent inquiries, please email directly to nimasaraeian65@gmail.com
+                <strong>Note:</strong> For urgent inquiries, please email directly to info@nimasaraeian.com
               </p>
             </div>
           </div>

@@ -79,5 +79,5 @@ The website is deployed on Vercel:
 ## Contact
 
 - **Website**: [https://www.nimasaraeian.com](https://www.nimasaraeian.com)
-- **Email**: nimasaraeian65@gmail.com
+- **Email**: info@nimasaraeian.com
 - **LinkedIn**: [linkedin.com/in/nima.saraeian](https://www.linkedin.com/in/nima.saraeian)
