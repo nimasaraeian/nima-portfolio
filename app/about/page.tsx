@@ -65,13 +65,47 @@ export default function AboutPage() {
             fontSize: '1.1rem',
             color: '#b0b0b0',
             fontStyle: 'italic',
-            marginBottom: '30px',
+            marginBottom: '20px',
             fontFamily: 'Times New Roman, serif'
           }}>
             UX Designer & Researcher<br />
             AI-Powered Behavior Analysis Expert<br />
             +90 536 291 4170 | ✉️ info@nimasaraeian.com
           </p>
+          
+          <div style={{ marginBottom: '30px' }}>
+            <a 
+              href="/cv-nima-saraeian.pdf" 
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '12px 24px',
+                backgroundColor: '#1a1a1a',
+                color: '#ffffff',
+                textDecoration: 'none',
+                borderRadius: '25px',
+                border: '2px solid #333333',
+                fontSize: '1rem',
+                fontWeight: '600',
+                transition: 'all 0.3s ease',
+                fontFamily: 'Times New Roman, serif'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = '#333333';
+                e.target.style.borderColor = '#555555';
+                e.target.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = '#1a1a1a';
+                e.target.style.borderColor = '#333333';
+                e.target.style.transform = 'translateY(0)';
+              }}
+            >
+              📄 Download CV
+            </a>
+          </div>
         </section>
 
         {/* About Me Section */}
@@ -118,7 +152,7 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* Frameworks Section */}
+        {/* Projects Section */}
         <section style={{ marginBottom: '60px' }}>
           <h2 style={{
             fontSize: '2rem',
@@ -128,97 +162,217 @@ export default function AboutPage() {
             textAlign: 'center',
             fontFamily: 'Times New Roman, serif'
           }}>
-            Innovative Frameworks
+            Featured Projects
           </h2>
           
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '20px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '25px',
             marginTop: '30px'
           }}>
+            {/* Selphlyze */}
             <div style={{
               padding: '30px 25px',
               borderRadius: '15px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               textAlign: 'center',
-              backgroundColor: '#1a1a1a'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🧬</div>
+              backgroundColor: '#1a1a1a',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.borderColor = '#4f46e5';
+              e.target.style.transform = 'translateY(-5px)';
+              e.target.style.boxShadow = '0 10px 25px rgba(79, 70, 229, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+            onClick={() => window.open('https://www.selphlyze.com', '_blank')}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🧠</div>
               <h3 style={{
-                fontSize: '1.3rem',
+                fontSize: '1.4rem',
                 fontWeight: '600',
                 marginBottom: '15px',
                 color: '#ffffff',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                Selflyzer Code
+                Selphlyze
               </h3>
               <p style={{
                 fontSize: '0.95rem',
-                margin: '0',
+                margin: '0 0 20px 0',
                 color: '#c0c0c0',
                 lineHeight: '1.5',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                An AI-driven psychological blueprint for consumer profiling and strategic segmentation
+                AI-powered psychometric platform for deep psychological profiling and behavioral analysis
               </p>
+              <div style={{
+                fontSize: '0.8rem',
+                color: '#4f46e5',
+                fontWeight: '600',
+                fontFamily: 'Times New Roman, serif'
+              }}>
+                Click to visit →
+              </div>
             </div>
             
+            {/* Contlyze */}
             <div style={{
               padding: '30px 25px',
               borderRadius: '15px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               textAlign: 'center',
-              backgroundColor: '#1a1a1a'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🔍</div>
+              backgroundColor: '#1a1a1a',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.borderColor = '#f97316';
+              e.target.style.transform = 'translateY(-5px)';
+              e.target.style.boxShadow = '0 10px 25px rgba(249, 115, 22, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+            onClick={() => window.open('https://www.contlyze.com', '_blank')}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>📊</div>
               <h3 style={{
-                fontSize: '1.3rem',
+                fontSize: '1.4rem',
                 fontWeight: '600',
                 marginBottom: '15px',
                 color: '#ffffff',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                ShadowTrace
+                Contlyze
               </h3>
               <p style={{
                 fontSize: '0.95rem',
-                margin: '0',
+                margin: '0 0 20px 0',
                 color: '#c0c0c0',
                 lineHeight: '1.5',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                A model for uncovering unconscious drivers behind purchasing decisions
+                AI-driven content analysis and optimization platform for data-driven marketing strategies
               </p>
+              <div style={{
+                fontSize: '0.8rem',
+                color: '#f97316',
+                fontWeight: '600',
+                fontFamily: 'Times New Roman, serif'
+              }}>
+                Click to visit →
+              </div>
             </div>
             
+            {/* Nekras Group */}
             <div style={{
               padding: '30px 25px',
               borderRadius: '15px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               textAlign: 'center',
-              backgroundColor: '#1a1a1a'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>💝</div>
+              backgroundColor: '#1a1a1a',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.borderColor = '#10b981';
+              e.target.style.transform = 'translateY(-5px)';
+              e.target.style.boxShadow = '0 10px 25px rgba(16, 185, 129, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+            onClick={() => window.open('https://nekrasgroup.com', '_blank')}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🏢</div>
               <h3 style={{
-                fontSize: '1.3rem',
+                fontSize: '1.4rem',
                 fontWeight: '600',
                 marginBottom: '15px',
                 color: '#ffffff',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                EmoConnect
+                Nekras Group
               </h3>
               <p style={{
                 fontSize: '0.95rem',
-                margin: '0',
+                margin: '0 0 20px 0',
                 color: '#c0c0c0',
                 lineHeight: '1.5',
                 fontFamily: 'Times New Roman, serif'
               }}>
-                A relationship AI module that enhances brand–consumer communication and emotional engagement
+                Strategic business consulting and digital transformation solutions for modern enterprises
               </p>
+              <div style={{
+                fontSize: '0.8rem',
+                color: '#10b981',
+                fontWeight: '600',
+                fontFamily: 'Times New Roman, serif'
+              }}>
+                Click to visit →
+              </div>
+            </div>
+            
+            {/* Lotus Business School */}
+            <div style={{
+              padding: '30px 25px',
+              borderRadius: '15px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              textAlign: 'center',
+              backgroundColor: '#1a1a1a',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.borderColor = '#8b5cf6';
+              e.target.style.transform = 'translateY(-5px)';
+              e.target.style.boxShadow = '0 10px 25px rgba(139, 92, 246, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = 'none';
+            }}
+            onClick={() => window.open('https://lotusbusinessschool.com', '_blank')}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🎓</div>
+              <h3 style={{
+                fontSize: '1.4rem',
+                fontWeight: '600',
+                marginBottom: '15px',
+                color: '#ffffff',
+                fontFamily: 'Times New Roman, serif'
+              }}>
+                Lotus Business School
+              </h3>
+              <p style={{
+                fontSize: '0.95rem',
+                margin: '0 0 20px 0',
+                color: '#c0c0c0',
+                lineHeight: '1.5',
+                fontFamily: 'Times New Roman, serif'
+              }}>
+                Professional education and training in consumer behavior, digital psychology, and strategic management
+              </p>
+              <div style={{
+                fontSize: '0.8rem',
+                color: '#8b5cf6',
+                fontWeight: '600',
+                fontFamily: 'Times New Roman, serif'
+              }}>
+                Click to visit →
+              </div>
             </div>
           </div>
         </section>

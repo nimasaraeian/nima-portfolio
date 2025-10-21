@@ -206,6 +206,26 @@ export default function ContactPage() {
           </div>
         </div>
 
+        {/* CV Download Section */}
+        <div className="mt-16 bg-gradient-to-r from-gray-900 to-gray-800 p-8 rounded-lg border border-gray-700 text-center">
+          <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Download My CV
+          </h2>
+          <p className="text-gray-400 mb-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Get a detailed overview of my experience, skills, and achievements
+          </p>
+          <a
+            href="/cv-nima-saraeian.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-full hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/30 text-lg"
+            style={{ fontFamily: 'Times New Roman, Times, serif' }}
+          >
+            <span className="mr-2">📄</span>
+            Download CV (PDF)
+          </a>
+        </div>
+
         {/* Additional Information */}
         <div className="mt-16 bg-gray-900 p-8 rounded-lg border border-gray-700">
           <h2 className="text-2xl font-bold mb-6 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
