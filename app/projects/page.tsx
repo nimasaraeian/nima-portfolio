@@ -264,7 +264,7 @@ export default function ProjectsPage() {
         </div>
       </main>
       
-      <style>{`
+      <style jsx>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;
