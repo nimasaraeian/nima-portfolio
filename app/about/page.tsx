@@ -68,8 +68,9 @@ export default function AboutPage() {
             marginBottom: '30px',
             fontFamily: 'Times New Roman, serif'
           }}>
-            AI Marketing Strategist<br />
-            Consumer Psychology & Digital Branding Expert
+            UX Designer & Researcher<br />
+            AI-Powered Behavior Analysis Expert<br />
+            +90 536 291 4170 | ✉️ info@nimasaraeian.com
           </p>
         </section>
 
@@ -93,7 +94,7 @@ export default function AboutPage() {
             marginBottom: '25px',
             fontFamily: 'Times New Roman, serif'
           }}>
-            Welcome! I'm an AI Marketing Strategist at the intersection of <strong style={{ color: '#ffffff' }}>artificial intelligence</strong>, <strong style={{ color: '#ffffff' }}>consumer psychology</strong>, and <strong style={{ color: '#ffffff' }}>digital branding</strong>. With more than 12 years of executive experience and academic research, I specialize in using AI to decode consumer behavior and design data-driven marketing strategies.
+            Welcome! I'm a <strong style={{ color: '#ffffff' }}>UX Designer & Researcher</strong> with over <strong style={{ color: '#ffffff' }}>12 years of experience</strong> in marketing, consumer psychology, and AI-powered behavior analysis. I specialize in combining psychology, design thinking, and data science to create engaging, intuitive, and impactful digital experiences.
           </p>
           
           <p style={{
@@ -103,7 +104,17 @@ export default function AboutPage() {
             marginBottom: '25px',
             fontFamily: 'Times New Roman, serif'
           }}>
-            My academic journey includes a <strong style={{ color: '#b0b0b0' }}>Master's in E-Commerce</strong> and a deep focus on AI-powered psychometrics, predictive analytics, and consumer decision-making. As the creator of <strong style={{ color: '#ffffff' }}>Selflyzer</strong>, I design frameworks that not only uncover emotional and cognitive patterns but also transform them into actionable insights for marketing, branding, and business growth.
+            My expertise spans <strong style={{ color: '#ffffff' }}>User-Centered Design (UCD)</strong>, <strong style={{ color: '#ffffff' }}>usability testing</strong>, and <strong style={{ color: '#ffffff' }}>AI-driven user analysis</strong>. As the founder of <strong style={{ color: '#ffffff' }}>Selphlyze AI Project</strong>, I've conducted user research with over 500 participants across cultural backgrounds, creating wireframes and prototypes that integrate AI & psychology to personalize user journeys.
+          </p>
+          
+          <p style={{
+            fontSize: '1.1rem',
+            lineHeight: '1.7',
+            color: '#cccccc',
+            marginBottom: '25px',
+            fontFamily: 'Times New Roman, serif'
+          }}>
+            With a <strong style={{ color: '#b0b0b0' }}>Master's in Electronic Business</strong> and ongoing <strong style={{ color: '#b0b0b0' }}>Data Science certification</strong>, I bring a unique blend of technical skills and human-centered design principles to every project. My work focuses on neuromarketing, behavioral design, and cross-cultural UX research to deliver solutions that truly resonate with users.
           </p>
         </section>
 
@@ -232,7 +243,7 @@ export default function AboutPage() {
             fontFamily: 'Times New Roman, serif',
             color: '#e0e0e0'
           }}>
-            My mission is to bring AI, psychology, and marketing strategy together to build smarter campaigns, more empathetic consumer experiences, and human-centered digital ecosystems.
+            My mission is to bridge the gap between <strong style={{ color: '#ffffff' }}>human psychology</strong>, <strong style={{ color: '#ffffff' }}>AI technology</strong>, and <strong style={{ color: '#ffffff' }}>user experience design</strong> to create digital products that are not only functional but truly meaningful and engaging for users across all cultures and backgrounds.
           </p>
 
           <div style={{
@@ -251,7 +262,7 @@ export default function AboutPage() {
               color: '#ffffff',
               fontFamily: 'Times New Roman, serif'
             }}>
-              "I believe that the future of marketing lies not in louder ads, but in deeper understanding."
+              "Great UX design is not about making things look pretty—it's about understanding human behavior and creating experiences that feel natural, intuitive, and meaningful."
             </p>
           </div>
         </section>

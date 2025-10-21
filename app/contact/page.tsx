@@ -86,17 +86,17 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Services</h3>
                     <ul className="text-gray-300 space-y-1">
-                      <li>• AI-Powered Psychological Profiling</li>
-                      <li>• Consumer Behavior Analytics & Insights</li>
-                      <li>• Digital Marketing Psychology Strategy</li>
-                      <li>• Psychometric Assessment Development</li>
-                      <li>• Emotional Intelligence & AI Integration</li>
-                      <li>• Neuromarketing & Brain Science Applications</li>
-                      <li>• Cross-Cultural UX Research & Design</li>
-                      <li>• Mental Health Technology Innovation</li>
-                      <li>• Brand Psychology & Identity Development</li>
-                      <li>• AI Ethics in Psychology Consulting</li>
-                      <li>• International Speaking & Training</li>
+                      <li>• UX Design & Research (12+ years experience)</li>
+                      <li>• AI-Powered User Behavior Analysis</li>
+                      <li>• Consumer Psychology & Digital Marketing</li>
+                      <li>• User-Centered Design (UCD) & Usability Testing</li>
+                      <li>• Wireframing, Prototyping & Information Architecture</li>
+                      <li>• Cross-Cultural User Research (500+ participants)</li>
+                      <li>• Neuromarketing & Behavioral Design</li>
+                      <li>• Data Science & A/B Testing</li>
+                      <li>• Strategic Management & Business Consulting</li>
+                      <li>• International Training & Workshops</li>
+                      <li>• Portfolio Development & Brand Strategy</li>
                       <li>• Research Collaboration & Innovation</li>
                     </ul>
                   </div>
