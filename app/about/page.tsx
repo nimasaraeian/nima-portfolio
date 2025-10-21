@@ -193,7 +193,17 @@ export default function AboutPage() {
             }}
             onClick={() => window.open('https://www.selphlyze.com', '_blank')}
             >
-              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🧠</div>
+              <div style={{ marginBottom: '15px' }}>
+                <img 
+                  src="/image/SELPHLYZE_LOGO_HIGH_RES.png" 
+                  alt="Selphlyze Logo" 
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    objectFit: 'contain'
+                  }}
+                />
+              </div>
               <h3 style={{
                 fontSize: '1.4rem',
                 fontWeight: '600',
@@ -244,7 +254,17 @@ export default function AboutPage() {
             }}
             onClick={() => window.open('https://www.contlyze.com', '_blank')}
             >
-              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>📊</div>
+              <div style={{ marginBottom: '15px' }}>
+                <img 
+                  src="/image/contlyze.png" 
+                  alt="Contlyze Logo" 
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    objectFit: 'contain'
+                  }}
+                />
+              </div>
               <h3 style={{
                 fontSize: '1.4rem',
                 fontWeight: '600',
