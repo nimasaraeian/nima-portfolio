@@ -86,11 +86,18 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Services</h3>
                     <ul className="text-gray-300 space-y-1">
-                      <li>• AI Psychology Consulting</li>
-                      <li>• Digital Consumer Behavior Analysis</li>
-                      <li>• Psychometric Assessment Design</li>
-                      <li>• Speaking Engagements</li>
-                      <li>• Research Collaborations</li>
+                      <li>• AI-Powered Psychological Profiling</li>
+                      <li>• Consumer Behavior Analytics & Insights</li>
+                      <li>• Digital Marketing Psychology Strategy</li>
+                      <li>• Psychometric Assessment Development</li>
+                      <li>• Emotional Intelligence & AI Integration</li>
+                      <li>• Neuromarketing & Brain Science Applications</li>
+                      <li>• Cross-Cultural UX Research & Design</li>
+                      <li>• Mental Health Technology Innovation</li>
+                      <li>• Brand Psychology & Identity Development</li>
+                      <li>• AI Ethics in Psychology Consulting</li>
+                      <li>• International Speaking & Training</li>
+                      <li>• Research Collaboration & Innovation</li>
                     </ul>
                   </div>
                 </div>
