@@ -263,7 +263,5 @@ export default function ProjectsPage() {
           </section>
         </div>
       </main>
-      
-    </main>
   );
 }
