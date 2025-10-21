@@ -55,6 +55,10 @@ export const metadata: Metadata = {
   verification: {
     google: 'googlea749cf479c48223f',
   },
+  other: {
+    'google-site-verification': 'googlea749cf479c48223f',
+    'google-analytics': 'G-XXXXXXXXXX', // Google Analytics ID خود را اینجا قرار دهید
+  },
   alternates: {
     canonical: 'https://www.nimasaraeian.com',
   },
