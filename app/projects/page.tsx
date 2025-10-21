@@ -142,21 +142,31 @@ export default function ProjectsPage() {
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="bg-gray-900 border border-gray-700 rounded-2xl p-8 hover:border-gray-500 transition"
+                  className="bg-gray-900 border border-gray-700 rounded-2xl p-8 hover:border-gray-500 transition-all duration-700 hover:shadow-2xl hover:shadow-blue-500/20 hover:scale-[1.02] group"
                 >
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center">
                       {project.title === 'Selphlyze' && (
-                        <Image 
-                          src="/image/SELPHLYZE_LOGO_HIGH_RES.png" 
-                          alt="Selphlyze Logo" 
-                          width={80} 
-                          height={80}
-                          className="mr-4"
-                        />
+                        <div className="mr-6 transform transition-all duration-500 hover:scale-110 hover:rotate-3 logo-float">
+                          <Image 
+                            src="/image/SELPHLYZE_LOGO_HIGH_RES.png" 
+                            alt="Selphlyze Logo" 
+                            width={120} 
+                            height={120}
+                            className="drop-shadow-lg logo-glow"
+                          />
+                        </div>
                       )}
                       {project.title === 'Contlyze' && (
-                        <div className="text-6xl mr-4">{project.icon}</div>
+                        <div className="mr-6 transform transition-all duration-500 hover:scale-110 hover:rotate-3 logo-float">
+                          <Image 
+                            src="/image/contlyze.png" 
+                            alt="Contlyze Logo" 
+                            width={120} 
+                            height={120}
+                            className="drop-shadow-lg logo-glow"
+                          />
+                        </div>
                       )}
                     </div>
                     <span
@@ -165,9 +175,9 @@ export default function ProjectsPage() {
                       {project.status}
                     </span>
                   </div>
-                  <h3 className="text-3xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.title}</h3>
-                  <p className="text-gray-400 italic mb-6 text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.subtitle}</p>
-                  <p className="text-gray-300 mb-6 leading-relaxed text-sm" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.description}</p>
+                  <h3 className="text-3xl font-bold mb-4 group-hover:text-blue-400 transition-colors duration-500" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.title}</h3>
+                  <p className="text-gray-400 italic mb-6 text-lg group-hover:text-gray-300 transition-colors duration-500" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.subtitle}</p>
+                  <p className="text-gray-300 mb-6 leading-relaxed text-sm group-hover:text-gray-200 transition-colors duration-500" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.description}</p>
                   <div className="mb-6">
                     <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI-Powered Features:</strong>
                     <ul className="list-disc list-inside text-gray-400 mt-2 space-y-1 text-sm">
@@ -182,8 +192,11 @@ export default function ProjectsPage() {
                       {project.technologies.map((t, i) => (
                         <span
                           key={i}
-                          className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-xs border border-gray-600"
-                          style={{ fontFamily: 'Times New Roman, Times, serif' }}
+                          className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-xs border border-gray-600 group-hover:bg-gray-700 group-hover:border-gray-500 transition-all duration-300 hover:scale-105"
+                          style={{ 
+                            fontFamily: 'Times New Roman, Times, serif',
+                            animationDelay: `${i * 100}ms`
+                          }}
                         >
                           {t}
                         </span>
@@ -199,10 +212,11 @@ export default function ProjectsPage() {
                           href="https://www.selphlyze.com"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg text-base"
+                          className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-full hover:from-blue-700 hover:to-purple-700 transition-all duration-500 transform hover:scale-110 hover:shadow-2xl hover:shadow-blue-500/30 text-base group/btn"
                           style={{ fontFamily: 'Times New Roman, Times, serif' }}
                         >
-                          🧠 Experience Selphlyze
+                          <span className="group-hover/btn:animate-pulse">🧠</span>
+                          <span className="ml-2">Experience Selphlyze</span>
                         </a>
                         <p className="text-xs text-gray-400 mt-2" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                           Discover your psychological profile through AI
@@ -215,10 +229,11 @@ export default function ProjectsPage() {
                           href="https://www.contlyze.com"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg text-base"
+                          className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-purple-600 text-white font-bold rounded-full hover:from-orange-600 hover:to-purple-700 transition-all duration-500 transform hover:scale-110 hover:shadow-2xl hover:shadow-orange-500/30 text-base group/btn"
                           style={{ fontFamily: 'Times New Roman, Times, serif' }}
                         >
-                          📊 Explore Contlyze
+                          <span className="group-hover/btn:animate-pulse">📊</span>
+                          <span className="ml-2">Explore Contlyze</span>
                         </a>
                         <p className="text-xs text-gray-400 mt-2" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                           Optimize your content with AI-powered insights
@@ -248,5 +263,45 @@ export default function ProjectsPage() {
           </section>
         </div>
       </main>
+      
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        
+        @keyframes glow {
+          0%, 100% {
+            box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+          }
+          50% {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+          }
+        }
+        
+        .logo-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        
+        .logo-glow {
+          animation: glow 2s ease-in-out infinite;
+        }
+      `}</style>
+    </main>
   );
 }
