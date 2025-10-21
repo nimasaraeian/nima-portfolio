@@ -47,6 +47,26 @@ export default function ProjectsPage() {
       technologies: ['Advanced AI/ML', 'Deep Learning', 'Psychology', 'React', 'Node.js', 'MongoDB', 'Neural Networks'],
       status: 'In Development',
     },
+    {
+      id: 2,
+      icon: '📊',
+      title: 'Contlyze',
+      subtitle: 'AI-Powered Content Analysis & Optimization Platform',
+      description:
+        'Contlyze is an advanced AI-driven content analysis platform that helps businesses and content creators optimize their digital content strategy. Using sophisticated natural language processing and machine learning algorithms, Contlyze analyzes content performance, audience engagement, and competitive landscapes to provide actionable insights. The platform empowers users to create data-driven content strategies, improve SEO performance, and maximize audience engagement through intelligent content recommendations and real-time analytics.',
+      features: [
+        'AI-Powered Content Analysis',
+        'SEO Optimization Recommendations',
+        'Competitive Content Intelligence',
+        'Audience Engagement Metrics',
+        'Content Performance Tracking',
+        'Real-time Analytics Dashboard',
+        'Multi-platform Content Monitoring',
+        'AI-Generated Content Insights'
+      ],
+      technologies: ['AI/ML', 'NLP', 'Data Analytics', 'React', 'Python', 'TensorFlow', 'Cloud Infrastructure'],
+      status: 'In Development',
+    },
   ];
 
   const stats: Stat[] = [
@@ -117,22 +137,27 @@ export default function ProjectsPage() {
           </div>
 
           <section className="mb-20">
-            <h2 className="text-3xl font-semibold mb-8 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>Featured Project</h2>
-            <div className="flex justify-center">
+            <h2 className="text-3xl font-semibold mb-8 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>Featured Projects</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {projects.map((project) => (
                 <div
                   key={project.id}
-                  className="bg-gray-900 border border-gray-700 rounded-2xl p-8 hover:border-gray-500 transition max-w-4xl w-full"
+                  className="bg-gray-900 border border-gray-700 rounded-2xl p-8 hover:border-gray-500 transition"
                 >
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center">
-                      <Image 
-                        src="/image/SELPHLYZE_LOGO_HIGH_RES.png" 
-                        alt="Selphlyze Logo" 
-                        width={80} 
-                        height={80}
-                        className="mr-4"
-                      />
+                      {project.title === 'Selphlyze' && (
+                        <Image 
+                          src="/image/SELPHLYZE_LOGO_HIGH_RES.png" 
+                          alt="Selphlyze Logo" 
+                          width={80} 
+                          height={80}
+                          className="mr-4"
+                        />
+                      )}
+                      {project.title === 'Contlyze' && (
+                        <div className="text-6xl mr-4">{project.icon}</div>
+                      )}
                     </div>
                     <span
                       className={`px-3 py-1 rounded-full text-sm text-white ${getStatusColor(project.status)}`}
@@ -140,24 +165,24 @@ export default function ProjectsPage() {
                       {project.status}
                     </span>
                   </div>
-                  <h3 className="text-4xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.title}</h3>
-                  <p className="text-gray-400 italic mb-6 text-xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.subtitle}</p>
-                  <p className="text-gray-300 mb-6 leading-relaxed text-base" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.description}</p>
+                  <h3 className="text-3xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.title}</h3>
+                  <p className="text-gray-400 italic mb-6 text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.subtitle}</p>
+                  <p className="text-gray-300 mb-6 leading-relaxed text-sm" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.description}</p>
                   <div className="mb-6">
                     <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI-Powered Features:</strong>
-                    <ul className="list-disc list-inside text-gray-400 mt-2 space-y-1">
+                    <ul className="list-disc list-inside text-gray-400 mt-2 space-y-1 text-sm">
                       {project.features.map((f, i) => (
                         <li key={i} style={{ fontFamily: 'Times New Roman, Times, serif' }}>{f}</li>
                       ))}
                     </ul>
                   </div>
                   <div className="mb-6">
-                    <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI Technologies:</strong>
+                    <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>Technologies:</strong>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {project.technologies.map((t, i) => (
                         <span
                           key={i}
-                          className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm border border-gray-600"
+                          className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-xs border border-gray-600"
                           style={{ fontFamily: 'Times New Roman, Times, serif' }}
                         >
                           {t}
@@ -166,26 +191,41 @@ export default function ProjectsPage() {
                     </div>
                   </div>
                   
-                  {/* Special Link for Selphlyze */}
-                  {project.title === 'Selphlyze' && (
-                    <div className="mt-6 text-center">
-                      <a
-                        href="https://www.selphlyze.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
-                        style={{ fontFamily: 'Times New Roman, Times, serif' }}
-                      >
-                        🧠 Experience Selphlyze AI Platform
-                      </a>
-                      <p className="text-sm text-gray-400 mt-3" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                        Discover your psychological profile through advanced AI analysis
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                        ✨ Powered entirely by Artificial Intelligence
-                      </p>
-                    </div>
-                  )}
+                  {/* Project Links */}
+                  <div className="mt-6 text-center">
+                    {project.title === 'Selphlyze' && (
+                      <>
+                        <a
+                          href="https://www.selphlyze.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg text-base"
+                          style={{ fontFamily: 'Times New Roman, Times, serif' }}
+                        >
+                          🧠 Experience Selphlyze
+                        </a>
+                        <p className="text-xs text-gray-400 mt-2" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                          Discover your psychological profile through AI
+                        </p>
+                      </>
+                    )}
+                    {project.title === 'Contlyze' && (
+                      <>
+                        <a
+                          href="https://www.contlyze.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center px-6 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg text-base"
+                          style={{ fontFamily: 'Times New Roman, Times, serif' }}
+                        >
+                          📊 Explore Contlyze
+                        </a>
+                        <p className="text-xs text-gray-400 mt-2" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                          Optimize your content with AI-powered insights
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
