@@ -2,22 +2,59 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Seminars by Nima Saraeian | Gallery',
-  description: 'Explore seminars and conferences attended by Nima Saraeian with full photo gallery.',
+  title: 'NIMA SARAEIAN International Seminars & Talks | AI Psychology Expert نیما سرائیان',
+  description: 'View NIMA SARAEIAN (نیما سرائیان) international conference presentations on AI, Digital Psychology, Consumer Behavior, Psychometrics, and Innovation. Expert speaker in artificial intelligence, emotional intelligence, and behavioral analytics.',
+  keywords: 'NIMA SARAEIAN, نیما سرائیان, AI psychology, digital psychology seminars, psychometric expert, consumer behavior speaker, artificial intelligence conference, emotional intelligence talks, behavioral analytics, neuromarketing, UX psychology, mental health technology, personality profiling, AI ethics, cognitive science',
+  authors: [{ name: 'NIMA SARAEIAN نیما سرائیان' }],
+  creator: 'NIMA SARAEIAN',
+  publisher: 'NIMA SARAEIAN',
   openGraph: {
-    title: 'Seminars Gallery - Nima Saraeian',
-    description: 'Professional presentations and seminars of Nima Saraeian.',
+    title: 'NIMA SARAEIAN International Seminars & Conference Presentations',
+    description: 'Dr. NIMA SARAEIAN (نیما سرائیان) presenting at international conferences on AI-powered psychology, digital consumer behavior, psychometric analysis, and innovation in mental health technology.',
     url: 'https://www.nimasaraeian.com/seminars',
-    siteName: 'Nima Saraeian',
+    siteName: 'NIMA SARAEIAN نیما سرائیان',
+    locale: 'en_US',
+    alternateLocale: 'fa_IR',
     images: [
       {
-        url: '/image/nimasaraeian2.jpg',
+        url: 'https://www.nimasaraeian.com/image/nimasaraeian2.jpg',
         width: 1200,
         height: 630,
-        alt: 'Nima Saraeian Seminar',
+        alt: 'NIMA SARAEIAN presenting at international AI psychology conference',
+      },
+      {
+        url: 'https://www.nimasaraeian.com/image/nimasaraeian3.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Dr. NIMA SARAEIAN seminar on consumer behavior and psychometrics',
+      },
+      {
+        url: 'https://www.nimasaraeian.com/image/nimasaraeian4.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'NIMA SARAEIAN keynote speech on emotional intelligence and AI',
       },
     ],
     type: 'website',
   },
-  robots: 'index, follow',
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NIMA SARAEIAN International Seminars نیما سرائیان',
+    description: 'AI Psychology Expert NIMA SARAEIAN speaking at international conferences',
+    images: ['https://www.nimasaraeian.com/image/nimasaraeian2.jpg'],
+    creator: '@nimasaraeian',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://www.nimasaraeian.com/seminars',
+  },
 };

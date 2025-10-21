@@ -21,6 +21,7 @@ Host: https://www.nimasaraeian.com
 # Sitemaps
 Sitemap: https://www.nimasaraeian.com/sitemap.xml
 Sitemap: https://www.nimasaraeian.com/image-sitemap.xml
+Sitemap: https://www.nimasaraeian.com/image-sitemap-seminars.xml
 Sitemap: https://www.nimasaraeian.com/articles-sitemap.xml
 
 # Crawl-delay برای ربات‌های محترم
