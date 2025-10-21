@@ -93,14 +93,16 @@ export default function AboutPage() {
                 fontFamily: 'Times New Roman, serif'
               }}
               onMouseOver={(e) => {
-                e.target.style.backgroundColor = '#333333';
-                e.target.style.borderColor = '#555555';
-                e.target.style.transform = 'translateY(-2px)';
+                const target = e.target as HTMLAnchorElement;
+                target.style.backgroundColor = '#333333';
+                target.style.borderColor = '#555555';
+                target.style.transform = 'translateY(-2px)';
               }}
               onMouseOut={(e) => {
-                e.target.style.backgroundColor = '#1a1a1a';
-                e.target.style.borderColor = '#333333';
-                e.target.style.transform = 'translateY(0)';
+                const target = e.target as HTMLAnchorElement;
+                target.style.backgroundColor = '#1a1a1a';
+                target.style.borderColor = '#333333';
+                target.style.transform = 'translateY(0)';
               }}
             >
               📄 Download CV
