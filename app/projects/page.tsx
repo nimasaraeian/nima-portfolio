@@ -264,44 +264,6 @@ export default function ProjectsPage() {
         </div>
       </main>
       
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-        
-        @keyframes glow {
-          0%, 100% {
-            box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
-          }
-          50% {
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-          }
-        }
-        
-        .logo-float {
-          animation: float 3s ease-in-out infinite;
-        }
-        
-        .logo-glow {
-          animation: glow 2s ease-in-out infinite;
-        }
-      `}</style>
     </main>
   );
 }
