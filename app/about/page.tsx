@@ -184,14 +184,16 @@ export default function AboutPage() {
               cursor: 'pointer'
             }}
             onMouseOver={(e) => {
-              e.target.style.borderColor = '#4f46e5';
-              e.target.style.transform = 'translateY(-5px)';
-              e.target.style.boxShadow = '0 10px 25px rgba(79, 70, 229, 0.3)';
+              const target = e.target as HTMLDivElement;
+              target.style.borderColor = '#4f46e5';
+              target.style.transform = 'translateY(-5px)';
+              target.style.boxShadow = '0 10px 25px rgba(79, 70, 229, 0.3)';
             }}
             onMouseOut={(e) => {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = 'none';
+              const target = e.target as HTMLDivElement;
+              target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              target.style.transform = 'translateY(0)';
+              target.style.boxShadow = 'none';
             }}
             onClick={() => window.open('https://www.selphlyze.com', '_blank')}
             >
@@ -245,14 +247,16 @@ export default function AboutPage() {
               cursor: 'pointer'
             }}
             onMouseOver={(e) => {
-              e.target.style.borderColor = '#f97316';
-              e.target.style.transform = 'translateY(-5px)';
-              e.target.style.boxShadow = '0 10px 25px rgba(249, 115, 22, 0.3)';
+              const target = e.target as HTMLDivElement;
+              target.style.borderColor = '#f97316';
+              target.style.transform = 'translateY(-5px)';
+              target.style.boxShadow = '0 10px 25px rgba(249, 115, 22, 0.3)';
             }}
             onMouseOut={(e) => {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = 'none';
+              const target = e.target as HTMLDivElement;
+              target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              target.style.transform = 'translateY(0)';
+              target.style.boxShadow = 'none';
             }}
             onClick={() => window.open('https://www.contlyze.com', '_blank')}
             >
@@ -306,14 +310,16 @@ export default function AboutPage() {
               cursor: 'pointer'
             }}
             onMouseOver={(e) => {
-              e.target.style.borderColor = '#8b5cf6';
-              e.target.style.transform = 'translateY(-5px)';
-              e.target.style.boxShadow = '0 10px 25px rgba(139, 92, 246, 0.3)';
+              const target = e.target as HTMLDivElement;
+              target.style.borderColor = '#8b5cf6';
+              target.style.transform = 'translateY(-5px)';
+              target.style.boxShadow = '0 10px 25px rgba(139, 92, 246, 0.3)';
             }}
             onMouseOut={(e) => {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = 'none';
+              const target = e.target as HTMLDivElement;
+              target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              target.style.transform = 'translateY(0)';
+              target.style.boxShadow = 'none';
             }}
             onClick={() => window.open('https://lotusbusinessschool.com', '_blank')}
             >
