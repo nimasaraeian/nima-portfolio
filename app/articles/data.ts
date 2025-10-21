@@ -20,7 +20,7 @@ export const articles: ArticleData[] = [
     tags: ['AI Marketing', 'Strategy', 'Automation', 'Analytics', 'Personalization', 'ROI'],
     publishedAt: '2024-01-15T08:00:00.000Z',
     wordCount: 2500,
-    imageUrl: '/image/marketing-ai-strategy-2024.jpg',
+    imageUrl: '/image/neuromarketing.jpg',
     href: '/articles/marketing/ai-marketing-strategy-2024'
   },
   {
@@ -31,7 +31,7 @@ export const articles: ArticleData[] = [
     tags: ['Personalization', 'AI Marketing', 'Customer Experience', 'Behavioral Analytics', 'Conversion'],
     publishedAt: '2024-01-16T08:00:00.000Z',
     wordCount: 2200,
-    imageUrl: '/image/marketing-ai-personalization-guide.jpg',
+    imageUrl: '/image/emotionalmarketing.jpg',
     href: '/articles/marketing/ai-personalization-guide'
   },
   {
@@ -42,7 +42,7 @@ export const articles: ArticleData[] = [
     tags: ['AI Psychology', 'Consumer Behavior', 'Behavioral Analysis', 'Predictive Modeling', 'Human-AI Interaction'],
     publishedAt: '2024-01-17T08:00:00.000Z',
     wordCount: 2800,
-    imageUrl: '/image/ai-consumer-psychology.jpg',
+    imageUrl: '/image/ConsumerBehavior.jpg',
     href: '/articles/ai/ai-consumer-psychology'
   },
   {
@@ -53,7 +53,7 @@ export const articles: ArticleData[] = [
     tags: ['AI Productivity', 'Daily Habits', 'Time Management', 'AI Tools', 'Personal Development', 'Work Optimization'],
     publishedAt: '2024-01-18T08:00:00.000Z',
     wordCount: 3200,
-    imageUrl: '/image/daily-ai-productivity-habits.jpg',
+    imageUrl: '/image/habits.JPG',
     href: '/articles/daily/ai-productivity-habits'
   },
   {

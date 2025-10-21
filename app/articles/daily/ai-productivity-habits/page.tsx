@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-18T08:00:00.000Z',
     authors: ['Nima Saraeian'],
-    images: ['/image/daily-ai-productivity-habits.jpg'],
+    images: ['/image/habits.JPG'],
   },
 };
 
@@ -24,7 +24,7 @@ export default function AIProductivityHabits() {
           {/* Cover Image */}
           <div className="mb-8">
             <Image
-              src="/image/daily-ai-productivity-habits.jpg"
+              src="/image/habits.JPG"
               alt="AI Productivity Habits"
               width={800}
               height={400}

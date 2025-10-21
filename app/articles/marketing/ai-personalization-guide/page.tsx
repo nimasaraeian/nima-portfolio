@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-16T08:00:00.000Z',
     authors: ['Nima Saraeian'],
-    images: ['/image/marketing-ai-personalization-guide.jpg'],
+    images: ['/image/emotionalmarketing.jpg'],
   },
 };
 
@@ -24,7 +24,7 @@ export default function AIPersonalizationGuide() {
           {/* Cover Image */}
           <div className="mb-8">
             <Image
-              src="/image/marketing-ai-personalization-guide.jpg"
+              src="/image/emotionalmarketing.jpg"
               alt="AI Personalization Guide"
               width={800}
               height={400}

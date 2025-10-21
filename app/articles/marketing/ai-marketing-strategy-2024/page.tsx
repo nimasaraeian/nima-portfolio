@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2024-01-15T08:00:00.000Z',
     authors: ['Nima Saraeian'],
-    images: ['/image/marketing-ai-strategy-2024.jpg'],
+    images: ['/image/neuromarketing.jpg'],
   },
 };
 
@@ -24,7 +24,7 @@ export default function AIMarketingStrategy2024() {
           {/* Cover Image */}
           <div className="mb-8">
             <Image
-              src="/image/marketing-ai-strategy-2024.jpg"
+              src="/image/neuromarketing.jpg"
               alt="AI Marketing Strategy 2024"
               width={800}
               height={400}

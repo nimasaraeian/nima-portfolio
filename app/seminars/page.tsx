@@ -162,7 +162,7 @@ export default function SeminarsPage() {
                     width={800}
                     height={600}
                     placeholder="blur"
-                    blurDataURL="/seminars/placeholder.jpg"
+                    blurDataURL="/image/nima-bw.jpg"
                     className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-1000"
                     loading="lazy"
                     quality={85}
