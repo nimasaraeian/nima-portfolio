@@ -1,75 +1,103 @@
 "use client";
 import Link from "next/link";
 
-export default function PaperCard({
-  title,
-  authors,
-  venue,
-  year,
-  tags,
-  pdf,
-  doi,
-  code,
-  abstract,
-  type,
-}: {
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-xs px-2 py-1 rounded-full border border-gray-600 text-gray-400">
+      {children}
+    </span>
+  );
+}
+
+export default function PaperCard(p: {
   title: string;
   authors: string[];
   venue: string;
   year: number;
+  type: string;
+  status: string;
   tags: string[];
   pdf: string;
   doi?: string;
   code?: string;
   abstract?: string;
-  type: "preprint" | "working" | "published";
+  datasets?: string[];
+  methods?: string[];
+  key_findings?: string[];
+  target_journal?: string;
+  last_updated?: string;
 }) {
-  const typeColors: Record<string, string> = {
-    published: "bg-green-500/20 text-green-400 border-green-500/30",
-    preprint: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-    working: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-  };
+  const statusColor = {
+    draft: "border-yellow-400 text-yellow-300",
+    submitted: "border-blue-400 text-blue-300",
+    under_review: "border-purple-400 text-purple-300",
+    accepted: "border-emerald-400 text-emerald-300",
+    published: "border-white text-white",
+  }[p.status as keyof any] || "border-gray-500 text-gray-300";
 
   return (
     <div className="rounded-2xl border border-gray-700 bg-black/40 p-6 hover:shadow-lg hover:border-gray-600 transition-all">
       <div className="flex items-start justify-between gap-4 mb-2">
-        <h3 className="text-xl font-semibold text-white flex-1" style={{ fontFamily: 'Times New Roman, serif' }}>
-          {title}
-        </h3>
-        <span
-          className={`text-xs px-2 py-1 rounded-full border ${typeColors[type] || typeColors.working}`}
-        >
-          {type}
+        <div>
+          <h3 className="text-xl font-semibold text-white" style={{ fontFamily: 'Times New Roman, serif' }}>
+            {p.title}
+          </h3>
+          <p className="text-sm text-gray-400 mt-1" style={{ fontFamily: 'Times New Roman, serif' }}>
+            {p.authors?.join(", ")} · {p.venue} · {p.year}
+          </p>
+        </div>
+        <span className={`text-xs px-2 py-1 rounded-full border ${statusColor}`}>
+          {p.type} · {p.status.replace("_", " ")}
         </span>
       </div>
-      
-      <p className="text-sm text-gray-400 mt-2 mb-3" style={{ fontFamily: 'Times New Roman, serif' }}>
-        {authors.join(", ")} · {venue} · {year}
-      </p>
-      
-      {abstract && (
-        <p className="mt-3 text-sm leading-6 text-gray-300 line-clamp-3" style={{ fontFamily: 'Times New Roman, serif' }}>
-          {abstract}
+
+      {p.abstract ? (
+        <p className="mt-3 text-sm leading-6 text-gray-300" style={{ fontFamily: 'Times New Roman, serif' }}>
+          {p.abstract}
         </p>
-      )}
-      
-      {tags && tags.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {tags.map((t) => (
-            <span
-              key={t}
-              className="text-xs px-2 py-1 rounded-full border border-gray-600 text-gray-400"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-      )}
-      
+      ) : null}
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {p.tags?.map((t) => (
+          <Badge key={t}>{t}</Badge>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-2 text-sm">
+        {p.datasets?.length ? (
+          <p>
+            <strong>Datasets:</strong> {p.datasets.join(" · ")}
+          </p>
+        ) : null}
+        {p.methods?.length ? (
+          <p>
+            <strong>Methods:</strong> {p.methods.join(" · ")}
+          </p>
+        ) : null}
+        {p.key_findings?.length ? (
+          <div>
+            <strong>Key Findings:</strong>
+            <ul className="list-disc ml-5 mt-1">
+              {p.key_findings.map((k, i) => (
+                <li key={i}>{k}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        {p.target_journal ? (
+          <p>
+            <strong>Target Journal:</strong> {p.target_journal}
+          </p>
+        ) : null}
+        {p.last_updated ? (
+          <p className="text-xs text-gray-500 mt-1">Last updated: {p.last_updated}</p>
+        ) : null}
+      </div>
+
       <div className="mt-4 flex flex-wrap gap-4 text-sm">
-        {pdf && (
+        {p.pdf && (
           <Link
-            href={pdf}
+            href={p.pdf}
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-gray-300 underline transition-colors"
@@ -78,9 +106,9 @@ export default function PaperCard({
             PDF
           </Link>
         )}
-        {doi && (
+        {p.doi && (
           <Link
-            href={`https://doi.org/${doi}`}
+            href={`https://doi.org/${p.doi}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-gray-300 underline transition-colors"
@@ -89,9 +117,9 @@ export default function PaperCard({
             DOI
           </Link>
         )}
-        {code && (
+        {p.code && (
           <Link
-            href={code}
+            href={p.code}
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-gray-300 underline transition-colors"

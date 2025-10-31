@@ -152,6 +152,16 @@ export default function AboutPage() {
           }}>
             With a <strong style={{ color: '#b0b0b0' }}>Master's in Electronic Business</strong> and ongoing <strong style={{ color: '#b0b0b0' }}>Data Science certification</strong>, I bring a unique blend of technical skills and human-centered design principles to every project. My work focuses on neuromarketing, behavioral design, and cross-cultural UX research to deliver solutions that truly resonate with users.
           </p>
+          
+          <p style={{
+            fontSize: '1.1rem',
+            lineHeight: '1.7',
+            color: '#cccccc',
+            marginBottom: '25px',
+            fontFamily: 'Times New Roman, serif'
+          }}>
+            <strong style={{ color: '#ffffff' }}>Research Focus:</strong> My PhD-oriented research agenda centers on building an AI-psychometric framework that connects cognitive (Selphlyze), aesthetic (Aesthlyzer), and behavioral (Contlyze) layers to explain and predict digital consumer decisions using public, anonymized datasets. <a href="/research" style={{ color: '#a0a0a0', textDecoration: 'underline' }}>Explore my research →</a>
+          </p>
         </section>
 
         {/* Projects Section */}
