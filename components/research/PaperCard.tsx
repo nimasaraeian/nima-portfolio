@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { Paper } from "@/lib/papers";
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
@@ -9,31 +10,16 @@ function Badge({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function PaperCard(p: {
-  title: string;
-  authors: string[];
-  venue: string;
-  year: number;
-  type: string;
-  status: string;
-  tags: string[];
-  pdf: string;
-  doi?: string;
-  code?: string;
-  abstract?: string;
-  datasets?: string[];
-  methods?: string[];
-  key_findings?: string[];
-  target_journal?: string;
-  last_updated?: string;
-}) {
-  const statusColor = {
+export default function PaperCard(p: Paper) {
+  const statusColors: Record<Paper["status"], string> = {
     draft: "border-yellow-400 text-yellow-300",
     submitted: "border-blue-400 text-blue-300",
     under_review: "border-purple-400 text-purple-300",
     accepted: "border-emerald-400 text-emerald-300",
     published: "border-white text-white",
-  }[p.status as keyof any] || "border-gray-500 text-gray-300";
+  };
+  
+  const statusColor = statusColors[p.status] || "border-gray-500 text-gray-300";
 
   return (
     <div className="rounded-2xl border border-gray-700 bg-black/40 p-6 hover:shadow-lg hover:border-gray-600 transition-all">
