@@ -9,6 +9,7 @@ export default function SideMenu() {
     { id: 'business', label: 'AI Marketing', href: '/business' },
     { id: 'projects', label: 'Projects', href: '/projects' },
     { id: 'articles', label: 'Articles', href: '/articles' },
+    { id: 'research', label: 'Research', href: '/research' },
     { id: 'seminars', label: 'Seminars', href: '/seminars' },
     { id: 'contact', label: 'Contact', href: '/contact' }
   ];
