@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import WaveSeparator from "@/components/WaveSeparator";
 import Link from "next/link";
@@ -11,16 +11,16 @@ export default function ArticlesPage() {
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">Articles</h1>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            Exploring the intersection of AI, psychology, and human behavior through research and insights by Nima Saraeian نیما سرائیان.
+            Exploring the intersection of AI, psychology, and human behavior through research and insights by Nima Saraeian Ù†ÛŒÙ…Ø§ Ø³Ø±Ø§Ø¦ÛŒØ§Ù†.
           </p>
         </div>
 
-        {/* بخش اول: AI Articles */}
+        {/* Ø¨Ø®Ø´ Ø§ÙˆÙ„: AI Articles */}
         <Section
           title="AI Articles"
           description="Explore insights and deep dives in artificial intelligence."
           cards={[
-            { title: "Emotion AI", image: "/image/emotionai.JPG", href: "/articles/ai/emotion-ai" },
+            { title: "Emotion AI", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
             { title: "Personality Models", image: "/image/personalitymodules.JPG", href: "/articles/ai/personality-models" },
             { title: "Psychometrics", image: "/image/psychometrics.JPG", href: "/articles/ai/psychometrics" },
             { title: "Neural Feedback", image: "/image/Neuralfeedback.jpg", href: "/articles/ai/neural-feedback" },
@@ -30,6 +30,7 @@ export default function ArticlesPage() {
             { title: "Aesthlyzer", image: "/image/aesthlyzerjpg.jpg", href: "/articles/ai/aesthlyzer" },
             { title: "Chrono Forecast", image: "/image/ChronoForecast.jpg", href: "/articles/ai/chrono-forecast" },
             { title: "AI-Powered Content Specialist", image: "/image/AI-Powered Content Specialist.jpg", href: "/articles/ai/ai-powered-content-specialist" },
+            { title: "AI-Powered Content Marketing Strategy 2025", image: "/image/ai content strategist.jpg", href: "/articles/ai/ai-powered-content-marketing-strategy-2025" },
           ]}
           bgColor="from-gray-900 to-gray-800"
           borderColor="border-blue-500/30"
@@ -37,7 +38,7 @@ export default function ArticlesPage() {
 
         <WaveSeparator flip />
 
-        {/* بخش دوم: Psychology Articles */}
+        {/* Ø¨Ø®Ø´ Ø¯ÙˆÙ…: Psychology Articles */}
         <Section
           title="Psychology Articles"
           description="Explore insights and deep dives in psychology."
@@ -59,7 +60,7 @@ export default function ArticlesPage() {
 
         <WaveSeparator />
 
-        {/* بخش سوم: Marketing Articles */}
+        {/* Ø¨Ø®Ø´ Ø³ÙˆÙ…: Marketing Articles */}
         <Section
           title="Marketing Articles"
           description="Explore insights and deep dives in marketing."
@@ -76,7 +77,7 @@ export default function ArticlesPage() {
 
         <WaveSeparator flip />
 
-        {/* بخش چهارم: Daily Articles */}
+        {/* Ø¨Ø®Ø´ Ú†Ù‡Ø§Ø±Ù…: Daily Articles */}
         <Section
           title="Daily Articles"
           description="Explore insights and deep dives in daily life."

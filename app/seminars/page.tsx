@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 
@@ -145,10 +146,10 @@ export default function SeminarsPage() {
         <div className="max-w-7xl mx-auto">
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8">
             {seminars.map((seminar, index) => (
-              <div
+              <Link
                 key={seminar.id}
-                className="break-inside-avoid group cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/30"
-                onClick={() => setSelectedImage(seminar.src)}
+                href={`/seminars/${seminar.id}`}
+                className="break-inside-avoid group cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/30 block"
                 style={{
                   animationDelay: `${index * 80}ms`,
                   opacity: 0,
@@ -178,7 +179,7 @@ export default function SeminarsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,4 +1,4 @@
-// Auto-generated articles index
+﻿// Auto-generated articles index
 export interface ArticleData {
   id: string;
   title: string;
@@ -66,6 +66,28 @@ export const articles: ArticleData[] = [
     wordCount: 3500,
     imageUrl: '/image/person-using-ar-technology-their-daily-occupation.jpg',
     href: '/articles/marketing/real-estate-ai-marketing-strategy'
+  },
+  {
+    id: 'ai-powered-content-marketing-strategy-2025',
+    title: 'AI-Powered Content Marketing Strategy 2025: How Artificial Intelligence Is Redefining Creativity, Strategy, and Human Connection',
+    excerpt: 'Discover how an AI Content Strategist transforms marketing and storytelling in 2025. Learn the latest AI content creation tools, digital marketing trends, and social-media strategies.',
+    category: 'ai',
+    tags: ['AI Content Marketing', 'AI Content Strategist', 'Content Marketing 2025', 'Digital Marketing', 'Social Media Marketing', 'Copywriting', 'SEO'],
+    publishedAt: '2025-01-04T08:00:00.000Z',
+    wordCount: 4500,
+    imageUrl: '/image/ai content strategist.jpg',
+    href: '/articles/ai/ai-powered-content-marketing-strategy-2025'
+  },
+  {
+    id: 'emotion-ai',
+    title: 'Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction',
+    excerpt: 'A deep, research-informed guide to Emotion AI combining AI marketing, psychology, behavioral science, beauty marketing and human-centered AI, with real stories, brand examples and practical strategies.',
+    category: 'ai',
+    tags: ['Emotion AI', 'Affective Computing', 'AI Marketing', 'Behavioral Science', 'Beauty Marketing', 'Aesthetic Clinic Marketing', 'Emotional Intelligence', 'Human-Machine Interaction', 'AI Psychology', 'Predictive Marketing', 'Emotion-Driven Marketing', 'Contlyze', 'Digital Mental Health', 'Human-Centered AI'],
+    publishedAt: '2025-01-20T08:00:00.000Z',
+    wordCount: 3500,
+    imageUrl: '/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg',
+    href: '/articles/ai/emotion-ai'
   }
 ];
 

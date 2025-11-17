@@ -6,7 +6,8 @@ export default function SideMenu() {
   const menuItems = [
     { id: 'home', label: 'Home', href: '/' },
     { id: 'about', label: 'About', href: '/about' },
-    { id: 'business', label: 'AI Marketing', href: '/business' },
+    { id: 'services', label: 'Services', href: '/services' },
+    { id: 'ai-marketing', label: 'AI Marketing', href: '/ai-marketing' },
     { id: 'projects', label: 'Projects', href: '/projects' },
     { id: 'articles', label: 'Articles', href: '/articles' },
     { id: 'research', label: 'Research', href: '/research' },
@@ -15,10 +16,10 @@ export default function SideMenu() {
   ];
 
   return (
-    <div className="bg-black/40 dark:bg-black/40 backdrop-blur-xl px-2 sm:px-4 py-2 sm:py-3">
+    <div className="bg-black/40 backdrop-blur-xl px-1 sm:px-2 md:px-4 py-1.5 sm:py-2 md:py-3 w-full max-w-full overflow-hidden">
       
       {/* Menu Items in Horizontal Row - Responsive */}
-      <div className="flex justify-center items-center space-x-2 sm:space-x-4 md:space-x-6 overflow-x-auto">
+      <div className="flex justify-center items-center gap-0.5 sm:gap-1 md:gap-2 lg:gap-4 overflow-x-auto scrollbar-hide w-full max-w-full">
         {menuItems.map((item) => (
           <Link
             key={item.id}
@@ -27,7 +28,7 @@ export default function SideMenu() {
           >
             {/* Simple Text Menu Item - Responsive */}
             <span 
-              className="text-black dark:text-white font-medium text-xs sm:text-sm md:text-base group-hover:text-blue-600 dark:group-hover:text-blue-200 transition-colors duration-300 px-2 sm:px-3 py-1 sm:py-2 rounded hover:bg-black/10 dark:hover:bg-white/10 whitespace-nowrap"
+              className="text-white font-medium text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-base group-hover:text-blue-200 transition-colors duration-300 px-1 xs:px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-0.5 sm:py-1 md:py-1.5 lg:py-2 rounded hover:bg-white/10 whitespace-nowrap"
               style={{ fontFamily: 'Times New Roman, Times, serif' }}
             >
               {item.label}
