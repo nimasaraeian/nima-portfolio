@@ -20,8 +20,8 @@ export default function ArticlesPage() {
           title="AI Articles"
           description="Explore insights and deep dives in artificial intelligence."
           cards={[
-            { title: "Emotion AI", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
-            { title: "Personality Models", image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", href: "/articles/ai/personality-models" },
+            { title: "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
+            { title: "AI Personalities: Will Artificial Intelligence Develop a Real Personality by 2026?", image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", href: "/articles/ai/personality-models" },
             { title: "Psychometrics", image: "/image/psychometrics.JPG", href: "/articles/ai/psychometrics" },
             { title: "Neural Feedback", image: "/image/Neuralfeedback.jpg", href: "/articles/ai/neural-feedback" },
             { title: "Ethics", image: "/image/Ethics.jpg", href: "/articles/ai/ethics" },

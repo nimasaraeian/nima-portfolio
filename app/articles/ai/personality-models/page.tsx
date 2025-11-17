@@ -195,6 +195,8 @@ export default function PersonalityModelsPage() {
               title="AI Personality and Human–AI Interaction – Artificial Emotion Analysis"
               width={600}
               height={315}
+              quality={70}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               priority
               style={{
                 width: '100%',
