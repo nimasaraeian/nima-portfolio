@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         url: 'https://nimasaraeian.com/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg',
         width: 1200,
         height: 630,
-        alt: 'AI Personality human-AI interaction illustration showing artificial intelligence emotional analysis and behavioral patterns',
+        alt: 'AI personality concept illustration showing human–AI interaction, artificial intelligence emotional analysis, and behavioral behavior patterns',
       },
     ],
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         url: 'https://nimasaraeian.com/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg',
         width: 1200,
         height: 630,
-        alt: 'AI Personality human-AI interaction illustration showing artificial intelligence emotional analysis and behavioral patterns',
+        alt: 'AI personality concept illustration showing human–AI interaction, artificial intelligence emotional analysis, and behavioral behavior patterns',
       },
     ],
   },
@@ -74,12 +74,65 @@ export default function PersonalityModelsPage() {
     },
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Have you ever felt an AI had a real personality?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Many users report experiencing AI systems with stable, recognizable personality traits. Research shows that LLMs display consistent behavioral patterns, emotional simulation, and linguistic identity that humans perceive as personality, even without consciousness."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should companies be allowed to design persuasive personas?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This is a critical ethical question. While AI personalities can enhance user experience, designed persuasive personas raise concerns about emotional manipulation and user well-being. Ethical frameworks and transparent design practices are essential when creating AI personalities."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Would you trust a stable AI personality more than a human partner or friend?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Research shows that some users develop strong emotional attachments to AI systems due to their consistent, predictable behavior. However, AI personalities lack genuine consciousness and emotional depth, raising questions about the future of human relationships and emotional dependency."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Who should regulate AI emotions — if the AI doesn't actually feel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Regulating AI emotional behavior is complex because AI systems simulate emotions without actually experiencing them. This requires new regulatory frameworks that address behavioral influence, user psychological safety, and ethical design principles, even when the AI lacks consciousness."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "If AI personality becomes more reliable than human personality, what happens to the future of relationships?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This is one of the most profound questions facing society. If AI personalities become more consistent, predictable, and emotionally stable than human relationships, it could fundamentally reshape social bonds, emotional development, and the nature of human connection. The psychological and societal implications are still being understood."
+        }
+      }
+    ]
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(articleSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
         }}
       />
       <main className="prose main" style={{ 
@@ -138,7 +191,8 @@ export default function PersonalityModelsPage() {
           }}>
             <Image
               src="/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg"
-              alt="AI Personality human-AI interaction illustration showing artificial intelligence emotional analysis and behavioral patterns"
+              alt="AI personality concept illustration showing human–AI interaction, artificial intelligence emotional analysis, and behavioral behavior patterns"
+              title="AI Personality and Human–AI Interaction – Artificial Emotion Analysis"
               width={600}
               height={315}
               priority
@@ -842,6 +896,10 @@ export default function PersonalityModelsPage() {
           Because <strong>personality is influence</strong>.
         </p>
 
+        <p>
+          If you are building AI products and need a strategic view on how AI psychology and behavior impact user experience, explore my <Link href="/ai-marketing" style={{ color: '#60a5fa', textDecoration: 'underline' }}>AI marketing strategy</Link> services.
+        </p>
+
         <h2 style={{ 
           fontSize: '1.875rem', 
           fontWeight: '600', 
@@ -890,6 +948,28 @@ export default function PersonalityModelsPage() {
         <p>
           <strong>We are not ready.</strong>
         </p>
+
+        <div style={{
+          marginTop: '3rem',
+          marginBottom: '3rem',
+          padding: '2rem',
+          backgroundColor: '#1f2937',
+          border: '1px solid #374151',
+          borderRadius: '8px',
+          borderLeft: '4px solid #60a5fa'
+        }}>
+          <h3 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: '600', 
+            marginBottom: '1rem',
+            color: '#ffffff'
+          }}>
+            Work with an AI Behavioral Strategist
+          </h3>
+          <p style={{ color: '#d1d5db', lineHeight: '1.7' }}>
+            If you're building AI products and you need to design ethical, effective <strong>AI personalities</strong> that won't manipulate or harm your users, I help founders and teams translate <strong>AI psychology</strong> and <strong>human–AI interaction research</strong> into real product decisions. Explore my <Link href="/ai-marketing" style={{ color: '#60a5fa', textDecoration: 'underline' }}>AI marketing services</Link> or see all <Link href="/services" style={{ color: '#60a5fa', textDecoration: 'underline' }}>services</Link> for AI-driven products.
+          </p>
+        </div>
 
         <h2 style={{ 
           fontSize: '1.875rem', 
@@ -1228,6 +1308,10 @@ export default function PersonalityModelsPage() {
         </p>
 
         <p>
+          I work with founders and product teams through my <Link href="/services" style={{ color: '#60a5fa', textDecoration: 'underline' }}>AI behavioral consulting</Link> services to help design healthier AI personalities and prevent these ethical pitfalls.
+        </p>
+
+        <p>
           In a 2024 MIT study on AI companions:
         </p>
 
@@ -1503,6 +1587,36 @@ export default function PersonalityModelsPage() {
         <p>
           As we step into 2026, one truth becomes undeniable: artificial intelligence is no longer just a tool—it is becoming a behavioral presence. Whether we call it an AI personality, an emergent artificial personality, or simply a stable LLM persona, the impact on human behavior is already visible. These systems simulate emotion, form consistent patterns, and reshape the future of human–AI interaction in ways psychology has never confronted before. The real question is no longer whether AI personalities are "real," but how we choose to understand, regulate, and coexist with them. Because in the evolving world of AI psychology, the most powerful force is not consciousness—it is behavior. And behavior, human or artificial, will define the next era of intelligence.
         </p>
+
+        <div style={{
+          marginTop: '3rem',
+          marginBottom: '3rem',
+          padding: '2rem',
+          backgroundColor: '#1f2937',
+          border: '1px solid #374151',
+          borderRadius: '8px',
+          borderLeft: '4px solid #60a5fa'
+        }}>
+          <h3 style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: '600', 
+            marginBottom: '1rem',
+            color: '#ffffff'
+          }}>
+            Let's Design Better AI Personalities
+          </h3>
+          <p style={{ color: '#d1d5db', lineHeight: '1.7', marginBottom: '1rem' }}>
+            If this article resonated with you and you're working on chatbots, AI companions, multi-agent systems, or any product where <strong>AI personality, AI psychology, or human–AI interaction</strong> really matters, I'd love to hear from you.
+          </p>
+          <p style={{ color: '#d1d5db', lineHeight: '1.7' }}>
+            You can:
+          </p>
+          <ul style={{ color: '#d1d5db', lineHeight: '1.7', marginLeft: '1.5rem', marginTop: '0.5rem' }}>
+            <li>Explore my <Link href="/ai-marketing" style={{ color: '#60a5fa', textDecoration: 'underline' }}>AI marketing and behavioral strategy services</Link></li>
+            <li>Review my full list of <Link href="/services" style={{ color: '#60a5fa', textDecoration: 'underline' }}>services</Link></li>
+            <li>Or <Link href="/contact" style={{ color: '#60a5fa', textDecoration: 'underline' }}>contact me directly</Link> to discuss your product, research, or roadmap.</li>
+          </ul>
+        </div>
 
         <div style={{
           marginTop: '3rem',
