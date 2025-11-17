@@ -21,7 +21,7 @@ export default function ArticlesPage() {
           description="Explore insights and deep dives in artificial intelligence."
           cards={[
             { title: "Emotion AI", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
-            { title: "Personality Models", image: "/image/personalitymodules.JPG", href: "/articles/ai/personality-models" },
+            { title: "Personality Models", image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", href: "/articles/ai/personality-models" },
             { title: "Psychometrics", image: "/image/psychometrics.JPG", href: "/articles/ai/psychometrics" },
             { title: "Neural Feedback", image: "/image/Neuralfeedback.jpg", href: "/articles/ai/neural-feedback" },
             { title: "Ethics", image: "/image/Ethics.jpg", href: "/articles/ai/ethics" },
