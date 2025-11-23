@@ -88,6 +88,17 @@ export const articles: ArticleData[] = [
     wordCount: 3500,
     imageUrl: '/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg',
     href: '/articles/ai/emotion-ai'
+  },
+  {
+    id: 'ai-marketing-skills-2025',
+    title: 'AI Marketing Skills 2025: The Essential Skill Map for the Next Generation of Marketing Specialists',
+    excerpt: 'The complete skill map for AI Marketing Specialists in 2025. Learn the four essential layers: behavioral psychology, data analytics, AI automation, and strategic communication.',
+    category: 'ai',
+    tags: ['AI Marketing Skills', 'AI Marketing Specialist', 'Marketing Skills 2025', 'AI Marketing Training', 'Behavioral Marketing', 'Marketing Analytics', 'AI Automation', 'Marketing Strategy', 'Behavioral Psychology', 'Data Analytics'],
+    publishedAt: '2025-01-21T08:00:00.000Z',
+    wordCount: 4500,
+    imageUrl: '/image/A_promotional_digital_photograph_with_text_overlay.png',
+    href: '/articles/ai/ai-marketing-skills-2025'
   }
 ];
 

@@ -3,6 +3,7 @@ import Image from "next/image";
 
 export default function ArticlesPage() {
   const aiArticles = [
+    { title: "AI Marketing Skills 2025: The Essential Skill Map for the Next Generation of Marketing Specialists", image: "/image/A_promotional_digital_photograph_with_text_overlay.png", href: "/articles/ai/ai-marketing-skills-2025" },
     { title: "What Does an AI Marketing Specialist Do? (2025 Full Guide)", image: "/image/ai-marketing-specialist-real-hero-image.jpg", href: "/what-does-an-ai-marketing-specialist-do" },
     { title: "Generative AI for Creative Marketing", image: "/image/Generative AI for Creative Marketing.png", href: "/articles/ai/generative-ai-creative-marketing" },
     { title: "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
@@ -43,19 +44,25 @@ export default function ArticlesPage() {
               >
                 <article className="relative h-full bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-gray-950/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-800/50 hover:border-blue-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2">
                   {/* Image Container */}
-                  <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                  <div className="relative w-full min-h-[300px] max-h-[400px] overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none" />
                     <Image
                       src={card.image}
                       alt={card.title}
-                      fill
+                      width={800}
+                      height={600}
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                      className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-700 ease-out"
                       loading={index < 2 ? "eager" : "lazy"}
                       quality={90}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        objectFit: 'contain'
+                      }}
                     />
                     {/* Overlay gradient on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none" />
                   </div>
 
                   {/* Content */}
