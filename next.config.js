@@ -21,11 +21,6 @@ const nextConfig = {
   
   // Compression
   compress: true,
-  
-  // Experimental features for performance
-  experimental: {
-    optimizeCss: true,
-  },
 
   async redirects() {
     return [
