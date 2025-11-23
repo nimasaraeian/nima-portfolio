@@ -3,11 +3,42 @@ import Image from "next/image";
 
 export default function ArticlesPage() {
   const aiArticles = [
-    { title: "AI Marketing Skills 2025: The Essential Skill Map for the Next Generation of Marketing Specialists", image: "/image/A_promotional_digital_photograph_with_text_overlay.png", href: "/articles/ai/ai-marketing-skills-2025" },
-    { title: "What Does an AI Marketing Specialist Do? (2025 Full Guide)", image: "/image/ai-marketing-specialist-real-hero-image.jpg", href: "/what-does-an-ai-marketing-specialist-do" },
-    { title: "Generative AI for Creative Marketing", image: "/image/Generative AI for Creative Marketing.png", href: "/articles/ai/generative-ai-creative-marketing" },
-    { title: "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
-    { title: "AI Personalities: Will Artificial Intelligence Develop a Real Personality by 2026?", image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", href: "/articles/ai/personality-models" },
+    { 
+      title: "AI Marketing Tools 2026: The Complete Guide to the Tools Every Modern Marketer Must Use", 
+      image: "/image/ai-marketing-tools-2026.jpg", 
+      href: "/articles/ai/ai-marketing-tools-2026",
+      alt: "AI Marketing Tools 2026 - Complete guide to essential AI marketing tools and modern marketing stack"
+    },
+    { 
+      title: "AI Marketing Skills 2025: The Essential Skill Map for the Next Generation of Marketing Specialists", 
+      image: "/image/A_promotional_digital_photograph_with_text_overlay.png", 
+      href: "/articles/ai/ai-marketing-skills-2025",
+      alt: "AI Marketing Skills 2025 - Young woman working on smartphone and laptop, showcasing essential AI marketing skills. Text overlay: AI Marketing Skills 2026."
+    },
+    { 
+      title: "What Does an AI Marketing Specialist Do? (2025 Full Guide)", 
+      image: "/image/ai-marketing-specialist-real-hero-image.jpg", 
+      href: "/what-does-an-ai-marketing-specialist-do",
+      alt: "AI Marketing Specialist 2025 - Professional guide to AI marketing roles and responsibilities"
+    },
+    { 
+      title: "Generative AI for Creative Marketing", 
+      image: "/image/Generative AI for Creative Marketing.png", 
+      href: "/articles/ai/generative-ai-creative-marketing",
+      alt: "Generative AI for Creative Marketing - AI-powered content creation and marketing automation"
+    },
+    { 
+      title: "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction", 
+      image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", 
+      href: "/articles/ai/emotion-ai",
+      alt: "Emotion AI 2025 - Artificial emotional intelligence transforming human-machine interaction and behavioral analysis"
+    },
+    { 
+      title: "AI Personalities: Will Artificial Intelligence Develop a Real Personality by 2026?", 
+      image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", 
+      href: "/articles/ai/personality-models",
+      alt: "AI Personalities 2026 - Artificial intelligence personality development and human-AI interaction analysis"
+    },
   ];
 
   return (
@@ -47,7 +78,7 @@ export default function ArticlesPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none" />
                     <Image
                       src={card.image}
-                      alt={card.title}
+                      alt={card.alt || card.title}
                       width={800}
                       height={600}
                       sizes="(max-width: 768px) 100vw, 50vw"
