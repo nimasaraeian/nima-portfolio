@@ -1,141 +1,107 @@
-﻿"use client";
-
-import WaveSeparator from "@/components/WaveSeparator";
-import Link from "next/link";
-import { title } from "process";
+﻿import Link from "next/link";
+import Image from "next/image";
 
 export default function ArticlesPage() {
+  const aiArticles = [
+    { title: "What Does an AI Marketing Specialist Do? (2025 Full Guide)", image: "/image/ai-marketing-specialist-real-hero-image.jpg", href: "/what-does-an-ai-marketing-specialist-do" },
+    { title: "Generative AI for Creative Marketing", image: "/image/Generative AI for Creative Marketing.png", href: "/articles/ai/generative-ai-creative-marketing" },
+    { title: "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
+    { title: "AI Personalities: Will Artificial Intelligence Develop a Real Personality by 2026?", image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", href: "/articles/ai/personality-models" },
+  ];
+
   return (
-    <main className="min-h-screen bg-black text-white pt-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">Articles</h1>
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            Exploring the intersection of AI, psychology, and human behavior through research and insights by Nima Saraeian Ù†ÛŒÙ…Ø§ Ø³Ø±Ø§Ø¦ÛŒØ§Ù†.
-          </p>
+    <main className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-black text-white relative overflow-hidden">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(139,92,246,0.08),transparent_50%)] pointer-events-none" />
+      
+      <div className="relative z-10 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Hero Section */}
+          <div className="text-center mb-20 space-y-6">
+            <div className="inline-block">
+              <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-full text-sm font-medium text-blue-300 mb-6 backdrop-blur-sm">
+                AI Marketing Insights
+              </span>
+            </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent leading-tight">
+              AI Marketing Articles
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Deep insights into AI-driven marketing strategies, behavioral psychology, and predictive analytics
+            </p>
+          </div>
+
+          {/* Articles Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            {aiArticles.map((card, index) => (
+              <Link 
+                key={index} 
+                href={card.href} 
+                className="group block"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <article className="relative h-full bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-gray-950/80 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-800/50 hover:border-blue-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2">
+                  {/* Image Container */}
+                  <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                    <Image
+                      src={card.image}
+                      alt={card.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                      loading={index < 2 ? "eager" : "lazy"}
+                      quality={90}
+                    />
+                    {/* Overlay gradient on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 lg:p-8 relative z-10">
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <h3 className="text-xl lg:text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-400 group-hover:bg-clip-text transition-all duration-300 leading-tight flex-1">
+                        {card.title}
+                      </h3>
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-blue-500 group-hover:to-purple-500 group-hover:border-transparent transition-all duration-300">
+                        <svg 
+                          className="w-4 h-4 text-gray-400 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300" 
+                          fill="none" 
+                          viewBox="0 0 24 24" 
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                    <p className="text-gray-400 text-sm lg:text-base leading-relaxed line-clamp-2 group-hover:text-gray-300 transition-colors duration-300">
+                      Explore insights and strategies for AI-powered marketing
+                    </p>
+                    
+                    {/* Bottom accent line */}
+                    <div className="mt-6 h-0.5 bg-gradient-to-r from-transparent via-gray-700 to-transparent group-hover:via-blue-500 transition-all duration-500" />
+                  </div>
+
+                  {/* Shine effect on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+
+          {/* Bottom CTA Section */}
+          <div className="mt-20 text-center">
+            <div className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-blue-500/20 rounded-full backdrop-blur-sm">
+              <p className="text-gray-400 text-sm">
+                More articles coming soon
+              </p>
+            </div>
+          </div>
         </div>
-
-        {/* Ø¨Ø®Ø´ Ø§ÙˆÙ„: AI Articles */}
-        <Section
-          title="AI Articles"
-          description="Explore insights and deep dives in artificial intelligence."
-          cards={[
-            { title: "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction", image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", href: "/articles/ai/emotion-ai" },
-            { title: "AI Personalities: Will Artificial Intelligence Develop a Real Personality by 2026?", image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", href: "/articles/ai/personality-models" },
-            { title: "Psychometrics", image: "/image/psychometrics.JPG", href: "/articles/ai/psychometrics" },
-            { title: "Neural Feedback", image: "/image/Neuralfeedback.jpg", href: "/articles/ai/neural-feedback" },
-            { title: "Ethics", image: "/image/Ethics.jpg", href: "/articles/ai/ethics" },
-            { title: "EmoConnect", image: "/image/emoconnectjpg.jpg", href: "/articles/ai/emoconnect" },
-            { title: "SelfCode", image: "/image/selfCode.jpg", href: "/articles/ai/selfCode" },
-            { title: "Aesthlyzer", image: "/image/aesthlyzerjpg.jpg", href: "/articles/ai/aesthlyzer" },
-            { title: "Chrono Forecast", image: "/image/ChronoForecast.jpg", href: "/articles/ai/chrono-forecast" },
-            { title: "AI-Powered Content Specialist", image: "/image/AI-Powered Content Specialist.jpg", href: "/articles/ai/ai-powered-content-specialist" },
-            { title: "AI-Powered Content Marketing Strategy 2025", image: "/image/ai content strategist.jpg", href: "/articles/ai/ai-powered-content-marketing-strategy-2025" },
-          ]}
-          bgColor="from-gray-900 to-gray-800"
-          borderColor="border-blue-500/30"
-        />
-
-        <WaveSeparator flip />
-
-        {/* Ø¨Ø®Ø´ Ø¯ÙˆÙ…: Psychology Articles */}
-        <Section
-          title="Psychology Articles"
-          description="Explore insights and deep dives in psychology."
-          cards={[
-            { title: "Mental Health", image: "/image/mentalhealth.jpg", href: "/articles/psychology/mental-health" },
-            { title: "Personality", image: "/image/personality.JPG", href: "/articles/psychology/personality" },
-            { title: "Emotional Intelligence", image: "/image/EmotionalIntelligence.JPG", href: "/articles/psychology/emotional-intelligence" },
-            { title: "Therapy", image: "/image/therapy.jpg", href: "/articles/psychology/therapy" },
-            { title: "Biases", image: "/image/biases.jpg", href: "/articles/psychology/biases" },
-            { title: "EmoConnect", image: "/image/emoconnectjpg.jpg", href: "/articles/psychology/emoconnect" },
-            { title: "Selflyzer Trace", image: "/image/Who am I_.jpg", href: "/articles/psychology/selflyzer-trace" },
-            { title: "Aesthlyzer", image: "/image/aesthlyzerjpg.jpg", href: "/articles/psychology/aesthlyzer" },
-            { title: "Chrono Forecast", image: "/image/ChronoForecast.jpg", href: "/articles/ai/chrono-forecast" },
-            { title: "Shadow Trace", image: "/image/ShadowTrace.jpg", href: "/articles/psychology/shadow-trace" },
-          ]}
-          bgColor="from-purple-900/20 to-gray-900"
-          borderColor="border-purple-500/30"
-        />
-
-        <WaveSeparator />
-
-        {/* Ø¨Ø®Ø´ Ø³ÙˆÙ…: Marketing Articles */}
-        <Section
-          title="Marketing Articles"
-          description="Explore insights and deep dives in marketing."
-          cards={[
-            { title: "Consumer Behavior", image: "/image/ConsumerBehavior.jpg", href: "/articles/marketing/consumer-behavior" },
-            { title: "Brand Identity", image: "/image/brandidentity.JPG", href: "/articles/marketing/brand-identity" },
-            { title: "Emotional Marketing", image: "/image/emotionalmarketing.jpg", href: "/articles/marketing/emotional-marketing" },
-            { title: "Neuromarketing", image: "/image/neuromarketing.jpg", href: "/articles/marketing/neuromarketing" },
-            { title: "UX & Psychology", image: "/image/UXPsychology.jpg", href: "/articles/marketing/ux-psychology" },
-          ]}
-          bgColor="from-green-900/20 to-gray-900"
-          borderColor="border-green-500/30"
-        />
-
-        <WaveSeparator flip />
-
-        {/* Ø¨Ø®Ø´ Ú†Ù‡Ø§Ø±Ù…: Daily Articles */}
-        <Section
-          title="Daily Articles"
-          description="Explore insights and deep dives in daily life."
-          cards={[
-            { title: "Mood", image: "/image/mood.JPG", href: "/articles/daily/mood" },
-            { title: "Habits", image: "/image/habits.JPG", href: "/articles/daily/habits" },
-            { title: "Journals", image: "/image/journals.jpg", href: "/articles/daily/journals" },
-            { title: "Social", image: "/image/social.jpg", href: "/articles/daily/social" },
-            { title: "Triggers", image: "/image/triggers.jpg", href: "/articles/daily/triggers" },
-          ]}
-          bgColor="from-yellow-900/20 to-gray-900"
-          borderColor="border-yellow-500/30"
-        />
-
-
       </div>
     </main>
-  );
-}
-
-function Section({ title, description, cards, bgColor, borderColor }: {
-  title: string;
-  description: string;
-  cards: { title: string; image: string; href: string }[];
-  bgColor: string;
-  borderColor: string;
-}) {
-  return (
-    <section className={`mb-20 p-6 sm:p-8 bg-gradient-to-br ${bgColor} rounded-2xl border ${borderColor} shadow-lg`}>
-      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-white uppercase tracking-wide">
-        {title}
-      </h2>
-      <p className="text-center text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-        {description}
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {cards.map((card, index) => (
-          <Link key={index} href={card.href}>
-            <div className="group bg-gray-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105 border border-gray-700 hover:border-gray-500">
-              <div className="aspect-video overflow-hidden">
-                <img
-                  src={card.image}
-                  alt={card.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-gray-200 transition-colors">
-                  {card.title}
-                </h3>
-                <p className="text-sm text-gray-400 line-clamp-2">
-                  Read more about {card.title}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
   );
 }

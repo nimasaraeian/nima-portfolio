@@ -58,7 +58,7 @@ const pageConfig = {
   cta: { label: "Build Your AI Brand", href: "/contact", utmCampaign: "aibranding" },
   relatedLinks: [
     { href: "/ai-content-creation-specialist", label: "AI Content Creation Specialist" },
-    { href: "/ai-marketing-expert", label: "AI Marketing Specialist" }
+    { href: "/ai-marketing-specialist", label: "AI Marketing Specialist" }
   ],
   image: {
     src: "/image/nima-saraeian-AI-Branding-Specialist-Building-Intelligent-Distinctive-Brands.jpg",

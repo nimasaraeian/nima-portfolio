@@ -188,7 +188,7 @@ export default function Page() {
       <p className="mt-6 text-sm text-gray-400 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
         Related:{" "}
         <a href="/ai-automation-consultant" className="text-blue-400 hover:text-blue-300 underline">AI Automation Specialist</a> ·{" "}
-        <a href="/ai-marketing-expert" className="text-blue-400 hover:text-blue-300 underline">AI Marketing Specialist</a> ·{" "}
+        <a href="/ai-marketing-specialist" className="text-blue-400 hover:text-blue-300 underline">AI Marketing Specialist</a> ·{" "}
         <a href="/consumer-behavior-analyst" className="text-blue-400 hover:text-blue-300 underline">Consumer Behavior Analyst</a>
       </p>
     </main>

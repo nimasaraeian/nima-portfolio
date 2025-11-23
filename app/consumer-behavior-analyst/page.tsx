@@ -62,7 +62,7 @@ const pageConfig = {
   cta: { label: "Request a Behavior Audit", href: "/contact", utmCampaign: "behavior" },
   relatedLinks: [
     { href: "/consumer-psychology-predictive-ai", label: "Consumer Psychology & Predictive Behavior Analyst" },
-    { href: "/ai-marketing-expert", label: "AI Marketing Specialist" }
+    { href: "/ai-marketing-specialist", label: "AI Marketing Specialist" }
   ],
   image: {
     src: "/image/Nima-saraeian-Consumer-Behavior-Analyst-Decisions-Biases-and-Digital-Triggers.jpg",

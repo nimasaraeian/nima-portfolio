@@ -66,7 +66,7 @@ const pageConfig = {
   cta: { label: "Explore Predictive Models", href: "/contact", utmCampaign: "predictive" },
   relatedLinks: [
     { href: "/consumer-behavior-analyst", label: "Consumer Behavior Analyst" },
-    { href: "/ai-marketing-expert", label: "AI Marketing Specialist" }
+    { href: "/ai-marketing-specialist", label: "AI Marketing Specialist" }
   ],
   image: {
     src: "/image/nima-saraeian-Consumer-Psychology-Predictive-Behavior-Analyst-Future-Choices-Modeled.jpg",

@@ -16,6 +16,11 @@ const nextConfig = {
         destination: '/ai-marketing',
         permanent: true, // 308
       },
+      {
+        source: '/articles/ai/psychometrics',
+        destination: '/what-does-an-ai-marketing-specialist-do',
+        permanent: true, // 308
+      },
     ];
   },
 

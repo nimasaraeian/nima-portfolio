@@ -63,7 +63,7 @@ export default function ServicesPage() {
           itemOffered: {
             "@type": "Service",
             name: "AI Marketing Specialist",
-            url: `${SITE.baseUrl}/ai-marketing-expert`
+            url: `${SITE.baseUrl}/ai-marketing-specialist`
           }
         },
         {
@@ -122,7 +122,7 @@ export default function ServicesPage() {
       {
         "@type": "ListItem",
         position: 3,
-        url: `${SITE.baseUrl}/ai-marketing-expert`,
+        url: `${SITE.baseUrl}/ai-marketing-specialist`,
         name: "AI Marketing Specialist"
       },
       {
@@ -167,7 +167,7 @@ export default function ServicesPage() {
     },
     {
       title: "AI Marketing Specialist",
-      href: "/ai-marketing-expert",
+      href: "/ai-marketing-specialist",
       description: "Predictive segmentation, creative intelligence, and multi-variant testing across Instagram, TikTok, LinkedIn, YouTube, Email, and SEO.",
       keywords: ["Marketing", "Growth", "Strategy", "Predictive Analytics"]
     },
@@ -285,7 +285,7 @@ export default function ServicesPage() {
           AI Content Creation Specialist
         </Link>{" "}
         ·{" "}
-        <Link href="/ai-marketing-expert" className="text-blue-400 hover:text-blue-300 underline">
+        <Link href="/ai-marketing-specialist" className="text-blue-400 hover:text-blue-300 underline">
           AI Marketing Specialist
         </Link>{" "}
         ·{" "}

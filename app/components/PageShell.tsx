@@ -5,7 +5,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
   const nav = [
     { href: "/ai-content-creation-specialist", label: "AI Content Creation Specialist" },
     { href: "/ai-business-automation", label: "AI Business Automation Specialist" },
-    { href: "/ai-marketing-expert", label: "AI Marketing Specialist" },
+    { href: "/ai-marketing-specialist", label: "AI Marketing Specialist" },
     { href: "/ai-automation-consultant", label: "AI Automation Specialist" },
     { href: "/consumer-behavior-analyst", label: "Consumer Behavior Analyst" },
     { href: "/consumer-psychology-predictive-ai", label: "Consumer Psychology & Predictive Behavior Analyst" },
@@ -35,6 +35,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
     </main>
   );
 }
+
 
 
 
