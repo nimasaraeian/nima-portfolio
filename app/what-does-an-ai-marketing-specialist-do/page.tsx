@@ -257,7 +257,7 @@ export default function Page() {
       </section>
 
       <section id="foundation" className="space-y-5">
-        <h2 id="the-new-foundation-of-ai-marketing-2025" className="text-3xl font-semibold">1. The New Foundation of AI Marketing 2025: Behavior, Data, and Human Decision-Making</h2>
+        <h2 id="the-new-foundation-of-ai-marketing-2025" className="text-2xl sm:text-3xl font-semibold">1. The New Foundation of AI Marketing 2025: Behavior, Data, and Human Decision-Making</h2>
         <p className="text-lg text-gray-300">
           In 2025, marketing has entered a stage where traditional frameworks can no longer keep up.
         </p>
@@ -304,7 +304,7 @@ export default function Page() {
           It is about redesigning how marketing thinks about behavior, data, and human decision-making at scale. Understanding what does an AI marketing specialist do requires recognizing that this is a strategic role, not just a technical one. To learn more about <Link href="/articles" className="text-blue-300 hover:text-blue-200 underline">AI marketing articles</Link> and strategies, explore our comprehensive content library.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">Why AI Marketing and AI Consumer Behavior Work at a Psychological Level</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">Why AI Marketing and AI Consumer Behavior Work at a Psychological Level</h3>
         <p className="text-lg text-gray-300">
           When you analyze real purchase behavior through <Link href="/consumer-behavior-analyst" className="text-blue-300 hover:text-blue-200 underline">consumer behavior analysis</Link>, it becomes clear that people do not make decisions based solely on information or logic. This is where behavioral marketing and consumer behavior analysis intersect with AI marketing strategies. Instead, decisions arise from a blend of:
         </p>
@@ -345,7 +345,7 @@ export default function Page() {
           A true <Link href="/ai-marketing-specialist" className="text-blue-300 hover:text-blue-200 underline">AI Marketing Specialist</Link> functions almost like a data-driven psychologist—someone who understands not just what people say, but what they mean beneath the surface.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">Where AI Marketing Systems Become a Strategic Advantage</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">Where AI Marketing Systems Become a Strategic Advantage</h3>
         <p className="text-lg text-gray-300">
           Across different businesses, industries, and audience groups, I noticed a consistent pattern: AI reveals insights that humans overlook, and those insights radically improve performance. AI marketing systems transform how brands understand and engage with their audiences. This is the power of data-driven marketing combined with AI-driven insights—creating a competitive advantage that traditional approaches cannot match.
         </p>
@@ -409,7 +409,7 @@ export default function Page() {
       </section>
 
       <section id="role" className="space-y-5">
-        <h2 id="what-an-ai-marketing-specialist-really-does" className="text-3xl font-semibold">2. What an AI Marketing Specialist Really Does — Skills, Layers, and Real Business Impact</h2>
+        <h2 id="what-an-ai-marketing-specialist-really-does" className="text-2xl sm:text-3xl font-semibold">2. What an AI Marketing Specialist Really Does — Skills, Layers, and Real Business Impact</h2>
         <p className="text-lg text-gray-300">
           After establishing why AI-driven marketing has become essential, the next logical question is clear:
         </p>
@@ -444,7 +444,7 @@ export default function Page() {
           />
         </div>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">1. Cognitive & Emotional Layer: How an AI Marketing Specialist Understands AI Consumer Psychology</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">1. Cognitive & Emotional Layer: How an AI Marketing Specialist Understands AI Consumer Psychology</h3>
         <p className="text-lg text-gray-300">
           The foundation of AI Marketing begins with a deep understanding of how people think, feel, and make decisions.
         </p>
@@ -469,7 +469,7 @@ export default function Page() {
           Traditional marketers focus on "what to say." AI marketers focus on why the audience responds.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">2. Analytical Layer: Data-Driven Marketing and Predictive Marketing Insights</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">2. Analytical Layer: Data-Driven Marketing and Predictive Marketing Insights</h3>
         <p className="text-lg text-gray-300">
           Once emotional and cognitive patterns are identified, the next layer involves transforming raw data into meaningful insights.
         </p>
@@ -502,7 +502,7 @@ export default function Page() {
           Without AI, identifying such subtle psychological preferences is nearly impossible. But once identified, these preferences transform the entire strategy.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">3. Strategic Layer: How an AI Marketing Specialist Designs AI Marketing Systems</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">3. Strategic Layer: How an AI Marketing Specialist Designs AI Marketing Systems</h3>
         <p className="text-lg text-gray-300">
           After understanding human behavior and analyzing data patterns, an <Link href="/ai-marketing-specialist" className="text-blue-300 hover:text-blue-200 underline">AI Marketing Specialist</Link> moves into the strategic role: designing a complete, predictable AI marketing system. This system integrates seamlessly with behavioral insights and predictive analytics to deliver measurable results.
         </p>
@@ -544,7 +544,7 @@ export default function Page() {
           These are not creative decisions—they’re behavioral decisions guided by AI insights.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">4. Behavioral Marketing Content Layer: Content That Adapts to Human Psychology</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">4. Behavioral Marketing Content Layer: Content That Adapts to Human Psychology</h3>
         <p className="text-lg text-gray-300">
           Content in AI Marketing is fundamentally different from traditional content. It is:
         </p>
@@ -568,7 +568,7 @@ export default function Page() {
           This is the difference between content that is “good” and content that is psychologically effective.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">5. Optimization Layer: Data-Driven Marketing and Continuous Improvement</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">5. Optimization Layer: Data-Driven Marketing and Continuous Improvement</h3>
         <p className="text-lg text-gray-300">
           AI Marketing is never static. It runs through a constant loop: Data → Analysis → Prediction → Content → Audience Response → New Data. This continuous cycle is what makes the AI marketing role so dynamic and powerful.
         </p>
@@ -585,7 +585,7 @@ export default function Page() {
           This dynamic, adaptive structure is what allows AI-driven marketing to outperform static traditional strategies.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">Real Examples: How an AI Marketing Specialist Improves Performance</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">Real Examples: How an AI Marketing Specialist Improves Performance</h3>
         <p className="text-lg text-gray-300">
           Across various industries, AI-driven marketing produces consistent improvements. See <a href="/projects" className="text-blue-300 hover:text-blue-200 underline">detailed case studies and real results</a> from implementing these strategies:
         </p>
@@ -621,7 +621,7 @@ export default function Page() {
           </ul>
         </div>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-8 mb-4">AI Marketing Skills Map (2025)</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-8 mb-4">AI Marketing Skills Map (2025)</h3>
         <p className="text-lg text-gray-300 mb-4">
           The role of an AI Marketing Specialist requires a unique blend of skills that combine psychology, data analysis, and strategic thinking. When considering what does an AI marketing specialist do, understanding these AI marketing skills 2025 becomes essential. Below is a comprehensive map of the core skills needed:
         </p>
@@ -712,7 +712,7 @@ export default function Page() {
         </div>
 
         <div className="mt-8 rounded-3xl border border-white/20 bg-white/5 p-8 text-center">
-          <h3 className="text-2xl font-semibold mb-4 text-white">Ready to Implement This Level of Strategic Depth?</h3>
+          <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-white">Ready to Implement This Level of Strategic Depth?</h3>
           <p className="text-lg text-gray-300 mb-6">
             An <strong>AI Marketing Specialist</strong> brings these layers together to design a complete <strong>AI marketing system</strong> for your brand—one that understands behavior, predicts outcomes, and scales with precision.
           </p>
@@ -727,7 +727,7 @@ export default function Page() {
       </section>
 
       <section id="framework" className="space-y-5">
-        <h2 id="a-complete-ai-marketing-framework-2025" className="text-3xl font-semibold">3. A Complete AI Marketing Framework 2025 — From Behavioral Marketing to Predictive Marketing Growth</h2>
+        <h2 id="a-complete-ai-marketing-framework-2025" className="text-2xl sm:text-3xl font-semibold">3. A Complete AI Marketing Framework 2025 — From Behavioral Marketing to Predictive Marketing Growth</h2>
         <p className="text-lg text-gray-300">
           Now that we’ve defined the role of an AI Marketing Specialist and explored the layers that shape it, the next important step is understanding how these concepts translate into a real, structured marketing system.
         </p>
@@ -735,7 +735,7 @@ export default function Page() {
           AI Marketing only becomes powerful when all insights—emotional, analytical, and strategic—are connected into a unified framework. This is where the difference between "using AI tools" and "building an AI-driven marketing system" becomes clear. Explore <Link href="/ai-marketing-specialist" className="text-blue-300 hover:text-blue-200 underline">AI Marketing Specialist</Link> insights to understand how this framework is implemented.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-8 mb-4">AI Marketing Tools Matrix (2025)</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-8 mb-4">AI Marketing Tools Matrix (2025)</h3>
         <p className="text-lg text-gray-300 mb-4">
           The AI marketing stack consists of tools across multiple categories, each serving specific functions in the marketing funnel. The right AI marketing tools enable the AI marketing specialist to execute predictive marketing, behavioral marketing, and data-driven marketing strategies at scale. Understanding which tools to use—and when—is essential for building effective AI marketing systems:
         </p>
@@ -845,7 +845,7 @@ export default function Page() {
           This framework transforms marketing from scattered decisions into a measurable, predictable, and psychologically aligned system.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">1. Behavioral Marketing Intelligence — Understanding AI Consumer Behavior</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">1. Behavioral Marketing Intelligence — Understanding AI Consumer Behavior</h3>
         <p className="text-lg text-gray-300">
           Everything begins with understanding the internal mechanics behind human decisions. AI Marketing focuses on extracting psychological signals from real user behavior rather than relying on assumptions. This approach aligns with <a href="https://www.gsb.stanford.edu/faculty-research/centers-initiatives/ideas/behavioral-insights" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline">Stanford behavioral science research</a> on consumer psychology and decision-making patterns, as well as <a href="https://www2.deloitte.com/us/en/insights/industry/retail-distribution/consumer-behavior-trends.html" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline">Deloitte consumer behavior reports</a> on digital decision patterns.
         </p>
@@ -873,7 +873,7 @@ export default function Page() {
           This behavioral clarity becomes the foundation of the entire marketing system. Once you understand what people feel, every decision that follows becomes sharper and more effective.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">2. Data-Driven Marketing: Pattern Analysis and Behavioral Insights</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">2. Data-Driven Marketing: Pattern Analysis and Behavioral Insights</h3>
         <p className="text-lg text-gray-300">
           With the psychological layer in place, the next step is translating behavior into measurable patterns.
         </p>
@@ -913,7 +913,7 @@ export default function Page() {
           Pattern interpretation is also how brands discover new opportunities. Before a trend becomes visible, AI identifies emerging topics based on micro-shifts in search behavior—giving companies a strategic advantage. <a href="https://web.mit.edu" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline underline-offset-2">MIT research</a> on predictive analytics demonstrates that early pattern detection can provide up to 6 months of competitive lead time in marketing strategy.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">3. Predictive Marketing: Content & Strategic Design for AI Marketing Systems</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">3. Predictive Marketing: Content & Strategic Design for AI Marketing Systems</h3>
         <p className="text-lg text-gray-300">
           This is where the role of the AI Marketing Specialist moves from analysis to creation. Within the AI marketing role, predictive marketing represents one of the most powerful capabilities.
         </p>
@@ -951,7 +951,7 @@ export default function Page() {
           Predictive systems allow this level of precision for every channel: websites, ads, articles, social media, and email.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">4. Continuous Optimization: How AI Marketing Systems Evolve With AI Consumer Behavior</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">4. Continuous Optimization: How AI Marketing Systems Evolve With AI Consumer Behavior</h3>
         <p className="text-lg text-gray-300">
           The final pillar is what makes AI marketing fundamentally different from traditional marketing.
         </p>
@@ -1014,7 +1014,7 @@ export default function Page() {
       </section>
 
       <section id="execution" className="space-y-5">
-        <h2 id="from-insight-to-execution" className="text-3xl font-semibold">4. From Insight to Execution — How an AI Marketing Specialist Drives Real Business Growth</h2>
+        <h2 id="from-insight-to-execution" className="text-2xl sm:text-3xl font-semibold">4. From Insight to Execution — How an AI Marketing Specialist Drives Real Business Growth</h2>
         <p className="text-lg text-gray-300">
           Across the previous sections, we’ve built a clear understanding of the mindset, methodology, and structural foundation that define modern AI Marketing.
         </p>
@@ -1025,7 +1025,7 @@ export default function Page() {
           Here, we explore how an AI Marketing Specialist transforms these insights into measurable results through <Link href="/services" className="text-blue-300 hover:text-blue-200 underline">data-driven marketing strategy</Link>, what this means for businesses today, and how companies can practically adopt an AI-driven strategy without disruption. Understanding what does an AI marketing specialist do in execution reveals the practical value of this role.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">1. How an AI Marketing Specialist Turns Frameworks Into Real-World Execution</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">1. How an AI Marketing Specialist Turns Frameworks Into Real-World Execution</h3>
         <p className="text-lg text-gray-300">
           A well-designed AI marketing framework is only as good as its implementation. Execution is where the system becomes tangible—where behavioral insights turn into content, where predictive analysis shapes user journeys, and where the entire marketing engine becomes measurable and scalable.
         </p>
@@ -1050,7 +1050,7 @@ export default function Page() {
           Execution is not about producing more content. It is about producing the right content—the kind that speaks to how people think, feel, and decide.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">2. Clarity, Trust, and Friction Reduction — The Three Levers of AI-Driven Growth</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">2. Clarity, Trust, and Friction Reduction — The Three Levers of AI-Driven Growth</h3>
         <p className="text-lg text-gray-300">
           Every business outcome—engagement, conversion, retention, and revenue—ultimately depends on three psychological levers:
         </p>
@@ -1072,7 +1072,7 @@ export default function Page() {
           Once these levers are calibrated correctly, performance improves not because users “suddenly like the brand,” but because the psychological experience has been optimized. This is where AI creates impact that traditional marketing cannot replicate.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">3. The Strategic Role of an AI Marketing Specialist</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">3. The Strategic Role of an AI Marketing Specialist</h3>
         <p className="text-lg text-gray-300">
           At this point, it becomes clear that AI Marketing is not simply an operational task—it is a strategic function.
         </p>
@@ -1097,7 +1097,7 @@ export default function Page() {
           The value doesn’t come from the tools—it comes from how the specialist interprets and applies behavior-driven intelligence.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">4. How Businesses Can Adopt AI Marketing 2025 Without Overwhelm</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">4. How Businesses Can Adopt AI Marketing 2025 Without Overwhelm</h3>
         <p className="text-lg text-gray-300">
           One of the misconceptions about AI-driven marketing is the belief that businesses must undergo a complete transformation to benefit from it.
         </p>
@@ -1120,7 +1120,7 @@ export default function Page() {
           Businesses that adopt even 20% of the model often see noticeable results—because even small behavioral improvements compound over time.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">5. Why AI Marketing Systems Create Sustainable, Long-Term Growth</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">5. Why AI Marketing Systems Create Sustainable, Long-Term Growth</h3>
         <p className="text-lg text-gray-300">
           The most overlooked benefit of AI Marketing is sustainability. Businesses typically face the same problems year after year:
         </p>
@@ -1146,7 +1146,7 @@ export default function Page() {
           This system grows stronger with every interaction, every user, every data point. Over time, the brand develops a deep behavioral awareness—an asset far more powerful than temporary campaigns or vague positioning exercises. This is where AI-driven marketing becomes a long-term competitive advantage. The AI marketing role evolves from tactical execution to strategic intelligence, powered by consumer behavior analysis and predictive marketing capabilities. <a href="https://www.mckinsey.com" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline underline-offset-2">McKinsey</a> research shows that organizations with mature AI marketing systems achieve 15-25% higher revenue growth than those relying on traditional methods.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">6. Why Working With a Specialist Makes a Difference</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">6. Why Working With a Specialist Makes a Difference</h3>
         <p className="text-lg text-gray-300">
           Implementing an AI-driven framework requires:
         </p>
@@ -1163,7 +1163,7 @@ export default function Page() {
           Most businesses don't have this combination internally. This is why working with an AI Marketing Specialist accelerates transformation: it brings depth, structure, and scientific direction into the marketing ecosystem. The AI marketing role requires expertise in consumer behavior analysis, predictive marketing, and behavioral marketing—skills that take years to develop. Industry reports from <a href="https://www.gartner.com" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline underline-offset-2">Gartner</a> indicate that companies working with specialized AI marketing expertise see 2-3x faster implementation cycles. But more importantly, it ensures that every decision is backed by human behavior—not assumptions.
         </p>
 
-        <h3 className="text-2xl font-semibold text-gray-200 mt-6">7. The Natural Bridge Toward the Services You Provide</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">7. The Natural Bridge Toward the Services You Provide</h3>
         <p className="text-lg text-gray-300">
           Brands that want clarity, trust, and predictable growth benefit most when AI Marketing is implemented by a specialist who understands behavioral psychology, content engineering, and predictive strategy at a deep level. Explore our <Link href="/services" className="text-blue-300 hover:text-blue-200 underline">AI marketing services</Link> to understand how this framework translates into real business results.
         </p>
@@ -1193,7 +1193,7 @@ export default function Page() {
         </div>
 
         <div className="mt-8 rounded-3xl border border-white/20 bg-white/5 p-8 text-center">
-          <h3 className="text-2xl font-semibold mb-4 text-white">Build Your AI Marketing System</h3>
+          <h3 className="text-xl sm:text-2xl font-semibold mb-4 text-white">Build Your AI Marketing System</h3>
           <p className="text-lg text-gray-300 mb-4">
             Working with an <strong>AI Marketing Specialist</strong> means implementing a complete <strong>AI marketing system</strong> that transforms how your brand understands, engages with, and grows its audience.
           </p>
@@ -1246,7 +1246,7 @@ export default function Page() {
       </section>
 
       <section aria-labelledby="faq-heading" className="space-y-6">
-        <h2 id="faq-heading" className="text-3xl font-semibold">
+        <h2 id="faq-heading" className="text-2xl sm:text-3xl font-semibold">
           FAQ
         </h2>
         {faqItems.map((faq) => (

@@ -45,11 +45,11 @@ export const metadata: Metadata = {
     description: 'Explore research, AI marketing strategies, and digital projects by Nima Saraeian.',
     images: [
       {
-        url: 'https://nimasaraeian.com/preview.jpg?v=2',
-        width: 1200,
-        height: 630,
+        url: 'https://nimasaraeian.com/nima-pic.png',
+        width: 512,
+        height: 512,
         alt: 'Nima Saraeian — AI Marketing Strategist',
-        type: 'image/jpeg',
+        type: 'image/png',
       },
     ],
   },
@@ -57,11 +57,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Nima Saraeian — AI Marketing Strategist',
     description: 'Explore AI marketing, digital strategy, and innovative AI projects.',
-    images: ['https://nimasaraeian.com/preview.jpg?v=2'],
+    images: ['https://nimasaraeian.com/nima-pic.png'],
     creator: '@nimasaraeian',
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/nima-pic.png',
+    shortcut: '/nima-pic.png',
+    apple: '/nima-pic.png',
   },
   verification: {
     google: 'googlea749cf479c48223f',
@@ -117,6 +119,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

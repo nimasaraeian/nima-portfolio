@@ -18,17 +18,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://www.nimasaraeian.com/image/nima-pic.png',
+        url: 'https://www.nimasaraeian.com/nima-pic.png',
         type: 'image/png',
-        width: 1200,
-        height: 1200,
-        alt: 'Nima Saraeian - AI Marketing Strategist',
-      },
-      {
-        url: 'https://www.nimasaraeian.com/preview.jpg',
-        type: 'image/jpeg',
-        width: 1200,
-        height: 630,
+        width: 512,
+        height: 512,
         alt: 'Nima Saraeian - AI Marketing Strategist',
       },
     ],
@@ -38,8 +31,7 @@ export const metadata: Metadata = {
     title: 'Nima Saraeian — AI Marketing Strategist',
     description: 'Explore research, AI products, and digital marketing strategies.',
     images: [
-      'https://www.nimasaraeian.com/image/nima-pic.png',
-      'https://www.nimasaraeian.com/preview.jpg'
+      'https://www.nimasaraeian.com/nima-pic.png'
     ],
     creator: '@nimasaraeian',
   },
