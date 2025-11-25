@@ -62,13 +62,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon.png', sizes: '16x16', type: 'image/png' },
-      { url: '/icon.png', sizes: '96x96', type: 'image/png' },
-      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
+      { url: '/nima-pic.png', sizes: '16x16', type: 'image/png' },
+      { url: '/nima-pic.png', sizes: '32x32', type: 'image/png' },
+      { url: '/nima-pic.png', sizes: '96x96', type: 'image/png' },
+      { url: '/nima-pic.png', sizes: '192x192', type: 'image/png' },
       { url: '/nima-pic.png', sizes: '512x512', type: 'image/png' },
     ],
-    shortcut: '/icon.png',
+    shortcut: '/nima-pic.png',
     apple: [
       { url: '/nima-pic.png', sizes: '180x180', type: 'image/png' },
     ],
@@ -127,10 +127,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/nima-pic.png" type="image/png" sizes="any" />
-        <link rel="icon" href="/icon.png" type="image/png" sizes="32x32" />
-        <link rel="shortcut icon" href="/nima-pic.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/nima-pic.png" sizes="180x180" />
+        <link rel="icon" type="image/png" href="/nima-pic.png" />
+        <link rel="shortcut icon" type="image/png" href="/nima-pic.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/nima-pic.png" />
         <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
