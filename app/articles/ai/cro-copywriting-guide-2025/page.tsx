@@ -3,17 +3,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'CRO Copywriting Guide 2025–2030 | Skills, Salary, A/B Frameworks & 50+ Copy Examples',
-  description: 'A complete 2025–2030 guide to CRO Copywriting. Learn skills, salary insights, scientific facts, A/B testing frameworks, examples, and the future of the CRO Copywriter role.',
-  keywords: 'CRO Copywriting, Conversion Copywriting, CRO Copywriter, Conversion Optimization, A/B Testing Copywriting, Copywriting Examples, CRO Skills, Conversion Rate Optimization',
+  title: 'The Ultimate Guide to CRO Copywriting (2025–2030) | Skills, Salary, A/B Tests & 90+ Examples',
+  description: 'A complete 2025–2030 guide to CRO copywriting, including skills, salaries, psychology, A/B testing frameworks, 90+ examples, landing page structure, and the future of conversion optimization.',
+  keywords: 'CRO copywriter, conversion copywriting, A/B test copywriting, CRO examples, landing page optimization, microcopy psychology, CTA optimization, conversion rate optimization, CRO skills, behavioral psychology marketing',
   alternates: {
     canonical: 'https://nimasaraeian.com/articles/ai/cro-copywriting-guide-2025',
   },
   openGraph: {
     type: 'article',
     url: 'https://nimasaraeian.com/articles/ai/cro-copywriting-guide-2025',
-    title: 'CRO Copywriting Guide 2025–2030 | Skills, Salary, A/B Frameworks & 50+ Copy Examples',
-    description: 'A complete 2025–2030 guide to CRO Copywriting. Learn skills, salary insights, scientific facts, A/B testing frameworks, examples, and the future of the CRO Copywriter role.',
+    title: 'The Ultimate Guide to CRO Copywriting (2025–2030) | Skills, Salary, A/B Tests & 90+ Examples',
+    description: 'A complete 2025–2030 guide to CRO copywriting, including skills, salaries, psychology, A/B testing frameworks, 90+ examples, landing page structure, and the future of conversion optimization.',
     siteName: 'Nima Saraeian',
     authors: ['Nima Saraeian'],
     publishedTime: '2025-11-25T08:00:00.000Z',
@@ -23,14 +23,14 @@ export const metadata: Metadata = {
         url: 'https://nimasaraeian.com/image/cro-copywriter-working-with-ai-real-image.jpg',
         width: 1200,
         height: 800,
-        alt: 'CRO Copywriter working with AI - Professional copywriter optimizing conversion copywriting with AI tools',
+        alt: 'A CRO copywriter using AI tools on multiple screens to analyze data and optimize conversion-focused copywriting.',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CRO Copywriting Guide 2025–2030 | Skills, Salary, A/B Frameworks & 50+ Copy Examples',
-    description: 'A complete 2025–2030 guide to CRO Copywriting. Learn skills, salary insights, scientific facts, A/B testing frameworks, and examples.',
+    title: 'The Ultimate Guide to CRO Copywriting (2025–2030) | Skills, Salary, A/B Tests & 90+ Examples',
+    description: 'A complete 2025–2030 guide to CRO copywriting, including skills, salaries, psychology, A/B testing frameworks, 90+ examples, landing page structure, and the future of conversion optimization.',
     images: [
       {
         url: 'https://nimasaraeian.com/image/cro-copywriter-working-with-ai-real-image.jpg',
@@ -51,13 +51,21 @@ export default function CROCopywritingGuide2025Page() {
       "@type": "Person",
       "name": "Nima Saraeian"
     },
-    "url": "https://nimasaraeian.com/articles/ai/cro-copywriting-guide-2025",
+    "datePublished": "2025-11-25",
+    "image": "https://nimasaraeian.com/image/cro-copywriter-working-with-ai-real-image.jpg",
+    "keywords": [
+      "CRO copywriter",
+      "conversion copywriting",
+      "A/B testing",
+      "CTA optimization",
+      "microcopy psychology",
+      "landing page optimization"
+    ],
     "publisher": {
       "@type": "Organization",
       "name": "Nima Saraeian"
     },
-    "datePublished": "2025-11-25T08:00:00.000Z",
-    "dateModified": "2025-11-25T08:00:00.000Z"
+    "url": "https://nimasaraeian.com/articles/ai/cro-copywriting-guide-2025"
   };
 
   const breadcrumbSchema = {
@@ -136,7 +144,7 @@ export default function CROCopywritingGuide2025Page() {
         <div className="my-8">
           <Image 
             src="/image/cro-copywriter-working-with-ai-real-image.jpg"
-            alt="CRO Copywriter working with AI - A professional copywriter at a desk with multiple screens, analyzing data and AI-powered tools to optimize conversion copywriting"
+            alt="A CRO copywriter using AI tools on multiple screens to analyze data and optimize conversion-focused copywriting."
             title="CRO Copywriter Working with AI"
             width={1200}
             height={800}
@@ -178,6 +186,192 @@ export default function CROCopywritingGuide2025Page() {
           </p>
         </section>
 
+        {/* CRO Conversion Process Diagram */}
+        <section className="my-12">
+          <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-700 rounded-2xl p-8 sm:p-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center">
+              How CRO Copywriting Transforms Traffic Into Revenue
+            </h2>
+            
+            <div className="relative">
+              {/* Desktop/Tablet View - Horizontal Flow */}
+              <div className="hidden md:block">
+                <div className="flex items-center justify-between gap-4">
+                  {/* Step 1: Traffic */}
+                  <div className="flex-1 text-center">
+                    <div className="bg-blue-600/20 border-2 border-blue-500 rounded-xl p-6 mb-4 transform hover:scale-105 transition-transform">
+                      <div className="text-4xl mb-3">📊</div>
+                      <h3 className="text-lg font-bold text-white mb-2">Traffic</h3>
+                      <p className="text-sm text-gray-400">10,000 visitors</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <svg className="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Step 2: Attention */}
+                  <div className="flex-1 text-center">
+                    <div className="bg-purple-600/20 border-2 border-purple-500 rounded-xl p-6 mb-4 transform hover:scale-105 transition-transform">
+                      <div className="text-4xl mb-3">👁️</div>
+                      <h3 className="text-lg font-bold text-white mb-2">Attention</h3>
+                      <p className="text-sm text-gray-400">7,000 engaged</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <svg className="w-12 h-12 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Step 3: Intent */}
+                  <div className="flex-1 text-center">
+                    <div className="bg-indigo-600/20 border-2 border-indigo-500 rounded-xl p-6 mb-4 transform hover:scale-105 transition-transform">
+                      <div className="text-4xl mb-3">🎯</div>
+                      <h3 className="text-lg font-bold text-white mb-2">Intent</h3>
+                      <p className="text-sm text-gray-400">4,000 interested</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <svg className="w-12 h-12 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Step 4: Trust */}
+                  <div className="flex-1 text-center">
+                    <div className="bg-green-600/20 border-2 border-green-500 rounded-xl p-6 mb-4 transform hover:scale-105 transition-transform">
+                      <div className="text-4xl mb-3">🤝</div>
+                      <h3 className="text-lg font-bold text-white mb-2">Trust</h3>
+                      <p className="text-sm text-gray-400">2,500 convinced</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Step 5: Action */}
+                  <div className="flex-1 text-center">
+                    <div className="bg-yellow-600/20 border-2 border-yellow-500 rounded-xl p-6 mb-4 transform hover:scale-105 transition-transform">
+                      <div className="text-4xl mb-3">⚡</div>
+                      <h3 className="text-lg font-bold text-white mb-2">Action</h3>
+                      <p className="text-sm text-gray-400">1,200 converted</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <svg className="w-12 h-12 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Step 6: Revenue */}
+                  <div className="flex-1 text-center">
+                    <div className="bg-emerald-600/20 border-2 border-emerald-500 rounded-xl p-6 mb-4 transform hover:scale-105 transition-transform">
+                      <div className="text-4xl mb-3">💰</div>
+                      <h3 className="text-lg font-bold text-white mb-2">Revenue</h3>
+                      <p className="text-sm text-gray-400">$48,000</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <div className="w-12 h-12"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Conversion Rate Bar */}
+                <div className="mt-8 pt-8 border-t border-gray-700">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm font-semibold text-gray-400">Overall Conversion Rate</span>
+                    <span className="text-2xl font-bold text-emerald-400">12%</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-4 overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-500 via-purple-500 via-indigo-500 via-green-500 via-yellow-500 to-emerald-500 h-full rounded-full" style={{ width: '12%' }}></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    Without CRO: ~2-3% | With CRO Copywriting: 12%+
+                  </p>
+                </div>
+              </div>
+
+              {/* Mobile View - Vertical Flow */}
+              <div className="md:hidden space-y-6">
+                {/* Step 1 */}
+                <div className="bg-blue-600/20 border-2 border-blue-500 rounded-xl p-6 text-center">
+                  <div className="text-4xl mb-3">📊</div>
+                  <h3 className="text-lg font-bold text-white mb-2">Traffic</h3>
+                  <p className="text-sm text-gray-400 mb-4">10,000 visitors</p>
+                  <svg className="w-8 h-8 text-blue-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* Step 2 */}
+                <div className="bg-purple-600/20 border-2 border-purple-500 rounded-xl p-6 text-center">
+                  <div className="text-4xl mb-3">👁️</div>
+                  <h3 className="text-lg font-bold text-white mb-2">Attention</h3>
+                  <p className="text-sm text-gray-400 mb-4">7,000 engaged</p>
+                  <svg className="w-8 h-8 text-purple-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* Step 3 */}
+                <div className="bg-indigo-600/20 border-2 border-indigo-500 rounded-xl p-6 text-center">
+                  <div className="text-4xl mb-3">🎯</div>
+                  <h3 className="text-lg font-bold text-white mb-2">Intent</h3>
+                  <p className="text-sm text-gray-400 mb-4">4,000 interested</p>
+                  <svg className="w-8 h-8 text-indigo-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* Step 4 */}
+                <div className="bg-green-600/20 border-2 border-green-500 rounded-xl p-6 text-center">
+                  <div className="text-4xl mb-3">🤝</div>
+                  <h3 className="text-lg font-bold text-white mb-2">Trust</h3>
+                  <p className="text-sm text-gray-400 mb-4">2,500 convinced</p>
+                  <svg className="w-8 h-8 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* Step 5 */}
+                <div className="bg-yellow-600/20 border-2 border-yellow-500 rounded-xl p-6 text-center">
+                  <div className="text-4xl mb-3">⚡</div>
+                  <h3 className="text-lg font-bold text-white mb-2">Action</h3>
+                  <p className="text-sm text-gray-400 mb-4">1,200 converted</p>
+                  <svg className="w-8 h-8 text-yellow-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* Step 6 */}
+                <div className="bg-emerald-600/20 border-2 border-emerald-500 rounded-xl p-6 text-center">
+                  <div className="text-4xl mb-3">💰</div>
+                  <h3 className="text-lg font-bold text-white mb-2">Revenue</h3>
+                  <p className="text-sm text-gray-400">$48,000</p>
+                </div>
+
+                {/* Conversion Rate */}
+                <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm font-semibold text-gray-400">Conversion Rate</span>
+                    <span className="text-2xl font-bold text-emerald-400">12%</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-500 to-emerald-500 h-full rounded-full" style={{ width: '12%' }}></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    With CRO Copywriting optimization
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* What Is a CRO Copywriter */}
         <section id="what-is-cro-copywriter" className="space-y-6">
           <h2 className="text-3xl md:text-4xl font-bold text-white mt-12 mb-6">
@@ -205,7 +399,7 @@ export default function CROCopywritingGuide2025Page() {
           </p>
 
           <ul className="list-disc list-inside space-y-2 text-gray-300 ml-4">
-            <li>behavioral psychology</li>
+            <li><Link href="/articles/ai/psychometrics" className="text-blue-400 hover:text-blue-300 underline">behavioral psychology</Link></li>
             <li>UX writing</li>
             <li>funnel strategy</li>
             <li>data interpretation</li>
@@ -826,6 +1020,130 @@ export default function CROCopywritingGuide2025Page() {
                 Remote CRO copywriters in the U.S. or Europe often earn higher than local salaries.
               </p>
             </div>
+
+            {/* Salary Comparison Bar Chart */}
+            <div className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-700 rounded-2xl p-6 sm:p-8 mt-8">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-6 text-center">
+                Senior CRO Copywriter Salary Comparison (2025)
+              </h3>
+              <p className="text-sm text-gray-400 mb-6 text-center">
+                Average annual salary in USD (converted from local currency)
+              </p>
+              
+              <div className="space-y-4">
+                {/* United States */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">United States</span>
+                    <span className="text-sm font-bold text-emerald-400">$140,000</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-8 overflow-hidden relative">
+                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full flex items-center justify-end pr-3" style={{ width: '100%' }}>
+                      <span className="text-xs font-semibold text-white">$120K-$160K</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Australia */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">Australia</span>
+                    <span className="text-sm font-bold text-emerald-400">$132,500</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-8 overflow-hidden relative">
+                    <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-full rounded-full flex items-center justify-end pr-3" style={{ width: '94.6%' }}>
+                      <span className="text-xs font-semibold text-white">$115K-$150K</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* UAE / Dubai */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">UAE / Dubai</span>
+                    <span className="text-sm font-bold text-emerald-400">$117,500</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-8 overflow-hidden relative">
+                    <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 h-full rounded-full flex items-center justify-end pr-3" style={{ width: '83.9%' }}>
+                      <span className="text-xs font-semibold text-white">$95K-$140K</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Canada */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">Canada</span>
+                    <span className="text-sm font-bold text-emerald-400">$112,500</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-8 overflow-hidden relative">
+                    <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-full rounded-full flex items-center justify-end pr-3" style={{ width: '80.4%' }}>
+                      <span className="text-xs font-semibold text-white">$95K-$130K</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Germany */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">Germany</span>
+                    <span className="text-sm font-bold text-emerald-400">$94,000</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-8 overflow-hidden relative">
+                    <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-full rounded-full flex items-center justify-end pr-3" style={{ width: '67.1%' }}>
+                      <span className="text-xs font-semibold text-white">€78K-€110K</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Netherlands */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">Netherlands</span>
+                    <span className="text-sm font-bold text-emerald-400">$90,000</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-8 overflow-hidden relative">
+                    <div className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-full rounded-full flex items-center justify-end pr-3" style={{ width: '64.3%' }}>
+                      <span className="text-xs font-semibold text-white">€75K-€105K</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* United Kingdom */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-white">United Kingdom</span>
+                    <span className="text-sm font-bold text-emerald-400">$80,000</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-8 overflow-hidden relative">
+                    <div className="bg-gradient-to-r from-pink-500 to-pink-600 h-full rounded-full flex items-center justify-end pr-3" style={{ width: '57.1%' }}>
+                      <span className="text-xs font-semibold text-white">£65K-£95K</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-6 border-t border-gray-700">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                    <p className="text-2xl font-bold text-blue-400">$140K</p>
+                    <p className="text-xs text-gray-400 mt-1">Highest (US)</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-emerald-400">$110K</p>
+                    <p className="text-xs text-gray-400 mt-1">Average</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-yellow-400">$80K</p>
+                    <p className="text-xs text-gray-400 mt-1">Lowest (UK)</p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-purple-400">+22-40%</p>
+                    <p className="text-xs text-gray-400 mt-1">Growth 2025-30</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Best Countries */}
@@ -1095,7 +1413,7 @@ export default function CROCopywritingGuide2025Page() {
                 Essential Skills
               </h3>
               <ul className="list-disc list-inside space-y-2 text-gray-300 ml-4">
-                <li>Behavioral psychology</li>
+                <li><Link href="/articles/ai/psychometrics" className="text-blue-400 hover:text-blue-300 underline">Behavioral psychology</Link></li>
                 <li>Offer clarity</li>
                 <li>Message hierarchy</li>
                 <li>Funnel strategy</li>
@@ -1645,8 +1963,12 @@ export default function CROCopywritingGuide2025Page() {
                 <li>
                   <Link href="/articles/ai/psychometrics" className="text-blue-400 hover:text-blue-300 underline">Behavioral Psychology in Marketing</Link> → link to Selphlyze articles
                 </li>
-                <li>Landing Page Optimization Guide</li>
-                <li>UX Research Insights</li>
+                <li>
+                  <Link href="/ai-marketing" className="text-blue-400 hover:text-blue-300 underline">Landing Page Optimization Guide</Link>
+                </li>
+                <li>
+                  <Link href="/research" className="text-blue-400 hover:text-blue-300 underline">UX Research Insights</Link>
+                </li>
               </ul>
             </div>
 
@@ -2164,32 +2486,17 @@ export default function CROCopywritingGuide2025Page() {
         </section>
 
         {/* Final CTA Section */}
-        <section className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 p-8 rounded-lg my-12">
-          <h2 className="text-2xl font-bold text-white mb-4 text-center">
-            Final CTA — Strong Conversion Ending
-          </h2>
-          <div className="space-y-4 text-center">
-            <p className="text-lg text-gray-300">
-              If you want to grow faster without spending more on traffic, CRO copywriting is your most powerful lever.
-            </p>
-            <p className="text-lg text-gray-300">
-              Every word matters.
-            </p>
-            <p className="text-lg text-gray-300">
-              Every click tells a story.
-            </p>
-            <p className="text-lg text-gray-300 mb-6">
-              Every page can convert better starting today.
-            </p>
-            <div className="text-xl text-white font-semibold mb-6">
-              👉 Need help improving conversions?
-            </div>
-            <p className="text-lg text-gray-300 mb-6">
-              Visit the Contact page — let's build your next winning A/B test together.
+        <section className="mt-10">
+          <div className="p-6 rounded-xl border border-gray-700 bg-gray-900/50">
+            <h3 className="text-xl font-semibold text-white mb-2">
+              Need help improving conversions?
+            </h3>
+            <p className="text-gray-300 mb-4">
+              Let's build your next winning A/B test together.
             </p>
             <Link
               href="/contact"
-              className="inline-block bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition-colors"
+              className="inline-block px-5 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors font-semibold"
             >
               Get In Touch
             </Link>
