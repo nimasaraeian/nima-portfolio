@@ -23,15 +23,20 @@ type PageConfig = {
 
 export function generateMetadata(cfg: PageConfig): Metadata {
   const url = `${SITE.baseUrl}/${cfg.slug}`;
+  const currentDate = new Date().toISOString();
   return {
     title: cfg.metaTitle,
     description: cfg.metaDesc,
     keywords: cfg.keywords,
+    authors: [{ name: 'Nima Saraeian' }],
     openGraph: {
       title: cfg.metaTitle,
       description: cfg.metaDesc,
       url: url,
       type: 'article',
+      publishedTime: currentDate,
+      modifiedTime: currentDate,
+      authors: ['Nima Saraeian'],
       images: [
         {
           url: cfg.image?.src || SITE.ogImage,
