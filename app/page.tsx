@@ -4,15 +4,15 @@ import type { Metadata } from 'next';
 import { FaCircleCheck } from 'react-icons/fa6';
 
 export const metadata: Metadata = {
-  title: 'Nima Saraeian | AI Marketing Strategist',
-  description: 'Official website of Nima Saraeian — AI Marketing Strategist, researcher, and founder of Selfflyzer and Contlyze.',
+  title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
+  description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
   keywords: 'Nima Saraeian, AI Marketing, Marketing Strategy, Selflyzer, Consumer Behavior, AI-Driven Marketing, Digital Marketing',
   alternates: {
     canonical: 'https://www.nimasaraeian.com',
   },
   openGraph: {
-    title: 'Nima Saraeian — AI Marketing Strategist',
-    description: 'Explore research, AI marketing strategies, and digital projects by Nima Saraeian.',
+    title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
+    description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
     url: 'https://www.nimasaraeian.com',
     siteName: 'Nima Saraeian',
     type: 'website',
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nima Saraeian — AI Marketing Strategist',
-    description: 'Explore research, AI products, and digital marketing strategies.',
+    title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
+    description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
     images: [
       'https://www.nimasaraeian.com/nima-pic.png'
     ],
@@ -46,17 +46,32 @@ export const metadata: Metadata = {
 };
 
 const impactStatements = [
-  'I design high-impact, AI-powered marketing systems that help businesses grow faster, understand their customers deeply, and scale with intelligent automation.',
-  'For more than a decade, I’ve worked at the intersection of AI, marketing strategy, consumer psychology, and data science — building frameworks that turn complex behavioral data into clear, actionable growth decisions.',
-  'As the founder of Selflyzer, I’ve developed advanced psychometric and predictive engines that decode emotional, cognitive, and behavioral patterns to power next-generation marketing and customer experience solutions.',
+  'I am an AI Marketing Specialist who designs high-impact, AI-powered marketing systems that help businesses grow faster, understand their customers on a deeper behavioral level, and scale with intelligent automation.',
+  'For more than a decade, I\'ve worked at the intersection of AI marketing strategy, consumer psychology, and data science — building frameworks that turn complex behavioral data into clear, actionable growth decisions for founders, CMOs, and marketing teams.',
+  'As the founder of Selphlyze, I\'ve developed advanced psychometric and predictive engines that decode emotional, cognitive, and behavioral patterns to power next-generation marketing, customer experience, and product decisions.',
 ];
 
 const focusAreas = [
-  'Build AI-powered content systems',
-  'Predict consumer behavior with data-driven insights',
-  'Create intelligent marketing funnels that adapt in real time',
-  'Automate operations, customer communication & lead generation',
-  'Improve decision-making using AI-enhanced analytics',
+  {
+    title: 'Build AI-powered content systems',
+    description: 'Design multi-platform content engines that use generative AI and behavioral psychology to produce consistent, on-brand content at scale.',
+  },
+  {
+    title: 'Predict consumer behavior with data-driven insights',
+    description: 'Use psychometrics, AI models, and customer data to forecast intent, next actions, and segments with the highest growth potential.',
+  },
+  {
+    title: 'Create intelligent marketing funnels that adapt in real time',
+    description: 'Connect your website, ads, and CRM so every journey automatically adapts to user behavior, intent, and engagement.',
+  },
+  {
+    title: 'Automate operations, customer communication & lead generation',
+    description: 'Replace manual workflows with automation that nurtures leads, qualifies them, and routes them to sales with minimal human effort.',
+  },
+  {
+    title: 'Improve decision-making using AI-enhanced analytics',
+    description: '',
+  },
 ];
 
 const offerings = [
@@ -102,12 +117,12 @@ export default function Home() {
       <section className="relative isolate overflow-hidden border-b border-white/10 bg-gradient-to-b from-black via-black/60 to-black/90">
         <div className="mx-auto flex w-full max-w-6xl flex-col-reverse items-center gap-10 px-4 pb-16 pt-20 sm:px-6 md:flex-row md:px-10 lg:gap-16 lg:px-12 lg:pt-24">
           <div className="flex-1 text-center md:text-left">
-            <p className="text-sm uppercase tracking-[0.4em] text-blue-200/80">AI Marketing Strategist & Growth Consultant</p>
+            <p className="text-sm uppercase tracking-[0.4em] text-blue-200/80">AI Marketing Specialist · Behavioral Marketing Strategist · Growth Consultant</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl lg:text-7xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               Nima Saraeian
             </h1>
             <p className="mt-6 text-lg text-gray-300 sm:text-xl">
-              I build AI-powered marketing systems that are intelligent, measurable, and human-centered — accelerating growth with automation, psychometrics, and predictive analytics.
+              I build AI-powered marketing systems that understand customers deeply, predict behavior, and turn insight into measurable growth — combining automation, psychometrics, and data-driven strategy.
             </p>
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
               <Link
@@ -155,14 +170,21 @@ export default function Home() {
           </h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
               {focusAreas.map((item) => (
-                <li key={item} className="flex items-start gap-3 rounded-2xl border border-white/5 bg-black/40 p-4 shadow-inner transition hover:border-white/20">
+                <li key={item.title} className="flex items-start gap-3 rounded-2xl border border-white/5 bg-black/40 p-4 shadow-inner transition hover:border-white/20">
                   <span className="mt-[2px] text-blue-300">
                     <FaCircleCheck aria-hidden size={18} />
                   </span>
-                <span className="text-sm text-gray-200 sm:text-base" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                  {item}
-                </span>
-              </li>
+                  <div className="flex-1">
+                    <span className="text-sm text-gray-200 sm:text-base" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                      {item.title}
+                    </span>
+                    {item.description && (
+                      <p className="mt-2 text-xs text-gray-400 sm:text-sm" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                        {item.description}
+                      </p>
+                    )}
+                  </div>
+                </li>
             ))}
           </ul>
         </div>

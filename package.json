@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "critters": "^0.0.23",
     "cron": "^4.3.3",
     "dotenv": "^17.2.1",
     "gray-matter": "^4.0.3",

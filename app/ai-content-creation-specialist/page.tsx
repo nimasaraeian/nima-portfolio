@@ -138,9 +138,8 @@ export default function Page() {
             alt="Nima Saraeian architecting an AI content creation system on a laptop"
             width={1920}
             height={1280}
-            quality={85}
+            quality={80}
             loading="lazy"
-            decoding="async"
             sizes="(max-width: 768px) 100vw, 1200px"
             className="w-full object-contain"
           />

@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'AI Marketing Skills 2025 – Skill Map for Modern Marketers | Nima Saraeian',
-  description: 'Master AI marketing skills 2025 with this complete skill map. Learn the four essential layers: behavioral psychology, data analytics, AI automation, and strategic communication for modern marketers.',
+  description: 'Master AI marketing skills 2025 with this skill map. Learn behavioral psychology, data analytics, AI automation, and strategic communication for modern AI marketing specialists.',
   keywords: 'AI Marketing Skills, AI Marketing Specialist, Marketing Skills 2025, AI Marketing Training, Behavioral Marketing, Marketing Analytics, AI Automation, Marketing Strategy',
   alternates: {
     canonical: 'https://nimasaraeian.com/articles/ai/ai-marketing-skills-2025',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     type: 'article',
     url: 'https://nimasaraeian.com/articles/ai/ai-marketing-skills-2025',
     title: 'AI Marketing Skills 2025 – Skill Map for Modern Marketers | Nima Saraeian',
-    description: 'Master AI marketing skills 2025 with this complete skill map. Learn the four essential layers: behavioral psychology, data analytics, AI automation, and strategic communication. Essential guide for marketers transitioning to AI-driven strategies and businesses hiring AI marketing talent.',
+    description: 'Master AI marketing skills 2025 with this complete skill map. Learn behavioral psychology, data analytics, AI automation, and strategic communication. Essential guide for AI marketing specialists transitioning to AI-driven strategies.',
     siteName: 'Nima Saraeian Signature',
     authors: ['Nima Saraeian'],
     publishedTime: '2025-01-21T08:00:00.000Z',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         url: 'https://nimasaraeian.com/image/A_promotional_digital_photograph_with_text_overlay.png',
         width: 1200,
         height: 630,
-        alt: 'AI Marketing Skills 2025 - Essential skills for modern marketing specialists',
+        alt: 'AI Marketing Skills 2025 - Young woman working on smartphone and laptop, showcasing essential AI marketing skills for modern specialists. Text overlay: AI Marketing Skills 2026.',
       },
     ],
   },
@@ -36,13 +36,50 @@ export const metadata: Metadata = {
         url: 'https://nimasaraeian.com/image/A_promotional_digital_photograph_with_text_overlay.png',
         width: 1200,
         height: 630,
-        alt: 'AI Marketing Skills 2025 - Essential skills for modern marketing specialists',
+        alt: 'AI Marketing Skills 2025 - Young woman working on smartphone and laptop, showcasing essential AI marketing skills for modern specialists. Text overlay: AI Marketing Skills 2026.',
       },
     ],
   },
 };
 
 export default function AIMarketingSkills2025Page() {
+  const authorSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Nima Saraeian",
+    "url": "https://nimasaraeian.com",
+    "jobTitle": "AI Marketing Strategist",
+    "description": "AI Marketing Strategist and researcher at the intersection of artificial intelligence and digital marketing",
+    "sameAs": [
+      "https://www.linkedin.com/in/nimasaraian/"
+    ]
+  };
+
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://nimasaraeian.com/articles/ai/ai-marketing-skills-2025",
+    "url": "https://nimasaraeian.com/articles/ai/ai-marketing-skills-2025",
+    "name": "AI Marketing Skills 2025: The Essential Skill Map for the Next Generation of Marketing Specialists",
+    "description": "Master AI marketing skills 2025 with this complete skill map. Learn the four essential layers: behavioral psychology, data analytics, AI automation, and strategic communication.",
+    "inLanguage": "en",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Nima Saraeian",
+      "url": "https://nimasaraeian.com"
+    },
+    "about": {
+      "@type": "Thing",
+      "name": "AI Marketing Skills"
+    },
+    "primaryImageOfPage": {
+      "@type": "ImageObject",
+      "url": "https://nimasaraeian.com/image/A_promotional_digital_photograph_with_text_overlay.png",
+      "width": 1200,
+      "height": 630
+    }
+  };
+
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -51,6 +88,7 @@ export default function AIMarketingSkills2025Page() {
     "author": {
       "@type": "Person",
       "name": "Nima Saraeian",
+      "url": "https://nimasaraeian.com"
     },
     "url": "https://nimasaraeian.com/articles/ai/ai-marketing-skills-2025",
     "mainEntityOfPage": {
@@ -173,6 +211,18 @@ export default function AIMarketingSkills2025Page() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
+          __html: JSON.stringify(authorSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
@@ -222,7 +272,7 @@ export default function AIMarketingSkills2025Page() {
         }}>
           <Image
             src="/image/A_promotional_digital_photograph_with_text_overlay.png"
-            alt="AI Marketing Skills 2025 - Essential skills for modern marketing specialists"
+            alt="AI Marketing Skills 2025 - Young woman working on smartphone and laptop, showcasing essential AI marketing skills for modern specialists. Text overlay: AI Marketing Skills 2026."
             width={1200}
             height={630}
             priority
@@ -259,7 +309,7 @@ export default function AIMarketingSkills2025Page() {
             color: '#d1d5db',
             margin: '0'
           }}>
-            AI marketing skills 2025 require understanding behavior, data analytics, and system design—not just tools. This guide maps the four essential layers every specialist needs: behavioral psychology, data literacy, AI automation, and strategic communication. Essential for marketers transitioning from traditional methods and businesses hiring AI-driven talent.
+            <strong>AI marketing skills 2025</strong> require understanding behavior, data analytics, and system design—not just tools. This guide maps the four essential layers every <strong>AI marketing specialist</strong> needs: behavioral psychology, data literacy, AI automation, and strategic communication. Essential for marketers transitioning from traditional methods and businesses hiring AI-driven talent.
           </p>
         </div>
 

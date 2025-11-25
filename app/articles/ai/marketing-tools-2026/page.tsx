@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { SITE } from '../../../lib/site';
 
@@ -7,11 +8,11 @@ export const metadata: Metadata = {
   description: 'Discover the AI marketing tools every marketing specialist needs in 2026. Master predictive marketing and build a stack that drives real results.',
   keywords: 'AI Marketing Tools 2026, AI Marketing Stack, Marketing Automation Tools, AI Content Tools, Marketing Analytics, Predictive Marketing, AI Marketing Software, Marketing Technology 2026',
   alternates: {
-    canonical: 'https://nimasaraeian.com/articles/ai/ai-marketing-tools-2026',
+    canonical: 'https://nimasaraeian.com/articles/ai/marketing-tools-2026',
   },
   openGraph: {
     type: 'article',
-    url: 'https://nimasaraeian.com/articles/ai/ai-marketing-tools-2026',
+    url: 'https://nimasaraeian.com/articles/ai/marketing-tools-2026',
     title: 'AI Marketing Tools 2026: Complete Guide for AI Marketing Specialists',
     description: 'Complete guide to AI marketing tools 2026. Learn the 7 archetypes of AI marketing tools and build a modern marketing stack that performs like the future.',
     siteName: 'Nima Saraeian Signature',
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     modifiedTime: '2026-01-15T08:00:00.000Z',
     images: [
       {
-        url: 'https://nimasaraeian.com/images/ai-marketing-tools-2026.jpg',
+        url: 'https://nimasaraeian.com/image/ai-marketing-tools-2026.jpg',
         width: 1080,
         height: 1080,
         alt: 'AI Marketing Tools 2026 - Complete guide to essential AI marketing tools and modern marketing stack',
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     description: 'Complete guide to AI marketing tools 2026. Learn the 7 archetypes and build a modern marketing stack.',
     images: [
       {
-        url: 'https://nimasaraeian.com/images/ai-marketing-tools-2026.jpg',
+        url: 'https://nimasaraeian.com/image/ai-marketing-tools-2026.jpg',
         width: 1080,
         height: 1080,
         alt: 'AI Marketing Tools 2026 - Complete guide to essential AI marketing tools',
@@ -58,8 +59,8 @@ export default function AIMarketingTools2026Page() {
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "@id": "https://nimasaraeian.com/articles/ai/ai-marketing-tools-2026",
-    "url": "https://nimasaraeian.com/articles/ai/ai-marketing-tools-2026",
+    "@id": "https://nimasaraeian.com/articles/ai/marketing-tools-2026",
+    "url": "https://nimasaraeian.com/articles/ai/marketing-tools-2026",
     "name": "AI Marketing Tools 2026: The Complete Guide to the Tools Every Modern Marketer Must Use",
     "description": "Complete guide to AI marketing tools 2026. Learn the 7 archetypes of AI marketing tools: Creator, Observer, Predictor, Connector, Optimizer, Identifier, and Communicator.",
     "inLanguage": "en",
@@ -74,7 +75,7 @@ export default function AIMarketingTools2026Page() {
     },
     "primaryImageOfPage": {
       "@type": "ImageObject",
-      "url": "https://nimasaraeian.com/images/ai-marketing-tools-2026.jpg",
+      "url": "https://nimasaraeian.com/image/ai-marketing-tools-2026.jpg",
       "width": 1080,
       "height": 1080
     }
@@ -88,14 +89,14 @@ export default function AIMarketingTools2026Page() {
       "@type": "Person",
       "name": "Nima Saraeian"
     },
-    "url": "https://nimasaraeian.com/articles/ai/ai-marketing-tools-2026",
+    "url": "https://nimasaraeian.com/articles/ai/marketing-tools-2026",
     "publisher": {
       "@type": "Organization",
       "name": "Nima Saraeian"
     },
     "image": {
       "@type": "ImageObject",
-      "url": "https://nimasaraeian.com/images/ai-marketing-tools-2026.jpg",
+      "url": "https://nimasaraeian.com/image/ai-marketing-tools-2026.jpg",
       "height": "1080",
       "width": "1080"
     }
@@ -121,7 +122,7 @@ export default function AIMarketingTools2026Page() {
         "@type": "ListItem",
         "position": 3,
         "name": "AI Marketing Tools 2026",
-        "item": "https://nimasaraeian.com/articles/ai/ai-marketing-tools-2026"
+        "item": "https://nimasaraeian.com/articles/ai/marketing-tools-2026"
       }
     ]
   };
@@ -178,14 +179,14 @@ export default function AIMarketingTools2026Page() {
 
         {/* Hero Image */}
         <div className="my-8">
-          <img 
-            src="/images/ai-marketing-tools-2026.jpg"
+          <Image 
+            src="/image/ai-marketing-tools-2026.jpg"
             alt="AI Marketing Tools 2026 poster showing real person and logos of GPT, Anthropic Claude, Google DeepMind, Adobe, HubSpot, n8n, Jasper and Salesforce"
             title="AI Marketing Tools 2026"
-            loading="lazy"
-            width="1080"
-            height="1080"
+            width={1080}
+            height={1080}
             className="w-full h-auto"
+            priority
           />
         </div>
 

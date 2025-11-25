@@ -13,16 +13,16 @@ const pillars = [
   {
     title: 'Psychology & Behavior',
     description:
-      'Understanding cognitive patterns, emotional responses, motivations, and decision-making in digital environments.',
+      'Understanding cognitive patterns, emotional triggers, motivations, and decision-making paths in digital environments — beyond simple demographics or clicks.',
   },
   {
     title: 'AI & Data Intelligence',
-    description: 'Transforming raw cognitive and market signals into predictive insights using AI-powered analysis.',
+    description: 'Transforming raw behavioral signals, user journeys, and market data into predictive insights using AI-powered models and structured analysis.',
   },
   {
     title: 'Human-Centered Design & Strategy',
     description:
-      'Designing systems, journeys, and products that feel intuitive, culturally adaptive, and behaviorally effective.',
+      'Designing systems, journeys, and products that feel intuitive, culturally aware, and behaviorally effective — so strategy is not only intelligent, but also deeply human-centered.',
   },
 ];
 
@@ -30,13 +30,13 @@ const ecosystem = [
   {
     name: 'Selphlyze',
     tag: 'Cognitive & Emotional AI Layer',
-    description: 'Analyzes personality signals, cognitive styles, and emotional patterns to decode human motivation.',
+    description: 'Analyzes personality signals, cognitive styles, emotional patterns, and aesthetic preferences to decode what truly motivates people beneath their visible behavior.',
   },
   {
     name: 'Contlyze',
     tag: 'Content, Behavior & Market Intelligence',
     description:
-      'Maps consumer behavior, social engagement, content performance, market trends, and competitive positioning.',
+      'Maps consumer behavior, social engagement, content performance, market trends, and competitive positioning to reveal where attention and growth really come from.',
   },
 ];
 
@@ -94,16 +94,16 @@ export default function AboutPage() {
           <div className="flex-1 text-center md:text-left">
             <p className="text-sm uppercase tracking-[0.4em] text-blue-200/80">About Nima Saraeian</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              AI Marketing Strategist · UX Researcher · AI-Driven Behavior Analyst
+              AI Marketing Specialist · Behavioral Marketing Strategist · UX Researcher
             </h1>
             <p className="mt-3 text-base text-gray-400" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               Founder of Selphlyze & Contlyze
             </p>
             <p className="mt-6 text-lg text-gray-300 sm:text-xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              I’m Nima Saraeian — a strategist, designer, and researcher working at the intersection of AI, behavioral psychology, UX, and digital marketing.
+              I'm Nima Saraeian — an AI Marketing Specialist, strategist, and researcher working at the intersection of AI, behavioral psychology, UX, and digital marketing.
             </p>
             <p className="mt-4 text-lg text-gray-300 sm:text-xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              For more than 12 years, my work has focused on one goal: understanding why people think, feel, decide, and behave the way they do — and translating those insights into intelligent, human-centered digital systems.
+              For more than 12 years, my work has focused on one core question: why do people think, feel, decide, and behave the way they do online — and how can we turn those patterns into intelligent, human-centered marketing systems?
             </p>
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
               <Link
@@ -142,13 +142,13 @@ export default function AboutPage() {
             ✅ My Journey
           </p>
           <p>
-            I began my career in marketing and business strategy, leading teams, designing campaigns, and studying how people respond to brand experiences.
+            I began my career in marketing and business strategy, leading teams, designing campaigns, and closely observing how people respond to digital experiences, stories, and interfaces.
           </p>
           <p>
-            But one question kept pushing me further: “What truly shapes digital behavior?”
+            But one question kept pushing me further: "What truly shapes digital behavior beneath clicks, metrics, and surface-level data?"
           </p>
           <p>
-            That question led me into {journeyHighlights.join(', ')} — ultimately shaping Selphlyze & Contlyze, the AI ecosystems I rely on today.
+            That question led me into cognitive psychology, neuromarketing, UX research, and AI-driven behavior modeling — and eventually into building Selphlyze & Contlyze, a dual AI ecosystem that connects deep psychometrics with real market behavior.
           </p>
           <p>
             ✅ My Approach: Three Pillars
@@ -197,7 +197,7 @@ export default function AboutPage() {
             ✅ Selphlyze & Contlyze Ecosystem (Founder)
           </h2>
           <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Selphlyze and Contlyze operate together as a dual ecosystem that merges psychometric depth with market intelligence. Validated with 500+ participants across diverse cultures, they help me translate human complexity into measurable strategy.
+            Selphlyze and Contlyze operate together as a dual AI ecosystem that merges deep psychometrics with real-time market intelligence. Validated with 500+ participants across diverse cultures, they help me translate human complexity into clear, measurable marketing strategy.
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-3">
             {ecosystem.map(({ name, tag, description }) => (
@@ -232,7 +232,7 @@ export default function AboutPage() {
                 ✅ Research Background
               </h2>
               <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                My research integrates cognitive psychology, aesthetic perception, behavioral data, and AI-driven decision modeling. I’m designing a unified framework that explains and predicts digital consumer decisions across cultures using real-world datasets.
+                My research integrates cognitive psychology, aesthetic perception, behavioral data, and AI-driven decision modeling. I'm designing a unified framework that explains and predicts digital consumer decisions across cultures using real-world datasets, AI models, and long-term behavioral patterns.
               </p>
             </div>
             <div>
@@ -288,7 +288,7 @@ export default function AboutPage() {
             ✅ Mission
           </h2>
           <p className="mt-6 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            To bridge human psychology, AI, and design — creating digital systems that are intelligent, emotionally aligned, and human-centered.
+            To bridge human psychology, AI, and design — creating AI-powered marketing systems that are intelligent, emotionally aligned, and deeply human-centered.
           </p>
           <blockquote className="mt-8 rounded-3xl border border-white/10 bg-white/5 px-6 py-8 text-lg italic text-white" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
             “The future of digital strategy belongs to those who understand both behavior and AI.”

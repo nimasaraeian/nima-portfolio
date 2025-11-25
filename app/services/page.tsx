@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { SITE } from "../lib/site";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "AI Marketing & Content Strategy Services | Nima Saraeian",
@@ -157,43 +158,50 @@ export default function ServicesPage() {
       title: "AI Content Creation Specialist",
       href: "/ai-content-creation-specialist",
       description: "End-to-end content systems that align behavioral storytelling with platform logic. From research and creative direction to AI caption engines and performance loops.",
-      keywords: ["Content Strategy", "AI Content", "Social Media", "Behavioral Storytelling"]
+      keywords: ["Content Strategy", "AI Content", "Social Media", "Behavioral Storytelling"],
+      image: "/image/Nima-saraeian-ai-content-creation-specialist.JPG"
     },
     {
       title: "AI Business Automation Specialist",
       href: "/ai-business-automation",
       description: "CRM, lead capture, onboarding, support, and reporting—automated with AI agents and integrations. Reduce cost, increase speed, and scale operations.",
-      keywords: ["Automation", "CRM", "Workflow", "Operations"]
+      keywords: ["Automation", "CRM", "Workflow", "Operations"],
+      image: "/image/nima-saraeian-AI-Business-Automation-Specialist.jpg"
     },
     {
       title: "AI Marketing Specialist",
       href: "/ai-marketing-specialist",
       description: "Predictive segmentation, creative intelligence, and multi-variant testing across Instagram, TikTok, LinkedIn, YouTube, Email, and SEO.",
-      keywords: ["Marketing", "Growth", "Strategy", "Predictive Analytics"]
+      keywords: ["Marketing", "Growth", "Strategy", "Predictive Analytics"],
+      image: "/image/Nima-saraeian-AI-Marketing-Specialist-Predictive-Personalized-Performance.jpg"
     },
     {
       title: "AI Automation Specialist",
       href: "/ai-automation-consultant",
       description: "Assistants and workflows that connect Email → CRM → Calendar → Analytics. Memory, tone, escalation, and compliance built-in.",
-      keywords: ["Chatbots", "AI Assistants", "Integration", "Workflows"]
+      keywords: ["Chatbots", "AI Assistants", "Integration", "Workflows"],
+      image: "/image/Nima-saraeian-AI-Automation-Specialist-End-to-End Automation-for-Teams-Customers.jpg"
     },
     {
       title: "Consumer Behavior Analyst",
       href: "/consumer-behavior-analyst",
       description: "Decision science applied to content and UX. Analyze the triggers that make audiences stop, feel, and act using qualitative, quantitative, and AI-based observation.",
-      keywords: ["Behavior Analysis", "Psychology", "UX", "Decision Science"]
+      keywords: ["Behavior Analysis", "Psychology", "UX", "Decision Science"],
+      image: "/image/Nima-saraeian-Consumer-Behavior-Analyst-Decisions-Biases-and-Digital-Triggers.jpg"
     },
     {
       title: "Consumer Psychology & Predictive Behavior Analyst",
       href: "/consumer-psychology-predictive-ai",
       description: "Forecast likely actions using psychological signals, content traces, and AI models. Transparent, ethical personalization that respects users.",
-      keywords: ["Predictive Analytics", "Psychology", "Forecasting", "Ethical AI"]
+      keywords: ["Predictive Analytics", "Psychology", "Forecasting", "Ethical AI"],
+      image: "/image/nima-saraeian-Consumer-Psychology-Predictive-Behavior-Analyst-Future-Choices-Modeled.jpg"
     },
     {
       title: "AI Branding Specialist",
       href: "/ai-branding-specialist",
       description: "Build distinctive brand identity, voice libraries, visual systems, and governance with AI. Consistency, memorability, and clear positioning.",
-      keywords: ["Branding", "Identity", "Positioning", "Visual Systems"]
+      keywords: ["Branding", "Identity", "Positioning", "Visual Systems"],
+      image: "/image/nima-saraeian-AI-Branding-Specialist-Building-Intelligent-Distinctive-Brands.jpg"
     }
   ];
 
@@ -222,27 +230,40 @@ export default function ServicesPage() {
           <Link
             key={index}
             href={service.href}
-            className="group block p-6 bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-1"
+            className="group block bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
           >
-            <h2 className="text-2xl font-semibold mb-3 text-white group-hover:text-blue-300 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              {service.title}
-            </h2>
-            <p className="text-gray-300 mb-4 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              {service.description}
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {service.keywords.map((keyword, i) => (
-                <span
-                  key={i}
-                  className="text-xs px-3 py-1 bg-gray-800 text-gray-400 rounded-full border border-gray-700"
-                >
-                  {keyword}
-                </span>
-              ))}
+            <div className="relative w-full h-48 overflow-hidden">
+              <Image
+                src={service.image}
+                alt={service.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                loading={index < 3 ? "eager" : "lazy"}
+                quality={85}
+              />
             </div>
-            <div className="text-blue-400 group-hover:text-blue-300 font-medium transition-colors flex items-center gap-2">
-              Learn more
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            <div className="p-6">
+              <h2 className="text-2xl font-semibold mb-3 text-white group-hover:text-blue-300 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                {service.title}
+              </h2>
+              <p className="text-gray-300 mb-4 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                {service.description}
+              </p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {service.keywords.map((keyword, i) => (
+                  <span
+                    key={i}
+                    className="text-xs px-3 py-1 bg-gray-800 text-gray-400 rounded-full border border-gray-700"
+                  >
+                    {keyword}
+                  </span>
+                ))}
+              </div>
+              <div className="text-blue-400 group-hover:text-blue-300 font-medium transition-colors flex items-center gap-2">
+                Learn more
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
             </div>
           </Link>
         ))}

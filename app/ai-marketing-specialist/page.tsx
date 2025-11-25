@@ -142,6 +142,7 @@ export default function Page() {
             alt="Nima Saraeian discussing predictive, personalized AI marketing strategies"
             fill
             priority
+            quality={80}
             className="object-contain"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 1200px"
           />

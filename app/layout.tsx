@@ -11,8 +11,8 @@ import SideMenu from '../components/SideMenu'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nimasaraeian.com'),
-  title: 'Nima Saraeian | AI Marketing Strategist',
-  description: 'Official website of Nima Saraeian — AI Marketing Strategist, researcher, and founder of Selfflyzer and Contlyze.',
+  title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
+  description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
   keywords: ['Nima Saraeian', 'AI Marketing', 'Marketing Strategy', 'Selflyzer', 'Consumer Behavior', 'AI-Driven Marketing', 'Digital Marketing', 'Marketing Analytics', 'Behavioral Analytics', 'Data Science'],
   authors: [{ name: 'Nima Saraeian' }],
   creator: 'Nima Saraeian',
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://nimasaraeian.com',
     siteName: 'Nima Saraeian',
-    title: 'Nima Saraeian — AI Marketing Strategist',
-    description: 'Explore research, AI marketing strategies, and digital projects by Nima Saraeian.',
+    title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
+    description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
     images: [
       {
         url: 'https://nimasaraeian.com/nima-pic.png',
@@ -55,15 +55,22 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nima Saraeian — AI Marketing Strategist',
-    description: 'Explore AI marketing, digital strategy, and innovative AI projects.',
+    title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
+    description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
     images: ['https://nimasaraeian.com/nima-pic.png'],
     creator: '@nimasaraeian',
   },
   icons: {
-    icon: '/nima-pic.png',
+    icon: [
+      { url: '/nima-pic.png', sizes: '32x32', type: 'image/png' },
+      { url: '/nima-pic.png', sizes: '16x16', type: 'image/png' },
+      { url: '/nima-pic.png', sizes: '96x96', type: 'image/png' },
+      { url: '/nima-pic.png', sizes: '192x192', type: 'image/png' },
+    ],
     shortcut: '/nima-pic.png',
-    apple: '/nima-pic.png',
+    apple: [
+      { url: '/nima-pic.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
   verification: {
     google: 'googlea749cf479c48223f',
@@ -119,6 +126,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/nima-pic.png" type="image/png" />
+        <link rel="shortcut icon" href="/nima-pic.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/nima-pic.png" />
         <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
@@ -138,6 +148,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 height={70}
                 className="object-contain max-h-[45px] sm:max-h-[55px] md:max-h-[70px] w-auto"
                 priority
+                quality={90}
                 sizes="(max-width: 640px) 140px, (max-width: 768px) 170px, 200px"
               />
             </Link>
@@ -162,6 +173,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 width={200}
                 height={80}
                 className="opacity-90 max-h-[60px] sm:max-h-[70px] md:max-h-[80px] w-auto"
+                loading="lazy"
+                quality={90}
                 sizes="(max-width: 640px) 150px, (max-width: 768px) 180px, 200px"
               />
             </div>

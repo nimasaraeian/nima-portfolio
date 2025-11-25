@@ -4,9 +4,15 @@ import Image from "next/image";
 export default function ArticlesPage() {
   const aiArticles = [
     { 
+      title: "The Ultimate Guide to CRO Copywriting (2025–2030)", 
+      image: "/image/cro-copywriter-working-with-ai-real-image.jpg", 
+      href: "/articles/ai/cro-copywriting-guide-2025",
+      alt: "CRO Copywriter working with AI - Professional copywriter optimizing conversion copywriting with AI tools and data analysis"
+    },
+    { 
       title: "AI Marketing Tools 2026: The Complete Guide to the Tools Every Modern Marketer Must Use", 
       image: "/image/ai-marketing-tools-2026.jpg", 
-      href: "/articles/ai/ai-marketing-tools-2026",
+      href: "/articles/ai/marketing-tools-2026",
       alt: "AI Marketing Tools 2026 - Complete guide to essential AI marketing tools and modern marketing stack"
     },
     { 
@@ -79,12 +85,14 @@ export default function ArticlesPage() {
                     <Image
                       src={card.image}
                       alt={card.alt || card.title}
-                      width={800}
-                      height={600}
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="w-full h-full object-contain"
-                      loading={index === 0 ? "eager" : "lazy"}
-                      quality={75}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading={index < 2 ? "eager" : "lazy"}
+                      quality={70}
+                      priority={index === 0}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                     />
                   </div>
 

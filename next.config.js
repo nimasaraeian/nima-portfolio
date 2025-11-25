@@ -25,7 +25,6 @@ const nextConfig = {
   compress: true,
   
   // Performance optimizations
-  swcMinify: true,
   reactStrictMode: true,
   
   // Experimental features for better performance
@@ -43,6 +42,11 @@ const nextConfig = {
       {
         source: '/articles/ai/psychometrics',
         destination: '/what-does-an-ai-marketing-specialist-do',
+        permanent: true, // 308
+      },
+      {
+        source: '/articles/ai/ai-marketing-tools-2026',
+        destination: '/articles/ai/marketing-tools-2026',
         permanent: true, // 308
       },
     ];
