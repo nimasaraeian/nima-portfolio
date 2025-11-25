@@ -562,9 +562,6 @@ export default function CROCopywritingGuide2025Page() {
             <ul className="space-y-3 text-gray-300">
               <li className="border-l-4 border-pink-500 pl-4">You lose nothing by trying — and everything by waiting</li>
             </ul>
-            <p className="text-gray-400 text-sm mt-4 italic">
-              (پارت‌های بعدی ۳۰ مثال دیگر هم خواهند داشت)
-            </p>
           </div>
         </section>
 
@@ -1281,9 +1278,6 @@ export default function CROCopywritingGuide2025Page() {
                 <li>"What if it doesn't work?"</li>
                 <li>"How long does setup take?"</li>
               </ul>
-              <p className="text-gray-400 text-sm mt-4 italic">
-                We will cover the full FAQ in Part 4.
-              </p>
             </div>
 
             {/* Hierarchy 6 */}
