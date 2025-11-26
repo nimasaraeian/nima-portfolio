@@ -230,7 +230,7 @@ export default function ServicesPage() {
           <Link
             key={index}
             href={service.href}
-            className="group block bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+            className="group block bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 transition-[border-color,box-shadow,transform] duration-200 ease-out transform hover:-translate-y-0.5 overflow-hidden will-change-transform"
           >
             <div className="relative w-full h-48 overflow-hidden">
               <Image
@@ -238,13 +238,14 @@ export default function ServicesPage() {
                 alt={service.title}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-cover group-hover:scale-[1.02] transition-transform duration-200 ease-out will-change-transform"
                 loading={index < 3 ? "eager" : "lazy"}
-                quality={85}
+                priority={index < 3}
+                quality={80}
               />
             </div>
             <div className="p-6">
-              <h2 className="text-2xl font-semibold mb-3 text-white group-hover:text-blue-300 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              <h2 className="text-2xl font-semibold mb-3 text-white group-hover:text-blue-300 transition-colors duration-200" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                 {service.title}
               </h2>
               <p className="text-gray-300 mb-4 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
@@ -260,9 +261,9 @@ export default function ServicesPage() {
                   </span>
                 ))}
               </div>
-              <div className="text-blue-400 group-hover:text-blue-300 font-medium transition-colors flex items-center gap-2">
+              <div className="text-blue-400 group-hover:text-blue-300 font-medium transition-colors duration-200 flex items-center gap-2">
                 Learn more
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
+                <span className="group-hover:translate-x-0.5 transition-transform duration-200 ease-out inline-block">→</span>
               </div>
             </div>
           </Link>
