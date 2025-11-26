@@ -4,7 +4,6 @@ import './globals.css'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
 import React from 'react'
 import { FaFacebook, FaInstagram, FaLinkedin, FaSquareXTwitter, FaYoutube } from 'react-icons/fa6'
 import type { IconType } from 'react-icons'
@@ -138,28 +137,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify(structuredData),
           }}
         />
-      </head>
-      <body className="bg-black text-white font-sans">
-        {/* Google Analytics */}
-        <Script
-          id="google-analytics-script"
-          strategy="afterInteractive"
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-S17VLRYWPQ"
+        />
+        <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function() {
-                var script = document.createElement('script');
-                script.async = true;
-                script.src = 'https://www.googletagmanager.com/gtag/js?id=G-S17VLRYWPQ';
-                document.head.appendChild(script);
-                
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-S17VLRYWPQ');
-              })();
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-S17VLRYWPQ');
             `,
           }}
         />
+      </head>
+      <body className="bg-black text-white font-sans">
           {/* Header with Signature */}
           <header className="bg-black py-3 sm:py-5 md:py-8 px-2 sm:px-3 md:px-6 flex flex-col items-center shadow-md border-b border-gray-800 relative z-40 w-full overflow-hidden">
             <Link href="/" className="block mb-1.5 sm:mb-2 md:mb-4">
