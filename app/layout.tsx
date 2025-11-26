@@ -4,6 +4,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
 import React from 'react'
 import { FaFacebook, FaInstagram, FaLinkedin, FaSquareXTwitter, FaYoutube } from 'react-icons/fa6'
 import type { IconType } from 'react-icons'
@@ -137,9 +138,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: JSON.stringify(structuredData),
           }}
         />
-        {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-S17VLRYWPQ"></script>
-        <script
+      </head>
+      <body className="bg-black text-white font-sans">
+        {/* Google Analytics */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-S17VLRYWPQ"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -149,8 +157,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
-      </head>
-      <body className="bg-black text-white font-sans">
           {/* Header with Signature */}
           <header className="bg-black py-3 sm:py-5 md:py-8 px-2 sm:px-3 md:px-6 flex flex-col items-center shadow-md border-b border-gray-800 relative z-40 w-full overflow-hidden">
             <Link href="/" className="block mb-1.5 sm:mb-2 md:mb-4">
