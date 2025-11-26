@@ -65,7 +65,7 @@ const pageConfig = {
   faParagraph: "با تحلیل سیگنال‌های روانی و ردپاهای محتوایی، انتخاب‌های آتی مشتری را پیش‌بینی می‌کنیم—اخلاق‌محور و شفاف. مدل‌های ما با رضایت و شفافیت کار می‌کنند.",
   cta: { label: "Explore Predictive Models", href: "/contact", utmCampaign: "predictive" },
   relatedLinks: [
-    { href: "/consumer-behavior-analyst", label: "Consumer Behavior Analyst" },
+    { href: "/consumer-behavior-strategist", label: "Consumer Behavior Analyst" },
     { href: "/ai-marketing-specialist", label: "AI Marketing Specialist" }
   ],
   image: {

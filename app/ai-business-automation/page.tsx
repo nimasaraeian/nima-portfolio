@@ -189,7 +189,7 @@ export default function Page() {
         Related:{" "}
         <a href="/ai-automation-consultant" className="text-blue-400 hover:text-blue-300 underline">AI Automation Specialist</a> ·{" "}
         <a href="/ai-marketing-specialist" className="text-blue-400 hover:text-blue-300 underline">AI Marketing Specialist</a> ·{" "}
-        <a href="/consumer-behavior-analyst" className="text-blue-400 hover:text-blue-300 underline">Consumer Behavior Analyst</a>
+        <a href="/consumer-behavior-strategist" className="text-blue-400 hover:text-blue-300 underline">Consumer Behavior Analyst</a>
       </p>
     </main>
   );

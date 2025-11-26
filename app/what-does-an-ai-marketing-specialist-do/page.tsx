@@ -306,7 +306,7 @@ export default function Page() {
 
         <h3 className="text-xl sm:text-2xl font-semibold text-gray-200 mt-6">Why AI Marketing and AI Consumer Behavior Work at a Psychological Level</h3>
         <p className="text-lg text-gray-300">
-          When you analyze real purchase behavior through <Link href="/consumer-behavior-analyst" className="text-blue-300 hover:text-blue-200 underline">consumer behavior analysis</Link>, it becomes clear that people do not make decisions based solely on information or logic. This is where behavioral marketing and consumer behavior analysis intersect with AI marketing strategies. Instead, decisions arise from a blend of:
+          When you analyze real purchase behavior through <Link href="/consumer-behavior-strategist" className="text-blue-300 hover:text-blue-200 underline">consumer behavior analysis</Link>, it becomes clear that people do not make decisions based solely on information or logic. This is where behavioral marketing and consumer behavior analysis intersect with AI marketing strategies. Instead, decisions arise from a blend of:
         </p>
         <ul className="list-disc ml-6 space-y-2 text-gray-300">
           <li>emotion</li>
@@ -316,7 +316,7 @@ export default function Page() {
           <li>internal needs and anxieties</li>
         </ul>
         <p className="text-lg text-gray-300">
-          <a href="https://www.hbs.edu/faculty/Pages/item.aspx?num=44826" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline">Harvard decision-making research</a> has long shown that a significant majority of human decisions occur at a subconscious level. This means that marketing strategies focused purely on rational messaging are inherently limited. This aligns with <Link href="/consumer-behavior-analyst" className="text-blue-300 hover:text-blue-200 underline">behavioral psychology in marketing</Link> and AI research on behavioral patterns and consumer psychology.
+          <a href="https://www.hbs.edu/faculty/Pages/item.aspx?num=44826" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline">Harvard decision-making research</a> has long shown that a significant majority of human decisions occur at a subconscious level. This means that marketing strategies focused purely on rational messaging are inherently limited. This aligns with <Link href="/consumer-behavior-strategist" className="text-blue-300 hover:text-blue-200 underline">behavioral psychology in marketing</Link> and AI research on behavioral patterns and consumer psychology.
         </p>
 
         <p className="text-lg text-gray-300">

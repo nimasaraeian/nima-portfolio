@@ -552,7 +552,7 @@ export default function AIMarketingSkills2025Page() {
         </div>
 
         <p>
-          This comprehensive example demonstrates how AI Marketing Specialists use <Link href="/consumer-behavior-analyst" style={{ color: '#60a5fa', textDecoration: 'underline' }}>consumer behavior analysis</Link> and machine learning to:
+          This comprehensive example demonstrates how AI Marketing Specialists use <Link href="/consumer-behavior-strategist" style={{ color: '#60a5fa', textDecoration: 'underline' }}>consumer behavior analysis</Link> and machine learning to:
         </p>
 
         <ul>
@@ -563,7 +563,7 @@ export default function AIMarketingSkills2025Page() {
         </ul>
 
         <p>
-          This is the foundation of <strong>behavioral marketing</strong> through <Link href="/consumer-behavior-analyst" style={{ color: '#60a5fa', textDecoration: 'underline' }}>digital consumer behavior</Link> segmentation in AI marketing—transforming raw data into actionable insights that drive personalized campaigns and higher conversions. These fundamental <strong>AI marketing skills 2025</strong> we'll explore throughout this guide.
+          This is the foundation of <strong>behavioral marketing</strong> through <Link href="/consumer-behavior-strategist" style={{ color: '#60a5fa', textDecoration: 'underline' }}>digital consumer behavior</Link> segmentation in AI marketing—transforming raw data into actionable insights that drive personalized campaigns and higher conversions. These fundamental <strong>AI marketing skills 2025</strong> we'll explore throughout this guide.
         </p>
 
         <h2 

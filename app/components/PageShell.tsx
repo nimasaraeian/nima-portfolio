@@ -7,7 +7,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
     { href: "/ai-business-automation", label: "AI Business Automation Specialist" },
     { href: "/ai-marketing-specialist", label: "AI Marketing Specialist" },
     { href: "/ai-automation-consultant", label: "AI Automation Specialist" },
-    { href: "/consumer-behavior-analyst", label: "Consumer Behavior Analyst" },
+    { href: "/consumer-behavior-strategist", label: "Consumer Behavior Analyst" },
     { href: "/consumer-psychology-predictive-ai", label: "Consumer Psychology & Predictive Behavior Analyst" },
     { href: "/ai-branding-specialist", label: "AI Branding Specialist" },
   ];

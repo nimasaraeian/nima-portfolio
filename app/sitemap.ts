@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "ai-business-automation",
     "ai-marketing-specialist",
     "ai-automation-consultant",
-    "consumer-behavior-analyst",
+    "consumer-behavior-strategist",
     "consumer-psychology-predictive-ai",
     "ai-branding-specialist",
     "ai-marketing",

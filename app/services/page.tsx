@@ -80,7 +80,7 @@ export default function ServicesPage() {
           itemOffered: {
             "@type": "Service",
             name: "Consumer Behavior Analyst",
-            url: `${SITE.baseUrl}/consumer-behavior-analyst`
+            url: `${SITE.baseUrl}/consumer-behavior-strategist`
           }
         },
         {
@@ -135,7 +135,7 @@ export default function ServicesPage() {
       {
         "@type": "ListItem",
         position: 5,
-        url: `${SITE.baseUrl}/consumer-behavior-analyst`,
+        url: `${SITE.baseUrl}/consumer-behavior-strategist`,
         name: "Consumer Behavior Analyst"
       },
       {
@@ -184,7 +184,7 @@ export default function ServicesPage() {
     },
     {
       title: "Consumer Behavior Analyst",
-      href: "/consumer-behavior-analyst",
+      href: "/consumer-behavior-strategist",
       description: "Decision science applied to content and UX. Analyze the triggers that make audiences stop, feel, and act using qualitative, quantitative, and AI-based observation.",
       keywords: ["Behavior Analysis", "Psychology", "UX", "Decision Science"],
       image: "/image/Nima-saraeian-Consumer-Behavior-Analyst-Decisions-Biases-and-Digital-Triggers.jpg"
