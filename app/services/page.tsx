@@ -98,6 +98,14 @@ export default function ServicesPage() {
             name: "AI Branding Specialist",
             url: `${SITE.baseUrl}/ai-branding-specialist`
           }
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: "CRO Copywriting",
+            url: `${SITE.baseUrl}/cro-copywriting`
+          }
         }
       ]
     }
@@ -149,6 +157,12 @@ export default function ServicesPage() {
         position: 7,
         url: `${SITE.baseUrl}/ai-branding-specialist`,
         name: "AI Branding Specialist"
+      },
+      {
+        "@type": "ListItem",
+        position: 8,
+        url: `${SITE.baseUrl}/cro-copywriting`,
+        name: "CRO Copywriting"
       }
     ]
   };
@@ -202,6 +216,13 @@ export default function ServicesPage() {
       description: "Build distinctive brand identity, voice libraries, visual systems, and governance with AI. Consistency, memorability, and clear positioning.",
       keywords: ["Branding", "Identity", "Positioning", "Visual Systems"],
       image: "/image/nima-saraeian-AI-Branding-Specialist-Building-Intelligent-Distinctive-Brands.jpg"
+    },
+    {
+      title: "CRO Copywriting",
+      href: "/cro-copywriting",
+      description: "Conversion-optimized copy that combines psychological triggers, AI insights, and data-driven testing to maximize conversions and revenue.",
+      keywords: ["CRO", "Copywriting", "Conversion", "Optimization"],
+      image: "/image/nima-saraeian-cro-copywriter.jpg"
     }
   ];
 
