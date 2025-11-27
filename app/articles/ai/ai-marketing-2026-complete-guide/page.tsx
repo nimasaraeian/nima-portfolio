@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     modifiedTime: new Date().toISOString(),
     images: [
       {
-        url: `${SITE.baseUrl}/image/Nima-saraeian-AI-Marketing-Specialist-Predictive-Personalized-Performance.jpg`,
+        url: `${SITE.baseUrl}/image/ai-marketing-2026-pillar-nima-saraeian.png`,
         width: 1200,
         height: 630,
         alt: 'AI Marketing 2026 Complete Guide - Nima Saraeian AI Marketing Specialist guide to tools, strategy, behavioral data, and conversion psychology',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     description: 'AI Marketing 2026 explained: tools, predictive analytics, behavioral data, personalization engines, CRO psychology, automation, and the future of AI-driven marketing.',
     images: [
       {
-        url: `${SITE.baseUrl}/image/Nima-saraeian-AI-Marketing-Specialist-Predictive-Personalized-Performance.jpg`,
+        url: `${SITE.baseUrl}/image/ai-marketing-2026-pillar-nima-saraeian.png`,
         width: 1200,
         height: 630,
         alt: 'AI Marketing 2026 Complete Guide',
@@ -53,7 +53,7 @@ export default function AIMarketing2026CompleteGuidePage() {
     },
     "headline": "AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology",
     "description": "A comprehensive 6,000-word pillar page on AI marketing systems, predictive behavioral data, personalization engines, automation, CRO psychology, and the future of AI-driven marketing.",
-    "image": `${SITE.baseUrl}/image/Nima-saraeian-AI-Marketing-Specialist-Predictive-Personalized-Performance.jpg`,
+    "image": `${SITE.baseUrl}/image/ai-marketing-2026-pillar-nima-saraeian.png`,
     "author": {
       "@type": "Person",
       "name": "Nima Saraeian",
@@ -155,13 +155,13 @@ export default function AIMarketing2026CompleteGuidePage() {
         {/* Hero Image */}
         <div className="rounded-2xl overflow-hidden border border-white/10">
           <Image
-            src="/image/Nima-saraeian-AI-Marketing-Specialist-Predictive-Personalized-Performance.jpg"
+            src="/image/ai-marketing-2026-pillar-nima-saraeian.png"
             alt="AI Marketing 2026 Complete Guide - Nima Saraeian AI Marketing Specialist guide to tools, strategy, behavioral data, and conversion psychology"
             width={1200}
             height={630}
             className="w-full h-auto object-cover"
             priority
-            quality={85}
+            quality={90}
           />
         </div>
 
