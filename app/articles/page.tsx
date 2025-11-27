@@ -4,6 +4,12 @@ import Image from "next/image";
 export default function ArticlesPage() {
   const aiArticles = [
     { 
+      title: "AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology", 
+      image: "/image/Nima-saraeian-AI-Marketing-Specialist-Predictive-Personalized-Performance.jpg", 
+      href: "/articles/ai-marketing-2026",
+      alt: "AI Marketing 2026 Complete Guide - Nima Saraeian AI Marketing Specialist guide to tools, strategy, behavioral data, and conversion psychology"
+    },
+    { 
       title: "The Ultimate Guide to CRO Copywriting (2025–2030)", 
       image: "/image/cro-copywriter-working-with-ai-real-image.jpg", 
       href: "/articles/ai/cro-copywriting-guide-2025",
