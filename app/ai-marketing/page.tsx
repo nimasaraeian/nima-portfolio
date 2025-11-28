@@ -125,114 +125,107 @@ export default function AIMarketingPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
-      <section className="mx-auto max-w-7xl px-6 py-20 text-white md:px-10 md:py-28 lg:px-16">
-        <div className="grid gap-12 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] md:items-center">
-          <div className="flex flex-col items-start text-left">
-            <span className="text-xs font-semibold uppercase tracking-[0.6em] text-blue-200/80">AI Marketing</span>
-            <div className="group mt-6">
-              <h1 className="text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+      {/* Hero Section with Gradient Background */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-purple-800 text-white">
+        <div className="mx-auto max-w-7xl px-6 py-20 text-center md:px-10 md:py-28 lg:px-16">
+          <div className="mx-auto max-w-4xl">
+            <h1 className="mb-4 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
+              <span className="bg-gradient-to-r from-white to-indigo-100 bg-clip-text text-transparent">
                 Behavior × AI × Strategy
-              </h1>
-              <div
-                className="mt-[22px] h-1 w-20 rounded-full bg-white/80 transition-opacity duration-300 group-hover:opacity-70"
-                aria-hidden
-              />
-            </div>
-            <p className="mt-6 text-3xl font-semibold leading-tight sm:text-4xl md:text-[2.9rem]" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              AI Marketing Operating System
-            </p>
-            <p className="mt-6 max-w-2xl text-base text-gray-300 sm:text-lg">
+              </span>
+            </h1>
+            <p className="mb-6 text-2xl font-semibold sm:text-3xl">AI Marketing Operating System</p>
+            <p className="mx-auto mb-8 max-w-2xl text-lg leading-relaxed opacity-90">
               Not just tools. A complete, behavior-first AI marketing system powered by <strong>Selphlyze</strong> (psychometrics) and{' '}
               <strong>Contlyze</strong> (behavior & content intelligence).
             </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-2xl border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-              >
-                Book a Consultation →
-              </Link>
-              <Link
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a
                 href="#modules"
-                className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-gray-200"
+                className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-base font-semibold text-indigo-600 transition-all hover:-translate-y-0.5 hover:shadow-lg"
               >
                 Explore Modules
+              </a>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-white bg-transparent px-8 py-3 text-base font-semibold text-white transition-all hover:bg-white hover:text-indigo-600"
+              >
+                Book a Consultation
               </Link>
             </div>
-
-            <ul className="mt-8 space-y-2 text-sm text-gray-300">
-              <li>• DeepScan → Market Intelligence → Content Engine → Conversion → Automation</li>
-              <li>• Strategy, design, analytics & automation — unified</li>
-              <li>• Tailored to clinics, service businesses, SaaS, education & creators</li>
-            </ul>
-          </div>
-
-          <div className="mx-auto mt-12 w-[92%] overflow-hidden rounded-3xl border border-white/15 bg-white/5 p-6 sm:w-[88%] md:mt-6 md:w-full md:p-6 lg:p-8">
-            <HeroDiagram />
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-12 text-white md:px-10 md:py-16 lg:px-16">
-        <h2 className="text-2xl font-semibold md:text-3xl">Why this works</h2>
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {[
-            { t: 'Behavior-first', d: 'Understands motivations, barriers, emotional triggers — not just clicks.' },
-            { t: 'Dual Engines', d: 'Selphlyze (psychometric) + Contlyze (market & content) for depth & breadth.' },
-            { t: 'Operating System', d: 'One system for research, strategy, content, conversion & automation.' },
-          ].map((b) => (
-            <div key={b.t} className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <h3 className="text-lg font-semibold text-white">{b.t}</h3>
-              <p className="mt-2 text-sm text-gray-300">{b.d}</p>
-            </div>
-          ))}
+      {/* Why This Works Section */}
+      <section className="bg-gray-50 py-16 text-gray-900 dark:bg-black dark:text-white">
+        <div className="mx-auto max-w-6xl px-6 md:px-10 lg:px-16">
+          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">Why this works</h2>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              { icon: '🧠', t: 'Behavior-first', d: 'Understands motivations, barriers, emotional triggers — not just clicks.' },
+              { icon: '⚙️', t: 'Dual Engines', d: 'Selphlyze (psychometric) + Contlyze (market & content) for depth & breadth.' },
+              { icon: '🚀', t: 'Operating System', d: 'One system for research, strategy, content, conversion & automation.' },
+            ].map((b) => (
+              <div
+                key={b.t}
+                className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-md transition-all hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-white/5"
+              >
+                <div className="mb-4 text-5xl">{b.icon}</div>
+                <h3 className="mb-3 text-xl font-semibold">{b.t}</h3>
+                <p className="text-gray-600 dark:text-gray-300">{b.d}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section id="modules" className="mx-auto max-w-7xl px-6 py-12 text-white md:px-10 md:py-20 lg:px-16">
-        <h2 className="text-2xl font-semibold md:text-3xl">The 5 Core Modules</h2>
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <ModuleInteractivity
-            moduleId="deepscan"
-            icon={<DeepScanIcon className="h-8 w-8" />}
-            title="Behavioral DeepScan"
-            bullets={[
-              'Psychometric mapping (cognition, emotion, decision patterns)',
-              'Audience motivations, barriers, triggers',
-              'Cultural & aesthetic preferences (Aesthlyzer-ready)',
-            ]}
-            footnote="Powered by Selphlyze — proprietary AI psychometric layer."
-          />
-          <ModuleInteractivity
-            moduleId="market"
-            icon={<MarketIcon className="h-8 w-8" />}
-            title="Market & Trend Intelligence"
-            bullets={['Competitors & category mapping', 'Audience reaction signals & trend shifts', 'Content pattern & positioning gaps']}
-            footnote="Powered by Contlyze — behavior & content intelligence."
-          />
-          <ModuleInteractivity
-            moduleId="content"
-            icon={<ContentIcon className="h-8 w-8" />}
-            title="AI Content Engine"
-            bullets={[
-              '30-day adaptive calendar + 100 ideas',
-              'Voice, tone, hooks and narrative arcs',
-              'Format mapping (IG, YT, LinkedIn, blog, email)',
-            ]}
-          />
-          <ModuleInteractivity
-            moduleId="conversion"
-            icon={<FunnelIcon className="h-8 w-8" />}
-            title="Conversion & Funnel Architecture"
-            bullets={['Decision journey & trust points', 'Layered funnels with behavioral cues', 'Retention boosters & relationship triggers']}
-          />
-          <ModuleInteractivity
-            moduleId="automation"
-            icon={<AutomationIcon className="h-8 w-8" />}
-            title="AI Automation System"
-            bullets={['Lead qualification & routing', 'DM/WhatsApp/Email automation', 'Appointment & follow-up with behavior triggers']}
-          />
+      {/* The 5 Core Modules Section */}
+      <section id="modules" className="bg-white py-16 text-gray-900 dark:bg-black dark:text-white">
+        <div className="mx-auto max-w-7xl px-6 md:px-10 lg:px-16">
+          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">The 5 Core Modules</h2>
+          <div className="space-y-6">
+            <ModuleInteractivity
+              moduleId="deepscan"
+              icon={<DeepScanIcon className="h-8 w-8" />}
+              title="Behavioral DeepScan"
+              bullets={[
+                'Psychometric mapping (cognition, emotion, decision patterns)',
+                'Audience motivations, barriers, triggers',
+                'Cultural & aesthetic preferences (Aesthlyzer-ready)',
+              ]}
+              footnote="Powered by Selphlyze — proprietary AI psychometric layer."
+            />
+            <ModuleInteractivity
+              moduleId="market"
+              icon={<MarketIcon className="h-8 w-8" />}
+              title="Market & Trend Intelligence"
+              bullets={['Competitors & category mapping', 'Audience reaction signals & trend shifts', 'Content pattern & positioning gaps']}
+              footnote="Powered by Contlyze — behavior & content intelligence."
+            />
+            <ModuleInteractivity
+              moduleId="content"
+              icon={<ContentIcon className="h-8 w-8" />}
+              title="AI Content Engine"
+              bullets={[
+                '30-day adaptive calendar + 100 ideas',
+                'Voice, tone, hooks and narrative arcs',
+                'Format mapping (IG, YT, LinkedIn, blog, email)',
+              ]}
+            />
+            <ModuleInteractivity
+              moduleId="conversion"
+              icon={<FunnelIcon className="h-8 w-8" />}
+              title="Conversion & Funnel Architecture"
+              bullets={['Decision journey & trust points', 'Layered funnels with behavioral cues', 'Retention boosters & relationship triggers']}
+            />
+            <ModuleInteractivity
+              moduleId="automation"
+              icon={<AutomationIcon className="h-8 w-8" />}
+              title="AI Automation System"
+              bullets={['Lead qualification & routing', 'DM/WhatsApp/Email automation', 'Appointment & follow-up with behavior triggers']}
+            />
+          </div>
         </div>
       </section>
 
