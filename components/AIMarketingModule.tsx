@@ -87,37 +87,57 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
     setLoading(true)
     setError(null)
 
-    // Build query based on module
-    let query = formData.query
-    if (moduleId === 'deepscan') {
-      query = `I need a behavioral DeepScan analysis for my ${formData.industry} in ${formData.city}. Target audience: ${formData.target_audience}. ${formData.query}`
-    } else if (moduleId === 'market') {
-      query = `I need market intelligence for my ${formData.industry} in ${formData.city} using ${formData.channel}. ${formData.query}`
-    } else if (moduleId === 'content') {
-      query = `I need AI-generated content for my ${formData.industry} in ${formData.city} for ${formData.channel}. ${formData.query}`
-    } else if (moduleId === 'conversion') {
-      query = `I need conversion and funnel architecture help for my ${formData.industry} in ${formData.city} on ${formData.channel}. ${formData.query}`
-    } else if (moduleId === 'automation') {
-      query = `I need automation setup for my ${formData.industry} in ${formData.city} using ${formData.channel}. ${formData.query}`
-    }
-
     try {
-      // API endpoint - use Next.js API route if available, otherwise fallback to external API
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api/brain'
+      // API base URL - use environment variable or default to FastAPI backend
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'
       
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      let requestBody: any
+      let apiEndpoint: string
+
+      // Special handling for Behavioral DeepScan - use FastAPI format
+      if (moduleId === 'deepscan') {
+        apiEndpoint = `${API_BASE_URL}/api/brain`
+        requestBody = {
+          mode: 'behavioral_deepscan',
+          input: {
+            industry: formData.industry || 'Other',
+            city: formData.city || 'Istanbul',
+            audience: formData.target_audience || '',
+            analysis: formData.query || '',
+          },
+        }
+      } else {
+        // Other modules use the existing format
+        apiEndpoint = process.env.NEXT_PUBLIC_API_URL || '/api/brain'
+        
+        // Build query based on module
+        let query = formData.query
+        if (moduleId === 'market') {
+          query = `I need market intelligence for my ${formData.industry} in ${formData.city} using ${formData.channel}. ${formData.query}`
+        } else if (moduleId === 'content') {
+          query = `I need AI-generated content for my ${formData.industry} in ${formData.city} for ${formData.channel}. ${formData.query}`
+        } else if (moduleId === 'conversion') {
+          query = `I need conversion and funnel architecture help for my ${formData.industry} in ${formData.city} on ${formData.channel}. ${formData.query}`
+        } else if (moduleId === 'automation') {
+          query = `I need automation setup for my ${formData.industry} in ${formData.city} using ${formData.channel}. ${formData.query}`
+        }
+
+        requestBody = {
           role: 'ai_marketing_strategist',
           locale: 'tr-TR',
           city: formData.city || 'Istanbul',
           industry: formData.industry || 'Other',
           channel: formData.channel || 'Instagram Ads',
           query: query,
-        }),
+        }
+      }
+
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
       })
 
       if (!response.ok) {
@@ -127,7 +147,8 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
       const data = await response.json()
       setResult(data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      console.error('Error:', err)
+      setError(err instanceof Error ? err.message : 'AI analysis failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -161,15 +182,82 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
           </div>
 
           <div className="prose prose-invert max-w-none">
-            <div className="whitespace-pre-wrap text-gray-200 leading-relaxed">
-              {result.response}
-            </div>
+            {/* Handle structured response from FastAPI (for deepscan) */}
+            {result.summary ? (
+              <div className="space-y-6 text-gray-200 leading-relaxed">
+                <div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">Summary</h3>
+                  <p className="whitespace-pre-wrap">{result.summary}</p>
+                </div>
+                
+                {result.segments && result.segments.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-white">Segments</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {result.segments.map((segment: string, idx: number) => (
+                        <li key={idx}>{segment}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {result.barriers && result.barriers.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-white">Barriers</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {result.barriers.map((barrier: string, idx: number) => (
+                        <li key={idx}>{barrier}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {result.triggers && result.triggers.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-white">Triggers</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {result.triggers.map((trigger: string, idx: number) => (
+                        <li key={idx}>{trigger}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {result.recommendations && result.recommendations.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-white">Recommendations</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {result.recommendations.map((rec: string, idx: number) => (
+                        <li key={idx}>{rec}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Handle simple text response (for other modules or fallback)
+              <div className="whitespace-pre-wrap text-gray-200 leading-relaxed">
+                {result.result || result.content || result.response || 'No results available.'}
+              </div>
+            )}
           </div>
 
           <div className="mt-8 flex gap-4">
             <button
               onClick={() => {
-                const blob = new Blob([`# ${config.title}\n\n${result.response}`], { type: 'text/markdown' })
+                // Format result for download
+                let content = `# ${config.title}\n\n`
+                if (result.summary) {
+                  content += `## Summary\n\n${result.summary}\n\n`
+                  if (result.segments) content += `## Segments\n\n${result.segments.map((s: string) => `- ${s}`).join('\n')}\n\n`
+                  if (result.barriers) content += `## Barriers\n\n${result.barriers.map((b: string) => `- ${b}`).join('\n')}\n\n`
+                  if (result.triggers) content += `## Triggers\n\n${result.triggers.map((t: string) => `- ${t}`).join('\n')}\n\n`
+                  if (result.recommendations) content += `## Recommendations\n\n${result.recommendations.map((r: string) => `- ${r}`).join('\n')}\n\n`
+                } else {
+                  content += result.result || result.content || result.response || ''
+                }
+                
+                const blob = new Blob([content], { type: 'text/markdown' })
                 const url = URL.createObjectURL(blob)
                 const a = document.createElement('a')
                 a.href = url
