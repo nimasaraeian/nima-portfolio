@@ -4,6 +4,12 @@ import Image from "next/image";
 export default function ArticlesPage() {
   const aiArticles = [
     { 
+      title: "How to Use AI in Marketing (2026 Guide to Tools, Strategy & Behavior-Driven Growth)", 
+      image: "/image/how-to-use-ai-in-marketing-prediction-automation.png", 
+      href: "/articles/ai/how-to-use-ai-in-marketing-2026",
+      alt: "How to Use AI in Marketing 2026 - Complete guide to AI marketing tools, strategy, prediction, automation, and behavior-driven growth"
+    },
+    { 
       title: "AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology", 
       image: "/image/ai-marketing-2026-pillar-nima-saraeian.png", 
       href: "/articles/ai-marketing-2026",
