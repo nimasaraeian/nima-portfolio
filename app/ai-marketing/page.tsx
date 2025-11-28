@@ -11,6 +11,7 @@ import PersonaPreview from '@/components/graphics/PersonaPreview'
 import CalendarPreview from '@/components/graphics/CalendarPreview'
 import FunnelPreview from '@/components/graphics/FunnelPreview'
 import AutomationPreview from '@/components/graphics/AutomationPreview'
+import ModuleInteractivity from '@/components/ModuleInteractivity'
 
 export const metadata: Metadata = {
   title: 'AI Marketing Strategy & Operating System | Nima Saraeian',
@@ -192,7 +193,8 @@ export default function AIMarketingPage() {
       <section id="modules" className="mx-auto max-w-7xl px-6 py-12 text-white md:px-10 md:py-20 lg:px-16">
         <h2 className="text-2xl font-semibold md:text-3xl">The 5 Core Modules</h2>
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <ModuleCard
+          <ModuleInteractivity
+            moduleId="deepscan"
             icon={<DeepScanIcon className="h-8 w-8" />}
             title="Behavioral DeepScan"
             bullets={[
@@ -202,13 +204,15 @@ export default function AIMarketingPage() {
             ]}
             footnote="Powered by Selphlyze — proprietary AI psychometric layer."
           />
-          <ModuleCard
+          <ModuleInteractivity
+            moduleId="market"
             icon={<MarketIcon className="h-8 w-8" />}
             title="Market & Trend Intelligence"
             bullets={['Competitors & category mapping', 'Audience reaction signals & trend shifts', 'Content pattern & positioning gaps']}
             footnote="Powered by Contlyze — behavior & content intelligence."
           />
-          <ModuleCard
+          <ModuleInteractivity
+            moduleId="content"
             icon={<ContentIcon className="h-8 w-8" />}
             title="AI Content Engine"
             bullets={[
@@ -217,12 +221,14 @@ export default function AIMarketingPage() {
               'Format mapping (IG, YT, LinkedIn, blog, email)',
             ]}
           />
-          <ModuleCard
+          <ModuleInteractivity
+            moduleId="conversion"
             icon={<FunnelIcon className="h-8 w-8" />}
             title="Conversion & Funnel Architecture"
             bullets={['Decision journey & trust points', 'Layered funnels with behavioral cues', 'Retention boosters & relationship triggers']}
           />
-          <ModuleCard
+          <ModuleInteractivity
+            moduleId="automation"
             icon={<AutomationIcon className="h-8 w-8" />}
             title="AI Automation System"
             bullets={['Lead qualification & routing', 'DM/WhatsApp/Email automation', 'Appointment & follow-up with behavior triggers']}
