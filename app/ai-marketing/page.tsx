@@ -112,7 +112,7 @@ export default function AIMarketingPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       {/* Hero Section with Gradient Background */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-purple-800 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
         <div className="mx-auto max-w-7xl px-6 py-20 text-center md:px-10 md:py-28 lg:px-16">
           <div className="mx-auto max-w-4xl">
             <h1 className="mb-4 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
@@ -128,13 +128,13 @@ export default function AIMarketingPage() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <a
                 href="#modules"
-                className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-base font-semibold text-indigo-600 transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-base font-semibold text-slate-900 transition-all hover:-translate-y-0.5 hover:shadow-lg"
               >
                 Explore Modules
               </a>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-lg border-2 border-white bg-transparent px-8 py-3 text-base font-semibold text-white transition-all hover:bg-white hover:text-indigo-600"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-white bg-transparent px-8 py-3 text-base font-semibold text-white transition-all hover:bg-white hover:text-slate-900"
               >
                 Book a Consultation
               </Link>
