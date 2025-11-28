@@ -1,16 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FaCircleCheck } from 'react-icons/fa6'
 import HeroDiagram from '@/components/graphics/HeroDiagram'
 import DeepScanIcon from '@/components/icons/DeepScanIcon'
 import MarketIcon from '@/components/icons/MarketIcon'
 import ContentIcon from '@/components/icons/ContentIcon'
 import FunnelIcon from '@/components/icons/FunnelIcon'
 import AutomationIcon from '@/components/icons/AutomationIcon'
-import PersonaPreview from '@/components/graphics/PersonaPreview'
-import CalendarPreview from '@/components/graphics/CalendarPreview'
-import FunnelPreview from '@/components/graphics/FunnelPreview'
-import AutomationPreview from '@/components/graphics/AutomationPreview'
 import ModuleInteractivity from '@/components/ModuleInteractivity'
 
 export const metadata: Metadata = {
@@ -108,15 +103,6 @@ const faqSchema = {
     },
   ],
 }
-
-const deliverables = [
-  '90-day growth roadmap (phased, with milestones)',
-  'Behavior-based personas (motivations, barriers, triggers)',
-  'AI-informed content calendar & creative directions',
-  'Funnel & conversion architecture (with trust cues)',
-  'Automation blueprint (DM/WhatsApp/Email)',
-  'KPI model & measurement plan',
-]
 
 export default function AIMarketingPage() {
   return (
@@ -225,62 +211,6 @@ export default function AIMarketingPage() {
               title="AI Automation System"
               bullets={['Lead qualification & routing', 'DM/WhatsApp/Email automation', 'Appointment & follow-up with behavior triggers']}
             />
-          </div>
-        </div>
-      </section>
-
-      {/* WHAT YOU GET */}
-      <section className="px-6 md:px-10 lg:px-16 py-16 md:py-20 max-w-7xl mx-auto text-white">
-        <div className="rounded-[40px] border border-white/12 bg-white/[0.04] p-8 md:p-12 shadow-[0_30px_60px_-40px_rgba(0,0,0,0.8)]">
-          <div className="grid gap-10 md:gap-12 lg:grid-cols-12 lg:items-start">
-            <div className="lg:col-span-5 xl:col-span-4">
-              <div className="flex h-full flex-col gap-10 rounded-[32px] border border-white/15 bg-white/[0.1] p-6 md:p-9">
-                <div>
-                  <span className="text-xs font-semibold uppercase tracking-[0.5em] text-blue-200/80">Deliverables</span>
-                  <h2 className="mt-5 text-[2.4rem] font-semibold leading-tight sm:text-[2.6rem]" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                    What you get
-                  </h2>
-                  <p className="mt-4 text-[0.95rem] text-gray-200/85 sm:text-base">
-                    A consolidated operating system ready to deploy across marketing, content, funnel, and automation workflows.
-                  </p>
-                </div>
-
-                <ul className="grid gap-4 text-[0.95rem] text-gray-50/90">
-                  {deliverables.map((item) => (
-                    <li key={item} className="flex items-start gap-4 rounded-3xl border border-white/15 bg-black/40 p-4 shadow-[0_12px_24px_-20px_rgba(0,0,0,0.7)]">
-                      <span className="mt-[2px] inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-200/20 text-blue-200">
-                        <FaCircleCheck aria-hidden size={16} />
-                      </span>
-                      <span className="leading-relaxed tracking-wide">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    href="/projects"
-                    className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/[0.08] px-7 py-3 text-sm font-semibold text-white transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                  >
-                    See Case Studies
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3 text-sm font-semibold text-black transition hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
-                  >
-                    Book a Consultation
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7 xl:col-span-8">
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:gap-7 auto-rows-fr">
-                <PersonaPreview />
-                <CalendarPreview />
-                <FunnelPreview />
-                <AutomationPreview />
-              </div>
-            </div>
           </div>
         </div>
       </section>
