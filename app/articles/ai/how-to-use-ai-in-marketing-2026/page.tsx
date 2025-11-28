@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import Script from 'next/script';
 import { SITE } from '@/app/lib/site';
 
 export const metadata: Metadata = {
@@ -202,23 +201,17 @@ export default function HowToUseAIInMarketing2026Page() {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      {/* Performance: Schema scripts moved to afterInteractive to prevent render blocking */}
-      <Script
-        id="article-schema"
+      {/* JSON-LD Structured Data - Using regular script tags for schema.org */}
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <Script
-        id="breadcrumb-schema"
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <Script
-        id="faq-schema"
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       
