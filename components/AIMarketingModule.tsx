@@ -102,8 +102,8 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
     }
 
     try {
-      // API endpoint - adjust this to your backend URL
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/brain'
+      // API endpoint - use Next.js API route if available, otherwise fallback to external API
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api/brain'
       
       const response = await fetch(API_URL, {
         method: 'POST',
