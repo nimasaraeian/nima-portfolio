@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { X, Loader2 } from 'lucide-react'
+import type { BrainAPIRequest, BrainAPIResponse } from '@/types/api'
 
 interface ModuleConfig {
   id: string
@@ -77,7 +78,7 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
   const config = MODULE_CONFIGS[moduleId]
   const [formData, setFormData] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<BrainAPIResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   if (!config) return null
@@ -88,67 +89,73 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
     setError(null)
 
     try {
-      // API base URL - use environment variable or default to FastAPI backend
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000'
+      // Use backend API via centralized client
+      const { postToBrain } = await import('@/lib/apiClient');
       
-      let requestBody: any
-      let apiEndpoint: string
-
-      // Special handling for Behavioral DeepScan - use FastAPI format
-      if (moduleId === 'deepscan') {
-        apiEndpoint = `${API_BASE_URL}/api/brain`
-        requestBody = {
-          mode: 'behavioral_deepscan',
-          input: {
-            industry: formData.industry || 'Other',
-            city: formData.city || 'Istanbul',
-            audience: formData.target_audience || '',
-            analysis: formData.query || '',
-          },
-        }
-      } else {
-        // Other modules use the existing format
-        apiEndpoint = process.env.NEXT_PUBLIC_API_URL || '/api/brain'
-        
-        // Build query based on module
-        let query = formData.query
-        if (moduleId === 'market') {
-          query = `I need market intelligence for my ${formData.industry} in ${formData.city} using ${formData.channel}. ${formData.query}`
+      // Build goals array from query
+      const goals: string[] = []
+      if (formData.query) {
+        // Split query by newlines or periods to create multiple goals
+        const queryParts = formData.query.split(/[.\n]/).map(p => p.trim()).filter(p => p.length > 0)
+        goals.push(...queryParts)
+      }
+      
+      // If no goals, add a default based on module
+      if (goals.length === 0) {
+        if (moduleId === 'deepscan') {
+          goals.push('Behavioral DeepScan Analysis')
+        } else if (moduleId === 'market') {
+          goals.push('Market Intelligence Analysis')
         } else if (moduleId === 'content') {
-          query = `I need AI-generated content for my ${formData.industry} in ${formData.city} for ${formData.channel}. ${formData.query}`
+          goals.push('AI Content Generation')
         } else if (moduleId === 'conversion') {
-          query = `I need conversion and funnel architecture help for my ${formData.industry} in ${formData.city} on ${formData.channel}. ${formData.query}`
+          goals.push('Conversion Funnel Optimization')
         } else if (moduleId === 'automation') {
-          query = `I need automation setup for my ${formData.industry} in ${formData.city} using ${formData.channel}. ${formData.query}`
-        }
-
-        requestBody = {
-          role: 'ai_marketing_strategist',
-          locale: 'tr-TR',
-          city: formData.city || 'Istanbul',
-          industry: formData.industry || 'Other',
-          channel: formData.channel || 'Instagram Ads',
-          query: query,
+          goals.push('Automation System Setup')
+        } else {
+          goals.push('Marketing Analysis')
         }
       }
 
-      const response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      })
-
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`)
+      // Build URL - use a placeholder if no URL provided
+      let url = formData.url || ''
+      if (!url && formData.channel) {
+        // Create a placeholder URL based on channel
+        url = `https://example.com/${formData.channel.toLowerCase().replace(/\s+/g, '-')}`
       }
 
-      const data = await response.json()
+      const requestBody: BrainAPIRequest = {
+        url: url || 'https://example.com',
+        goals: goals,
+        platform: formData.channel || 'Instagram Ads',
+      }
+
+      console.log('Sending request to Brain API')
+      console.log('Request body:', requestBody)
+
+      const data = await postToBrain<BrainAPIResponse>('/api/brain', requestBody)
+      console.log('Success response:', data)
       setResult(data)
     } catch (err) {
-      console.error('Error:', err)
-      setError(err instanceof Error ? err.message : 'AI analysis failed. Please try again.')
+      console.error('Error in handleSubmit:', err)
+      let errorMessage = 'AI analysis failed. Please try again.'
+      
+      if (err instanceof Error) {
+        const errorMsg = err.message.toLowerCase()
+        if (errorMsg.includes('failed to fetch') || errorMsg.includes('networkerror') || errorMsg.includes('network request failed')) {
+          errorMessage = 'Unable to connect to the server. Please check your internet connection and ensure the Next.js development server is running. If you are in development, make sure to run `npm run dev`.'
+        } else if (errorMsg.includes('timeout')) {
+          errorMessage = err.message
+        } else if (errorMsg.includes('cors')) {
+          errorMessage = 'CORS error: The server is not allowing requests from this origin.'
+        } else if (errorMsg.includes('api error')) {
+          errorMessage = err.message
+        } else {
+          errorMessage = err.message || 'An unexpected error occurred. Please try again.'
+        }
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -160,101 +167,119 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
 
   if (result) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-        <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/20 bg-black/90 p-8 text-white">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6">
+        {/* Animated Background Lights */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border-2 border-purple-500/30 bg-gradient-to-br from-slate-900 to-black p-6 sm:p-8 md:p-10 text-white shadow-2xl">
           <button
             onClick={() => {
               setResult(null)
               onClose()
             }}
-            className="absolute left-4 top-4 rounded-full p-2 hover:bg-white/10 transition"
+            className="absolute right-4 top-4 sm:right-6 sm:top-6 rounded-full p-2 hover:bg-white/10 transition-all hover:scale-110 z-10"
+            aria-label="Close"
           >
             <X size={24} />
           </button>
 
-          <div className="mb-6">
-            <h2 className="text-3xl font-semibold mb-2">{config.title} - Results</h2>
-            {result.quality_score !== undefined && (
-              <div className="inline-block px-4 py-2 rounded-full bg-green-500/20 text-green-300 text-sm font-semibold">
-                Quality Score: {result.quality_score}/5
-              </div>
-            )}
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
+              {config.title} - Results
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              {result.score !== undefined && (
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-500/30 text-purple-300 text-sm font-semibold backdrop-blur-sm">
+                  <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                  Score: {result.score}
+                </div>
+              )}
+              {result.aiConfidence !== undefined && (
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 text-blue-300 text-sm font-semibold backdrop-blur-sm">
+                  <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                  AI Confidence: {result.aiConfidence}%
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="prose prose-invert max-w-none">
-            {/* Handle structured response from FastAPI (for deepscan) */}
-            {result.summary ? (
-              <div className="space-y-6 text-gray-200 leading-relaxed">
-                <div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">Summary</h3>
-                  <p className="whitespace-pre-wrap">{result.summary}</p>
-                </div>
-                
-                {result.segments && result.segments.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Segments</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {result.segments.map((segment: string, idx: number) => (
-                        <li key={idx}>{segment}</li>
+          <div className="prose prose-invert max-w-none space-y-4">
+            {/* Display new response format */}
+            {result.mainIssues && result.mainIssues.length > 0 ? (
+              <div className="space-y-4">
+                {/* Main Issues */}
+                {result.mainIssues && result.mainIssues.length > 0 && (
+                  <div className="rounded-2xl border-2 border-red-500/20 bg-slate-800 p-5 sm:p-6">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-3 text-red-300">Main Issues</h3>
+                    <ul className="space-y-2">
+                      {result.mainIssues.map((issue, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm sm:text-base text-gray-200">
+                          <span className="text-red-400 mt-1">•</span>
+                          <span>{issue}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>
                 )}
-                
-                {result.barriers && result.barriers.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Barriers</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {result.barriers.map((barrier: string, idx: number) => (
-                        <li key={idx}>{barrier}</li>
+
+                {/* Suggestions */}
+                {result.suggestions && result.suggestions.length > 0 && (
+                  <div className="rounded-2xl border-2 border-blue-500/20 bg-slate-800 p-5 sm:p-6">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-3 text-blue-300">Suggestions</h3>
+                    <ul className="space-y-2">
+                      {result.suggestions.map((suggestion, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm sm:text-base text-gray-200">
+                          <span className="text-blue-400 mt-1">•</span>
+                          <span>{suggestion}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>
                 )}
-                
-                {result.triggers && result.triggers.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Triggers</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {result.triggers.map((trigger: string, idx: number) => (
-                        <li key={idx}>{trigger}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {result.recommendations && result.recommendations.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 text-white">Recommendations</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {result.recommendations.map((rec: string, idx: number) => (
-                        <li key={idx}>{rec}</li>
+
+                {/* Quick Wins */}
+                {result.quickWins && result.quickWins.length > 0 && (
+                  <div className="rounded-2xl border-2 border-green-500/20 bg-slate-800 p-5 sm:p-6">
+                    <h3 className="text-lg sm:text-xl font-semibold mb-3 text-green-300">Quick Wins</h3>
+                    <ul className="space-y-2">
+                      {result.quickWins.map((win, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm sm:text-base text-gray-200">
+                          <span className="text-green-400 mt-1">•</span>
+                          <span>{win}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>
                 )}
               </div>
             ) : (
-              // Handle simple text response (for other modules or fallback)
-              <div className="whitespace-pre-wrap text-gray-200 leading-relaxed">
-                {result.result || result.content || result.response || 'No results available.'}
+              <div className="rounded-2xl border-2 border-purple-500/20 bg-slate-800 p-5 sm:p-6">
+                <div className="text-sm sm:text-base text-gray-200">
+                  No detailed results available.
+                </div>
               </div>
             )}
           </div>
 
-          <div className="mt-8 flex gap-4">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={() => {
                 // Format result for download
                 let content = `# ${config.title}\n\n`
-                if (result.summary) {
-                  content += `## Summary\n\n${result.summary}\n\n`
-                  if (result.segments) content += `## Segments\n\n${result.segments.map((s: string) => `- ${s}`).join('\n')}\n\n`
-                  if (result.barriers) content += `## Barriers\n\n${result.barriers.map((b: string) => `- ${b}`).join('\n')}\n\n`
-                  if (result.triggers) content += `## Triggers\n\n${result.triggers.map((t: string) => `- ${t}`).join('\n')}\n\n`
-                  if (result.recommendations) content += `## Recommendations\n\n${result.recommendations.map((r: string) => `- ${r}`).join('\n')}\n\n`
-                } else {
-                  content += result.result || result.content || result.response || ''
+                content += `Score: ${result.score}\n`
+                content += `AI Confidence: ${result.aiConfidence}%\n\n`
+                
+                if (result.mainIssues && result.mainIssues.length > 0) {
+                  content += `## Main Issues\n\n${result.mainIssues.join('\n')}\n\n`
+                }
+                if (result.suggestions && result.suggestions.length > 0) {
+                  content += `## Suggestions\n\n${result.suggestions.join('\n')}\n\n`
+                }
+                if (result.quickWins && result.quickWins.length > 0) {
+                  content += `## Quick Wins\n\n${result.quickWins.join('\n')}\n\n`
                 }
                 
                 const blob = new Blob([content], { type: 'text/markdown' })
@@ -265,16 +290,17 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
                 a.click()
                 URL.revokeObjectURL(url)
               }}
-              className="rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-gray-200"
+              className="group relative flex-1 inline-flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
             >
-              Download Results
+              <span className="relative z-10">Download Results</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
             </button>
             <button
               onClick={() => {
                 setResult(null)
                 onClose()
               }}
-              className="rounded-2xl border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-2xl border-2 border-purple-500/40 bg-slate-800 px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all hover:border-purple-500/60 hover:bg-slate-700 hover:scale-105"
             >
               Close
             </button>
@@ -285,31 +311,47 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-2xl rounded-3xl border border-white/20 bg-black/90 p-8 text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6">
+      {/* Animated Background Lights */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
+      <div className="relative w-full max-w-2xl rounded-3xl border-2 border-purple-500/30 bg-gradient-to-br from-slate-900 to-black p-6 sm:p-8 md:p-10 text-white shadow-2xl overflow-y-auto max-h-[90vh]">
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute left-4 top-4 rounded-full p-2 hover:bg-white/10 transition"
+          className="absolute right-4 top-4 sm:right-6 sm:top-6 rounded-full p-2 bg-slate-800 hover:bg-slate-700 border border-purple-500/30 transition-all hover:scale-110 z-10"
+          aria-label="Close"
         >
           <X size={24} />
         </button>
 
-        <h2 className="text-3xl font-semibold mb-6">{config.title}</h2>
+        {/* Header */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
+            {config.title}
+          </h2>
+          <p className="text-sm sm:text-base text-gray-400">Fill out the form below to get started</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
           {config.fields.map((field) => (
-            <div key={field.name}>
-              <label className="block mb-2 text-sm font-semibold">{field.label}</label>
+            <div key={field.name} className="space-y-2">
+              <label className="block text-sm sm:text-base font-semibold text-gray-200">
+                {field.label}
+              </label>
               {field.type === 'select' ? (
                 <select
                   value={formData[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
-                  className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white focus:border-white/40 focus:outline-none"
+                  className="w-full rounded-xl border-2 border-gray-300 bg-white px-4 py-3 text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
                   required
                 >
-                  <option value="">Select...</option>
+                  <option value="" className="bg-white text-gray-900">Select...</option>
                   {field.options?.map((opt) => (
-                    <option key={opt} value={opt} className="bg-black text-white">
+                    <option key={opt} value={opt} className="bg-white text-gray-900">
                       {opt}
                     </option>
                   ))}
@@ -319,7 +361,7 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
                   value={formData[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
                   placeholder={field.placeholder}
-                  className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-gray-400 focus:border-white/40 focus:outline-none min-h-[120px]"
+                  className="w-full rounded-xl border-2 border-gray-300 bg-white px-4 py-3 text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[120px] sm:min-h-[140px] resize-y"
                   required
                 />
               ) : (
@@ -328,39 +370,44 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
                   value={formData[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
                   placeholder={field.placeholder}
-                  className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-gray-400 focus:border-white/40 focus:outline-none"
+                  className="w-full rounded-xl border-2 border-gray-300 bg-white px-4 py-3 text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
                   required
                 />
               )}
             </div>
           ))}
 
-          <div className="flex gap-4 pt-4">
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="group relative flex-1 inline-flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3.5 text-sm sm:text-base font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {loading ? (
                 <>
-                  <Loader2 className="animate-spin" size={20} />
-                  Analyzing...
+                  <Loader2 className="animate-spin mr-2" size={20} />
+                  <span>Analyzing...</span>
                 </>
               ) : (
-                'Analyze with AI'
+                <>
+                  <span className="relative z-10">Analyze with AI</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
+                </>
               )}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-2xl border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-2xl border border-white/30 bg-white/5 px-6 py-3.5 text-sm sm:text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/50 hover:bg-white/10 hover:scale-105"
             >
               Cancel
             </button>
           </div>
 
+          {/* Error Message */}
           {error && (
-            <div className="mt-4 rounded-xl bg-red-500/20 border border-red-500/50 p-4 text-red-300 text-sm">
+            <div className="mt-4 rounded-xl bg-red-900/50 border-2 border-red-500 p-4 text-red-200 text-sm sm:text-base">
               {error}
             </div>
           )}

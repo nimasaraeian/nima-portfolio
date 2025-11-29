@@ -248,46 +248,57 @@ export default function ServicesPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
         {services.map((service, index) => (
-          <Link
+          <div
             key={index}
-            href={service.href}
             className="group block bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-2xl hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 transition-[border-color,box-shadow,transform] duration-200 ease-out transform hover:-translate-y-0.5 overflow-hidden will-change-transform"
           >
-            <div className="relative w-full h-48 overflow-hidden">
-              <Image
-                src={service.image}
-                alt={service.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover group-hover:scale-[1.02] transition-transform duration-200 ease-out will-change-transform"
-                loading={index < 3 ? "eager" : "lazy"}
-                priority={index < 3}
-                quality={80}
-              />
-            </div>
-            <div className="p-6">
-              <h2 className="text-2xl font-semibold mb-3 text-white group-hover:text-blue-300 transition-colors duration-200" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                {service.title}
-              </h2>
-              <p className="text-gray-300 mb-4 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                {service.description}
-              </p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {service.keywords.map((keyword, i) => (
-                  <span
-                    key={i}
-                    className="text-xs px-3 py-1 bg-gray-800 text-gray-400 rounded-full border border-gray-700"
-                  >
-                    {keyword}
-                  </span>
-                ))}
+            <Link href={service.href} className="block">
+              <div className="relative w-full h-48 overflow-hidden">
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-[1.02] transition-transform duration-200 ease-out will-change-transform"
+                  loading={index < 3 ? "eager" : "lazy"}
+                  priority={index < 3}
+                  quality={80}
+                />
               </div>
-              <div className="text-blue-400 group-hover:text-blue-300 font-medium transition-colors duration-200 flex items-center gap-2">
-                Learn more
-                <span className="group-hover:translate-x-0.5 transition-transform duration-200 ease-out inline-block">→</span>
+              <div className="p-6">
+                <h2 className="text-2xl font-semibold mb-3 text-white group-hover:text-blue-300 transition-colors duration-200" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                  {service.title}
+                </h2>
+                <p className="text-gray-300 mb-4 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                  {service.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {service.keywords.map((keyword, i) => (
+                    <span
+                      key={i}
+                      className="text-xs px-3 py-1 bg-gray-800 text-gray-400 rounded-full border border-gray-700"
+                    >
+                      {keyword}
+                    </span>
+                  ))}
+                </div>
+                <div className="text-blue-400 group-hover:text-blue-300 font-medium transition-colors duration-200 flex items-center gap-2">
+                  Learn more
+                  <span className="group-hover:translate-x-0.5 transition-transform duration-200 ease-out inline-block">→</span>
+                </div>
               </div>
+            </Link>
+            <div className="px-6 pb-6 pt-2 border-t border-gray-700/50">
+              <Link
+                href="/ai-marketing"
+                onClick={(e) => e.stopPropagation()}
+                className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200 inline-flex items-center gap-1.5 font-medium group/ai"
+              >
+                <span>Learn how our AI Marketing Engine works</span>
+                <span className="text-purple-400 group-hover/ai:translate-x-0.5 transition-transform duration-200 inline-block">→</span>
+              </Link>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 

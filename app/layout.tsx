@@ -155,7 +155,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-black text-white font-sans">
           {/* Header with Signature */}
-          <header className="bg-black py-3 sm:py-5 md:py-8 px-2 sm:px-3 md:px-6 flex flex-col items-center shadow-md border-b border-gray-800 relative z-40 w-full overflow-hidden">
+          <header className="bg-black py-3 sm:py-5 md:py-8 px-2 sm:px-3 md:px-6 flex flex-col items-center shadow-md border-b border-gray-800 relative z-40 w-full overflow-x-hidden overflow-y-visible">
             <Link href="/" className="block mb-1.5 sm:mb-2 md:mb-4">
               <Image
                 src="/image/signature-white.png"
@@ -170,7 +170,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
             
             {/* Navigation Menu */}
-            <div className="w-full max-w-full overflow-hidden">
+            <div className="w-full max-w-full overflow-x-auto overflow-y-visible">
             <SideMenu />
             </div>
           </header>
