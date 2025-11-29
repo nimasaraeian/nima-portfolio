@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { SITE } from "../lib/site";
 import Link from "next/link";
 import Image from "next/image";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "AI Marketing & Content Strategy Services | Nima Saraeian",
@@ -291,7 +292,7 @@ export default function ServicesPage() {
             <div className="px-6 pb-6 pt-2 border-t border-gray-700/50">
               <Link
                 href="/ai-marketing"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.stopPropagation()}
                 className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200 inline-flex items-center gap-1.5 font-medium group/ai"
               >
                 <span>Learn how our AI Marketing Engine works</span>
