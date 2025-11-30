@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import MultiStepInputPanel from './components/MultiStepInputPanel';
+import ReportPanel from './components/ReportPanel';
 
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
@@ -9,14 +11,14 @@ import Link from 'next/link';
  * This page is the main UI for the Behavioral DeepScan AI engine.
  * 
  * Key Components:
- * - CognitiveFrictionResult: TypeScript interface matching the response from POST /api/brain/cognitive-friction
+ * - MultiStepInputPanel: Multi-step form with progress indicator
+ * - ReportPanel: AI analysis report with empty, loading, success, and error states
  * - analyzeCognitiveFriction(): Function that calls POST /api/brain/cognitive-friction (via centralized API client)
- * - ScoreCard: Component for displaying individual scores with progress bars
  * 
  * The page includes:
  * - Hero section with H1 and intro
  * - "How it works" section
- * - Main analysis form (left) and results panel (right)
+ * - Main analysis form (left 40%) and results panel (right 60%)
  * - SEO content sections
  * - CTA section
  * 
@@ -57,30 +59,6 @@ async function analyzeCognitiveFriction(payload: {
   meta: null;
 }): Promise<CognitiveFrictionResult> {
   return postToBrain<CognitiveFrictionResult>('/api/brain/cognitive-friction', payload);
-}
-
-// Score display component
-function ScoreCard({ label, value, colorClass }: { label: string; value: number; colorClass: string }) {
-  const getColorClass = (score: number) => {
-    if (score <= 30) return 'bg-green-500';
-    if (score <= 60) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
-
-  return (
-    <div className="rounded-xl border border-gray-700 bg-slate-800 p-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-semibold text-gray-300">{label}</span>
-        <span className="text-xl font-bold text-white">{value}</span>
-      </div>
-      <div className="w-full bg-gray-700 rounded-full h-2">
-        <div
-          className={`h-2 rounded-full transition-all ${getColorClass(value)}`}
-          style={{ width: `${value}%` }}
-        />
-      </div>
-    </div>
-  );
 }
 
 // Main page component
@@ -232,369 +210,36 @@ export default function BehavioralDeepScanPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
         
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Run an AI Cognitive Friction Scan
           </h2>
 
-          <div className="grid gap-8 lg:grid-cols-2">
-            {/* Form - Left Side */}
-            <div className="rounded-2xl border border-gray-700 bg-slate-900/50 p-6 sm:p-8 backdrop-blur-sm">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Raw Text */}
-                <div>
-                  <label htmlFor="raw_text" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Paste your content (at least 20–50 words) <span className="text-red-400">*</span>
-                  </label>
-                  <textarea
-                    id="raw_text"
-                    name="raw_text"
-                    value={formData.raw_text}
-                    onChange={handleInputChange}
-                    placeholder="Example: landing page copy, ad script, email, product description…"
-                    required
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[150px] resize-y"
-                  />
-                </div>
-
-                {/* Platform */}
-                <div>
-                  <label htmlFor="platform" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Content type (affects analysis)
-                  </label>
-                  <select
-                    id="platform"
-                    name="platform"
-                    value={formData.platform}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="landing_page">Landing Page</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="linkedin">LinkedIn</option>
-                    <option value="email">Email</option>
-                    <option value="ad">Ad</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                {/* Goals */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-200 mb-2">
-                    What are you trying to achieve?
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {['clicks', 'leads', 'sales', 'engagement'].map((goal) => (
-                      <label
-                        key={goal}
-                        className="flex items-center gap-2 p-3 rounded-xl border-2 border-gray-600 bg-slate-800 hover:border-purple-500/50 cursor-pointer transition-all"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.goal.includes(goal)}
-                          onChange={() => handleGoalChange(goal)}
-                          className="w-4 h-4 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
-                        />
-                        <span className="text-sm text-gray-200 capitalize">{goal}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Audience */}
-                <div>
-                  <label htmlFor="audience" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Audience stage
-                  </label>
-                  <select
-                    id="audience"
-                    name="audience"
-                    value={formData.audience}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="cold">Cold</option>
-                    <option value="warm">Warm</option>
-                    <option value="retargeting">Retargeting</option>
-                  </select>
-                </div>
-
-                {/* Language */}
-                <div>
-                  <label htmlFor="language" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Content language
-                  </label>
-                  <select
-                    id="language"
-                    name="language"
-                    value={formData.language}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="en">English</option>
-                    <option value="tr">Turkish</option>
-                    <option value="fa">Persian</option>
-                  </select>
-                </div>
-
-                {/* Audience Type */}
-                <div>
-                  <label htmlFor="audienceType" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Audience type
-                  </label>
-                  <select
-                    id="audienceType"
-                    name="audienceType"
-                    value={formData.audienceType}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="General">General</option>
-                    <option value="Professional">Professional</option>
-                    <option value="Technical">Technical</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Cold audience">Cold audience</option>
-                    <option value="Warm audience">Warm audience</option>
-                  </select>
-                </div>
-
-                {/* Tone Preference */}
-                <div>
-                  <label htmlFor="tonePreference" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Preferred tone
-                  </label>
-                  <select
-                    id="tonePreference"
-                    name="tonePreference"
-                    value={formData.tonePreference}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="Formal">Formal</option>
-                    <option value="Confident">Confident</option>
-                    <option value="Friendly">Friendly</option>
-                    <option value="Direct">Direct</option>
-                    <option value="Conversational">Conversational</option>
-                  </select>
-                </div>
-
-                {/* Advanced Section */}
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
-                  >
-                    {showAdvanced ? '▼' : '▶'} Advanced (meta JSON)
-                  </button>
-                  {showAdvanced && (
-                    <textarea
-                      value={metaJson}
-                      onChange={(e) => setMetaJson(e.target.value)}
-                      placeholder='{"key": "value"}'
-                      className="mt-2 w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-xs text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[80px] resize-y font-mono"
-                    />
-                  )}
-                </div>
-
-                {/* Error Display */}
-                {error && (
-                  <div className="rounded-xl border-2 border-red-500/20 bg-red-900/20 p-4">
-                    <div className="text-sm text-red-200">{error}</div>
-                  </div>
-                )}
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={loading || !formData.raw_text.trim()}
-                  className="w-full group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <>
-                      <span className="mr-2 animate-spin">⏳</span>
-                      <span>Analyzing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="relative z-10">Run Cognitive Friction Analysis</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
-                    </>
-                  )}
-                </button>
-              </form>
+          {/* New Layout: Vertical - Form on top, Results below */}
+          <div className="space-y-6 sm:space-y-8">
+            {/* Input Panel - Top */}
+            <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/30 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
+              <MultiStepInputPanel
+                formData={formData}
+                showAdvanced={showAdvanced}
+                metaJson={metaJson}
+                loading={loading}
+                error={error}
+                onInputChange={handleInputChange}
+                onGoalChange={handleGoalChange}
+                onAdvancedToggle={() => setShowAdvanced(!showAdvanced)}
+                onMetaJsonChange={setMetaJson}
+                onSubmit={handleSubmit}
+              />
             </div>
 
-            {/* Results - Right Side */}
-            <div className="rounded-2xl border border-gray-700 bg-slate-900/50 p-6 sm:p-8 backdrop-blur-sm">
-              <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Your Decision Psychology Report
-              </h2>
-
-              {!result ? (
-                <div className="text-center py-12">
-                  <div className="text-4xl mb-4">📊</div>
-                  <h3 className="text-lg font-semibold mb-2 text-white">Your Decision Psychology Report</h3>
-                  <p className="text-sm text-gray-400 max-w-sm mx-auto">
-                    No analysis yet. Paste your content on the left and run a Cognitive Friction Scan to see results here.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {/* Summary Section */}
-                  <div className="rounded-xl border border-purple-500/20 bg-purple-900/10 p-4 mb-4">
-                    <p className="text-sm text-gray-300 leading-relaxed">{result.explanationSummary}</p>
-                  </div>
-
-                  {/* Key Scores Section */}
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4 text-white">Key Scores</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <ScoreCard label="Friction Level" value={result.frictionScore} colorClass="red" />
-                      <ScoreCard label="Trust Stability" value={result.trustScore} colorClass="green" />
-                      <ScoreCard label="Clarity" value={result.emotionalClarityScore} colorClass="blue" />
-                      <ScoreCard label="Emotional Tone" value={result.motivationMatchScore} colorClass="purple" />
-                      <div className="sm:col-span-2">
-                        <ScoreCard label="Momentum" value={Math.round(result.decisionProbability * 100)} colorClass="green" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Decision Metrics */}
-                  <div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="rounded-xl border border-gray-700 bg-slate-800 p-4">
-                        <span className="text-sm font-semibold text-gray-300 block mb-1">Decision likelihood</span>
-                        <span className="text-2xl font-bold text-white">
-                          {Math.round(result.decisionProbability * 100)}%
-                        </span>
-                      </div>
-                      <div className="rounded-xl border border-gray-700 bg-slate-800 p-4">
-                        <span className="text-sm font-semibold text-gray-300 block mb-1">Conversion impact</span>
-                        <span className={`text-2xl font-bold ${result.conversionLiftEstimate >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {result.conversionLiftEstimate >= 0 ? '+' : ''}
-                          {Math.round(result.conversionLiftEstimate)}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Blockers & Factors */}
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4 text-white">Decision Blockers & Psychological Factors</h3>
-                    <div className="space-y-4">
-                      {result.keyDecisionBlockers.length > 0 && (
-                        <div className="rounded-xl border border-red-500/20 bg-red-900/10 p-4">
-                          <h4 className="text-sm font-semibold mb-2 text-red-300">Key Decision Blockers</h4>
-                          <ul className="space-y-1 text-sm text-gray-300">
-                            {result.keyDecisionBlockers.map((blocker, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <span className="text-red-400 mt-1">•</span>
-                                <span>{blocker}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {result.emotionalResistanceFactors.length > 0 && (
-                        <div className="rounded-xl border border-orange-500/20 bg-orange-900/10 p-4">
-                          <h4 className="text-sm font-semibold mb-2 text-orange-300">Emotional Resistance</h4>
-                          <ul className="space-y-1 text-sm text-gray-300">
-                            {result.emotionalResistanceFactors.map((factor, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <span className="text-orange-400 mt-1">•</span>
-                                <span>{factor}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {result.cognitiveOverloadFactors.length > 0 && (
-                        <div className="rounded-xl border border-yellow-500/20 bg-yellow-900/10 p-4">
-                          <h4 className="text-sm font-semibold mb-2 text-yellow-300">Cognitive Overload</h4>
-                          <ul className="space-y-1 text-sm text-gray-300">
-                            {result.cognitiveOverloadFactors.map((factor, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <span className="text-yellow-400 mt-1">•</span>
-                                <span>{factor}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {result.trustBreakpoints.length > 0 && (
-                        <div className="rounded-xl border border-blue-500/20 bg-blue-900/10 p-4">
-                          <h4 className="text-sm font-semibold mb-2 text-blue-300">Trust Breakpoints</h4>
-                          <ul className="space-y-1 text-sm text-gray-300">
-                            {result.trustBreakpoints.map((point, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <span className="text-blue-400 mt-1">•</span>
-                                <span>{point}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {result.motivationMisalignments.length > 0 && (
-                        <div className="rounded-xl border border-purple-500/20 bg-purple-900/10 p-4">
-                          <h4 className="text-sm font-semibold mb-2 text-purple-300">Motivation Misalignments</h4>
-                          <ul className="space-y-1 text-sm text-gray-300">
-                            {result.motivationMisalignments.map((misalignment, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <span className="text-purple-400 mt-1">•</span>
-                                <span>{misalignment}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Recommendations */}
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4 text-white">AI Recommendations</h3>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="rounded-xl border border-green-500/20 bg-green-900/10 p-4">
-                        <h4 className="text-sm font-semibold mb-2 text-green-300">Quick Wins</h4>
-                        <p className="text-xs text-gray-400 mb-3">Immediate changes you can make to reduce friction fast.</p>
-                        <ul className="space-y-1 text-sm text-gray-300">
-                          {result.recommendedQuickWins.map((win, idx) => (
-                            <li key={idx} className="flex items-start gap-2">
-                              <span className="text-green-400 mt-1">⚡</span>
-                              <span>{win}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="rounded-xl border border-indigo-500/20 bg-indigo-900/10 p-4">
-                        <h4 className="text-sm font-semibold mb-2 text-indigo-300">Deep Changes</h4>
-                        <p className="text-xs text-gray-400 mb-3">Structural or strategic changes for long-term impact.</p>
-                        <ul className="space-y-1 text-sm text-gray-300">
-                          {result.recommendedDeepChanges.map((change, idx) => (
-                            <li key={idx} className="flex items-start gap-2">
-                              <span className="text-indigo-400 mt-1">🔧</span>
-                              <span>{change}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Summary */}
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4 text-white">Decision Psychology Summary</h3>
-                    <div className="rounded-xl border border-purple-500/20 bg-purple-900/10 p-4">
-                      <p className="text-sm text-gray-300 leading-relaxed">{result.explanationSummary}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+            {/* Report Panel - Bottom */}
+            <div>
+              <ReportPanel
+                result={result}
+                loading={loading}
+                error={error}
+                formData={formData}
+              />
             </div>
           </div>
         </div>

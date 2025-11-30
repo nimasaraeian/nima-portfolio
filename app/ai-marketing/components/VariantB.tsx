@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
+import MultiStepInputPanel from '../behavioral-deepscan/components/MultiStepInputPanel';
+import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
 
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
@@ -630,236 +632,36 @@ export default function AiMarketingPageVariantB() {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
         
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Run an AI Cognitive Friction Scan
           </h2>
 
-          <div className="grid gap-8 lg:grid-cols-2">
-            {/* Form - Left Side */}
-            <div className="rounded-2xl border border-gray-700 bg-slate-900/50 p-6 sm:p-8 backdrop-blur-sm">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Raw Text */}
-                <div>
-                  <label htmlFor="raw_text" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Content to analyze <span className="text-red-400">*</span>
-                  </label>
-                  <textarea
-                    id="raw_text"
-                    name="raw_text"
-                    value={formData.raw_text}
-                    onChange={handleInputChange}
-                    placeholder="Paste your landing page, ad copy, email, or social post here..."
-                    required
-                    rows={10}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all resize-y"
-                  />
-                  {error && !formData.raw_text.trim() && (
-                    <p className="mt-1 text-xs text-red-400">Please enter content to analyze</p>
-                  )}
-                </div>
-
-                {/* Platform */}
-                <div>
-                  <label htmlFor="platform" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Platform
-                  </label>
-                  <select
-                    id="platform"
-                    name="platform"
-                    value={formData.platform}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="landing_page">Landing Page</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="linkedin">LinkedIn</option>
-                    <option value="email">Email</option>
-                    <option value="ad">Ad</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                {/* Goals */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-200 mb-2">
-                    Primary goals
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {['clicks', 'leads', 'sales', 'engagement'].map((goal) => (
-                      <label
-                        key={goal}
-                        className="flex items-center gap-2 p-3 rounded-xl border-2 border-gray-600 bg-slate-800 hover:border-purple-500/50 cursor-pointer transition-all"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.goal.includes(goal)}
-                          onChange={() => handleGoalChange(goal)}
-                          className="w-4 h-4 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
-                        />
-                        <span className="text-sm text-gray-200 capitalize">{goal}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Audience */}
-                <div>
-                  <label htmlFor="audience" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Audience stage
-                  </label>
-                  <select
-                    id="audience"
-                    name="audience"
-                    value={formData.audience}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="cold">Cold</option>
-                    <option value="warm">Warm</option>
-                    <option value="retargeting">Retargeting</option>
-                  </select>
-                </div>
-
-                {/* Language */}
-                <div>
-                  <label htmlFor="language" className="block text-sm font-semibold text-gray-200 mb-2">
-                    Content language
-                  </label>
-                  <select
-                    id="language"
-                    name="language"
-                    value={formData.language}
-                    onChange={handleInputChange}
-                    className="w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-sm text-white focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="en">English</option>
-                    <option value="tr">Turkish</option>
-                    <option value="fa">Persian</option>
-                  </select>
-                </div>
-
-                {/* Advanced Section */}
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
-                  >
-                    {showAdvanced ? '▼' : '▶'} Advanced (meta JSON)
-                  </button>
-                  {showAdvanced && (
-                    <textarea
-                      value={metaJson}
-                      onChange={(e) => setMetaJson(e.target.value)}
-                      placeholder='{"key": "value"}'
-                      className="mt-2 w-full rounded-xl border-2 border-gray-600 bg-slate-800 px-4 py-3 text-xs text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[80px] resize-y font-mono"
-                    />
-                  )}
-                </div>
-
-                {/* Error Display */}
-                {error && (
-                  <div className="mt-4 rounded-lg border border-red-400 bg-red-500/10 p-3 text-sm text-red-300">
-                    <strong>Error:</strong> {error}
-                  </div>
-                )}
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={loading || !formData.raw_text.trim()}
-                  className="w-full group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <>
-                      <span className="mr-2 animate-spin">⏳</span>
-                      <span>Analyzing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="relative z-10">Run Cognitive Friction Analysis</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
-                    </>
-                  )}
-                </button>
-              </form>
+          {/* New Layout: Vertical - Form on top, Results below */}
+          <div className="space-y-6 sm:space-y-8">
+            {/* Input Panel - Top */}
+            <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/30 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
+              <MultiStepInputPanel
+                formData={formData}
+                showAdvanced={showAdvanced}
+                metaJson={metaJson}
+                loading={loading}
+                error={error}
+                onInputChange={handleInputChange}
+                onGoalChange={handleGoalChange}
+                onAdvancedToggle={() => setShowAdvanced(!showAdvanced)}
+                onMetaJsonChange={setMetaJson}
+                onSubmit={handleSubmit}
+              />
             </div>
 
-            {/* Results - Right Side */}
-            <div className="rounded-2xl border border-gray-700 bg-slate-900/50 p-6 sm:p-8 backdrop-blur-sm">
-              <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Your Decision Psychology Report
-              </h2>
-
-              {!result ? (
-                <div className="text-center py-12">
-                  <div className="text-4xl mb-4">📊</div>
-                  <h3 className="text-lg font-semibold mb-2 text-gray-300">No analysis yet</h3>
-                  <p className="text-sm text-gray-400">
-                    Paste your content and run the AI scan to get a decision psychology report.
-                  </p>
-                </div>
-              ) : (
-                <ResultsPanel result={result} />
-              )}
-
-              {/* AI Copy Rewrite Suggestions Section - Directly under ResultsPanel */}
-              <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-inner shadow-black/40">
-                <div className="flex items-center justify-between gap-4 mb-3">
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-100">
-                      AI Copy Rewrite Suggestions
-                    </h3>
-                    <p className="text-xs text-slate-400">
-                      Get multiple psychologically-optimized versions of your content.
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={runRewrite}
-                    disabled={rewriteLoading || !formData.raw_text.trim()}
-                    className="inline-flex items-center rounded-full bg-violet-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-violet-500 disabled:cursor-not-allowed disabled:bg-slate-700"
-                  >
-                    {rewriteLoading ? 'Generating...' : 'Generate Better Copy'}
-                  </button>
-                </div>
-
-                {rewriteError && (
-                  <div className="mb-3 rounded-lg border border-red-500/40 bg-red-500/5 px-3 py-2 text-xs text-red-200">
-                    {rewriteError}
-                  </div>
-                )}
-
-                {!rewriteResult && !rewriteLoading && !rewriteError && (
-                  <p className="text-xs text-slate-500">
-                    Paste your content, run the analysis, then click{' '}
-                    <span className="font-semibold text-slate-200">Generate Better Copy</span>{' '}
-                    to see suggested rewrites.
-                  </p>
-                )}
-
-                {rewriteResult && (
-                  <div className="mt-3 space-y-3 text-xs text-slate-100">
-                    <RewriteVariant label="Soft / Trust-Based" body={rewriteResult.soft_version} />
-                    <RewriteVariant label="Value-Driven" body={rewriteResult.value_version} />
-                    <RewriteVariant label="Proof-Focused" body={rewriteResult.proof_version} />
-                    <RewriteVariant label="Emotional" body={rewriteResult.emotional_version} />
-                    <RewriteVariant label="Direct Response" body={rewriteResult.direct_version} />
-
-                    <div className="pt-2 border-t border-slate-800">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                          Suggested CTA
-                        </span>
-                      </div>
-                      <p className="mt-1 text-xs text-slate-100">
-                        {rewriteResult.cta}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </section>
+            {/* Report Panel - Bottom */}
+            <div>
+              <ReportPanel
+                result={result}
+                loading={loading}
+                error={error}
+                formData={formData}
+              />
             </div>
           </div>
         </div>
