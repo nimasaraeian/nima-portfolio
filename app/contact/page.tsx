@@ -50,10 +50,23 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Email</h3>
                     <a 
-                      href="mailto:info@nimasaraeian.com"
+                      href="mailto:nimasaraeian65@gmail.com"
                       className="text-blue-400 hover:text-blue-300 transition-colors"
                     >
-                      info@nimasaraeian.com
+                      nimasaraeian65@gmail.com
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="text-2xl">📱</div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">Phone</h3>
+                    <a 
+                      href="tel:+905362914170"
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      +90 536 291 41 70
                     </a>
                   </div>
                 </div>
@@ -200,7 +213,7 @@ export default function ContactPage() {
 
             <div className="mt-6 p-4 bg-blue-900/20 border border-blue-700 rounded-lg">
               <p className="text-sm text-blue-300">
-                <strong>Note:</strong> For urgent inquiries, please email directly to info@nimasaraeian.com
+                <strong>Note:</strong> For urgent inquiries, please email directly to nimasaraeian65@gmail.com or call +90 536 291 41 70
               </p>
             </div>
           </div>
