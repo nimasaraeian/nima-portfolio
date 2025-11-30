@@ -90,7 +90,7 @@ function ScoreCard({ label, value, insights, icon: Icon }: {
         </div>
         {insights && insights.length > 0 && (
           <div className="space-y-1.5 sm:space-y-2">
-            {insights.slice(0, 2).map((insight, idx) => (
+            {insights.map((insight, idx) => (
               <div key={idx} className="flex items-start gap-2 text-[11px] sm:text-xs text-slate-400">
                 <span className="text-purple-400 mt-0.5 sm:mt-1">▸</span>
                 <span>{insight}</span>
@@ -128,6 +128,46 @@ function RewriteVariant({ label, body }: { label: string; body: string }) {
       <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">{body}</p>
     </div>
   );
+}
+
+// AI Interpretation generator
+function buildAiInterpretation(result: CognitiveFrictionResult): string {
+  const parts: string[] = [];
+  
+  // Friction and Trust analysis
+  if (result.frictionScore >= 60 && result.trustScore <= 40) {
+    parts.push('Your content currently creates high decision friction and relatively low trust. Users are likely to hesitate and postpone action rather than convert.');
+  } else if (result.frictionScore >= 60) {
+    parts.push('The content creates significant cognitive friction that may cause users to abandon the decision process, despite some trust signals.');
+  } else if (result.trustScore <= 40) {
+    parts.push('Trust levels are low, which creates hesitation even if the content is relatively clear.');
+  }
+  
+  // Motivation analysis
+  if (result.motivationMatchScore < 50) {
+    parts.push('The message does not strongly connect with the audience\'s core motivations, which reduces the emotional drive to take action.');
+  } else if (result.motivationMatchScore >= 70) {
+    parts.push('The content aligns well with audience motivations, creating a strong emotional connection.');
+  }
+  
+  // Decision probability analysis
+  if (result.decisionProbability < 0.4) {
+    parts.push('Overall, the current likelihood of conversion is low. The piece needs clearer value proposition, proof, and emotional resonance.');
+  } else if (result.decisionProbability >= 0.6) {
+    parts.push('The content shows strong conversion potential with good decision-making signals.');
+  }
+  
+  // Emotional clarity
+  if (result.emotionalClarityScore < 50) {
+    parts.push('Emotional messaging could be clearer to better guide users toward confident decisions.');
+  }
+  
+  // Default if no specific patterns
+  if (parts.length === 0) {
+    parts.push('The content shows a balanced psychological profile with moderate conversion potential.');
+  }
+  
+  return parts.join(' ');
 }
 
 export default function ReportPanel({ result, loading, error, formData }: ReportPanelProps) {
@@ -359,6 +399,186 @@ export default function ReportPanel({ result, loading, error, formData }: Report
                     </span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Decision Blockers & Psychological Factors */}
+          <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-2xl">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+              <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+              Decision Blockers & Psychological Factors
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {/* Key Decision Blockers */}
+              <div className="rounded-xl border-2 border-red-500/20 bg-red-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-3 text-red-300 flex items-center gap-2">
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Key Decision Blockers
+                </h4>
+                {result.keyDecisionBlockers && result.keyDecisionBlockers.length > 0 ? (
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+                    {result.keyDecisionBlockers.map((blocker, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-red-400 mt-1">▸</span>
+                        <span>{blocker}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs sm:text-sm text-slate-400 italic">No major blockers detected.</p>
+                )}
+              </div>
+
+              {/* Emotional Resistance Factors */}
+              <div className="rounded-xl border-2 border-orange-500/20 bg-orange-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-3 text-orange-300 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Emotional Resistance
+                </h4>
+                {result.emotionalResistanceFactors && result.emotionalResistanceFactors.length > 0 ? (
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+                    {result.emotionalResistanceFactors.map((factor, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-orange-400 mt-1">▸</span>
+                        <span>{factor}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs sm:text-sm text-slate-400 italic">No major emotional resistance detected.</p>
+                )}
+              </div>
+
+              {/* Cognitive Overload Factors */}
+              <div className="rounded-xl border-2 border-yellow-500/20 bg-yellow-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-3 text-yellow-300 flex items-center gap-2">
+                  <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Cognitive Overload
+                </h4>
+                {result.cognitiveOverloadFactors && result.cognitiveOverloadFactors.length > 0 ? (
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+                    {result.cognitiveOverloadFactors.map((factor, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-yellow-400 mt-1">▸</span>
+                        <span>{factor}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs sm:text-sm text-slate-400 italic">No cognitive overload detected.</p>
+                )}
+              </div>
+
+              {/* Trust Breakpoints */}
+              <div className="rounded-xl border-2 border-blue-500/20 bg-blue-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-3 text-blue-300 flex items-center gap-2">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Trust Breakpoints
+                </h4>
+                {result.trustBreakpoints && result.trustBreakpoints.length > 0 ? (
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+                    {result.trustBreakpoints.map((breakpoint, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-blue-400 mt-1">▸</span>
+                        <span>{breakpoint}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs sm:text-sm text-slate-400 italic">No trust breakpoints detected.</p>
+                )}
+              </div>
+
+              {/* Motivation Misalignments */}
+              {result.motivationMisalignments && result.motivationMisalignments.length > 0 && (
+                <div className="rounded-xl border-2 border-purple-500/20 bg-purple-900/10 p-4 sm:p-5 md:col-span-2">
+                  <h4 className="text-sm sm:text-base font-semibold mb-3 text-purple-300 flex items-center gap-2">
+                    <Target className="w-4 h-4 sm:w-5 sm:h-5" />
+                    Motivation Misalignments
+                  </h4>
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+                    {result.motivationMisalignments.map((misalignment, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-purple-400 mt-1">▸</span>
+                        <span>{misalignment}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* AI Recommendations */}
+          <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-2xl">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+              <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+              AI Recommendations
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {/* Quick Wins */}
+              <div className="rounded-xl border-2 border-green-500/20 bg-green-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-2 text-green-300 flex items-center gap-2">
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Quick Wins
+                </h4>
+                <p className="text-[10px] sm:text-xs text-slate-400 mb-3">Immediate changes to reduce friction fast.</p>
+                {result.recommendedQuickWins && result.recommendedQuickWins.length > 0 ? (
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+                    {result.recommendedQuickWins.map((win, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-green-400 mt-1">⚡</span>
+                        <span>{win}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs sm:text-sm text-slate-400 italic">No quick wins available.</p>
+                )}
+              </div>
+
+              {/* Deep Changes */}
+              <div className="rounded-xl border-2 border-indigo-500/20 bg-indigo-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-2 text-indigo-300 flex items-center gap-2">
+                  <Target className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Deep Changes
+                </h4>
+                <p className="text-[10px] sm:text-xs text-slate-400 mb-3">Structural and strategic improvements for long-term impact.</p>
+                {result.recommendedDeepChanges && result.recommendedDeepChanges.length > 0 ? (
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+                    {result.recommendedDeepChanges.map((change, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-indigo-400 mt-1">🔧</span>
+                        <span>{change}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-xs sm:text-sm text-slate-400 italic">No deep changes available.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Decision Psychology Summary */}
+          <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-2xl">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+              <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+              Decision Psychology Summary
+            </h3>
+            <div className="space-y-4 sm:space-y-6">
+              <div className="rounded-xl border-2 border-purple-500/20 bg-purple-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-3 text-purple-300">Analysis Summary</h4>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{result.explanationSummary}</p>
+              </div>
+              
+              <div className="rounded-xl border-2 border-blue-500/20 bg-blue-900/10 p-4 sm:p-5">
+                <h4 className="text-sm sm:text-base font-semibold mb-3 text-blue-300">AI Interpretation</h4>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  {buildAiInterpretation(result)}
+                </p>
               </div>
             </div>
           </div>
