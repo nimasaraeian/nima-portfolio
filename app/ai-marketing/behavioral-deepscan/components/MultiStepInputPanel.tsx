@@ -202,7 +202,12 @@ export default function MultiStepInputPanel({
                           name="platform"
                           value={platform.value}
                           checked={isSelected}
-                          onChange={onInputChange}
+                          onChange={(e) => {
+                            const event = {
+                              target: { name: 'platform', value: e.target.value },
+                            } as React.ChangeEvent<HTMLSelectElement>;
+                            onInputChange(event);
+                          }}
                           className="sr-only"
                         />
                         <div className={`transform transition-transform ${isSelected ? 'scale-110' : 'group-hover:scale-110'}`}>
