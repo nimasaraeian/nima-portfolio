@@ -141,7 +141,14 @@ export default function MultiStepInputPanel({
                     onChange={onInputChange}
                     placeholder="Paste your marketing copy here..."
                     required
-                    className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white placeholder-slate-500/70 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all min-h-[140px] sm:min-h-[160px] resize-y shadow-xl group-hover:border-purple-500/30"
+                    className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white placeholder-slate-500/70 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all min-h-[140px] sm:min-h-[160px] resize-y shadow-xl group-hover:border-purple-500/30 relative"
+                    style={{
+                      backgroundImage: formData.raw_text.trim() === '' 
+                        ? `radial-gradient(circle, rgba(148, 163, 184, 0.08) 1.2px, transparent 1.2px)`
+                        : 'none',
+                      backgroundSize: '24px 28px',
+                      backgroundPosition: '12px 12px',
+                    }}
                   />
                   <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </div>

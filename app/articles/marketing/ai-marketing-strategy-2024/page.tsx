@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'AI Marketing Strategy 2024: Complete Guide to AI-Driven Marketing Success - Nima Saraeian',
@@ -62,7 +63,7 @@ export default function AIMarketingStrategy2024() {
             </p>
 
             <p className="text-lg mb-8 text-gray-300">
-              This comprehensive guide will show you how to build a complete AI marketing strategy that transforms your business from reactive to predictive, from generic to hyper-personalized, and from guesswork to data-driven precision.
+              This comprehensive guide will show you how to build a complete AI marketing strategy that transforms your business from reactive to predictive, from generic to hyper-personalized, and from guesswork to data-driven precision. For a deeper strategic framework, explore our <Link href="/ai-marketing" className="text-blue-400 hover:text-blue-300 underline">complete AI Marketing guide</Link> — it's completely <strong>FREE</strong> to access and includes advanced tools and behavioral marketing systems.
             </p>
 
             <h2 className="text-2xl font-bold mb-4 text-white">The AI Marketing Revolution: Why 2024 is the Tipping Point</h2>
@@ -90,7 +91,7 @@ export default function AIMarketingStrategy2024() {
 
             <h3 className="text-xl font-semibold mb-3 text-white">1. Data Foundation & Customer Intelligence</h3>
             <p className="mb-4 text-gray-300">
-              Before any AI magic happens, you need a solid data foundation. This isn't just about collecting data—it's about collecting the RIGHT data and making it actionable.
+              Before any AI magic happens, you need a solid data foundation. This isn't just about collecting data—it's about collecting the RIGHT data and making it actionable. Our <Link href="/ai-marketing" className="text-blue-400 hover:text-blue-300 underline">AI Marketing system</Link> provides a <strong>FREE</strong> behavioral marketing engine that helps you build this foundation with real-time data analysis and customer intelligence tools.
             </p>
 
             <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-6">
@@ -106,7 +107,7 @@ export default function AIMarketingStrategy2024() {
 
             <h3 className="text-xl font-semibold mb-3 text-white">2. Predictive Analytics & Behavioral Modeling</h3>
             <p className="mb-4 text-gray-300">
-              The real power of AI marketing lies in its ability to predict customer behavior before it happens. This is where you move from reactive to proactive marketing.
+              The real power of AI marketing lies in its ability to predict customer behavior before it happens. This is where you move from reactive to proactive marketing. You can access our <Link href="/ai-marketing" className="text-blue-400 hover:text-blue-300 underline">advanced AI marketing strategy framework</Link> for <strong>FREE</strong> to see how predictive analytics and behavioral modeling work together in real-time.
             </p>
 
             <p className="mb-4 text-gray-300">
@@ -122,7 +123,7 @@ export default function AIMarketingStrategy2024() {
 
             <h3 className="text-xl font-semibold mb-3 text-white">3. Hyper-Personalization at Scale</h3>
             <p className="mb-4 text-gray-300">
-              Personalization isn't just about using someone's first name in an email. True AI-powered personalization creates unique experiences for every single customer.
+              Personalization isn't just about using someone's first name in an email. True AI-powered personalization creates unique experiences for every single customer. Discover how our <Link href="/ai-marketing" className="text-blue-400 hover:text-blue-300 underline">AI behavioral marketing engine</Link> enables hyper-personalization at scale — try it <strong>FREE</strong> to see real-time personalization in action.
             </p>
 
             <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-4 mb-6">
@@ -186,6 +187,10 @@ export default function AIMarketingStrategy2024() {
             </div>
 
             <h2 className="text-2xl font-bold mb-4 text-white">Implementation Roadmap: Your 90-Day AI Marketing Plan</h2>
+            
+            <p className="mb-6 text-gray-300">
+              To support your implementation journey, explore our <Link href="/ai-marketing" className="text-blue-400 hover:text-blue-300 underline">complete AI Marketing tools and framework</Link>. The entire system is available <strong>FREE</strong> and includes step-by-step implementation guides, behavioral analysis tools, and conversion optimization frameworks.
+            </p>
             
             <div className="space-y-6 mb-8">
               <div className="border-l-4 border-blue-500 pl-4">
@@ -280,7 +285,7 @@ export default function AIMarketingStrategy2024() {
             </p>
 
             <p className="mb-6 text-gray-300">
-              The question isn't whether you should implement AI marketing, but how quickly you can do it effectively. The tools are available, the strategies are proven, and the results are undeniable.
+              The question isn't whether you should implement AI marketing, but how quickly you can do it effectively. The tools are available, the strategies are proven, and the results are undeniable. Visit <Link href="/ai-marketing" className="text-blue-400 hover:text-blue-300 underline">Nima Saraeian's complete AI Marketing 2026 guide</Link> to access the full system — it's <strong>FREE</strong> and includes all the tools, frameworks, and behavioral marketing engines you need to get started immediately.
             </p>
 
             <p className="text-lg font-semibold text-white">

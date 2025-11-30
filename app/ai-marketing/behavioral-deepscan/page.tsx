@@ -177,34 +177,6 @@ export default function BehavioralDeepScanPage() {
       </section>
 
       {/* How it works section */}
-      <section className="relative bg-black py-12 sm:py-16 mt-24">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
-        
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <h2 className="text-3xl font-bold mb-12 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            How Behavioral DeepScan Works
-          </h2>
-          
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: '📝', title: 'Paste your content', desc: 'DeepScan reads emotional tone, certainty, confidence, and hidden friction signals inside your text.' },
-              { icon: '⚙️', title: 'Choose context', desc: "Tell the AI what you're trying to achieve so it can analyze intent and decision psychology accurately." },
-              { icon: '🤖', title: 'Run AI analysis', desc: 'The engine models user psychology and predicts how readers will react to your content.' },
-              { icon: '📊', title: 'Get insights', desc: 'Receive clear, actionable recommendations to reduce friction and increase clarity, trust, and conversion.' },
-            ].map((step, index) => (
-              <div
-                key={index}
-                className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 text-center backdrop-blur-sm"
-              >
-                <div className="text-4xl mb-3">{step.icon}</div>
-                <h3 className="text-lg font-semibold mb-2 text-white">{step.title}</h3>
-                <p className="text-sm text-gray-400">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Main Analysis Section */}
       <section id="analysis-form" className="relative bg-black py-12 sm:py-16 md:py-20 mt-24">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>

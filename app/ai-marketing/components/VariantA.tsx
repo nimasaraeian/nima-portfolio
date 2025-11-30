@@ -574,37 +574,6 @@ export default function AiMarketingPageVariantA() {
         </div>
       </section>
 
-      {/* How it works section */}
-      <section className="relative bg-black py-12 sm:py-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
-        
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <h2 className="text-3xl font-bold mb-12 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            How Behavioral DeepScan Works
-          </h2>
-          
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              { number: '1', title: 'Paste your content', desc: 'Paste your landing page, ad, or post text' },
-              { number: '2', title: 'Choose context', desc: 'Select platform, goal, and audience' },
-              { number: '3', title: 'Run AI analysis', desc: 'Our decision psychology engine analyzes cognitive friction' },
-              { number: '4', title: 'Get insights', desc: 'Receive scores, blockers, and conversion recommendations' },
-            ].map((step, index) => (
-              <div
-                key={index}
-                className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 text-center backdrop-blur-sm"
-              >
-                <div className="w-12 h-12 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-xl font-bold text-purple-300">{step.number}</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2 text-white">{step.title}</h3>
-                <p className="text-sm text-gray-400">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Main Analysis Section */}
       <section id="analysis-form" className="relative bg-black py-12 sm:py-16 md:py-20">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
