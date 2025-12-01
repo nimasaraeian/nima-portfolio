@@ -81,6 +81,9 @@ async function analyzeCognitiveFriction(payload: {
 
 // Score display component with improved visuals
 function ScoreCard({ label, value, isFriction = false }: { label: string; value: number; isFriction?: boolean }) {
+  // Handle undefined, null, or NaN values
+  const safeValue = (typeof value === 'number' && !isNaN(value)) ? value : 0;
+  
   const getColorClass = (score: number, isFriction: boolean) => {
     if (isFriction) {
       // For friction, lower is better
@@ -96,6 +99,7 @@ function ScoreCard({ label, value, isFriction = false }: { label: string; value:
   };
 
   const getStatusText = (score: number, isFriction: boolean) => {
+    if (score === 0 || isNaN(score)) return 'No Data';
     if (isFriction) {
       if (score <= 30) return 'Good';
       if (score <= 60) return 'Medium';
@@ -107,24 +111,28 @@ function ScoreCard({ label, value, isFriction = false }: { label: string; value:
     }
   };
 
-  const statusText = getStatusText(value, isFriction);
-  const statusColor = isFriction
-    ? value <= 30 ? 'text-green-400' : value <= 60 ? 'text-amber-400' : 'text-red-400'
-    : value >= 70 ? 'text-green-400' : value >= 40 ? 'text-amber-400' : 'text-red-400';
+  const statusText = getStatusText(safeValue, isFriction);
+  const statusColor = safeValue === 0 || isNaN(safeValue)
+    ? 'text-gray-400'
+    : isFriction
+    ? safeValue <= 30 ? 'text-green-400' : safeValue <= 60 ? 'text-amber-400' : 'text-red-400'
+    : safeValue >= 70 ? 'text-green-400' : safeValue >= 40 ? 'text-amber-400' : 'text-red-400';
   
   return (
     <div className="rounded-xl border border-gray-700 bg-slate-800 p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-semibold text-gray-300">{label}</span>
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold text-white">{value} / 100</span>
+          <span className="text-xl font-bold text-white">
+            {safeValue === 0 || isNaN(safeValue) ? 'N/A' : `${safeValue} / 100`}
+          </span>
           <span className={`text-xs font-medium ${statusColor}`}>({statusText})</span>
         </div>
       </div>
       <div className="w-full bg-gray-700 rounded-full h-2.5">
         <div
-          className={`h-2.5 rounded-full transition-all duration-500 ${getColorClass(value, isFriction)}`}
-          style={{ width: `${value}%` }}
+          className={`h-2.5 rounded-full transition-all duration-500 ${getColorClass(safeValue, isFriction)}`}
+          style={{ width: `${Math.min(100, Math.max(0, safeValue))}%` }}
         />
       </div>
     </div>
@@ -135,31 +143,38 @@ function ScoreCard({ label, value, isFriction = false }: { label: string; value:
 function buildAiInterpretation(result: CognitiveFrictionResult): string {
   const parts: string[] = [];
   
+  // Safe value getters
+  const frictionScore = typeof result.frictionScore === 'number' && !isNaN(result.frictionScore) ? result.frictionScore : 0;
+  const trustScore = typeof result.trustScore === 'number' && !isNaN(result.trustScore) ? result.trustScore : 0;
+  const motivationMatchScore = typeof result.motivationMatchScore === 'number' && !isNaN(result.motivationMatchScore) ? result.motivationMatchScore : 0;
+  const decisionProbability = typeof result.decisionProbability === 'number' && !isNaN(result.decisionProbability) ? result.decisionProbability : 0;
+  const emotionalClarityScore = typeof result.emotionalClarityScore === 'number' && !isNaN(result.emotionalClarityScore) ? result.emotionalClarityScore : 0;
+  
   // Friction and Trust analysis
-  if (result.frictionScore >= 60 && result.trustScore <= 40) {
+  if (frictionScore >= 60 && trustScore <= 40) {
     parts.push('Your content currently creates high decision friction and relatively low trust. Users are likely to hesitate and postpone action rather than convert.');
-  } else if (result.frictionScore >= 60) {
+  } else if (frictionScore >= 60) {
     parts.push('The content creates significant cognitive friction that may cause users to abandon the decision process, despite some trust signals.');
-  } else if (result.trustScore <= 40) {
+  } else if (trustScore <= 40) {
     parts.push('Trust levels are low, which creates hesitation even if the content is relatively clear.');
   }
   
   // Motivation analysis
-  if (result.motivationMatchScore < 50) {
+  if (motivationMatchScore < 50 && motivationMatchScore > 0) {
     parts.push('The message does not strongly connect with the audience\'s core motivations, which reduces the emotional drive to take action.');
-  } else if (result.motivationMatchScore >= 70) {
+  } else if (motivationMatchScore >= 70) {
     parts.push('The content aligns well with audience motivations, creating a strong emotional connection.');
   }
   
   // Decision probability analysis
-  if (result.decisionProbability < 0.4) {
+  if (decisionProbability > 0 && decisionProbability < 0.4) {
     parts.push('Overall, the current likelihood of conversion is low. The piece needs clearer value proposition, proof, and emotional resonance.');
-  } else if (result.decisionProbability >= 0.6) {
+  } else if (decisionProbability >= 0.6) {
     parts.push('The content shows strong conversion potential with good decision-making signals.');
   }
   
   // Emotional clarity
-  if (result.emotionalClarityScore < 50) {
+  if (emotionalClarityScore < 50 && emotionalClarityScore > 0) {
     parts.push('Emotional messaging could be clearer to better guide users toward confident decisions.');
   }
   
@@ -334,14 +349,21 @@ function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
           <div className="rounded-xl border border-gray-700 bg-slate-800 p-4">
             <span className="text-sm font-semibold text-gray-300">Decision likelihood: </span>
             <span className="text-lg font-bold text-white">
-              {Math.round(result.decisionProbability * 100)}%
+              {typeof result.decisionProbability === 'number' && !isNaN(result.decisionProbability)
+                ? `${Math.round(result.decisionProbability * 100)}%`
+                : 'N/A'}
             </span>
           </div>
           <div className="rounded-xl border border-gray-700 bg-slate-800 p-4">
             <span className="text-sm font-semibold text-gray-300">Conversion impact: </span>
-            <span className={`text-lg font-bold ${result.conversionLiftEstimate >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {result.conversionLiftEstimate >= 0 ? '+' : ''}
-              {Math.round(result.conversionLiftEstimate)}% {result.conversionLiftEstimate >= 0 ? 'potential conversion uplift' : 'potential conversion impact'}
+            <span className={`text-lg font-bold ${
+              typeof result.conversionLiftEstimate === 'number' && !isNaN(result.conversionLiftEstimate)
+                ? result.conversionLiftEstimate >= 0 ? 'text-green-400' : 'text-red-400'
+                : 'text-gray-400'
+            }`}>
+              {typeof result.conversionLiftEstimate === 'number' && !isNaN(result.conversionLiftEstimate)
+                ? `${result.conversionLiftEstimate >= 0 ? '+' : ''}${Math.round(result.conversionLiftEstimate)}% ${result.conversionLiftEstimate >= 0 ? 'potential conversion uplift' : 'potential conversion impact'}`
+                : 'N/A'}
             </span>
           </div>
         </div>
@@ -493,31 +515,46 @@ export default function AiMarketingPageVariantB() {
     try {
       setLoading(true);
 
-      const formDataToSend = new FormData();
-      formDataToSend.append('content', trimmed); // می‌تونه خالی باشد
+      // Prepare payload for cognitive friction analysis
+      const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
+      
+      // Convert image to base64 if provided
+      let imageBase64: string | undefined = undefined;
+      let imageType: string | undefined = undefined;
+      let imageName: string | undefined = undefined;
       
       if (selectedImage) {
-        formDataToSend.append('image', selectedImage);
+        imageBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result as string;
+            // Remove data:image/...;base64, prefix
+            const base64 = result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(selectedImage);
+        });
+        imageType = selectedImage.type;
+        imageName = selectedImage.name;
       }
 
-      // Add other form fields
-      const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
-      formDataToSend.append('platform', formData.platform);
-      formDataToSend.append('goal', JSON.stringify(goals));
-      formDataToSend.append('audience', formData.audience);
-      formDataToSend.append('language', formData.language);
+      const payload = {
+        raw_text: trimmed,
+        platform: formData.platform,
+        goal: goals,
+        audience: formData.audience,
+        language: formData.language,
+        meta: null,
+        ...(imageBase64 && {
+          image: imageBase64,
+          image_type: imageType,
+          image_name: imageName,
+        }),
+      };
 
-      const res = await fetch('/api/brain', {
-        method: 'POST',
-        body: formDataToSend, // IMPORTANT: no manual Content-Type header
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || 'Failed to analyze content');
-      }
-
-      const data = await res.json();
+      // Use analyzeCognitiveFriction function which calls the correct endpoint
+      const data = await analyzeCognitiveFriction(payload);
       setResult(data);
     } catch (err: any) {
       console.error('Analyze error', err);

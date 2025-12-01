@@ -10,21 +10,29 @@
  */
 
 /**
- * Gets the base URL for the Brain API from environment variables.
- * Throws an error if the environment variable is not set.
+ * Gets the base URL for the Brain API.
+ * In browser: uses relative URLs (Next.js API routes)
+ * In server: uses NEXT_PUBLIC_API_BASE_URL or falls back to relative URLs
  */
 function getApiBaseUrl(): string {
+  // In browser, always use relative URLs (Next.js API routes)
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+  
+  // In server-side code, try to use environment variable
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+  
   if (!baseUrl) {
     if (process.env.NODE_ENV === 'development') {
       console.warn(
         '⚠️  NEXT_PUBLIC_API_BASE_URL is not defined. ' +
-        'Please set it in your .env.local file. ' +
-        'Example: NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000'
+        'Using relative URLs (Next.js API routes). ' +
+        'For direct backend access, set NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000'
       );
     }
-    throw new Error('NEXT_PUBLIC_API_BASE_URL is not defined');
+    // Return empty string to use relative URLs
+    return '';
   }
 
   return baseUrl;
