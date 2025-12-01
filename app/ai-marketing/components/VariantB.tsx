@@ -440,6 +440,9 @@ export default function AiMarketingPageVariantB() {
   const [result, setResult] = useState<CognitiveFrictionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   
+  // Image upload state
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  
   // Rewrite state
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
   const [rewriteLoading, setRewriteLoading] = useState(false);
@@ -464,6 +467,10 @@ export default function AiMarketingPageVariantB() {
         : [...prev.goal, goal];
       return { ...prev, goal: goals };
     });
+  };
+
+  const handleImageChange = (file: File | null) => {
+    setSelectedImage(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -605,6 +612,9 @@ export default function AiMarketingPageVariantB() {
                 onInputChange={handleInputChange}
                 onGoalChange={handleGoalChange}
                 onSubmit={handleSubmit}
+                showImageUpload={true}
+                onImageChange={handleImageChange}
+                selectedImage={selectedImage}
               />
             </div>
 
