@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Target, Settings, Home, Megaphone, Mail, Smartphone, Briefcase, File, MousePointerClick, DollarSign, MessageSquare, Brain, AlertTriangle, Check, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
+import { FileText, Target, Home, Megaphone, Mail, Smartphone, Briefcase, File, MousePointerClick, DollarSign, MessageSquare, Brain, AlertTriangle, Check, ChevronRight, ChevronLeft, Sparkles, Image as ImageIcon } from 'lucide-react';
 
 interface MultiStepInputPanelProps {
   formData: {
@@ -13,14 +13,12 @@ interface MultiStepInputPanelProps {
     audienceType?: string;
     tonePreference?: string;
   };
-  showAdvanced: boolean;
-  metaJson: string;
   loading: boolean;
   error: string | null;
   onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => void;
   onGoalChange: (goal: string) => void;
-  onAdvancedToggle: () => void;
-  onMetaJsonChange: (value: string) => void;
+  onImageChange: (file: File | null) => void;
+  selectedImage: File | null;
   onSubmit: (e: React.FormEvent) => void;
 }
 
@@ -48,14 +46,12 @@ const AUDIENCE_OPTIONS = [
 
 export default function MultiStepInputPanel({
   formData,
-  showAdvanced,
-  metaJson,
   loading,
   error,
   onInputChange,
   onGoalChange,
-  onAdvancedToggle,
-  onMetaJsonChange,
+  onImageChange,
+  selectedImage,
   onSubmit,
 }: MultiStepInputPanelProps) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -63,7 +59,6 @@ export default function MultiStepInputPanel({
   const steps = [
     { number: 1, label: 'Content & Platform', Icon: FileText },
     { number: 2, label: 'Goals & Audience', Icon: Target },
-    { number: 3, label: 'Advanced', Icon: Settings },
   ];
 
   const getCharacterCount = () => formData.raw_text.length;
@@ -166,6 +161,39 @@ export default function MultiStepInputPanel({
                       <span className="hidden sm:inline">Minimum 20 words recommended</span>
                       <span className="sm:hidden">Min 20 words</span>
                     </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Image Upload Field */}
+              <div className="relative group">
+                <label htmlFor="image_upload" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
+                  Optional: Upload Landing Page Screenshot
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    id="image_upload"
+                    name="image_upload"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      onImageChange(file);
+                    }}
+                    className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all shadow-xl group-hover:border-purple-500/30"
+                  />
+                  {selectedImage && (
+                    <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                      <ImageIcon className="w-4 h-4 text-purple-400" />
+                      <span>{selectedImage.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => onImageChange(null)}
+                        className="ml-auto text-red-400 hover:text-red-300 transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -355,73 +383,6 @@ export default function MultiStepInputPanel({
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">Back</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(3)}
-                  className="px-4 sm:px-8 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
-                >
-                  <span>Next</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Advanced Settings */}
-          {currentStep === 3 && (
-            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto">
-                <div>
-                  <label htmlFor="language" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 text-center md:text-left">
-                    Content Language
-                  </label>
-                  <select
-                    id="language"
-                    name="language"
-                    value={formData.language}
-                    onChange={onInputChange}
-                    className="w-full rounded-xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm text-white focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all shadow-lg"
-                  >
-                    <option value="en">English</option>
-                    <option value="tr">Turkish</option>
-                    <option value="fa">Persian</option>
-                  </select>
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    onClick={onAdvancedToggle}
-                    className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 hover:from-purple-300 hover:to-cyan-300 transition-all text-center md:text-left"
-                  >
-                    Advanced Settings
-                  </button>
-                  {showAdvanced && (
-                    <div className="space-y-3 p-4 sm:p-5 rounded-xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl">
-                      <p className="text-xs text-slate-400 mb-2">
-                        Add custom metadata as JSON for advanced analysis parameters.
-                      </p>
-                      <textarea
-                        value={metaJson}
-                        onChange={(e) => onMetaJsonChange(e.target.value)}
-                        placeholder='{"key": "value"}'
-                        className="w-full rounded-lg border-2 border-slate-700/50 bg-slate-800/80 px-3 sm:px-4 py-2 sm:py-3 text-xs text-white placeholder-slate-500/70 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all min-h-[100px] sm:min-h-[120px] resize-y font-mono"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Navigation */}
-              <div className="flex justify-center gap-3 sm:gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(2)}
-                  className="px-4 sm:px-6 py-3 rounded-xl border-2 border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 text-slate-300 text-sm font-semibold transition-all transform hover:scale-105 flex items-center justify-center gap-2"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  Back
                 </button>
               </div>
             </div>

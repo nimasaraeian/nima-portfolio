@@ -44,6 +44,16 @@ interface CognitiveFrictionResult {
   explanationSummary: string;
 }
 
+// Visual Trust Analysis type definition
+type VisualTrustResult = {
+  trust_label: "low" | "medium" | "high";
+  trust_scores: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+} | null;
+
 import { postToBrain } from '@/lib/apiClient';
 
 // Helper function to call the Cognitive Friction API
@@ -76,8 +86,9 @@ export default function BehavioralDeepScanPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<CognitiveFrictionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [metaJson, setMetaJson] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>
@@ -95,23 +106,20 @@ export default function BehavioralDeepScanPage() {
     });
   };
 
+  const handleImageChange = (file: File | null) => {
+    setSelectedImage(file);
+    setVisualTrust(null); // Reset visual trust when image changes
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setResult(null);
+    setVisualTrust(null);
 
     try {
       const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
-      let meta = null;
-      
-      if (showAdvanced && metaJson.trim()) {
-        try {
-          meta = JSON.parse(metaJson);
-        } catch {
-          throw new Error('Invalid JSON in meta field');
-        }
-      }
 
       const payload = {
         raw_text: formData.raw_text,
@@ -121,11 +129,51 @@ export default function BehavioralDeepScanPage() {
         language: formData.language,
         audienceType: formData.audienceType,
         tonePreference: formData.tonePreference,
-        meta,
+        meta: null,
       };
 
+      // Send text analysis request (existing behavior)
       const data = await analyzeCognitiveFriction(payload);
       setResult(data);
+
+      // If image is selected, also analyze visual trust
+      if (selectedImage) {
+        setIsImageLoading(true);
+        try {
+          const formDataImage = new FormData();
+          formDataImage.append('file', selectedImage);
+
+          // Get base URL from environment (same as apiClient)
+          const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+          if (!baseUrl) {
+            throw new Error('NEXT_PUBLIC_API_BASE_URL is not defined');
+          }
+
+          const imageResponse = await fetch(`${baseUrl}/api/analyze/image-trust`, {
+            method: 'POST',
+            body: formDataImage,
+            // Don't set Content-Type header - let browser set it with boundary for multipart/form-data
+          });
+
+          if (imageResponse.ok) {
+            const imageData = await imageResponse.json();
+            if (imageData.success && imageData.analysis) {
+              setVisualTrust({
+                trust_label: imageData.analysis.trust_label,
+                trust_scores: imageData.analysis.trust_scores,
+              });
+            }
+          } else {
+            console.error('Image trust analysis failed:', imageResponse.statusText);
+            // Don't throw - just log the error, main analysis should still work
+          }
+        } catch (imageErr) {
+          console.error('Error analyzing image trust:', imageErr);
+          // Don't throw - just log the error, main analysis should still work
+        } finally {
+          setIsImageLoading(false);
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
@@ -192,14 +240,12 @@ export default function BehavioralDeepScanPage() {
             <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/30 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
               <MultiStepInputPanel
                 formData={formData}
-                showAdvanced={showAdvanced}
-                metaJson={metaJson}
                 loading={loading}
                 error={error}
                 onInputChange={handleInputChange}
                 onGoalChange={handleGoalChange}
-                onAdvancedToggle={() => setShowAdvanced(!showAdvanced)}
-                onMetaJsonChange={setMetaJson}
+                onImageChange={handleImageChange}
+                selectedImage={selectedImage}
                 onSubmit={handleSubmit}
               />
             </div>
@@ -211,6 +257,8 @@ export default function BehavioralDeepScanPage() {
                 loading={loading}
                 error={error}
                 formData={formData}
+                visualTrust={visualTrust}
+                isImageLoading={isImageLoading}
               />
             </div>
           </div>
