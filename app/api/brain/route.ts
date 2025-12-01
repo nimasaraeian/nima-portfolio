@@ -18,10 +18,56 @@ export async function POST(req: NextRequest) {
   console.log('📥 /api/brain POST request received');
   
   try {
-    const body: BrainRequest = await req.json();
-    console.log('📋 Request body:', { role: body.role, industry: body.industry, city: body.city, channel: body.channel });
-    
-    const { role, locale, city, industry, channel, query } = body;
+    // Check if request is FormData (for Behavioral DeepScan) or JSON (for other modules)
+    const contentType = req.headers.get('content-type') || '';
+    let body: any;
+    let query: string;
+    let role: string = 'marketer';
+    let locale: string = 'en';
+    let city: string = '';
+    let industry: string = '';
+    let channel: string = '';
+    let imageFile: File | null = null;
+
+    if (contentType.includes('multipart/form-data')) {
+      // Handle FormData (Behavioral DeepScan)
+      const formData = await req.formData();
+      const content = formData.get('content') as string || '';
+      imageFile = formData.get('image') as File | null;
+      const platform = formData.get('platform') as string || 'landing_page';
+      let goalStr = formData.get('goal') as string || '["leads"]';
+      const audience = formData.get('audience') as string || 'cold';
+      const language = formData.get('language') as string || 'en';
+
+      // Parse goal JSON string safely
+      let goalArray: string[] = ['leads'];
+      try {
+        if (goalStr) {
+          const parsed = JSON.parse(goalStr);
+          goalArray = Array.isArray(parsed) ? parsed : [parsed];
+        }
+      } catch (e) {
+        console.warn('Failed to parse goal, using default:', e);
+        goalArray = ['leads'];
+      }
+
+      // Build query from content and image
+      if (imageFile) {
+        // If image is provided, we'll need to process it
+        // For now, include it in the query description
+        query = `Behavioral DeepScan Analysis for ${platform}. Content: ${content || '[Image provided]'}. Goal: ${goalArray.join(', ')}. Audience: ${audience}. Language: ${language}.`;
+      } else {
+        query = `Behavioral DeepScan Analysis for ${platform}. Content: ${content}. Goal: ${goalArray.join(', ')}. Audience: ${audience}. Language: ${language}.`;
+      }
+      
+      console.log('📋 FormData received:', { platform, goal: goalArray, audience, language, hasImage: !!imageFile, contentLength: content.length });
+    } else {
+      // Handle JSON (other modules)
+      body = await req.json();
+      console.log('📋 Request body:', { role: body.role, industry: body.industry, city: body.city, channel: body.channel });
+      
+      ({ role, locale, city, industry, channel, query } = body);
+    }
 
     // Check for OpenAI API key
     const apiKey = process.env.OPENAI_API_KEY;
@@ -55,7 +101,7 @@ Your responses should be:
 Format your response in markdown with clear headings (##, ###) and bullet points.`;
 
     // Check if this is a Behavioral DeepScan request
-    const isDeepScan = query.includes('Behavioral DeepScan Analysis') || query.includes('Psychometric mapping');
+    const isDeepScan = query.includes('Behavioral DeepScan Analysis') || query.includes('Psychometric mapping') || contentType.includes('multipart/form-data');
     
     if (isDeepScan) {
       // Specialized prompt for Behavioral DeepScan
