@@ -483,17 +483,10 @@ export default function AiMarketingPageVariantA() {
     setResult(null);
 
     const trimmed = formData.raw_text.trim();
-    const MIN_TEXT_LENGTH = 60;
 
-    // Case 1: only image, no text → we currently don't support pure image analysis
-    if (!trimmed && selectedImage) {
-      setError('فعلاً فقط متن تحلیل می‌شود. لطفاً متن لندینگ یا متن تبلیغ خود را اینجا پیست کنید.');
-      return;
-    }
-
-    // Case 2: text is too short → don't send meaningless prompts like 'این رو آنالیز کن'
-    if (!trimmed || trimmed.length < MIN_TEXT_LENGTH) {
-      setError('متن برای تحلیل کافی نیست. لطفاً بخشی از محتوای واقعی لندینگ یا آگهی خود را وارد کنید (حداقل چند جمله).');
+    // تنها حالت غیرمجاز: نه متن، نه تصویر
+    if (!trimmed && !selectedImage) {
+      setError('لطفاً متن لندینگ/تبلیغ خود را وارد کنید یا یک تصویر (اسکرین‌شات) آپلود کنید.');
       return;
     }
 
@@ -501,7 +494,7 @@ export default function AiMarketingPageVariantA() {
       setLoading(true);
 
       const formDataToSend = new FormData();
-      formDataToSend.append('content', trimmed);
+      formDataToSend.append('content', trimmed); // می‌تونه خالی باشد
       
       if (selectedImage) {
         formDataToSend.append('image', selectedImage);
