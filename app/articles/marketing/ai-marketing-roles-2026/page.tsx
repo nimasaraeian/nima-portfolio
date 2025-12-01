@@ -819,6 +819,496 @@ export default function AIMarketingRoles2026() {
               </p>
             </div>
 
+            <div className="mt-12 mb-8 p-6 bg-gradient-to-r from-purple-900/20 to-indigo-900/20 border border-purple-500/30 rounded-xl">
+              <p className="text-2xl font-bold text-center text-white mb-2">Part 3 of 4</p>
+              <p className="text-lg text-center text-gray-300">Complete Comparison · Organizational Structure · Career Pathways</p>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 7: The Complete Comparison — How Each AI Marketing Role Actually Differs</h2>
+            
+            <p className="text-lg mb-6 text-gray-300">
+              Up to this point, we've explained each role individually.
+            </p>
+
+            <p className="text-lg mb-6 text-gray-300">
+              Now it's time to bring everything together into a clear, strategic comparison that reveals the deeper differences in responsibilities, mindsets, and impact.
+            </p>
+
+            <p className="text-lg mb-8 text-gray-300">
+              <strong className="text-white">This is one of the most important sections for companies, hiring managers, and professionals trying to position themselves properly.</strong>
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">1. The Core Comparison Table</h3>
+            
+            <p className="mb-4 text-gray-300">
+              Here is a comprehensive, multi-dimension matrix comparing all roles:
+            </p>
+
+            <div className="overflow-x-auto mb-6">
+              <table className="w-full border-collapse border border-gray-700 text-sm">
+                <thead>
+                  <tr className="bg-gray-900">
+                    <th className="border border-gray-700 px-3 py-2 text-left text-white font-semibold">Dimension</th>
+                    <th className="border border-gray-700 px-3 py-2 text-center text-white font-semibold">AI Specialist</th>
+                    <th className="border border-gray-700 px-3 py-2 text-center text-white font-semibold">AI Expert</th>
+                    <th className="border border-gray-700 px-3 py-2 text-center text-white font-semibold">AI Strategist</th>
+                    <th className="border border-gray-700 px-3 py-2 text-center text-white font-semibold">AI Consultant</th>
+                    <th className="border border-gray-700 px-3 py-2 text-center text-white font-semibold">AI Engineer</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300">
+                  <tr>
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Primary Purpose</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Execution</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Hybrid (execute + plan)</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Strategy & architecture</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Org-wide transformation</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">System building</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Works With</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Tools</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Tools + Strategy</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Teams + Data</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Leadership</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Data + Code</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Most Used Skills</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Prompting, Ads, SEO, Content</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Multi-channel ops</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Behavioral psychology, data, funnels</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">System design</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">ML, APIs, Backend</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Output Type</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Content, campaigns</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Systems + content</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Roadmaps, structures</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Audits, recommendations</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Internal AI tools</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Timespan Impact</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Short-term</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Mid-term</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Long-term</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Long-term</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Long-term infrastructure</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Company Size Fit</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Small</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Small–Medium</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Medium–Large</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">All sizes</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">SaaS, enterprise</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Autonomy Level</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Low</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Medium</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">High</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">High</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">High</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Most Important KPI</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Volume & speed</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Growth & ROI</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Cost-efficiency & predictability</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Adoption & optimization</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Accuracy & stability</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-700 px-3 py-2 font-semibold">Salary Level</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Low–Medium</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Medium–High</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">High</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">High</td>
+                    <td className="border border-gray-700 px-3 py-2 text-center">Very High</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p className="mb-4 text-gray-300">
+              In simple terms:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-3 text-gray-300">
+                <li>• <strong className="text-white">Specialists</strong> get things done fast</li>
+                <li>• <strong className="text-white">Experts</strong> get things done right</li>
+                <li>• <strong className="text-white">Strategists</strong> make sure you're doing the right things</li>
+                <li>• <strong className="text-white">Consultants</strong> fix the system as a whole</li>
+                <li>• <strong className="text-white">Engineers</strong> build the AI system</li>
+              </ul>
+            </div>
+
+            <p className="mb-8 text-gray-300">
+              <strong className="text-white">No overlap can fully replace another role.</strong>
+            </p>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 8: How These Roles Fit Inside a Modern AI-Powered Marketing Team</h2>
+            
+            <p className="text-lg mb-6 text-gray-300">
+              To understand the strategic flow, imagine a modern AI marketing team hierarchy:
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Top Layer: AI Strategist / AI Consultant</h3>
+            
+            <p className="mb-4 text-gray-300">
+              They define:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• the roadmap</li>
+                <li>• the data strategy</li>
+                <li>• the funnels</li>
+                <li>• the KPIs</li>
+                <li>• the AI transformation plan</li>
+              </ul>
+            </div>
+
+            <p className="mb-6 text-gray-300">
+              They sit at the decision level, shaping the direction.
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Middle Layer: AI Expert</h3>
+            
+            <p className="mb-4 text-gray-300">
+              They translate strategy into actionable execution.
+            </p>
+
+            <p className="mb-4 text-gray-300">
+              They ensure the team:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• follows the AI roadmap</li>
+                <li>• runs optimized workflows</li>
+                <li>• creates the right content</li>
+                <li>• tests the right variables</li>
+                <li>• pulls the right data</li>
+              </ul>
+            </div>
+
+            <p className="mb-6 text-gray-300">
+              <strong className="text-white">Experts are the central hub of the AI-enabled team.</strong>
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Execution Layer: AI Specialist</h3>
+            
+            <p className="mb-4 text-gray-300">
+              They build:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• content</li>
+                <li>• landing pages</li>
+                <li>• ads</li>
+                <li>• automated sequences</li>
+              </ul>
+            </div>
+
+            <p className="mb-6 text-gray-300">
+              They move fast and execute the tactical components.
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Infrastructure Layer: AI Engineer</h3>
+            
+            <p className="mb-4 text-gray-300">
+              They build the environment where all strategies run:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• AI API integrations</li>
+                <li>• prediction models</li>
+                <li>• custom GPT engines</li>
+                <li>• automated marketing pipelines</li>
+                <li>• internal tools</li>
+              </ul>
+            </div>
+
+            <p className="mb-6 text-gray-300">
+              They are the <strong className="text-white">"technical backbone"</strong> of the entire system.
+            </p>
+
+            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 mb-8">
+              <p className="text-lg font-semibold text-blue-300 mb-2">
+                A modern AI team is no longer linear — it's a loop.
+              </p>
+              <p className="text-gray-300">
+                Strategy → Execution → Data → Prediction → Optimization → New Strategy
+              </p>
+              <p className="text-gray-300 mt-2">
+                This loop can only run when each role is in harmony.
+              </p>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 9: How to Know Which Role Your Business Actually Needs</h2>
+            
+            <p className="text-lg mb-6 text-gray-300">
+              Most companies choose the wrong role because they misunderstand their stage of growth.
+            </p>
+
+            <p className="text-lg mb-8 text-gray-300">
+              <strong className="text-white">Here's a simplified guide:</strong>
+            </p>
+
+            <div className="space-y-6 mb-8">
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">
+                  If you are a small business or solo entrepreneur:
+                </h4>
+                <p className="text-lg font-semibold text-green-400 mb-3">
+                  👉 Hire an AI Marketing Specialist
+                </p>
+                <p className="mb-3 text-gray-300">Because you need:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• content</li>
+                  <li>• ads</li>
+                  <li>• fast execution</li>
+                  <li>• optimized workflows</li>
+                  <li>• low cost</li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">
+                  If you are a startup trying to grow fast:
+                </h4>
+                <p className="text-lg font-semibold text-green-400 mb-3">
+                  👉 Hire an AI Expert
+                </p>
+                <p className="mb-3 text-gray-300">Because you need someone who:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• runs everything</li>
+                  <li>• builds systems</li>
+                  <li>• understands strategy</li>
+                  <li>• acts independently</li>
+                  <li>• is cost-effective compared to a full team</li>
+                </ul>
+                <p className="mt-3 text-gray-300">
+                  Experts are perfect fractional CMOs with execution ability.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">
+                  If you are a medium or larger company:
+                </h4>
+                <p className="text-lg font-semibold text-green-400 mb-3">
+                  👉 Hire an AI Strategist
+                </p>
+                <p className="mb-3 text-gray-300">Because you need someone to:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• architect your AI transformation</li>
+                  <li>• analyze cross-channel behavior</li>
+                  <li>• define experiments</li>
+                  <li>• improve efficiency</li>
+                  <li>• guide your whole team</li>
+                </ul>
+                <p className="mt-3 text-gray-300">
+                  Strategists create structure and predictability.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">
+                  If you want to modernize your entire marketing department:
+                </h4>
+                <p className="text-lg font-semibold text-green-400 mb-3">
+                  👉 Hire an AI Consultant
+                </p>
+                <p className="mb-3 text-gray-300">Because they bring:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• external experience</li>
+                  <li>• unbiased audits</li>
+                  <li>• industry benchmarks</li>
+                  <li>• long-term adoption plans</li>
+                </ul>
+                <p className="mt-3 text-gray-300">
+                  Consultants are ideal for organizations wanting a top-down AI redesign.
+                </p>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">
+                  If you want custom AI systems or automation at scale:
+                </h4>
+                <p className="text-lg font-semibold text-green-400 mb-3">
+                  👉 Hire an AI Engineer
+                </p>
+                <p className="mb-3 text-gray-300">Because only they can:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• connect your CRM and AI</li>
+                  <li>• build custom GPT systems</li>
+                  <li>• train predictive models</li>
+                  <li>• automate 80% of manual work</li>
+                </ul>
+                <p className="mt-3 text-gray-300">
+                  Engineers give you a competitive advantage that tools alone cannot.
+                </p>
+              </div>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 10: Career Path — How Professionals Move Between These Roles</h2>
+            
+            <p className="text-lg mb-6 text-gray-300">
+              This is one of the most important parts for personal branding and professional growth.
+            </p>
+
+            <p className="text-lg mb-6 text-gray-300">
+              Most AI marketing professionals follow this path:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <div className="space-y-4">
+                <div>
+                  <p className="font-semibold text-white mb-2">1. AI Specialist → AI Expert</p>
+                  <p className="text-gray-300">They gain speed, mastery, and multi-channel knowledge.</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-white mb-2">2. AI Expert → AI Strategist</p>
+                  <p className="text-gray-300 mb-2">They start working on:</p>
+                  <ul className="space-y-1 text-gray-300 ml-4">
+                    <li>• deeper analytics</li>
+                    <li>• funnel architecture</li>
+                    <li>• predictive thinking</li>
+                    <li>• growth frameworks</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-semibold text-white mb-2">3. AI Strategist → AI Consultant</p>
+                  <p className="text-gray-300 mb-2">They learn:</p>
+                  <ul className="space-y-1 text-gray-300 ml-4">
+                    <li>• organizational transformation</li>
+                    <li>• leadership communication</li>
+                    <li>• system-level design</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-semibold text-white mb-2">4. AI Expert → AI Engineer (parallel track)</p>
+                  <p className="text-gray-300">If they develop strong technical skills (coding + ML), they move into building systems.</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Which Path Is the Highest Paying in 2026?</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ol className="space-y-2 text-gray-300">
+                <li>1. <strong className="text-white">AI Engineer</strong> — highest salary globally</li>
+                <li>2. <strong className="text-white">AI Consultant / Strategist</strong></li>
+                <li>3. <strong className="text-white">AI Expert</strong></li>
+                <li>4. <strong className="text-white">AI Specialist</strong></li>
+              </ol>
+            </div>
+
+            <p className="mb-4 text-gray-300">
+              But the fastest-growth trend globally is:
+            </p>
+
+            <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+              <p className="text-xl font-bold text-purple-300 mb-3">
+                AI Behavioral Marketing Strategist
+              </p>
+              <p className="text-gray-300 mb-3">
+                Because companies now want to understand not only:
+              </p>
+              <p className="text-gray-300 mb-2">
+                <strong className="text-white">"what the user does"</strong>
+              </p>
+              <p className="text-gray-300 mb-3">
+                but
+              </p>
+              <p className="text-gray-300">
+                <strong className="text-white">"why they do it."</strong>
+              </p>
+              <p className="text-gray-300 mt-3">
+                And that is what behavioral AI delivers.
+              </p>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 11: How AI Roles Interact with Behavioral Data & Consumer Psychology</h2>
+            
+            <p className="text-lg mb-6 text-gray-300">
+              This is where modern marketing gets truly exciting.
+            </p>
+
+            <p className="mb-6 text-gray-300">
+              All roles interact with behavioral data differently.
+            </p>
+
+            <div className="space-y-6 mb-8">
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">Specialist → Uses behavioral data</h4>
+                <p className="mb-3 text-gray-300">To optimize:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• content tone</li>
+                  <li>• ad variations</li>
+                  <li>• landing page sections</li>
+                  <li>• email personalization</li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">Expert → Interprets behavioral data</h4>
+                <p className="mb-3 text-gray-300">They identify:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• emotional segments</li>
+                  <li>• friction points</li>
+                  <li>• buying triggers</li>
+                  <li>• conversion barriers</li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">Strategist → Maps behavioral systems</h4>
+                <p className="mb-3 text-gray-300">They design:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• psychological funnels</li>
+                  <li>• decision frameworks</li>
+                  <li>• multi-step user journeys</li>
+                  <li>• emotional messaging strategies</li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">Consultant → Redesigns behavior-led operations</h4>
+                <p className="mb-3 text-gray-300">They create:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• new CRM logic</li>
+                  <li>• new retention systems</li>
+                  <li>• new personalization layers</li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+                <h4 className="text-xl font-semibold mb-3 text-white">Engineer → Builds behavioral AI models</h4>
+                <p className="mb-3 text-gray-300">They build:</p>
+                <ul className="space-y-1 text-gray-300 ml-4">
+                  <li>• recommendation engines</li>
+                  <li>• prediction models</li>
+                  <li>• clustering algorithms</li>
+                  <li>• psychological scoring systems</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 mb-8">
+              <p className="text-lg font-semibold text-blue-300">
+                This is where AI becomes truly intelligent — when it understands patterns of human behavior.
+              </p>
+            </div>
+
             {/* CTA Section */}
             <div className="mt-12 p-8 bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border border-purple-500/30 rounded-xl">
               <h3 className="text-2xl font-bold mb-4 text-white">Ready to Master AI Marketing?</h3>
