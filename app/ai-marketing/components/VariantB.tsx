@@ -72,6 +72,9 @@ async function analyzeCognitiveFriction(payload: {
   audience: string;
   language: string;
   meta: null;
+  image?: string;
+  image_type?: string;
+  image_name?: string;
 }): Promise<CognitiveFrictionResult> {
   return postToBrain<CognitiveFrictionResult>('/api/brain/cognitive-friction', payload);
 }
@@ -501,6 +504,12 @@ export default function AiMarketingPageVariantB() {
 
       // If image is uploaded, add it to payload
       if (selectedImage) {
+        console.log('📷 Converting image to base64...', {
+          name: selectedImage.name,
+          type: selectedImage.type,
+          size: selectedImage.size
+        });
+        
         // Convert image to base64 for API
         const reader = new FileReader();
         const imageBase64 = await new Promise<string>((resolve, reject) => {
@@ -508,15 +517,29 @@ export default function AiMarketingPageVariantB() {
             const result = reader.result as string;
             // Remove data:image/...;base64, prefix
             const base64 = result.split(',')[1];
+            if (!base64) {
+              reject(new Error('Failed to convert image to base64'));
+              return;
+            }
+            console.log('✅ Image converted to base64, length:', base64.length);
             resolve(base64);
           };
-          reader.onerror = reject;
+          reader.onerror = (error) => {
+            console.error('❌ Error reading image:', error);
+            reject(error);
+          };
           reader.readAsDataURL(selectedImage);
         });
         
         payload.image = imageBase64;
         payload.image_type = selectedImage.type;
         payload.image_name = selectedImage.name;
+        
+        console.log('📤 Image added to payload:', {
+          image_type: payload.image_type,
+          image_name: payload.image_name,
+          image_length: payload.image.length
+        });
       }
 
       const data = await analyzeCognitiveFriction(payload);

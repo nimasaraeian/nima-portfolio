@@ -45,6 +45,13 @@ export async function postToBrain<T = any>(
   const baseUrl = getApiBaseUrl();
   const url = `${baseUrl}${path}`;
 
+  // Log payload info (without full base64 to avoid console spam)
+  const payloadInfo = { ...payload };
+  if (payloadInfo.image) {
+    payloadInfo.image = `[base64 image, ${payloadInfo.image.length} characters]`;
+  }
+  console.log('📤 Sending to Brain API:', url, payloadInfo);
+
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -55,12 +62,15 @@ export async function postToBrain<T = any>(
 
   if (!res.ok) {
     const text = await res.text();
-    console.error(`Brain API request failed: ${res.status} ${res.statusText}`, text);
+    console.error(`❌ Brain API request failed: ${res.status} ${res.statusText}`, text);
     throw new Error(`Brain API request failed with status ${res.status}`);
   }
 
-  return res.json();
+  const result = await res.json();
+  console.log('✅ Brain API response received');
+  return result;
 }
+
 
 
 
