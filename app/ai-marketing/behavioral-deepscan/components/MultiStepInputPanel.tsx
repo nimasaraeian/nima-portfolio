@@ -121,7 +121,7 @@ export default function MultiStepInputPanel({
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-6 sm:space-y-8">
+        <form onSubmit={onSubmit} className="space-y-6 sm:space-y-8" noValidate>
           {/* Step 1: Content & Platform */}
           {currentStep === 1 && (
             <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
