@@ -128,7 +128,7 @@ export default function MultiStepInputPanel({
               {/* Content Textarea */}
               <div className="relative group">
                 <label htmlFor="raw_text" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
-                  Content to Analyze <span className="text-red-400">*</span>
+                  Content to Analyze {!selectedImage && <span className="text-red-400">*</span>}
                 </label>
                 <div className="relative">
                   <textarea
@@ -136,8 +136,8 @@ export default function MultiStepInputPanel({
                     name="raw_text"
                     value={formData.raw_text}
                     onChange={onInputChange}
-                    placeholder="Paste your marketing copy here..."
-                    required
+                    placeholder="Paste your marketing copy here... (or upload an image)"
+                    required={!selectedImage}
                     className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white placeholder-slate-500/70 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all min-h-[140px] sm:min-h-[160px] resize-y shadow-xl group-hover:border-purple-500/30 relative"
                     style={{
                       backgroundImage: formData.raw_text.trim() === '' 
@@ -171,7 +171,11 @@ export default function MultiStepInputPanel({
               {showImageUpload && onImageChange && (
                 <div className="relative group">
                   <label htmlFor="image_upload" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
-                    Optional: Upload Landing Page Screenshot
+                    {!formData.raw_text.trim() ? (
+                      <>Upload Landing Page Screenshot <span className="text-red-400">*</span></>
+                    ) : (
+                      <>Optional: Upload Landing Page Screenshot</>
+                    )}
                   </label>
                   <div className="relative">
                     <input
@@ -406,7 +410,7 @@ export default function MultiStepInputPanel({
           <div className="pt-6 sm:pt-8 border-t border-slate-800/50">
             <button
               type="submit"
-              disabled={loading || !formData.raw_text.trim()}
+              disabled={loading || (!formData.raw_text.trim() && !selectedImage)}
               className="w-full group relative px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 hover:from-purple-500 hover:via-purple-400 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-bold transition-all transform hover:scale-[1.02] active:scale-100 shadow-2xl shadow-purple-500/50 flex items-center justify-center gap-2 sm:gap-3"
             >
               <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>

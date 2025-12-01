@@ -476,8 +476,9 @@ export default function AiMarketingPageVariantA() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.raw_text.trim()) {
-      setError('Please enter content to analyze');
+    // Allow submission if either text or image is provided
+    if (!formData.raw_text.trim() && !selectedImage) {
+      setError('Please enter content or upload an image to analyze');
       return;
     }
 
@@ -488,14 +489,35 @@ export default function AiMarketingPageVariantA() {
     try {
       const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
 
-      const payload = {
-        raw_text: formData.raw_text.trim(),
+      // If image is uploaded, convert it to base64 or send as FormData
+      let payload: any = {
+        raw_text: formData.raw_text.trim() || '',
         platform: formData.platform,
         goal: goals,
         audience: formData.audience,
         language: formData.language,
         meta: null,
       };
+
+      // If image is uploaded, add it to payload
+      if (selectedImage) {
+        // Convert image to base64 for API
+        const reader = new FileReader();
+        const imageBase64 = await new Promise<string>((resolve, reject) => {
+          reader.onload = () => {
+            const result = reader.result as string;
+            // Remove data:image/...;base64, prefix
+            const base64 = result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(selectedImage);
+        });
+        
+        payload.image = imageBase64;
+        payload.image_type = selectedImage.type;
+        payload.image_name = selectedImage.name;
+      }
 
       const data = await analyzeCognitiveFriction(payload);
       setResult(data);
