@@ -4,6 +4,12 @@ import Image from "next/image";
 export default function ArticlesPage() {
   const aiArticles = [
     { 
+      title: "AI Marketing Roles in 2026: Understanding the Real Differences (Specialist vs Strategist vs Expert vs Consultant vs Engineer)", 
+      image: "/image/ai-marketing-specialist-cover-2026.png", 
+      href: "/articles/marketing/ai-marketing-roles-2026",
+      alt: "AI Marketing Roles 2026 - Complete guide to understanding differences between AI Marketing Specialist, Strategist, Expert, Consultant, and Engineer roles"
+    },
+    { 
       title: "Predictive Buyer Intent AI: How AI Reads Customer Minds Before They Decide", 
       image: "/image/predictive-buyer-intent-ai-real-person-smiling-cover-image.png", 
       href: "/articles/ai/predictive-buyer-intent-ai",
@@ -62,12 +68,6 @@ export default function ArticlesPage() {
       image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", 
       href: "/articles/ai/personality-models",
       alt: "AI Personalities 2026 - Artificial intelligence personality development and human-AI interaction analysis"
-    },
-    { 
-      title: "AI Marketing Roles in 2026: Understanding the Real Differences (Specialist vs Strategist vs Expert vs Consultant vs Engineer)", 
-      image: "/image/ai-marketing-specialist-cover-2026.png", 
-      href: "/articles/marketing/ai-marketing-roles-2026",
-      alt: "AI Marketing Roles 2026 - Complete guide to understanding differences between AI Marketing Specialist, Strategist, Expert, Consultant, and Engineer roles"
     },
   ];
 
