@@ -65,7 +65,7 @@ export default function ArticlesPage() {
     },
     { 
       title: "AI Marketing Roles in 2026: Understanding the Real Differences (Specialist vs Strategist vs Expert vs Consultant vs Engineer)", 
-      image: "/image/ai-marketing-2026.webp", 
+      image: "/image/ai-marketing-specialist-cover-2026.png", 
       href: "/articles/marketing/ai-marketing-roles-2026",
       alt: "AI Marketing Roles 2026 - Complete guide to understanding differences between AI Marketing Specialist, Strategist, Expert, Consultant, and Engineer roles"
     },
