@@ -479,74 +479,56 @@ export default function AiMarketingPageVariantB() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Allow submission if either text or image is provided
-    if (!formData.raw_text.trim() && !selectedImage) {
-      setError('Please enter content or upload an image to analyze');
+    setError(null);
+    setResult(null);
+
+    const trimmed = formData.raw_text.trim();
+    const MIN_TEXT_LENGTH = 60;
+
+    // Case 1: only image, no text → we currently don't support pure image analysis
+    if (!trimmed && selectedImage) {
+      setError('فعلاً فقط متن تحلیل می‌شود. لطفاً متن لندینگ یا متن تبلیغ خود را اینجا پیست کنید.');
       return;
     }
 
-    setError(null);
-    setLoading(true);
-    setResult(null);
+    // Case 2: text is too short → don't send meaningless prompts like 'این رو آنالیز کن'
+    if (!trimmed || trimmed.length < MIN_TEXT_LENGTH) {
+      setError('متن برای تحلیل کافی نیست. لطفاً بخشی از محتوای واقعی لندینگ یا آگهی خود را وارد کنید (حداقل چند جمله).');
+      return;
+    }
 
     try {
-      const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
+      setLoading(true);
 
-      // If image is uploaded, convert it to base64 or send as FormData
-      let payload: any = {
-        raw_text: formData.raw_text.trim() || '',
-        platform: formData.platform,
-        goal: goals,
-        audience: formData.audience,
-        language: formData.language,
-        meta: null,
-      };
-
-      // If image is uploaded, add it to payload
+      const formDataToSend = new FormData();
+      formDataToSend.append('content', trimmed);
+      
       if (selectedImage) {
-        console.log('📷 Converting image to base64...', {
-          name: selectedImage.name,
-          type: selectedImage.type,
-          size: selectedImage.size
-        });
-        
-        // Convert image to base64 for API
-        const reader = new FileReader();
-        const imageBase64 = await new Promise<string>((resolve, reject) => {
-          reader.onload = () => {
-            const result = reader.result as string;
-            // Remove data:image/...;base64, prefix
-            const base64 = result.split(',')[1];
-            if (!base64) {
-              reject(new Error('Failed to convert image to base64'));
-              return;
-            }
-            console.log('✅ Image converted to base64, length:', base64.length);
-            resolve(base64);
-          };
-          reader.onerror = (error) => {
-            console.error('❌ Error reading image:', error);
-            reject(error);
-          };
-          reader.readAsDataURL(selectedImage);
-        });
-        
-        payload.image = imageBase64;
-        payload.image_type = selectedImage.type;
-        payload.image_name = selectedImage.name;
-        
-        console.log('📤 Image added to payload:', {
-          image_type: payload.image_type,
-          image_name: payload.image_name,
-          image_length: payload.image.length
-        });
+        formDataToSend.append('image', selectedImage);
       }
 
-      const data = await analyzeCognitiveFriction(payload);
+      // Add other form fields
+      const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
+      formDataToSend.append('platform', formData.platform);
+      formDataToSend.append('goal', JSON.stringify(goals));
+      formDataToSend.append('audience', formData.audience);
+      formDataToSend.append('language', formData.language);
+
+      const res = await fetch('/api/brain', {
+        method: 'POST',
+        body: formDataToSend, // IMPORTANT: no manual Content-Type header
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Failed to analyze content');
+      }
+
+      const data = await res.json();
       setResult(data);
-    } catch (err) {
-      console.error('Request failed:', err);
-      setError(err instanceof Error ? err.message : 'Request failed');
+    } catch (err: any) {
+      console.error('Analyze error', err);
+      setError(err.message || 'خطا در تحلیل. لطفاً دوباره تلاش کنید.');
     } finally {
       setLoading(false);
     }
