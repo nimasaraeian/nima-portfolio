@@ -63,6 +63,12 @@ export default function ArticlesPage() {
       href: "/articles/ai/personality-models",
       alt: "AI Personalities 2026 - Artificial intelligence personality development and human-AI interaction analysis"
     },
+    { 
+      title: "AI Marketing Roles in 2026: Understanding the Real Differences (Specialist vs Strategist vs Expert vs Consultant vs Engineer)", 
+      image: "/image/ai-marketing-2026.webp", 
+      href: "/articles/marketing/ai-marketing-roles-2026",
+      alt: "AI Marketing Roles 2026 - Complete guide to understanding differences between AI Marketing Specialist, Strategist, Expert, Consultant, and Engineer roles"
+    },
   ];
 
   return (
