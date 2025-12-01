@@ -515,46 +515,47 @@ export default function AiMarketingPageVariantB() {
     try {
       setLoading(true);
 
-      // Prepare payload for cognitive friction analysis
-      const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
-      
-      // Convert image to base64 if provided
-      let imageBase64: string | undefined = undefined;
-      let imageType: string | undefined = undefined;
-      let imageName: string | undefined = undefined;
+      const formDataToSend = new FormData();
+      formDataToSend.append('content', trimmed); // می‌تونه خالی باشد
       
       if (selectedImage) {
-        imageBase64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const result = reader.result as string;
-            // Remove data:image/...;base64, prefix
-            const base64 = result.split(',')[1];
-            resolve(base64);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(selectedImage);
+        formDataToSend.append('image', selectedImage);
+        console.log('📷 Image added to FormData:', {
+          name: selectedImage.name,
+          type: selectedImage.type,
+          size: selectedImage.size
         });
-        imageType = selectedImage.type;
-        imageName = selectedImage.name;
       }
 
-      const payload = {
-        raw_text: trimmed,
+      // Add other form fields
+      const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
+      formDataToSend.append('platform', formData.platform);
+      formDataToSend.append('goal', JSON.stringify(goals));
+      formDataToSend.append('audience', formData.audience);
+      formDataToSend.append('language', formData.language);
+
+      console.log('📤 Sending FormData to /api/brain:', {
+        hasContent: !!trimmed,
+        contentLength: trimmed.length,
+        hasImage: !!selectedImage,
         platform: formData.platform,
         goal: goals,
         audience: formData.audience,
-        language: formData.language,
-        meta: null,
-        ...(imageBase64 && {
-          image: imageBase64,
-          image_type: imageType,
-          image_name: imageName,
-        }),
-      };
+        language: formData.language
+      });
 
-      // Use analyzeCognitiveFriction function which calls the correct endpoint
-      const data = await analyzeCognitiveFriction(payload);
+      const res = await fetch('/api/brain', {
+        method: 'POST',
+        body: formDataToSend, // IMPORTANT: no manual Content-Type header
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Failed to analyze content');
+      }
+
+      const data = await res.json();
+      console.log('✅ Response received from /api/brain');
       setResult(data);
     } catch (err: any) {
       console.error('Analyze error', err);
