@@ -92,8 +92,8 @@ export async function POST(req: NextRequest) {
     } else {
       // Handle JSON (other modules)
       body = await req.json();
-      console.log('📋 Request body:', { role: body.role, industry: body.industry, city: body.city, channel: body.channel });
-      
+    console.log('📋 Request body:', { role: body.role, industry: body.industry, city: body.city, channel: body.channel });
+    
       ({ role, locale, city, industry, channel, query } = body);
     }
 
@@ -180,98 +180,61 @@ IMPORTANT: Return ONLY valid JSON, no markdown, no explanations outside the JSON
     
     if (isDeepScan) {
       console.log('🔍 Processing DeepScan response...');
-      // Try to parse JSON response, fallback to text parsing
-      let parsedResponse: any = { response: responseText };
+      // Parse JSON response - should be valid JSON due to response_format
+      let parsedResponse: any;
       
       try {
-        // Try to extract JSON from response
-        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          parsedResponse = JSON.parse(jsonMatch[0]);
-          // Ensure summary is a string
-          if (parsedResponse.summary) {
-            if (typeof parsedResponse.summary === 'object' && parsedResponse.summary !== null) {
-              parsedResponse.summary = parsedResponse.summary.overview || parsedResponse.summary.text || parsedResponse.summary.description || JSON.stringify(parsedResponse.summary);
-            } else {
-              parsedResponse.summary = String(parsedResponse.summary);
-            }
-          }
-          // Ensure arrays contain only strings
-          if (parsedResponse.segments && Array.isArray(parsedResponse.segments)) {
-            parsedResponse.segments = parsedResponse.segments.map((s: any) => 
-              typeof s === 'string' ? s : (typeof s === 'object' && s !== null ? (s.name || s.text || s.description || JSON.stringify(s)) : String(s))
-            );
-          }
-          if (parsedResponse.barriers && Array.isArray(parsedResponse.barriers)) {
-            parsedResponse.barriers = parsedResponse.barriers.map((s: any) => 
-              typeof s === 'string' ? s : (typeof s === 'object' && s !== null ? (s.name || s.text || s.description || JSON.stringify(s)) : String(s))
-            );
-          }
-          if (parsedResponse.triggers && Array.isArray(parsedResponse.triggers)) {
-            parsedResponse.triggers = parsedResponse.triggers.map((s: any) => 
-              typeof s === 'string' ? s : (typeof s === 'object' && s !== null ? (s.name || s.text || s.description || JSON.stringify(s)) : String(s))
-            );
-          }
-          if (parsedResponse.recommendations && Array.isArray(parsedResponse.recommendations)) {
-            parsedResponse.recommendations = parsedResponse.recommendations.map((s: any) => 
-              typeof s === 'string' ? s : (typeof s === 'object' && s !== null ? (s.name || s.text || s.description || JSON.stringify(s)) : String(s))
-            );
-          }
-        } else {
-          // Parse markdown sections
-          const summaryMatch = responseText.match(/##?\s*Summary[\s\S]*?(?=##|$)/i);
-          const segmentsMatch = responseText.match(/##?\s*Segments[\s\S]*?(?=##|$)/i);
-          const barriersMatch = responseText.match(/##?\s*Barriers[\s\S]*?(?=##|$)/i);
-          const triggersMatch = responseText.match(/##?\s*Triggers[\s\S]*?(?=##|$)/i);
-          const recommendationsMatch = responseText.match(/##?\s*Recommendations[\s\S]*?(?=##|$)/i);
-          
-          if (summaryMatch) {
-            const summaryText = summaryMatch[0].replace(/##?\s*Summary\s*/i, '').trim();
-            // Ensure summary is a string
-            parsedResponse.summary = typeof summaryText === 'string' ? summaryText : String(summaryText);
-          }
-          if (segmentsMatch) {
-            const segmentsText = segmentsMatch[0].replace(/##?\s*Segments\s*/i, '').trim();
-            const segmentsArray = segmentsText.split(/\n/).filter((s: string) => s.trim().startsWith('-') || s.trim().startsWith('•')).map((s: string) => s.replace(/^[-•]\s*/, '').trim());
-            // Ensure all items are strings
-            parsedResponse.segments = segmentsArray.map((s: any) => typeof s === 'string' ? s : String(s));
-          }
-          if (barriersMatch) {
-            const barriersText = barriersMatch[0].replace(/##?\s*Barriers\s*/i, '').trim();
-            const barriersArray = barriersText.split(/\n/).filter((s: string) => s.trim().startsWith('-') || s.trim().startsWith('•')).map((s: string) => s.replace(/^[-•]\s*/, '').trim());
-            // Ensure all items are strings
-            parsedResponse.barriers = barriersArray.map((s: any) => typeof s === 'string' ? s : String(s));
-          }
-          if (triggersMatch) {
-            const triggersText = triggersMatch[0].replace(/##?\s*Triggers\s*/i, '').trim();
-            const triggersArray = triggersText.split(/\n/).filter((s: string) => s.trim().startsWith('-') || s.trim().startsWith('•')).map((s: string) => s.replace(/^[-•]\s*/, '').trim());
-            // Ensure all items are strings
-            parsedResponse.triggers = triggersArray.map((s: any) => typeof s === 'string' ? s : String(s));
-          }
-          if (recommendationsMatch) {
-            const recommendationsText = recommendationsMatch[0].replace(/##?\s*Recommendations\s*/i, '').trim();
-            const recommendationsArray = recommendationsText.split(/\n/).filter((s: string) => s.trim().startsWith('-') || s.trim().startsWith('•')).map((s: string) => s.replace(/^[-•]\s*/, '').trim());
-            // Ensure all items are strings
-            parsedResponse.recommendations = recommendationsArray.map((s: any) => typeof s === 'string' ? s : String(s));
-          }
-        }
-      } catch (parseError) {
-        console.error('Error parsing DeepScan response:', parseError);
-        // Fallback to simple response
-        parsedResponse = { response: responseText };
+        // Parse JSON response directly (response_format ensures it's valid JSON)
+        parsedResponse = JSON.parse(responseText);
+        
+        // Validate and ensure all required fields exist with correct types
+        const result: any = {
+          frictionScore: typeof parsedResponse.frictionScore === 'number' && !isNaN(parsedResponse.frictionScore) ? Math.max(0, Math.min(100, parsedResponse.frictionScore)) : 50,
+          trustScore: typeof parsedResponse.trustScore === 'number' && !isNaN(parsedResponse.trustScore) ? Math.max(0, Math.min(100, parsedResponse.trustScore)) : 50,
+          emotionalClarityScore: typeof parsedResponse.emotionalClarityScore === 'number' && !isNaN(parsedResponse.emotionalClarityScore) ? Math.max(0, Math.min(100, parsedResponse.emotionalClarityScore)) : 50,
+          motivationMatchScore: typeof parsedResponse.motivationMatchScore === 'number' && !isNaN(parsedResponse.motivationMatchScore) ? Math.max(0, Math.min(100, parsedResponse.motivationMatchScore)) : 50,
+          decisionProbability: typeof parsedResponse.decisionProbability === 'number' && !isNaN(parsedResponse.decisionProbability) ? Math.max(0, Math.min(1, parsedResponse.decisionProbability)) : 0.5,
+          conversionLiftEstimate: typeof parsedResponse.conversionLiftEstimate === 'number' && !isNaN(parsedResponse.conversionLiftEstimate) ? parsedResponse.conversionLiftEstimate : 0,
+          keyDecisionBlockers: Array.isArray(parsedResponse.keyDecisionBlockers) ? parsedResponse.keyDecisionBlockers.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
+          emotionalResistanceFactors: Array.isArray(parsedResponse.emotionalResistanceFactors) ? parsedResponse.emotionalResistanceFactors.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
+          cognitiveOverloadFactors: Array.isArray(parsedResponse.cognitiveOverloadFactors) ? parsedResponse.cognitiveOverloadFactors.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
+          trustBreakpoints: Array.isArray(parsedResponse.trustBreakpoints) ? parsedResponse.trustBreakpoints.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
+          motivationMisalignments: Array.isArray(parsedResponse.motivationMisalignments) ? parsedResponse.motivationMisalignments.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
+          recommendedQuickWins: Array.isArray(parsedResponse.recommendedQuickWins) ? parsedResponse.recommendedQuickWins.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
+          recommendedDeepChanges: Array.isArray(parsedResponse.recommendedDeepChanges) ? parsedResponse.recommendedDeepChanges.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
+          explanationSummary: typeof parsedResponse.explanationSummary === 'string' && parsedResponse.explanationSummary.trim().length > 0 ? parsedResponse.explanationSummary : (parsedResponse.summary || 'Analysis completed successfully'),
+        };
+        
+        console.log('✅ DeepScan response processed successfully', {
+          frictionScore: result.frictionScore,
+          trustScore: result.trustScore,
+          blockersCount: result.keyDecisionBlockers.length,
+          quickWinsCount: result.recommendedQuickWins.length,
+        });
+        
+        return NextResponse.json(result);
+      } catch (parseError: any) {
+        console.error('❌ Error parsing DeepScan JSON response:', parseError);
+        console.error('Response text (first 500 chars):', responseText.substring(0, 500));
+        
+        // Return a default structure with error indication
+        return NextResponse.json({
+          frictionScore: 50,
+          trustScore: 50,
+          emotionalClarityScore: 50,
+          motivationMatchScore: 50,
+          decisionProbability: 0.5,
+          conversionLiftEstimate: 0,
+          keyDecisionBlockers: ['Error parsing response from AI'],
+          emotionalResistanceFactors: [],
+          cognitiveOverloadFactors: [],
+          trustBreakpoints: [],
+          motivationMisalignments: [],
+          recommendedQuickWins: [],
+          recommendedDeepChanges: [],
+          explanationSummary: 'Error processing analysis. Please try again.',
+        }, { status: 500 });
       }
-
-      // Calculate quality score
-      let quality_score = 3;
-      if (parsedResponse.summary) quality_score += 1;
-      if (parsedResponse.segments && parsedResponse.segments.length > 0) quality_score += 1;
-      if (quality_score > 5) quality_score = 5;
-
-      console.log('✅ DeepScan response processed successfully');
-      return NextResponse.json({
-        ...parsedResponse,
-        quality_score: quality_score,
-      });
     }
 
     // Standard response for other modules
