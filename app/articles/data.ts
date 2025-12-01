@@ -119,7 +119,7 @@ export const articles: ArticleData[] = [
     tags: ['AI Marketing Roles', 'AI Marketing Specialist', 'AI Marketing Strategist', 'AI Marketing Expert', 'AI Marketing Consultant', 'AI Marketing Engineer', 'Marketing Careers', 'Marketing Jobs 2026', 'Career Guide'],
     publishedAt: '2026-01-20T08:00:00.000Z',
     wordCount: 1000,
-    imageUrl: '/image/ai-marketing-2026.webp',
+    imageUrl: '/image/ai-marketing-specialist-cover-2026.png',
     href: '/articles/marketing/ai-marketing-roles-2026'
   }
 ];

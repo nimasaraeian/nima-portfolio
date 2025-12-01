@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     type: 'article',
     publishedTime: '2026-01-20T08:00:00.000Z',
     authors: ['Nima Saraeian'],
-    images: ['/image/ai-marketing-2026.webp'],
+    images: ['/image/ai-marketing-specialist-cover-2026.png'],
   },
 };
 
@@ -25,8 +25,8 @@ export default function AIMarketingRoles2026() {
           {/* Cover Image */}
           <div className="mb-8 overflow-hidden rounded-lg shadow-xl">
             <Image
-              src="/image/ai-marketing-2026.webp"
-              alt="AI Marketing Roles in 2026"
+              src="/image/ai-marketing-specialist-cover-2026.png"
+              alt="AI Marketing Roles in 2026 — Understanding the Real Differences"
               width={800}
               height={400}
               className="w-full h-auto object-contain"
