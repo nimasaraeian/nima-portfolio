@@ -475,6 +475,350 @@ export default function AIMarketingRoles2026() {
               <p className="text-lg font-semibold text-blue-300">The Specialist is the executor.</p>
             </div>
 
+            <div className="mt-12 mb-8 p-6 bg-gradient-to-r from-purple-900/20 to-indigo-900/20 border border-purple-500/30 rounded-xl">
+              <p className="text-2xl font-bold text-center text-white mb-2">Part 2 of 4</p>
+              <p className="text-lg text-center text-gray-300">Expert · Consultant · Engineer</p>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 4: AI Marketing Expert — The Hybrid Senior Marketer Who Thinks AND Executes</h2>
+            
+            <p className="text-lg mb-6 text-gray-300">
+              Now that we've covered the Specialist (executor) and the Strategist (architect), it's time to explore the AI Marketing Expert — a hybrid role that combines strategic thinking and hands-on skills.
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Who is the Expert?</h3>
+            
+            <p className="mb-4 text-gray-300">
+              An AI Marketing Expert is someone who:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• understands AI tools deeply</li>
+                <li>• uses them to produce high-quality results</li>
+                <li>• contributes to strategic decisions</li>
+                <li>• can independently plan, test, analyze, and iterate</li>
+                <li>• acts as a bridge between the technical and creative sides of marketing</li>
+              </ul>
+            </div>
+
+            <p className="mb-6 text-gray-300">
+              This role is often a <strong className="text-white">Senior-level generalist</strong> — not because they do everything, but because they can handle almost anything across the AI marketing spectrum.
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Core Responsibilities</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• Own entire campaigns end-to-end (strategy + execution)</li>
+                <li>• Design AI-powered workflows for SEO, PPC, and CRO</li>
+                <li>• Build scalable content strategies using AI generation models</li>
+                <li>• Implement AI into email marketing, customer retention, and CRM</li>
+                <li>• Coordinate with developers, data analysts, and designers</li>
+                <li>• Evaluate marketing tech stacks and recommend improvements</li>
+                <li>• Lead A/B and multivariate testing strategies</li>
+                <li>• Manage AI tools like Jasper, Copy.ai, Mutiny, Phrasee, Surfer SEO, etc.</li>
+                <li>• Translate behavioral insights into content and campaign structures</li>
+              </ul>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Ideal for:</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• Growth-stage startups that need one AI-powered marketing lead</li>
+                <li>• Medium businesses that want to integrate AI without hiring a full team</li>
+                <li>• Solo AI consultants or fractional CMOs</li>
+              </ul>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">What Makes This Role Different?</h3>
+            
+            <p className="mb-4 text-gray-300">
+              Unlike Specialists, Experts don't just wait for instructions.
+            </p>
+
+            <p className="mb-4 text-gray-300">
+              <strong className="text-white">They analyze, plan, test, and optimize.</strong>
+            </p>
+
+            <p className="mb-4 text-gray-300">
+              Unlike Strategists, they're hands-on and ready to ship content, build landing pages, run automations, and more.
+            </p>
+
+            <p className="mb-6 text-gray-300">
+              You can think of them as <strong className="text-white">T-shaped AI marketers:</strong>
+            </p>
+
+            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-blue-300">
+                <li>✓ Broad understanding across many tools and channels</li>
+                <li>✓ Deep specialization in 1–2 core areas (e.g., AI content, CRO, funnel architecture)</li>
+              </ul>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Salary Range (2026 Global Average):</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>🇺🇸 <strong className="text-white">USA:</strong> $90,000 – $130,000</li>
+                <li>🇩🇪 <strong className="text-white">Germany:</strong> €70,000 – €100,000</li>
+                <li>🌍 <strong className="text-white">Remote/Freelance:</strong> $50–150/hour</li>
+              </ul>
+            </div>
+
+            <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-8">
+              <p className="text-lg font-semibold text-green-300">
+                ⚡ In 2026, demand for AI Marketing Experts has grown by 310% YoY on platforms like Toptal, Upwork, and LinkedIn.
+              </p>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 5: AI Marketing Consultant — The Strategic Outsider Who Designs Transformation</h2>
+            
+            <h3 className="text-2xl font-semibold mb-4 text-white">What is an AI Marketing Consultant?</h3>
+            
+            <p className="mb-4 text-gray-300">
+              A Consultant is an external expert hired to:
+            </p>
+
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• audit the current marketing system</li>
+                <li>• recommend how to implement AI</li>
+                <li>• create a roadmap for integration</li>
+                <li>• train internal teams</li>
+                <li>• guide digital transformation</li>
+              </ul>
+            </div>
+
+            <p className="mb-6 text-gray-300">
+              They don't usually execute campaigns directly — they guide the company toward a more AI-driven model.
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">When do companies hire a Consultant?</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• They want to shift from manual to automated systems</li>
+                <li>• They need help choosing the right AI tools</li>
+                <li>• Their performance has plateaued</li>
+                <li>• They're scaling and want to future-proof marketing</li>
+                <li>• Their internal teams lack AI knowledge</li>
+              </ul>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Consultant's Deliverables:</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• AI Marketing Audit (current tech, processes, weaknesses)</li>
+                <li>• AI Adoption Plan (tools, data requirements, workflow upgrades)</li>
+                <li>• Martech Stack Design (HubSpot + Jasper + Zapier + n8n etc.)</li>
+                <li>• Training sessions for internal marketers and content teams</li>
+                <li>• Behavioral analytics framework</li>
+                <li>• Automation recommendations for lead generation, nurturing, retargeting</li>
+                <li>• Dashboard and reporting redesign</li>
+              </ul>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Key Differences from Expert and Strategist</h3>
+            
+            <div className="overflow-x-auto mb-6">
+              <table className="w-full border-collapse border border-gray-700">
+                <thead>
+                  <tr className="bg-gray-900">
+                    <th className="border border-gray-700 px-4 py-3 text-left text-white font-semibold">Role</th>
+                    <th className="border border-gray-700 px-4 py-3 text-center text-white font-semibold">Internal or External?</th>
+                    <th className="border border-gray-700 px-4 py-3 text-center text-white font-semibold">Execution?</th>
+                    <th className="border border-gray-700 px-4 py-3 text-center text-white font-semibold">Builds AI System?</th>
+                    <th className="border border-gray-700 px-4 py-3 text-center text-white font-semibold">Strategic Vision</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300">
+                  <tr>
+                    <td className="border border-gray-700 px-4 py-3">Expert</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Internal</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">Yes</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Sometimes</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Moderate–High</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-4 py-3">Strategist</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Internal</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-red-400">Rarely</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">Often</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Very High</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-700 px-4 py-3">Consultant</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">External</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-red-400">No</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Designs It</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Extremely High</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Top Skills for AI Marketing Consultants</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• Deep understanding of martech & AI tools</li>
+                <li>• System design and architecture</li>
+                <li>• Cross-functional collaboration (sales, product, dev, ops)</li>
+                <li>• Workshop and training delivery</li>
+                <li>• AI ROI modeling and business case writing</li>
+                <li>• Often includes previous experience in leadership or agency work</li>
+              </ul>
+            </div>
+
+            <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-8">
+              <p className="text-lg font-semibold text-purple-300">
+                🧠 Think of them as AI transformation coaches for organizations.
+              </p>
+            </div>
+
+            <h2 className="text-3xl font-bold mb-6 text-white">Section 6: AI Marketing Engineer — The System Builder Behind the Scenes</h2>
+            
+            <h3 className="text-2xl font-semibold mb-4 text-white">The Most Technical Role in AI Marketing</h3>
+            
+            <p className="mb-4 text-gray-300">
+              The AI Marketing Engineer is the builder.
+            </p>
+
+            <p className="mb-4 text-gray-300">
+              They don't just use AI tools — they develop, fine-tune, and integrate them into the company's infrastructure.
+            </p>
+
+            <p className="mb-6 text-gray-300">
+              While Specialists, Experts, and Strategists use AI as a tool, <strong className="text-white">Engineers build the tool or the system itself.</strong>
+            </p>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Core Responsibilities</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• Develop custom GPT-powered applications for content or chat</li>
+                <li>• Integrate OpenAI, Gemini, Claude, or local LLMs via API</li>
+                <li>• Create internal AI tools for customer profiling or content personalization</li>
+                <li>• Build ML models (Random Forests, Clustering, Forecasting)</li>
+                <li>• Set up RAG pipelines for knowledge bases or SEO content engines</li>
+                <li>• Connect data layers (GA4, CRM, CDP) to prediction engines</li>
+                <li>• Create marketing automation bots via Node, Python, TypeScript</li>
+                <li>• Monitor system performance and fine-tune AI output accuracy</li>
+              </ul>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Skills & Tools</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <div className="space-y-4">
+                <div>
+                  <p className="font-semibold text-white mb-2">Languages:</p>
+                  <p className="text-gray-300">Python, JavaScript/TypeScript, SQL</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-white mb-2">Frameworks:</p>
+                  <p className="text-gray-300">LangChain, TensorFlow, PyTorch</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-white mb-2">Infrastructure:</p>
+                  <p className="text-gray-300">Vercel, Supabase, Firebase, Docker</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-white mb-2">Workflow tools:</p>
+                  <p className="text-gray-300">n8n, Node-RED, Airflow</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-white mb-2">APIs:</p>
+                  <p className="text-gray-300">OpenAI, HuggingFace, Google Cloud AI, AWS SageMaker</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Where Do They Work?</h3>
+            
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6">
+              <ul className="space-y-2 text-gray-300">
+                <li>• SaaS and platform-based companies</li>
+                <li>• Advanced marketing agencies</li>
+                <li>• AI startups</li>
+                <li>• Enterprise-level eCommerce companies</li>
+                <li>• Internal AI/ML teams inside Fortune 500 brands</li>
+              </ul>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Engineer vs. Expert: The Technical Divide</h3>
+            
+            <div className="overflow-x-auto mb-6">
+              <table className="w-full border-collapse border border-gray-700">
+                <thead>
+                  <tr className="bg-gray-900">
+                    <th className="border border-gray-700 px-4 py-3 text-left text-white font-semibold">Capability</th>
+                    <th className="border border-gray-700 px-4 py-3 text-center text-white font-semibold">AI Expert</th>
+                    <th className="border border-gray-700 px-4 py-3 text-center text-white font-semibold">AI Engineer</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300">
+                  <tr>
+                    <td className="border border-gray-700 px-4 py-3">Runs content workflows</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">✔️</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">✔️</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-4 py-3">Designs prompt structure</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">✔️</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">✔️</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-700 px-4 py-3">Fine-tunes LLMs</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-red-400">❌</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">✔️</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-4 py-3">Builds internal tools</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-red-400">❌</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">✔️</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-700 px-4 py-3">Writes backend code</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-red-400">❌</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">✔️</td>
+                  </tr>
+                  <tr className="bg-gray-900">
+                    <td className="border border-gray-700 px-4 py-3">Connects marketing + engineering teams</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center">Sometimes</td>
+                    <td className="border border-gray-700 px-4 py-3 text-center text-green-400">Always</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 className="text-2xl font-semibold mb-4 text-white">Why This Role Is Exploding</h3>
+            
+            <p className="mb-4 text-gray-300">
+              In 2026, <strong className="text-white">custom AI = competitive advantage.</strong>
+            </p>
+
+            <p className="mb-4 text-gray-300">
+              Companies no longer want cookie-cutter GPT prompts.
+            </p>
+
+            <p className="mb-4 text-gray-300">
+              They want their own branded GPT, their own behavioral analysis engine, their own smart automation pipeline.
+            </p>
+
+            <p className="mb-6 text-gray-300">
+              <strong className="text-white">AI Engineers are the ones who build the machinery behind those systems.</strong>
+            </p>
+
+            <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-6 mb-8">
+              <p className="text-lg font-semibold text-yellow-300">
+                💡 This is one of the highest-paying and hardest-to-hire roles in AI marketing.
+              </p>
+            </div>
+
             {/* CTA Section */}
             <div className="mt-12 p-8 bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border border-purple-500/30 rounded-xl">
               <h3 className="text-2xl font-bold mb-4 text-white">Ready to Master AI Marketing?</h3>
