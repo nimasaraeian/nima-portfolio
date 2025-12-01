@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     let imageFile: File | null = null;
 
     if (contentType.includes('multipart/form-data')) {
-      // Handle FormData (Behavioral DeepScan)
+      // Handle FormData (Behavioral DeepScan with image support)
       const formData = await req.formData();
       const content = formData.get('content') as string || '';
       imageFile = formData.get('image') as File | null;
@@ -51,12 +51,40 @@ export async function POST(req: NextRequest) {
         goalArray = ['leads'];
       }
 
-      // Build query from content and image
+      // If image is provided, forward to backend API with image
       if (imageFile) {
-        // If image is provided, we'll need to process it
-        // For now, include it in the query description
-        query = `Behavioral DeepScan Analysis for ${platform}. Content: ${content || '[Image provided]'}. Goal: ${goalArray.join(', ')}. Audience: ${audience}. Language: ${language}.`;
+        console.log('📸 Image file received, forwarding to backend API...');
+        
+        // Get backend URL from environment
+        const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
+        
+        // Create FormData for backend
+        const backendFormData = new FormData();
+        backendFormData.append('content', content);
+        backendFormData.append('image', imageFile);
+        
+        try {
+          // Forward to backend API
+          const backendResponse = await fetch(`${backendUrl}/api/brain`, {
+            method: 'POST',
+            body: backendFormData,
+          });
+          
+          if (!backendResponse.ok) {
+            const errorText = await backendResponse.text();
+            throw new Error(`Backend API error: ${backendResponse.status} - ${errorText}`);
+          }
+          
+          const backendData = await backendResponse.json();
+          console.log('✅ Backend API response received');
+          return NextResponse.json(backendData);
+        } catch (backendError: any) {
+          console.error('❌ Error forwarding to backend:', backendError);
+          // Fallback to OpenAI if backend fails
+          query = `Behavioral DeepScan Analysis for ${platform}. Content: ${content || '[Image provided]'}. Goal: ${goalArray.join(', ')}. Audience: ${audience}. Language: ${language}.`;
+        }
       } else {
+        // No image, build query normally
         query = `Behavioral DeepScan Analysis for ${platform}. Content: ${content}. Goal: ${goalArray.join(', ')}. Audience: ${audience}. Language: ${language}.`;
       }
       
