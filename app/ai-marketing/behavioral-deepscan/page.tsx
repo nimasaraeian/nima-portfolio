@@ -246,6 +246,7 @@ export default function BehavioralDeepScanPage() {
                 onGoalChange={handleGoalChange}
                 onImageChange={handleImageChange}
                 selectedImage={selectedImage}
+                showImageUpload={true}
                 onSubmit={handleSubmit}
               />
             </div>

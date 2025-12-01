@@ -17,8 +17,9 @@ interface MultiStepInputPanelProps {
   error: string | null;
   onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => void;
   onGoalChange: (goal: string) => void;
-  onImageChange: (file: File | null) => void;
-  selectedImage: File | null;
+  onImageChange?: (file: File | null) => void;
+  selectedImage?: File | null;
+  showImageUpload?: boolean; // Explicit flag to show/hide image upload
   onSubmit: (e: React.FormEvent) => void;
 }
 
@@ -52,6 +53,7 @@ export default function MultiStepInputPanel({
   onGoalChange,
   onImageChange,
   selectedImage,
+  showImageUpload = false,
   onSubmit,
 }: MultiStepInputPanelProps) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -165,38 +167,40 @@ export default function MultiStepInputPanel({
                 </div>
               </div>
 
-              {/* Image Upload Field */}
-              <div className="relative group">
-                <label htmlFor="image_upload" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
-                  Optional: Upload Landing Page Screenshot
-                </label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    id="image_upload"
-                    name="image_upload"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] || null;
-                      onImageChange(file);
-                    }}
-                    className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all shadow-xl group-hover:border-purple-500/30"
-                  />
-                  {selectedImage && (
-                    <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
-                      <ImageIcon className="w-4 h-4 text-purple-400" />
-                      <span>{selectedImage.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => onImageChange(null)}
-                        className="ml-auto text-red-400 hover:text-red-300 transition-colors"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  )}
+              {/* Image Upload Field - Only show if showImageUpload is true */}
+              {showImageUpload && onImageChange && (
+                <div className="relative group">
+                  <label htmlFor="image_upload" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
+                    Optional: Upload Landing Page Screenshot
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="image_upload"
+                      name="image_upload"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        onImageChange(file);
+                      }}
+                      className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all shadow-xl group-hover:border-purple-500/30"
+                    />
+                    {selectedImage && (
+                      <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                        <ImageIcon className="w-4 h-4 text-purple-400" />
+                        <span>{selectedImage.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => onImageChange(null)}
+                          className="ml-auto text-red-400 hover:text-red-300 transition-colors"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Platform Selection */}
               <div>

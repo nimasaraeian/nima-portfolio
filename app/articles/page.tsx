@@ -4,6 +4,12 @@ import Image from "next/image";
 export default function ArticlesPage() {
   const aiArticles = [
     { 
+      title: "Predictive Buyer Intent AI: How AI Reads Customer Minds Before They Decide", 
+      image: "/image/predictive-buyer-intent-ai-real-person-smiling-cover-image.png", 
+      href: "/articles/ai/predictive-buyer-intent-ai",
+      alt: "Predictive Buyer Intent AI - How AI reads customer behavior signals before purchase decisions to achieve 3-5× higher conversions"
+    },
+    { 
       title: "How to Use AI in Marketing (2026 Guide to Tools, Strategy & Behavior-Driven Growth)", 
       image: "/image/how-to-use-ai-in-marketing-prediction-automation.png", 
       href: "/articles/ai/how-to-use-ai-in-marketing-2026",

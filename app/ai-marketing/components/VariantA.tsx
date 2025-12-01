@@ -439,8 +439,6 @@ export default function AiMarketingPageVariantA() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<CognitiveFrictionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [metaJson, setMetaJson] = useState('');
   
   // Rewrite state
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
@@ -482,15 +480,6 @@ export default function AiMarketingPageVariantA() {
 
     try {
       const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
-      let meta = null;
-      
-      if (showAdvanced && metaJson.trim()) {
-        try {
-          meta = JSON.parse(metaJson);
-        } catch {
-          throw new Error('Invalid JSON in meta field');
-        }
-      }
 
       const payload = {
         raw_text: formData.raw_text.trim(),
@@ -498,7 +487,7 @@ export default function AiMarketingPageVariantA() {
         goal: goals,
         audience: formData.audience,
         language: formData.language,
-        meta,
+        meta: null,
       };
 
       const data = await analyzeCognitiveFriction(payload);
@@ -589,14 +578,10 @@ export default function AiMarketingPageVariantA() {
             <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/30 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
               <MultiStepInputPanel
                 formData={formData}
-                showAdvanced={showAdvanced}
-                metaJson={metaJson}
                 loading={loading}
                 error={error}
                 onInputChange={handleInputChange}
                 onGoalChange={handleGoalChange}
-                onAdvancedToggle={() => setShowAdvanced(!showAdvanced)}
-                onMetaJsonChange={setMetaJson}
                 onSubmit={handleSubmit}
               />
             </div>
