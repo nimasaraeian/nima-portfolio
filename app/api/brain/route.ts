@@ -132,19 +132,29 @@ Format your response in markdown with clear headings (##, ###) and bullet points
     const isDeepScan = query.includes('Behavioral DeepScan Analysis') || query.includes('Psychometric mapping') || contentType.includes('multipart/form-data');
     
     if (isDeepScan) {
-      // Specialized prompt for Behavioral DeepScan
+      // Specialized prompt for Behavioral DeepScan - must return CognitiveFrictionResult format
       systemPrompt = `You are an expert Behavioral Psychologist and Marketing Strategist using Selphlyze (proprietary AI psychometric layer).
-Your task is to perform a Behavioral DeepScan analysis.
+Your task is to perform a Behavioral DeepScan analysis and return results in a specific JSON format.
 
-Provide a comprehensive analysis including:
-1. **Summary**: Overview of behavioral patterns and insights
-2. **Segments**: Audience segments with distinct behavioral characteristics
-3. **Barriers**: Psychological and practical barriers preventing action
-4. **Triggers**: Emotional and behavioral triggers that drive action
-5. **Recommendations**: Actionable strategies based on psychometric insights
+You MUST return a valid JSON object with EXACTLY these fields:
+{
+  "frictionScore": <number 0-100>,  // Cognitive friction score (higher = more friction)
+  "trustScore": <number 0-100>,     // Trust level score (higher = more trust)
+  "emotionalClarityScore": <number 0-100>,  // Emotional clarity score
+  "motivationMatchScore": <number 0-100>,   // How well content matches audience motivation
+  "decisionProbability": <number 0-1>,      // Probability of user making a decision (0.0 to 1.0)
+  "conversionLiftEstimate": <number>,       // Estimated conversion lift percentage (can be negative)
+  "keyDecisionBlockers": [<string>],       // Array of decision blockers
+  "emotionalResistanceFactors": [<string>], // Array of emotional resistance factors
+  "cognitiveOverloadFactors": [<string>],    // Array of cognitive overload factors
+  "trustBreakpoints": [<string>],           // Array of trust breakpoints
+  "motivationMisalignments": [<string>],    // Array of motivation misalignments
+  "recommendedQuickWins": [<string>],       // Array of quick win recommendations
+  "recommendedDeepChanges": [<string>],     // Array of deep change recommendations
+  "explanationSummary": "<string>"           // Overall explanation summary
+}
 
-Format your response as structured JSON with these keys: summary, segments (array), barriers (array), triggers (array), recommendations (array).
-If you cannot provide structured JSON, format clearly with these sections using markdown headings.`;
+IMPORTANT: Return ONLY valid JSON, no markdown, no explanations outside the JSON object.`;
     } else {
       // Standard prompt for other modules
       systemPrompt += `\n\nYou are analyzing: ${query}\nIndustry: ${industry}\nCity: ${city}\nChannel: ${channel}\nLocale: ${locale}`;
@@ -157,8 +167,9 @@ If you cannot provide structured JSON, format clearly with these sections using 
         { role: 'system', content: systemPrompt },
         { role: 'user', content: query },
       ],
-      temperature: 0.7,
-      max_tokens: 2000,
+      temperature: isDeepScan ? 0.3 : 0.7, // Lower temperature for more consistent DeepScan results
+      max_tokens: isDeepScan ? 3000 : 2000,
+      ...(isDeepScan && { response_format: { type: 'json_object' } }), // Force JSON for DeepScan
     });
 
     const responseText = completion.choices[0]?.message?.content || 'No response generated';
