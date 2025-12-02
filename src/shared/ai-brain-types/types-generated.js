@@ -59,3 +59,4 @@
  * @property {string} direct_version - High-conversion direct version
  * @property {string} cta - Optimized call-to-action
  */
+

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     modifiedTime: new Date().toISOString(),
     images: [
       {
-        url: `${SITE.baseUrl}/image/ai-marketing-2026-pillar-nima-saraeian.png`,
+        url: `${SITE.baseUrl}/image/ai-marketing-2026.png`,
         width: 1200,
         height: 630,
         alt: 'AI Marketing 2026 Complete Guide - Nima Saraeian AI Marketing Specialist guide to tools, strategy, behavioral data, and conversion psychology',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     description: 'Discover the complete AI Marketing 2026 guide: 20+ tools, 7-layer framework, behavioral data strategies. Learn how AI increases ROI by 32-48% and boosts conversion rates 2.5×. Expert insights from Nima Saraeian, AI Marketing Specialist.',
     images: [
       {
-        url: `${SITE.baseUrl}/image/ai-marketing-2026-pillar-nima-saraeian.png`,
+        url: `${SITE.baseUrl}/image/ai-marketing-2026.png`,
         width: 1200,
         height: 630,
         alt: 'AI Marketing 2026 Complete Guide',
@@ -53,7 +53,7 @@ export default function AIMarketing2026CompleteGuidePage() {
     },
     "headline": "AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology",
     "description": "A comprehensive 6,000-word pillar page on AI marketing systems, predictive behavioral data, personalization engines, automation, CRO psychology, and the future of AI-driven marketing.",
-    "image": `${SITE.baseUrl}/image/ai-marketing-2026-pillar-nima-saraeian.png`,
+    "image": `${SITE.baseUrl}/image/ai-marketing-2026.png`,
     "author": {
       "@type": "Person",
       "name": "Nima Saraeian",
@@ -257,7 +257,7 @@ export default function AIMarketing2026CompleteGuidePage() {
         {/* Hero Image */}
         <div className="rounded-2xl overflow-hidden border border-white/10">
           <Image
-            src="/image/ai-marketing-2026-pillar-nima-saraeian.png"
+            src="/image/ai-marketing-2026.png"
             alt="AI Marketing 2026 Complete Guide - Nima Saraeian AI Marketing Specialist guide to tools, strategy, behavioral data, and conversion psychology"
             width={1200}
             height={630}

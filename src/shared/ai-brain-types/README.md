@@ -24,3 +24,4 @@ This folder contains the auto-generated types coming from the backend.
 
 NEVER edit types-generated.js manually.
 
+
