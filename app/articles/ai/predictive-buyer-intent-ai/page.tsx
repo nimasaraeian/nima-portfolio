@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE } from '@/app/lib/site';
+import AudioSummary from '@/components/AudioSummary';
 import BackToTopButton from './components/BackToTopButton';
 
 export const metadata: Metadata = {
@@ -258,6 +259,11 @@ export default function PredictiveBuyerIntentAIPage() {
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20" style={{ scrollBehavior: 'smooth' }}>
           {/* Article Content */}
           <div className="prose prose-invert prose-lg max-w-none">
+            <AudioSummary
+              src="/audio/predictive-buyer-intent-ai-summary.mp3"
+              title="🎧 Audio Summary — Predictive Buyer Intent AI"
+            />
+
             {/* Introduction Section */}
             <section className="mb-12">
               <p className="text-lg sm:text-xl text-gray-300 leading-relaxed mb-6">

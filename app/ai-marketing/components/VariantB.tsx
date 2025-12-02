@@ -3,8 +3,29 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
-import MultiStepInputPanel from '../behavioral-deepscan/components/MultiStepInputPanel';
 import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
+import type { BrainResponse, PsychologyAnalysisResult } from '../brain-types';
+import {
+  analyzeCognitiveFriction,
+  type ContentType,
+  type AudienceStage,
+  type PrimaryGoal,
+} from '@/lib/apiClient';
+
+// Simple utility to join conditional classNames (replacement for clsx)
+function classNames(...classes: Array<string | null | undefined | false>) {
+  return classes.filter(Boolean).join(' ');
+}
+
+// Goals per content type (local map to avoid runtime issues)
+const GOALS_BY_TYPE: Record<ContentType, PrimaryGoal[]> = {
+  landing: ['clicks', 'leads', 'sales', 'engagement'],
+  social: ['engagement', 'awareness'],
+  ad: ['clicks', 'sales', 'awareness'],
+  sales_page: ['sales', 'engagement'],
+  email: ['open_rate', 'clicks', 'reply'],
+  engagement: ['retention', 'engagement', 'awareness'],
+};
 
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
@@ -62,22 +83,6 @@ type RewriteOutput = {
 };
 
 import { postToBrain } from '@/lib/apiClient';
-
-// Helper function to call the Cognitive Friction API
-// Uses the centralized API client helper
-async function analyzeCognitiveFriction(payload: {
-  raw_text: string;
-  platform: string;
-  goal: string[];
-  audience: string;
-  language: string;
-  meta: null;
-  image?: string;
-  image_type?: string;
-  image_name?: string;
-}): Promise<CognitiveFrictionResult> {
-  return postToBrain<CognitiveFrictionResult>('/api/brain/cognitive-friction', payload);
-}
 
 // Score display component with improved visuals
 function ScoreCard({ label, value, isFriction = false }: { label: string; value: number; isFriction?: boolean }) {
@@ -453,99 +458,173 @@ function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
 
 // Main page component - Variant B (Improved UX/Conversion)
 export default function AiMarketingPageVariantB() {
-  const [formData, setFormData] = useState({
-    raw_text: '',
-    platform: 'landing_page',
-    goal: [] as string[],
-    audience: 'cold',
-    language: 'en',
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<CognitiveFrictionResult | null>(null);
+  // New step-based state
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [contentType, setContentType] = useState<ContentType>('landing');
+  const [audienceStage, setAudienceStage] = useState<AudienceStage | null>('cold');
+  const [goals, setGoals] = useState<PrimaryGoal[]>([]);
+  const [rawText, setRawText] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
-  // Image upload state
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [result, setResult] = useState<CognitiveFrictionResult | null>(null);
+
   // Rewrite state
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
   const [rewriteLoading, setRewriteLoading] = useState(false);
   const [rewriteError, setRewriteError] = useState<string | null>(null);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    // Reset rewrite results when content changes significantly
-    if (name === 'raw_text' || name === 'platform' || name === 'audience' || name === 'language') {
-      setRewriteResult(null);
-      setRewriteError(null);
+  // Derived helpers
+  const showAudienceStage = ['landing', 'ad', 'sales_page'].includes(contentType);
+  // Show image upload for all content types
+  const showImageUpload = true;
+
+  const wordCount = rawText.trim()
+    ? rawText.trim().split(/\s+/).filter(Boolean).length
+    : 0;
+  const charCount = rawText.length;
+
+  const mapContentTypeToPlatform = (ct: ContentType): string => {
+    switch (ct) {
+      case 'landing':
+        return 'landing_page';
+      case 'social':
+        return 'social_post';
+      case 'ad':
+        return 'ad';
+      case 'sales_page':
+        return 'sales_page';
+      case 'email':
+        return 'email';
+      case 'engagement':
+      default:
+        return 'engagement';
     }
   };
 
-  const handleGoalChange = (goal: string) => {
-    setFormData((prev) => {
-      const goals = prev.goal.includes(goal)
-        ? prev.goal.filter((g) => g !== goal)
-        : [...prev.goal, goal];
-      return { ...prev, goal: goals };
-    });
+  const CONTENT_TYPE_OPTIONS: Array<{
+    id: ContentType;
+    label: string;
+    description: string;
+  }> = [
+    {
+      id: 'landing',
+      label: 'Landing Page',
+      description: 'Analyze a full landing or product page.',
+    },
+    {
+      id: 'social',
+      label: 'Social Content',
+      description: 'Posts, carousels, hooks, captions.',
+    },
+    {
+      id: 'ad',
+      label: 'Ads',
+      description: 'Paid ads for social or search.',
+    },
+    {
+      id: 'sales_page',
+      label: 'Sales Page',
+      description: 'Long-form or dedicated sales pages.',
+    },
+    {
+      id: 'email',
+      label: 'Email',
+      description: 'Newsletters, launch emails, onboarding.',
+    },
+    {
+      id: 'engagement',
+      label: 'Engagement (Reels/TikTok/Shorts)',
+      description: 'Short-form video scripts & hooks.',
+    },
+  ];
+
+  const handleToggleGoal = (goal: PrimaryGoal) => {
+    setGoals((prev) =>
+      prev.includes(goal) ? prev.filter((g) => g !== goal) : [...prev, goal],
+    );
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setRawText(e.target.value);
+    setRewriteResult(null);
+    setRewriteError(null);
   };
 
   const handleImageChange = (file: File | null) => {
-    setSelectedImage(file);
+    setImageFile(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setError(null);
     setResult(null);
 
-    const trimmed = formData.raw_text.trim();
+    // Validate goals
+    if (!goals.length) {
+      setError('Please select at least one goal.');
+      setStep(2);
+      return;
+    }
 
-    // تنها حالت غیرمجاز: نه متن، نه تصویر
-    if (!trimmed && !selectedImage) {
-      setError('لطفاً متن لندینگ/تبلیغ خود را وارد کنید یا یک تصویر (اسکرین‌شات) آپلود کنید.');
+    const hasAudience = showAudienceStage ? audienceStage !== null : true;
+    if (!hasAudience) {
+      setError('Please select an audience stage.');
+      setStep(2);
+      return;
+    }
+
+    const trimmed = rawText.trim();
+    const words = trimmed ? trimmed.split(/\s+/).filter(Boolean).length : 0;
+
+    // Require at least some meaningful input (text or image)
+    if (words < 10 && !imageFile) {
+      setError('Please provide at least one meaningful text block or a screenshot.');
+      setStep(3);
       return;
     }
 
     try {
-      setLoading(true);
+      setIsLoading(true);
 
-      // Prepare payload for cognitive friction analysis
-      const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
-      
-      // Convert image to base64 if provided
-      let imageBase64: string | undefined = undefined;
-      let imageType: string | undefined = undefined;
-      let imageName: string | undefined = undefined;
-      
-      if (selectedImage) {
-        imageBase64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const result = reader.result as string;
-            // Remove data:image/...;base64, prefix
-            const base64 = result.split(',')[1];
-            resolve(base64);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(selectedImage);
-        });
-        imageType = selectedImage.type;
-        imageName = selectedImage.name;
+      // اگر کاربر تصویری آپلود کرده، آن را به base64 تبدیل کن
+      let imageBase64: string | undefined;
+      let imageType: string | undefined;
+      let imageName: string | undefined;
+
+      if (imageFile) {
+        try {
+          imageBase64 = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const result = reader.result as string;
+              // Remove data:image/...;base64, prefix if present
+              const base64 = result.includes(',')
+                ? result.split(',')[1]
+                : result;
+              resolve(base64);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(imageFile);
+          });
+          imageType = imageFile.type;
+          imageName = imageFile.name;
+        } catch (fileErr: any) {
+          console.error('Image encode error', fileErr);
+          setError('There was a problem reading your image. Please try another file.');
+          setIsLoading(false);
+          return;
+        }
       }
 
       const payload = {
         raw_text: trimmed,
-        platform: formData.platform,
-        goal: goals,
-        audience: formData.audience,
-        language: formData.language,
-        meta: null,
+        content_type: contentType,
+        goals,
+        audience_stage: showAudienceStage ? audienceStage : null,
+        language: 'en',
         ...(imageBase64 && {
           image: imageBase64,
           image_type: imageType,
@@ -553,14 +632,13 @@ export default function AiMarketingPageVariantB() {
         }),
       };
 
-      // Use analyzeCognitiveFriction function which calls the correct endpoint
       const data = await analyzeCognitiveFriction(payload);
-      setResult(data);
+      setResult(data as any);
     } catch (err: any) {
       console.error('Analyze error', err);
       setError(err.message || 'خطا در تحلیل. لطفاً دوباره تلاش کنید.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -574,16 +652,17 @@ export default function AiMarketingPageVariantB() {
     setRewriteLoading(true);
 
     try {
-      if (!formData.raw_text.trim()) {
+      if (!rawText.trim()) {
         throw new Error('Please enter content before rewriting.');
       }
 
       const payload: RewriteInputPayload = {
-        text: formData.raw_text.trim(),
-        platform: formData.platform,
-        goal: formData.goal.length ? formData.goal : ['leads'],
-        audience: formData.audience,
-        language: formData.language,
+        text: rawText.trim(),
+        // Map new contentType into legacy platform string for rewrite endpoint
+        platform: mapContentTypeToPlatform(contentType),
+        goal: goals.length ? goals : (['leads'] as PrimaryGoal[]),
+        audience: audienceStage || 'cold',
+        language: 'en',
       };
 
       const data = await postToBrain<RewriteOutput>('/api/brain/rewrite', payload);
@@ -658,30 +737,244 @@ export default function AiMarketingPageVariantB() {
             Run an AI Cognitive Friction Scan
           </h2>
 
-          {/* New Layout: Vertical - Form on top, Results below */}
+          {/* New Layout: Vertical - 3-step form on top, results below */}
           <div className="space-y-6 sm:space-y-8">
-            {/* Input Panel - Top */}
-            <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/30 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
-              <MultiStepInputPanel
-                formData={formData}
-                loading={loading}
-                error={error}
-                onInputChange={handleInputChange}
-                onGoalChange={handleGoalChange}
-                onSubmit={handleSubmit}
-                showImageUpload={true}
-                onImageChange={handleImageChange}
-                selectedImage={selectedImage}
-              />
+            {/* Step-based Form */}
+            <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/40 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
+              <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                {/* Step 1 – Content Type */}
+                <div className="mb-6">
+                  <h3 className="text-sm font-medium text-slate-300 mb-2">
+                    Step 1 · What do you want to analyze?
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {CONTENT_TYPE_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => {
+                          setContentType(opt.id);
+                          setStep(2);
+                          setGoals([]);
+                          if (['landing', 'ad', 'sales_page'].includes(opt.id)) {
+                            setAudienceStage('cold');
+                          } else {
+                            setAudienceStage(null);
+                          }
+                        }}
+                        className={classNames(
+                          'rounded-xl border px-4 py-3 text-left transition',
+                          contentType === opt.id
+                            ? 'border-indigo-500 bg-indigo-500/10 text-white shadow'
+                            : 'border-slate-700 bg-slate-900/60 text-slate-200 hover:border-slate-500',
+                        )}
+                      >
+                        <div className="text-sm font-semibold">{opt.label}</div>
+                        <div className="text-xs text-slate-400 mt-1">
+                          {opt.description}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-slate-800/70 pt-4" />
+
+                {/* Step 2 – Goals & Audience */}
+                {step >= 2 && (
+                  <div className="mb-6">
+                    <h3 className="text-sm font-medium text-slate-300 mb-2">
+                      Step 2 · Goals & Audience
+                    </h3>
+
+                    {/* Goals */}
+                    <p className="text-xs text-slate-400 mb-2">
+                      Primary goal for this content
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {GOALS_BY_TYPE[contentType].map((goal) => (
+                        <button
+                          key={goal}
+                          type="button"
+                          onClick={() => handleToggleGoal(goal)}
+                          className={classNames(
+                            'px-3 py-1.5 rounded-full text-xs font-medium border transition',
+                            goals.includes(goal)
+                              ? 'border-indigo-500 bg-indigo-500/20 text-white'
+                              : 'border-slate-700 bg-slate-900/70 text-slate-200 hover:border-slate-500',
+                          )}
+                        >
+                          {goal.replace('_', ' ')}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Audience Stage (conditional) */}
+                    {showAudienceStage && (
+                      <>
+                        <p className="text-xs text-slate-400 mb-2">
+                          Audience stage
+                        </p>
+                        <div className="flex gap-2 mb-4">
+                          {(['cold', 'warm', 'hot'] as AudienceStage[]).map(
+                            (stage) => (
+                              <button
+                                key={stage}
+                                type="button"
+                                onClick={() => setAudienceStage(stage)}
+                                className={classNames(
+                                  'px-3 py-1.5 rounded-full text-xs font-medium border transition',
+                                  audienceStage === stage
+                                    ? 'border-indigo-500 bg-indigo-500/20 text-white'
+                                    : 'border-slate-700 bg-slate-900/70 text-slate-200 hover:border-slate-500',
+                                )}
+                              >
+                                {stage.charAt(0).toUpperCase() +
+                                  stage.slice(1)}
+                              </button>
+                            ),
+                          )}
+                        </div>
+                      </>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!goals.length) {
+                          setError('Please select at least one goal.');
+                          return;
+                        }
+                        setError(null);
+                        setStep(3);
+                      }}
+                      className="mt-1 inline-flex items-center rounded-full border border-slate-700 bg-slate-900/60 px-4 py-1.5 text-xs font-medium text-slate-200 hover:border-indigo-500 hover:text-white transition"
+                    >
+                      Continue to content →
+                    </button>
+                  </div>
+                )}
+
+                {/* Divider */}
+                {step >= 2 && (
+                  <div className="border-t border-slate-800/70 pt-4" />
+                )}
+
+                {/* Step 3 – Content Input */}
+                {step >= 3 && (
+                  <div className="mb-2">
+                    <h3 className="text-sm font-medium text-slate-300 mb-2">
+                      Step 3 · Paste your content
+                    </h3>
+
+                    {/* Textarea */}
+                    <div className="relative group">
+                      <label
+                        htmlFor="content"
+                        className="block text-xs font-semibold text-slate-300 mb-2"
+                      >
+                        Content to analyze
+                      </label>
+                      <textarea
+                        id="content"
+                        name="content"
+                        value={rawText}
+                        onChange={handleTextChange}
+                        placeholder="Paste your copy here…"
+                        className="w-full rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 min-h-[140px] resize-y"
+                      />
+                      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>
+                          {wordCount} words · {charCount} characters
+                        </span>
+                        {wordCount < 20 && (
+                          <span className="text-amber-400">
+                            Minimum 20 words recommended
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Image Upload (conditional) */}
+                    {showImageUpload && (
+                      <div className="mt-4">
+                        <label
+                          htmlFor="screenshot"
+                          className="block text-xs font-semibold text-slate-300 mb-2"
+                        >
+                          Upload screenshot or image (optional)
+                        </label>
+                        <input
+                          id="screenshot"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) =>
+                            handleImageChange(e.target.files?.[0] || null)
+                          }
+                          className="block w-full text-xs text-slate-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 border border-slate-800 rounded-xl bg-slate-950/60 px-3 py-2"
+                        />
+                        {imageFile && (
+                          <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-400">
+                            <span>{imageFile.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleImageChange(null)}
+                              className="text-red-400 hover:text-red-300 text-[11px]"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Error message */}
+                {error && (
+                  <p className="mt-2 text-xs text-red-400">
+                    {error}
+                  </p>
+                )}
+
+                {/* Analyze button + helper text */}
+                <div className="pt-4 border-t border-slate-800/70">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-purple-500/40 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  >
+                    {isLoading ? (
+                      <>
+                        <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        Analyzing Cognitive Friction…
+                      </>
+                    ) : (
+                      'Run Cognitive Friction Analysis'
+                    )}
+                  </button>
+                  <p className="mt-3 text-xs text-center text-slate-400">
+                    The AI will analyze psychological friction, trust signals,
+                    emotional resistance, and decision barriers for this content.
+                  </p>
+                </div>
+              </form>
             </div>
 
             {/* Report Panel - Bottom */}
             <div>
               <ReportPanel
                 result={result}
-                loading={loading}
+                loading={isLoading}
                 error={error}
-                formData={formData}
+                formData={{
+                  raw_text: rawText,
+                  platform: mapContentTypeToPlatform(contentType),
+                  goal: goals,
+                  audience: audienceStage || 'cold',
+                  language: 'en',
+                }}
               />
             </div>
           </div>

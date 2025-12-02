@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import Script from 'next/script';
+import AudioSummary from '@/components/AudioSummary';
 
 export const metadata: Metadata = {
   title: 'AI Marketing Roles in 2026 — The Future of Marketing Jobs and Skills - Nima Saraeian',
@@ -57,13 +57,13 @@ export default function AIMarketingRoles2026() {
     ]
   };
 
+  const summaryText = `
+  This article is a practical map of the AI marketing job landscape in 2026. It explains why classic digital marketing roles are no longer enough, how AI has become the operating system of modern marketing, and why companies now need clearly defined roles like AI Marketing Specialist, Strategist, Expert, Consultant, and Engineer. You’ll hear how these roles differ in responsibility and mindset: from hands-on execution and content production, to system design, data-backed decision making, and long‑term AI transformation inside an organization. The article also covers what skills actually matter in this new market — from prompt engineering and analytics to consumer psychology, automation, and behavior prediction — plus which types of businesses should hire which roles first. By the end, you’ll have a clear mental model of where you fit in this ecosystem, how to position yourself for future AI marketing careers, and how companies can build lean, high‑leverage teams that use AI to move faster instead of just adding more tools and job titles.
+  `;
+
   return (
     <>
-      <Script
-        id="faq-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <main className="min-h-screen bg-black text-white pt-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header with Cover Image */}
@@ -101,17 +101,18 @@ export default function AIMarketingRoles2026() {
               </span>
             ))}
           </div>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-2">
-            Part 1 of 4 · ~1,000 Words
-          </p>
-          <div className="text-sm text-gray-500 mt-4">
-            Published on January 20, 2026
-          </div>
+          {/* Meta line (word count, published date) intentionally removed for cleaner header */}
         </header>
 
         {/* Article Content */}
         <article className="prose prose-lg prose-invert max-w-none">
           <div className="text-white leading-relaxed space-y-6">
+            <AudioSummary
+              // بعد از اجرای اسکریپت و ساخت فایل، این مسیر روی هاستت موجود خواهد بود
+              src="/audio/ai-marketing-roles-2026-summary.mp3"
+              title="🎧 Audio Summary — AI Marketing Roles in 2026"
+            />
+
             {/* Table of Contents */}
             <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 mb-8">
               <h2 className="text-2xl font-bold mb-4 text-white">Table of Contents</h2>

@@ -10,9 +10,14 @@
  */
 
 /**
+ * Default backend URL for local development
+ */
+const DEFAULT_DEV_BRAIN_URL = 'http://127.0.0.1:8000';
+
+/**
  * Gets the base URL for the Brain API.
  * In browser: uses relative URLs (Next.js API routes)
- * In server: uses NEXT_PUBLIC_API_BASE_URL or falls back to relative URLs
+ * In server: uses NEXT_PUBLIC_API_BASE_URL or falls back to default dev URL
  */
 function getApiBaseUrl(): string {
   // In browser, always use relative URLs (Next.js API routes)
@@ -20,69 +25,151 @@ function getApiBaseUrl(): string {
     return '';
   }
   
-  // In server-side code, try to use environment variable
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  // In server-side code, try environment variables first
+  const baseUrl = 
+    process.env.NEXT_PUBLIC_BRAIN_API_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.BRAIN_API_BASE_URL;
   
-  if (!baseUrl) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(
-        '⚠️  NEXT_PUBLIC_API_BASE_URL is not defined. ' +
-        'Using relative URLs (Next.js API routes). ' +
-        'For direct backend access, set NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000'
-      );
-    }
-    // Return empty string to use relative URLs
-    return '';
+  if (baseUrl) {
+    return baseUrl;
   }
-
-  return baseUrl;
+  
+  // Fallback to default dev URL
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(
+      '⚠️  No Brain API URL configured. ' +
+      `Using default dev URL: ${DEFAULT_DEV_BRAIN_URL}. ` +
+      'Set NEXT_PUBLIC_BRAIN_API_URL to override.'
+    );
+    return DEFAULT_DEV_BRAIN_URL;
+  }
+  
+  // Production fallback (can be updated later)
+  return DEFAULT_DEV_BRAIN_URL;
 }
+
+// Shared marketing/behavior types
+export type ContentType =
+  | 'landing'
+  | 'social'
+  | 'ad'
+  | 'sales_page'
+  | 'email'
+  | 'engagement';
+
+export type AudienceStage = 'cold' | 'warm' | 'hot';
+
+export type PrimaryGoal =
+  | 'clicks'
+  | 'leads'
+  | 'sales'
+  | 'engagement'
+  | 'awareness'
+  | 'retention'
+  | 'open_rate'
+  | 'reply';
+
+export const GOALS_BY_TYPE: Record<ContentType, PrimaryGoal[]> = {
+  landing: ['clicks', 'leads', 'sales', 'engagement'],
+  social: ['engagement', 'awareness'],
+  ad: ['clicks', 'sales', 'awareness'],
+  sales_page: ['sales', 'engagement'],
+  email: ['open_rate', 'clicks', 'reply'],
+  engagement: ['retention', 'engagement', 'awareness'],
+};
 
 /**
  * Sends a POST request to the Brain API.
- * 
+ *
  * @param path - API endpoint path (e.g., '/api/brain/cognitive-friction')
  * @param payload - Request body object (will be JSON stringified)
  * @returns Promise resolving to the JSON response
  * @throws Error if the request fails or environment variable is missing
  */
-export async function postToBrain<T = any>(
-  path: string,
-  payload: any
-): Promise<T> {
+export async function postToBrain<T = any>(path: string, payload: any): Promise<T> {
   const baseUrl = getApiBaseUrl();
-  const url = `${baseUrl}${path}`;
+  // Ensure path starts with / if baseUrl is provided
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const url = `${baseUrl}${normalizedPath}`;
 
   // Log payload info (without full base64 to avoid console spam)
   const payloadInfo = { ...payload };
   if (payloadInfo.image) {
     payloadInfo.image = `[base64 image, ${payloadInfo.image.length} characters]`;
   }
-  console.log('📤 Sending to Brain API:', url, payloadInfo);
+  
+  console.log('[Brain API] Fetching:', url);
+  console.log('[Brain API] Payload:', payloadInfo);
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!res.ok) {
-    const text = await res.text();
-    console.error(`❌ Brain API request failed: ${res.status} ${res.statusText}`, text);
-    throw new Error(`Brain API request failed with status ${res.status}`);
+    if (!res.ok) {
+      const text = await res.text();
+      let errorDetail = text;
+      
+      // Try to parse as JSON for better error messages
+      try {
+        const errorJson = JSON.parse(text);
+        errorDetail = errorJson.detail || errorJson.error || text;
+      } catch {
+        // Not JSON, use text as-is
+      }
+      
+      console.error(
+        `❌ Brain API request failed: ${res.status} ${res.statusText} for ${url}`,
+        errorDetail
+      );
+      
+      throw new Error(
+        `Brain API request failed with status ${res.status}: ${errorDetail}`
+      );
+    }
+
+    const result = await res.json();
+    console.log('✅ Brain API response received');
+    return result;
+  } catch (error: any) {
+    // Handle network/connection errors
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      console.error(`❌ Brain API connection failed for ${url}:`, error.message);
+      throw new Error(
+        `Failed to connect to backend API at ${url}. ` +
+        'Please ensure the backend is running on http://127.0.0.1:8000'
+      );
+    }
+    
+    // Re-throw other errors
+    throw error;
   }
-
-  const result = await res.json();
-  console.log('✅ Brain API response received');
-  return result;
 }
 
+// Strictly typed helper for Cognitive Friction analysis
+export interface CognitiveFrictionInput {
+  raw_text: string;
+  content_type: ContentType;
+  goals: PrimaryGoal[];
+  audience_stage: AudienceStage | null;
+  language: string;
+  // اختیاری: اگر کاربر اسکرین‌شات یا تصویر آپلود کند
+  image?: string;
+  image_type?: string;
+  image_name?: string;
+}
 
+export async function analyzeCrictionWithImage(input: CognitiveFrictionInput) {
+  return postToBrain('/api/brain/cognitive-friction', input);
+}
 
-
-
+// backward‑compatible alias name
+export const analyzeCognitiveFriction = analyzeCrictionWithImage;
 
 
 
