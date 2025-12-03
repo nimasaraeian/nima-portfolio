@@ -5,6 +5,7 @@ import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
 import MultiStepInputPanel from '../behavioral-deepscan/components/MultiStepInputPanel';
 import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
+import type { CognitiveFrictionResult } from '@/app/ai-marketing/brain-types';
 
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
@@ -24,25 +25,6 @@ import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
  * - CTA section
  */
 
-// CognitiveFrictionResult type definition
-// This interface matches the response from POST /api/brain/cognitive-friction
-interface CognitiveFrictionResult {
-  frictionScore: number;
-  trustScore: number;
-  emotionalClarityScore: number;
-  motivationMatchScore: number;
-  decisionProbability: number;
-  conversionLiftEstimate: number;
-  keyDecisionBlockers: string[];
-  emotionalResistanceFactors: string[];
-  cognitiveOverloadFactors: string[];
-  trustBreakpoints: string[];
-  motivationMisalignments: string[];
-  recommendedQuickWins: string[];
-  recommendedDeepChanges: string[];
-  explanationSummary: string;
-}
-
 // Rewrite API types
 type RewriteInputPayload = {
   text: string;
@@ -60,6 +42,15 @@ type RewriteOutput = {
   direct_version: string;
   cta: string;
 };
+
+type VisualTrustResult = {
+  trust_label: 'low' | 'medium' | 'high';
+  trust_scores: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+} | null;
 
 import { postToBrain } from '@/lib/apiClient';
 
@@ -467,6 +458,9 @@ export default function AiMarketingPageVariantA() {
   
   // Image upload state
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
   
   // Rewrite state
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
@@ -496,6 +490,48 @@ export default function AiMarketingPageVariantA() {
 
   const handleImageChange = (file: File | null) => {
     setSelectedImage(file);
+    setVisualTrust(null);
+    setImageError(null);
+  };
+
+  const runVisualTrustAnalysis = async (file: File) => {
+    setIsImageLoading(true);
+    setImageError(null);
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      if (!baseUrl) {
+        throw new Error('آدرس سرور برای تحلیل تصویری تنظیم نشده است (NEXT_PUBLIC_API_BASE_URL).');
+      }
+
+      const formDataImage = new FormData();
+      formDataImage.append('file', file);
+
+      const response = await fetch(`${baseUrl}/api/analyze/image-trust`, {
+        method: 'POST',
+        body: formDataImage,
+      });
+
+      if (!response.ok) {
+        throw new Error('درخواست تحلیل اعتماد بصری با خطا مواجه شد.');
+      }
+
+      const imageData = await response.json();
+
+      if (imageData?.success && imageData.analysis?.trust_label && imageData.analysis?.trust_scores) {
+        setVisualTrust({
+          trust_label: imageData.analysis.trust_label,
+          trust_scores: imageData.analysis.trust_scores,
+        });
+      } else {
+        throw new Error('پاسخ معتبر برای تحلیل اعتماد بصری دریافت نشد.');
+      }
+    } catch (err: any) {
+      console.error('Visual trust analysis error', err);
+      setImageError(err.message || 'تحلیل اعتماد بصری با خطا مواجه شد.');
+    } finally {
+      setIsImageLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -503,11 +539,14 @@ export default function AiMarketingPageVariantA() {
     
     setError(null);
     setResult(null);
+    setVisualTrust(null);
+    setImageError(null);
 
     const trimmed = formData.raw_text.trim();
+    const imageForAnalysis = selectedImage;
 
     // تنها حالت غیرمجاز: نه متن، نه تصویر
-    if (!trimmed && !selectedImage) {
+    if (!trimmed && !imageForAnalysis) {
       setError('لطفاً متن لندینگ/تبلیغ خود را وارد کنید یا یک تصویر (اسکرین‌شات) آپلود کنید.');
       return;
     }
@@ -523,7 +562,7 @@ export default function AiMarketingPageVariantA() {
       let imageType: string | undefined = undefined;
       let imageName: string | undefined = undefined;
       
-      if (selectedImage) {
+      if (imageForAnalysis) {
         imageBase64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => {
@@ -533,10 +572,10 @@ export default function AiMarketingPageVariantA() {
             resolve(base64);
           };
           reader.onerror = reject;
-          reader.readAsDataURL(selectedImage);
+          reader.readAsDataURL(imageForAnalysis);
         });
-        imageType = selectedImage.type;
-        imageName = selectedImage.name;
+        imageType = imageForAnalysis.type;
+        imageName = imageForAnalysis.name;
       }
 
       const payload = {
@@ -556,6 +595,10 @@ export default function AiMarketingPageVariantA() {
       // Use analyzeCognitiveFriction function which calls the correct endpoint
       const data = await analyzeCognitiveFriction(payload);
       setResult(data);
+
+      if (imageForAnalysis) {
+        await runVisualTrustAnalysis(imageForAnalysis);
+      }
     } catch (err: any) {
       console.error('Analyze error', err);
       setError(err.message || 'خطا در تحلیل. لطفاً دوباره تلاش کنید.');
@@ -660,6 +703,9 @@ export default function AiMarketingPageVariantA() {
                 loading={loading}
                 error={error}
                 formData={formData}
+                visualTrust={visualTrust}
+                isImageLoading={isImageLoading}
+                imageError={imageError}
               />
             </div>
           </div>

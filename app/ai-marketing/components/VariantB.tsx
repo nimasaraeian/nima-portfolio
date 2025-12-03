@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
 import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
-import type { BrainResponse, PsychologyAnalysisResult } from '../brain-types';
+import type { BrainResponse, CognitiveFrictionResult, PsychologyAnalysisResult } from '../brain-types';
 import {
   analyzeCognitiveFriction,
   type ContentType,
@@ -45,25 +45,6 @@ const GOALS_BY_TYPE: Record<ContentType, PrimaryGoal[]> = {
  * - CTA section
  */
 
-// CognitiveFrictionResult type definition
-// This interface matches the response from POST /api/brain/cognitive-friction
-interface CognitiveFrictionResult {
-  frictionScore: number;
-  trustScore: number;
-  emotionalClarityScore: number;
-  motivationMatchScore: number;
-  decisionProbability: number;
-  conversionLiftEstimate: number;
-  keyDecisionBlockers: string[];
-  emotionalResistanceFactors: string[];
-  cognitiveOverloadFactors: string[];
-  trustBreakpoints: string[];
-  motivationMisalignments: string[];
-  recommendedQuickWins: string[];
-  recommendedDeepChanges: string[];
-  explanationSummary: string;
-}
-
 // Rewrite API types
 type RewriteInputPayload = {
   text: string;
@@ -81,6 +62,15 @@ type RewriteOutput = {
   direct_version: string;
   cta: string;
 };
+
+type VisualTrustResult = {
+  trust_label: 'low' | 'medium' | 'high';
+  trust_scores: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+} | null;
 
 import { postToBrain } from '@/lib/apiClient';
 
@@ -465,6 +455,9 @@ export default function AiMarketingPageVariantB() {
   const [goals, setGoals] = useState<PrimaryGoal[]>([]);
   const [rawText, setRawText] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -554,6 +547,48 @@ export default function AiMarketingPageVariantB() {
 
   const handleImageChange = (file: File | null) => {
     setImageFile(file);
+    setVisualTrust(null);
+    setImageError(null);
+  };
+
+  const runVisualTrustAnalysis = async (file: File) => {
+    setIsImageLoading(true);
+    setImageError(null);
+
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      if (!baseUrl) {
+        throw new Error('آدرس سرور برای تحلیل اعتماد بصری (NEXT_PUBLIC_API_BASE_URL) تنظیم نشده است.');
+      }
+
+      const imageFormData = new FormData();
+      imageFormData.append('file', file);
+
+      const response = await fetch(`${baseUrl}/api/analyze/image-trust`, {
+        method: 'POST',
+        body: imageFormData,
+      });
+
+      if (!response.ok) {
+        throw new Error('خطا در ارسال درخواست تحلیل اعتماد بصری.');
+      }
+
+      const imageData = await response.json();
+
+      if (imageData?.success && imageData.analysis?.trust_label && imageData.analysis?.trust_scores) {
+        setVisualTrust({
+          trust_label: imageData.analysis.trust_label,
+          trust_scores: imageData.analysis.trust_scores,
+        });
+      } else {
+        throw new Error('پاسخ معتبر از سرویس تحلیل اعتماد بصری دریافت نشد.');
+      }
+    } catch (err: any) {
+      console.error('Visual trust analysis error', err);
+      setImageError(err.message || 'تحلیل اعتماد بصری با شکست مواجه شد.');
+    } finally {
+      setIsImageLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -561,6 +596,8 @@ export default function AiMarketingPageVariantB() {
 
     setError(null);
     setResult(null);
+    setVisualTrust(null);
+    setImageError(null);
 
     // Validate goals
     if (!goals.length) {
@@ -578,9 +615,10 @@ export default function AiMarketingPageVariantB() {
 
     const trimmed = rawText.trim();
     const words = trimmed ? trimmed.split(/\s+/).filter(Boolean).length : 0;
+    const imageForAnalysis = imageFile;
 
     // Require at least some meaningful input (text or image)
-    if (words < 10 && !imageFile) {
+    if (words < 10 && !imageForAnalysis) {
       setError('Please provide at least one meaningful text block or a screenshot.');
       setStep(3);
       return;
@@ -594,7 +632,7 @@ export default function AiMarketingPageVariantB() {
       let imageType: string | undefined;
       let imageName: string | undefined;
 
-      if (imageFile) {
+      if (imageForAnalysis) {
         try {
           imageBase64 = await new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
@@ -607,10 +645,10 @@ export default function AiMarketingPageVariantB() {
               resolve(base64);
             };
             reader.onerror = reject;
-            reader.readAsDataURL(imageFile);
+            reader.readAsDataURL(imageForAnalysis);
           });
-          imageType = imageFile.type;
-          imageName = imageFile.name;
+          imageType = imageForAnalysis.type;
+          imageName = imageForAnalysis.name;
         } catch (fileErr: any) {
           console.error('Image encode error', fileErr);
           setError('There was a problem reading your image. Please try another file.');
@@ -641,6 +679,10 @@ export default function AiMarketingPageVariantB() {
 
       const data = await analyzeCognitiveFriction(payload);
       setResult(data as any);
+
+      if (imageForAnalysis) {
+        await runVisualTrustAnalysis(imageForAnalysis);
+      }
     } catch (err: any) {
       console.error('Analyze error', err);
       setError(err.message || 'Ø®Ø·Ø§ Ø¯Ø± ØªØ­Ù„ÛŒÙ„. Ù„Ø·ÙØ§Ù‹ Ø¯ÙˆØ¨Ø§Ø±Ù‡ ØªÙ„Ø§Ø´ Ú©Ù†ÛŒØ¯.');
@@ -982,6 +1024,9 @@ export default function AiMarketingPageVariantB() {
                   audience: audienceStage || 'cold',
                   language: 'en',
                 }}
+                visualTrust={visualTrust}
+                isImageLoading={isImageLoading}
+                imageError={imageError}
               />
             </div>
           </div>
