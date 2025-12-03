@@ -10,9 +10,9 @@ export default function ArticlesPage() {
       alt: "AI Marketing Roles 2026 - Complete guide to understanding differences between AI Marketing Specialist, Strategist, Expert, Consultant, and Engineer roles"
     },
     { 
-      title: "Predictive Buyer Intent AI: How AI Reads Customer Minds Before They Decide", 
+      title: "Predictive Buyer Intent AI — Why Marketing Fails Without Behavioral Signals", 
       image: "/image/predictive-buyer-intent-ai-real-person-smiling-cover-image.png", 
-      href: "/articles/ai/predictive-buyer-intent-ai",
+      href: "/articles/ai/predictive-buyer-intent-ai-2026",
       alt: "Predictive Buyer Intent AI - How AI reads customer behavior signals before purchase decisions to achieve 3-5× higher conversions"
     },
     { 
@@ -23,7 +23,8 @@ export default function ArticlesPage() {
     },
     { 
       title: "AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology", 
-      image: "/image/ai-marketing-2026-pillar-nima-saraeian.png", 
+      // cache-busting query برای دور زدن کش یک‌ساله روی Vercel
+      image: "/image/ai-marketing-2026.png?v=2", 
       href: "/articles/ai-marketing-2026",
       alt: "AI Marketing 2026 Complete Guide - Nima Saraeian AI Marketing Specialist guide to tools, strategy, behavioral data, and conversion psychology"
     },

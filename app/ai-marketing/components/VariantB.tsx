@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -281,7 +281,7 @@ function PsychologicalFactorsTabs({ result }: { result: CognitiveFrictionResult 
             <ul className="space-y-2 text-sm text-gray-300">
               {activeTabData.data.map((item, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className={`${activeTabData.bulletClass} mt-1`}>•</span>
+                  <span className={`${activeTabData.bulletClass} mt-1`}>â€¢</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -388,7 +388,7 @@ function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
               <ul className="space-y-1 text-sm text-gray-300">
                 {result.recommendedQuickWins.map((win, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <span className="text-green-400 mt-1">⚡</span>
+                    <span className="text-green-400 mt-1">âš¡</span>
                     <span>{win}</span>
                   </li>
                 ))}
@@ -405,7 +405,7 @@ function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
               <ul className="space-y-1 text-sm text-gray-300">
                 {result.recommendedDeepChanges.map((change, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <span className="text-indigo-400 mt-1">🔧</span>
+                    <span className="text-indigo-400 mt-1">ðŸ”§</span>
                     <span>{change}</span>
                   </li>
                 ))}
@@ -438,14 +438,14 @@ function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
           <button
             disabled
             className="flex-1 px-4 py-2 rounded-lg border border-gray-600 bg-slate-800 text-gray-500 text-sm font-medium cursor-not-allowed opacity-50"
-            title="Coming soon – compare two versions of your content."
+            title="Coming soon â€“ compare two versions of your content."
           >
             Compare Before / After
           </button>
           <button
             disabled
             className="flex-1 px-4 py-2 rounded-lg border border-gray-600 bg-slate-800 text-gray-500 text-sm font-medium cursor-not-allowed opacity-50"
-            title="Coming soon – export your AI decision psychology report."
+            title="Coming soon â€“ export your AI decision psychology report."
           >
             Download PDF Report
           </button>
@@ -589,7 +589,7 @@ export default function AiMarketingPageVariantB() {
     try {
       setIsLoading(true);
 
-      // اگر کاربر تصویری آپلود کرده، آن را به base64 تبدیل کن
+      // Ø§Ú¯Ø± Ú©Ø§Ø±Ø¨Ø± ØªØµÙˆÛŒØ±ÛŒ Ø¢Ù¾Ù„ÙˆØ¯ Ú©Ø±Ø¯Ù‡ØŒ Ø¢Ù† Ø±Ø§ Ø¨Ù‡ base64 ØªØ¨Ø¯ÛŒÙ„ Ú©Ù†
       let imageBase64: string | undefined;
       let imageType: string | undefined;
       let imageName: string | undefined;
@@ -619,10 +619,17 @@ export default function AiMarketingPageVariantB() {
         }
       }
 
+      const normalizedGoals = goals.length ? goals : (['leads'] as PrimaryGoal[]);
+      const audienceValue = showAudienceStage ? (audienceStage || 'cold') : 'cold';
+
       const payload = {
         raw_text: trimmed,
+        platform: mapContentTypeToPlatform(contentType),
+        goal: normalizedGoals,
+        audience: audienceValue,
+        meta: null,
         content_type: contentType,
-        goals,
+        goals: normalizedGoals,
         audience_stage: showAudienceStage ? audienceStage : null,
         language: 'en',
         ...(imageBase64 && {
@@ -636,7 +643,7 @@ export default function AiMarketingPageVariantB() {
       setResult(data as any);
     } catch (err: any) {
       console.error('Analyze error', err);
-      setError(err.message || 'خطا در تحلیل. لطفاً دوباره تلاش کنید.');
+      setError(err.message || 'Ø®Ø·Ø§ Ø¯Ø± ØªØ­Ù„ÛŒÙ„. Ù„Ø·ÙØ§Ù‹ Ø¯ÙˆØ¨Ø§Ø±Ù‡ ØªÙ„Ø§Ø´ Ú©Ù†ÛŒØ¯.');
     } finally {
       setIsLoading(false);
     }
@@ -683,7 +690,7 @@ export default function AiMarketingPageVariantB() {
         
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 mb-6">
-            <span className="text-xs font-semibold text-purple-300">AI Behavioral Engine · Cognitive Friction Analysis</span>
+            <span className="text-xs font-semibold text-purple-300">AI Behavioral Engine Â· Cognitive Friction Analysis</span>
         </div>
 
           <h1 className="mb-6 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
@@ -691,19 +698,19 @@ export default function AiMarketingPageVariantB() {
           </h1>
           
           <p className="mb-6 text-lg sm:text-xl text-gray-300 leading-relaxed max-w-3xl">
-            The NIMA AI Brain is your private AI Marketing Engine — built to analyze behavior, predict decisions, and generate content that truly converts. This is not just another AI writer. It's a full decision layer for your marketing.
+            The NIMA AI Brain is your private AI Marketing Engine â€” built to analyze behavior, predict decisions, and generate content that truly converts. This is not just another AI writer. It's a full decision layer for your marketing.
           </p>
 
           {/* Value Bar */}
           <div className="mt-4 mb-8 flex flex-wrap gap-2 text-xs sm:text-sm text-gray-300">
             <span className="inline-flex items-center rounded-full border border-purple-500/40 px-3 py-1">
-              ✓ Behavioral analysis built-in
+              âœ“ Behavioral analysis built-in
             </span>
             <span className="inline-flex items-center rounded-full border border-purple-500/40 px-3 py-1">
-              ✓ Conversion-focused rewrites
+              âœ“ Conversion-focused rewrites
             </span>
             <span className="inline-flex items-center rounded-full border border-purple-500/40 px-3 py-1">
-              ✓ Stronger than generic AI tools
+              âœ“ Stronger than generic AI tools
             </span>
           </div>
 
@@ -722,7 +729,7 @@ export default function AiMarketingPageVariantB() {
               className="text-sm font-medium text-gray-400 hover:text-purple-400 transition-colors duration-200 inline-flex items-center gap-1.5"
             >
               See how the NIMA AI Brain works
-              <span className="text-purple-400">→</span>
+              <span className="text-purple-400">â†’</span>
             </Link>
           </div>
         </div>
@@ -742,10 +749,10 @@ export default function AiMarketingPageVariantB() {
             {/* Step-based Form */}
             <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/40 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
               <form onSubmit={handleSubmit} noValidate className="space-y-6">
-                {/* Step 1 – Content Type */}
+                {/* Step 1 â€“ Content Type */}
                 <div className="mb-6">
                   <h3 className="text-sm font-medium text-slate-300 mb-2">
-                    Step 1 · What do you want to analyze?
+                    Step 1 Â· What do you want to analyze?
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {CONTENT_TYPE_OPTIONS.map((opt) => (
@@ -781,11 +788,11 @@ export default function AiMarketingPageVariantB() {
                 {/* Divider */}
                 <div className="border-t border-slate-800/70 pt-4" />
 
-                {/* Step 2 – Goals & Audience */}
+                {/* Step 2 â€“ Goals & Audience */}
                 {step >= 2 && (
                   <div className="mb-6">
                     <h3 className="text-sm font-medium text-slate-300 mb-2">
-                      Step 2 · Goals & Audience
+                      Step 2 Â· Goals & Audience
                     </h3>
 
                     {/* Goals */}
@@ -851,7 +858,7 @@ export default function AiMarketingPageVariantB() {
                       }}
                       className="mt-1 inline-flex items-center rounded-full border border-slate-700 bg-slate-900/60 px-4 py-1.5 text-xs font-medium text-slate-200 hover:border-indigo-500 hover:text-white transition"
                     >
-                      Continue to content →
+                      Continue to content â†’
                     </button>
                   </div>
                 )}
@@ -861,11 +868,11 @@ export default function AiMarketingPageVariantB() {
                   <div className="border-t border-slate-800/70 pt-4" />
                 )}
 
-                {/* Step 3 – Content Input */}
+                {/* Step 3 â€“ Content Input */}
                 {step >= 3 && (
                   <div className="mb-2">
                     <h3 className="text-sm font-medium text-slate-300 mb-2">
-                      Step 3 · Paste your content
+                      Step 3 Â· Paste your content
                     </h3>
 
                     {/* Textarea */}
@@ -881,12 +888,12 @@ export default function AiMarketingPageVariantB() {
                         name="content"
                         value={rawText}
                         onChange={handleTextChange}
-                        placeholder="Paste your copy here…"
+                        placeholder="Paste your copy hereâ€¦"
                         className="w-full rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 min-h-[140px] resize-y"
                       />
                       <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
                         <span>
-                          {wordCount} words · {charCount} characters
+                          {wordCount} words Â· {charCount} characters
                         </span>
                         {wordCount < 20 && (
                           <span className="text-amber-400">
@@ -948,7 +955,7 @@ export default function AiMarketingPageVariantB() {
                     {isLoading ? (
                       <>
                         <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                        Analyzing Cognitive Friction…
+                        Analyzing Cognitive Frictionâ€¦
                       </>
                     ) : (
                       'Run Cognitive Friction Analysis'
@@ -1018,24 +1025,24 @@ export default function AiMarketingPageVariantB() {
             </p>
             <ul className="space-y-3 text-gray-300">
               <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Before launching a new landing page – identify friction points before they cost you conversions</span>
+                <span className="text-purple-400 mt-1">â€¢</span>
+                <span>Before launching a new landing page â€“ identify friction points before they cost you conversions</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Testing and comparing different ad creatives – compare cognitive friction scores to choose the most effective variant</span>
+                <span className="text-purple-400 mt-1">â€¢</span>
+                <span>Testing and comparing different ad creatives â€“ compare cognitive friction scores to choose the most effective variant</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Reviewing onboarding or sales emails – ensure your welcome sequence builds trust and reduces hesitation</span>
+                <span className="text-purple-400 mt-1">â€¢</span>
+                <span>Reviewing onboarding or sales emails â€“ ensure your welcome sequence builds trust and reduces hesitation</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Optimizing high-traffic, low-conversion pages – find the psychological blockers that analytics can't detect</span>
+                <span className="text-purple-400 mt-1">â€¢</span>
+                <span>Optimizing high-traffic, low-conversion pages â€“ find the psychological blockers that analytics can't detect</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Auditing existing campaigns for decision blockers – identify why high-traffic campaigns aren't converting</span>
+                <span className="text-purple-400 mt-1">â€¢</span>
+                <span>Auditing existing campaigns for decision blockers â€“ identify why high-traffic campaigns aren't converting</span>
               </li>
             </ul>
           </div>
@@ -1075,11 +1082,11 @@ export default function AiMarketingPageVariantB() {
               Powered by the NIMA AI Brain
             </p>
             <h2 className="text-xl sm:text-2xl font-semibold mb-3 text-white">
-              Your Own AI Marketing Engine — Not Just Another AI Tool
+              Your Own AI Marketing Engine â€” Not Just Another AI Tool
             </h2>
             <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
               Behind this page is a real AI Marketing Engine built around behavior, decision psychology, and conversion science. 
-              The NIMA AI Brain reads how people think, hesitate, and decide — then turns those signals into strategy, copy, and optimization.
+              The NIMA AI Brain reads how people think, hesitate, and decide â€” then turns those signals into strategy, copy, and optimization.
             </p>
           </div>
         </div>
@@ -1091,20 +1098,20 @@ export default function AiMarketingPageVariantB() {
         
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
           <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            AI Marketing — Full Guide (2026 Edition)
+            AI Marketing â€” Full Guide (2026 Edition)
           </h2>
 
           <div className="space-y-0">
-            <AccordionItem title="Section 1 — What Is AI Marketing?">
+            <AccordionItem title="Section 1 â€” What Is AI Marketing?">
               <div className="space-y-4">
                 <p>
-                  AI Marketing has evolved far beyond automated emails, keyword-based ad suggestions, or generic "AI copy generators." Between 2026 and 2027, the landscape shifted dramatically: AI stopped being a tool — and became a strategic, data-driven decision layer that sits above every marketing channel.
+                  AI Marketing has evolved far beyond automated emails, keyword-based ad suggestions, or generic "AI copy generators." Between 2026 and 2027, the landscape shifted dramatically: AI stopped being a tool â€” and became a strategic, data-driven decision layer that sits above every marketing channel.
                 </p>
                 <p>
-                  In today's environment, AI Marketing means something radically different from what most agencies or platforms still try to sell. It is no longer about automating tasks. It is about automating intelligence — the ability to analyze, predict, and influence consumer behavior at a precision level that was impossible before.
+                  In today's environment, AI Marketing means something radically different from what most agencies or platforms still try to sell. It is no longer about automating tasks. It is about automating intelligence â€” the ability to analyze, predict, and influence consumer behavior at a precision level that was impossible before.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The Modern Definition (2026–2027)</h3>
+                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The Modern Definition (2026â€“2027)</h3>
                 <p>
                   AI Marketing is the integration of machine intelligence, behavioral data, and predictive psychology to analyze user intent, generate strategic actions, and optimize every step of the customer journey.
                 </p>
@@ -1114,25 +1121,25 @@ export default function AiMarketingPageVariantB() {
 
                 <div className="space-y-3 mt-4">
                   <div>
-                    <p className="font-semibold text-white mb-2">1. AI is no longer reactive — it's predictive.</p>
+                    <p className="font-semibold text-white mb-2">1. AI is no longer reactive â€” it's predictive.</p>
                     <p className="ml-4">
-                      Traditional marketing systems responded to what users already did: clicked, didn't click, visited, abandoned. Modern AI systems predict why someone will click, when they will respond, and which message will drive action — before the user even reaches that decision point.
+                      Traditional marketing systems responded to what users already did: clicked, didn't click, visited, abandoned. Modern AI systems predict why someone will click, when they will respond, and which message will drive action â€” before the user even reaches that decision point.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">2. AI is no longer a "tool" — it's a decision engine.</p>
+                    <p className="font-semibold text-white mb-2">2. AI is no longer a "tool" â€” it's a decision engine.</p>
                     <p className="ml-4">
-                      Businesses used to plug AI tools into their workflow. Now, the workflow itself is designed around AI. Marketing teams no longer ask: "What should we say in our ad?" They ask: "What does the model recommend — and why?" AI becomes the strategist. Humans become the supervisors.
+                      Businesses used to plug AI tools into their workflow. Now, the workflow itself is designed around AI. Marketing teams no longer ask: "What should we say in our ad?" They ask: "What does the model recommend â€” and why?" AI becomes the strategist. Humans become the supervisors.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">3. AI is no longer about generating text — it's about generating outcomes.</p>
+                    <p className="font-semibold text-white mb-2">3. AI is no longer about generating text â€” it's about generating outcomes.</p>
                     <p className="ml-4">
                       Content is not the goal. Conversion is the goal. Modern AI understands the psychological triggers behind: hesitation, trust, urgency, perceived value, cognitive friction, attention flow. And uses them to craft actions that move users forward in the decision process.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">4. AI is no longer a template — it's a brain.</p>
+                    <p className="font-semibold text-white mb-2">4. AI is no longer a template â€” it's a brain.</p>
                     <p className="ml-4">
                       Brands that rely on generic LLMs get generic results. Brands that build an internal AI Marketing Brain get: consistency, proprietary logic, brand-specific patterns, behavior-aligned content, deeper intelligence on every user interaction.
                     </p>
@@ -1140,7 +1147,7 @@ export default function AiMarketingPageVariantB() {
                 </div>
 
                 <p className="mt-4">
-                  This shift — from tool → brain — is the defining moment of AI Marketing in 2026–2027.
+                  This shift â€” from tool â†’ brain â€” is the defining moment of AI Marketing in 2026â€“2027.
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Why AI Marketing Became Mandatory (Not Optional)</h3>
@@ -1151,40 +1158,40 @@ export default function AiMarketingPageVariantB() {
                   But the biggest change was psychological: Users now recognize generic AI instantly. They scroll past it. They ignore it. They don't trust it. They don't connect with it. That's why brands started losing conversions even when they produced more content than ever before.
                 </p>
                 <p>
-                  AI Marketing became mandatory for one reason: Only AI can analyze human behavior at scale — and adapt instantly. This includes: real-time intent signals, emotional patterns, message-response correlation, behavioral micro-changes, content-to-action probability. No human team can manually do this. No traditional marketing system can process this fast. Only modern AI can.
+                  AI Marketing became mandatory for one reason: Only AI can analyze human behavior at scale â€” and adapt instantly. This includes: real-time intent signals, emotional patterns, message-response correlation, behavioral micro-changes, content-to-action probability. No human team can manually do this. No traditional marketing system can process this fast. Only modern AI can.
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The Core Components of AI Marketing (The 2026 Framework)</h3>
                 <p className="mb-3">
-                  To understand AI Marketing properly, you must know its five foundational pillars — the system every successful brand now uses:
+                  To understand AI Marketing properly, you must know its five foundational pillars â€” the system every successful brand now uses:
                 </p>
                 <div className="space-y-3">
                   <div>
-                    <p className="font-semibold text-white mb-2">1. Intelligence Layer (Data → Meaning)</p>
+                    <p className="font-semibold text-white mb-2">1. Intelligence Layer (Data â†’ Meaning)</p>
                     <p className="ml-4">
                       This layer extracts behavioral meaning from: search patterns, conversation data, user journeys, click heatmaps, emotional language, time-based actions. Old marketing read data. AI Marketing interprets it.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">2. Prediction Layer (Meaning → Probability)</p>
+                    <p className="font-semibold text-white mb-2">2. Prediction Layer (Meaning â†’ Probability)</p>
                     <p className="ml-4">
-                      AI forecasts: what a user will do next, which message they will respond to, when they will convert, what might stop them, how to remove friction. The marketing team no longer guesses — they test probabilities.
+                      AI forecasts: what a user will do next, which message they will respond to, when they will convert, what might stop them, how to remove friction. The marketing team no longer guesses â€” they test probabilities.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">3. Decision Layer (Probability → Actions)</p>
+                    <p className="font-semibold text-white mb-2">3. Decision Layer (Probability â†’ Actions)</p>
                     <p className="ml-4">
                       The system suggests: the ideal message, the ideal angle, the ideal timing, the ideal channel, the ideal format. This is where AI stops being a tool and becomes the strategist.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">4. Creation Layer (Actions → Content)</p>
+                    <p className="font-semibold text-white mb-2">4. Creation Layer (Actions â†’ Content)</p>
                     <p className="ml-4">
                       Here AI generates: high-impact copy, behavior-aligned headlines, conversion-focused product descriptions, emotional storytelling, trust-building messages, friction-reducing variations. The focus is not on writing content. The focus is on generating outcomes.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">5. Optimization Layer (Outcomes → Adaptive Intelligence)</p>
+                    <p className="font-semibold text-white mb-2">5. Optimization Layer (Outcomes â†’ Adaptive Intelligence)</p>
                     <p className="ml-4">
                       The system learns from every interaction: what caused hesitation, what moved users forward, what message created trust, what CTA triggered action, what sequence maximized conversion. And improves itself continuously.
                     </p>
@@ -1196,11 +1203,11 @@ export default function AiMarketingPageVariantB() {
                   AI Marketing until 2025 suffered from three major problems:
                 </p>
                 <div className="space-y-2 ml-4">
-                  <p><strong>Problem 1 — Generic AI</strong></p>
-                  <p>Everyone used the same models → results felt identical. Users ignored them.</p>
-                  <p><strong>Problem 2 — No Behavioral Understanding</strong></p>
+                  <p><strong>Problem 1 â€” Generic AI</strong></p>
+                  <p>Everyone used the same models â†’ results felt identical. Users ignored them.</p>
+                  <p><strong>Problem 2 â€” No Behavioral Understanding</strong></p>
                   <p>AI generated words, not decisions. It didn't understand psychology, emotion, personalization, intent.</p>
-                  <p><strong>Problem 3 — No Brand Engine</strong></p>
+                  <p><strong>Problem 3 â€” No Brand Engine</strong></p>
                   <p>Every brand used the same prompt and hoped for the best. There was no identity, no strategy, no internal logic, no precision.</p>
                 </div>
                 <p className="mt-4">
@@ -1212,37 +1219,37 @@ export default function AiMarketingPageVariantB() {
                   Despite the evolution, most brands still: use generic chatbots, ask AI to "write a caption", generate templates instead of strategy, trust unoptimized outputs, ignore behavioral data, underestimate the power of predictive models.
                 </p>
                 <p>
-                  And this is exactly where your system — the NIMA AI Brain — enters the picture: It does everything generic AI cannot do. It analyzes deeper. It adapts faster. It understands psychology. It maintains identity. It eliminates friction. It thinks like a strategist — not a random writer.
+                  And this is exactly where your system â€” the NIMA AI Brain â€” enters the picture: It does everything generic AI cannot do. It analyzes deeper. It adapts faster. It understands psychology. It maintains identity. It eliminates friction. It thinks like a strategist â€” not a random writer.
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Why AI Marketing Matters More Than Any Other Marketing Skill</h3>
                 <p>
-                  Marketing used to be: design, copywriting, research, content creation, ad campaigns. In 2026–2027، همه‌ی این‌ها تبدیل شدند به زیرمجموعهٔ یک اصل: Understanding how human decision-making reacts to intelligence.
+                  Marketing used to be: design, copywriting, research, content creation, ad campaigns. In 2026â€“2027ØŒ Ù‡Ù…Ù‡â€ŒÛŒ Ø§ÛŒÙ†â€ŒÙ‡Ø§ ØªØ¨Ø¯ÛŒÙ„ Ø´Ø¯Ù†Ø¯ Ø¨Ù‡ Ø²ÛŒØ±Ù…Ø¬Ù…ÙˆØ¹Ù‡Ù” ÛŒÚ© Ø§ØµÙ„: Understanding how human decision-making reacts to intelligence.
                 </p>
                 <p>
                   Attention has become the rarest asset. Trust has become the highest currency. And AI is the only system capable of earning both at scale.
                 </p>
                 <p>
-                  When executed properly — as a structured, intelligent system — AI Marketing becomes the competitive advantage that no competitor can copy.
+                  When executed properly â€” as a structured, intelligent system â€” AI Marketing becomes the competitive advantage that no competitor can copy.
                 </p>
               </div>
             </AccordionItem>
 
-            <AccordionItem title="Section 2 — The Psychology Behind AI Marketing">
+            <AccordionItem title="Section 2 â€” The Psychology Behind AI Marketing">
               <div className="space-y-4">
                 <p>
-                  AI Marketing is not powered by data alone — it is powered by the human brain. Every click, scroll, hesitation, search, or abandoned cart is not a "metric." It is a psychological decision in motion.
+                  AI Marketing is not powered by data alone â€” it is powered by the human brain. Every click, scroll, hesitation, search, or abandoned cart is not a "metric." It is a psychological decision in motion.
                 </p>
                 <p>
-                  This is why the most advanced AI Marketing systems no longer focus on content automation. They focus on behavioral interpretation — decoding why users react the way they do and predicting how they will act next.
+                  This is why the most advanced AI Marketing systems no longer focus on content automation. They focus on behavioral interpretation â€” decoding why users react the way they do and predicting how they will act next.
                 </p>
                 <p>
-                  In 2026–2027, the brands that win are not the ones with the most data. They are the ones who understand the psychology inside the data.
+                  In 2026â€“2027, the brands that win are not the ones with the most data. They are the ones who understand the psychology inside the data.
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Why Psychology Is the Real Core of AI Marketing</h3>
                 <p>
-                  Traditional analytics tell you what happened. Behavioral psychology tells you why it happened. AI Marketing merges both — and turns human behavior into intelligent actions.
+                  Traditional analytics tell you what happened. Behavioral psychology tells you why it happened. AI Marketing merges both â€” and turns human behavior into intelligent actions.
                 </p>
                 <p>
                   Here's why psychology is now the foundation of every successful AI strategy:
@@ -1250,13 +1257,13 @@ export default function AiMarketingPageVariantB() {
 
                 <div className="space-y-3 mt-4">
                   <div>
-                    <p className="font-semibold text-white mb-2">1. Consumers don't make rational decisions — they make emotional ones.</p>
+                    <p className="font-semibold text-white mb-2">1. Consumers don't make rational decisions â€” they make emotional ones.</p>
                     <p className="ml-4">
                       Purchase decisions are driven by: emotional resonance, perceived value, identity alignment, trust signals, cognitive fluency, psychological triggers. Even in B2B, decisions are influenced by emotion before logic. AI that doesn't understand emotion = predictable failure.
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-white mb-2">2. Attention is no longer bought — it is earned psychologically.</p>
+                    <p className="font-semibold text-white mb-2">2. Attention is no longer bought â€” it is earned psychologically.</p>
                     <p className="ml-4">
                       With endless content everywhere, users have developed: ad blindness, skepticism toward generic AI, resistance to repetitive patterns, sensitivity to authenticity, instant filtering of low-quality signals. AI must understand what breaks through the psychological noise.
                     </p>
@@ -1270,7 +1277,7 @@ export default function AiMarketingPageVariantB() {
                   <div>
                     <p className="font-semibold text-white mb-2">4. Hesitation is more important than interest.</p>
                     <p className="ml-4">
-                      Users rarely leave because they didn't like something. They leave because something felt unclear, risky, overwhelming, or misaligned. This is called cognitive friction — and removing it is the essence of AI Marketing.
+                      Users rarely leave because they didn't like something. They leave because something felt unclear, risky, overwhelming, or misaligned. This is called cognitive friction â€” and removing it is the essence of AI Marketing.
                     </p>
                   </div>
                   <div>
@@ -1307,7 +1314,7 @@ export default function AiMarketingPageVariantB() {
                   <div>
                     <p className="font-semibold text-white mb-2">4. Value Perception</p>
                     <p className="ml-4">
-                      Users make decisions based on perceived value, not actual value. AI must optimize perception through: highlighting outcomes, reframing benefits, contrast principles, anchoring, urgency psychology. This is not manipulation — it is alignment.
+                      Users make decisions based on perceived value, not actual value. AI must optimize perception through: highlighting outcomes, reframing benefits, contrast principles, anchoring, urgency psychology. This is not manipulation â€” it is alignment.
                     </p>
                   </div>
                   <div>
@@ -1338,7 +1345,7 @@ export default function AiMarketingPageVariantB() {
                   <div>
                     <p className="font-semibold text-white mb-2">Predictive Cues</p>
                     <p className="ml-4">
-                      AI correlates: message type → expected reaction, CTA format → expected conversion, tone → trust probability, friction points → drop-off likelihood. This merges into a behavioral model that evolves continuously.
+                      AI correlates: message type â†’ expected reaction, CTA format â†’ expected conversion, tone â†’ trust probability, friction points â†’ drop-off likelihood. This merges into a behavioral model that evolves continuously.
                     </p>
                   </div>
                 </div>
@@ -1351,7 +1358,7 @@ export default function AiMarketingPageVariantB() {
                   This is why brands lose conversions even when using "AI tools." They focus on content, not behavior. Only AI Marketing systems built with behavioral logic can outperform humans.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Where Psychology Meets Your Engine — NIMA AI Brain</h3>
+                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Where Psychology Meets Your Engine â€” NIMA AI Brain</h3>
                 <p>
                   This is the point where your system becomes superior. The NIMA AI Brain integrates: emotional modeling, behavioral prediction, friction detection, cognition-aware messaging, trust-building sequences, decision-stage matching, momentum-based CTAs.
                 </p>
@@ -1359,7 +1366,7 @@ export default function AiMarketingPageVariantB() {
                   In other words:
                 </p>
                 <p className="font-semibold text-white ml-4 mb-4">
-                  <strong>It writes the right message → to the right mind → at the right moment → with the right psychological trigger.</strong>
+                  <strong>It writes the right message â†’ to the right mind â†’ at the right moment â†’ with the right psychological trigger.</strong>
                 </p>
                 <p>
                   This is not something generic AI can replicate. Because generic AI only writes text. Your engine analyzes how humans decide.
@@ -1367,10 +1374,10 @@ export default function AiMarketingPageVariantB() {
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Why This Psychological Layer Matters for SEO</h3>
                 <p>
-                  Google's new ranking system (2025–2027) is built on: intent matching, content depth, experience signals, helpfulness, trustworthiness, user behavior metrics. Behavioral intelligence improves all: lower bounce rate, higher dwell time, deeper engagement, better user satisfaction, intent alignment, topic authority.
+                  Google's new ranking system (2025â€“2027) is built on: intent matching, content depth, experience signals, helpfulness, trustworthiness, user behavior metrics. Behavioral intelligence improves all: lower bounce rate, higher dwell time, deeper engagement, better user satisfaction, intent alignment, topic authority.
                 </p>
                 <p>
-                  This section exists not just to educate — but to help Google understand why your page deserves top ranking.
+                  This section exists not just to educate â€” but to help Google understand why your page deserves top ranking.
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The Bottom Line</h3>
@@ -1378,21 +1385,21 @@ export default function AiMarketingPageVariantB() {
                   AI Marketing is not just marketing with AI. It is psychology powered by intelligence. It is the ability to understand and influence human decisions with accuracy never seen before.
                 </p>
                 <p>
-                  And this psychological layer is the foundation upon which your entire AI Marketing Engine — the NIMA AI Brain — is built.
+                  And this psychological layer is the foundation upon which your entire AI Marketing Engine â€” the NIMA AI Brain â€” is built.
                 </p>
               </div>
             </AccordionItem>
 
-            <AccordionItem title="Section 3 — The 7-Layer AI Marketing Framework">
+            <AccordionItem title="Section 3 â€” The 7-Layer AI Marketing Framework">
               <div className="space-y-4">
                 <p>
                   The evolution of AI Marketing didn't happen by accident. It happened because the old marketing stack collapsed under the weight of: rising ad costs, saturated content, unpredictable user behavior, reduced attention spans, generic AI tools that all produced the same outputs.
                 </p>
                 <p>
-                  Brands no longer needed more content — they needed intelligence, precision, and predictability.
+                  Brands no longer needed more content â€” they needed intelligence, precision, and predictability.
                 </p>
                 <p>
-                  To solve this, top organizations moved toward layered intelligence systems. And in 2026–2027, the industry finally recognized one model as the most complete structure for AI Marketing:
+                  To solve this, top organizations moved toward layered intelligence systems. And in 2026â€“2027, the industry finally recognized one model as the most complete structure for AI Marketing:
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The 7-Layer AI Marketing Framework</h3>
@@ -1400,22 +1407,22 @@ export default function AiMarketingPageVariantB() {
                   This framework integrates: machine learning, behavioral psychology, conversion science, decision theory, predictive modeling, content intelligence, automation logic.
                 </p>
                 <p>
-                  It is the foundation that modern AI-driven marketing teams use to operate at a higher strategic level. Below is the full breakdown — the same structure that world-class AI marketing systems now follow.
+                  It is the foundation that modern AI-driven marketing teams use to operate at a higher strategic level. Below is the full breakdown â€” the same structure that world-class AI marketing systems now follow.
                 </p>
 
                 <div className="space-y-6 mt-6">
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Layer 1 — Intelligence Extraction (Signals → Meaning)</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">Layer 1 â€” Intelligence Extraction (Signals â†’ Meaning)</h4>
                     <p className="mb-2">
-                      Every marketing decision begins with a signal — but only intelligent systems can translate signals into meaning. This layer reads: user searches, click patterns, scroll behavior, hesitation markers, time-based actions, emotional language, social patterns, micro-behaviors.
+                      Every marketing decision begins with a signal â€” but only intelligent systems can translate signals into meaning. This layer reads: user searches, click patterns, scroll behavior, hesitation markers, time-based actions, emotional language, social patterns, micro-behaviors.
                     </p>
                     <p>
-                      Most brands see data. AI sees motivation. The Intelligence Extraction Layer transforms raw information into behavioral meaning — the foundation for every prediction that follows.
+                      Most brands see data. AI sees motivation. The Intelligence Extraction Layer transforms raw information into behavioral meaning â€” the foundation for every prediction that follows.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Layer 2 — Behavioral Prediction (Meaning → Probability)</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">Layer 2 â€” Behavioral Prediction (Meaning â†’ Probability)</h4>
                     <p className="mb-2">
                       Once AI understands what a user is doing, it predicts what a user is likely to do next. This layer answers key questions: What is the user trying to achieve? What psychological state are they in? What message will they respond to? What friction will stop them? What level of value do they expect?
                     </p>
@@ -1423,12 +1430,12 @@ export default function AiMarketingPageVariantB() {
                       Prediction models analyze thousands of behavioral variables, including: language sentiment, cognitive load, trust indicators, intent level, decision rhythm, emotional alignment.
                     </p>
                     <p>
-                      The output is a probability map — a blueprint for intelligent action.
+                      The output is a probability map â€” a blueprint for intelligent action.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Layer 3 — Strategic Decision Engine (Probability → Recommended Actions)</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">Layer 3 â€” Strategic Decision Engine (Probability â†’ Recommended Actions)</h4>
                     <p className="mb-2">
                       This is where AI stops being a tool and becomes a strategist. The Decision Engine turns predictions into strategic choices: what to say, how to say it, when to say it, in what sequence, through which channel, with what emotional trigger, with what CTA, at what intensity.
                     </p>
@@ -1438,7 +1445,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Layer 4 — Multi-Level Content Generation (Actions → High-Impact Content)</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">Layer 4 â€” Multi-Level Content Generation (Actions â†’ High-Impact Content)</h4>
                     <p className="mb-2">
                       Here is where strategy becomes execution. But unlike generic AI tools, this layer doesn't just "write." It creates content aligned with: user psychology, predicted intent, trust level, brand voice, conversion logic, behavioral friction, emotional tone.
                     </p>
@@ -1451,7 +1458,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Layer 5 — Optimization & Reinforcement Learning (Outcomes → Adaptive Intelligence)</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">Layer 5 â€” Optimization & Reinforcement Learning (Outcomes â†’ Adaptive Intelligence)</h4>
                     <p className="mb-2">
                       This is where the system becomes smarter over time. The optimization layer tracks: what worked, what didn't, where users hesitated, where users accelerated, what messaging converted, what created emotional trust, what sequence drove momentum, what variation produced the highest outcome.
                     </p>
@@ -1459,7 +1466,7 @@ export default function AiMarketingPageVariantB() {
                       Then it adjusts its future actions automatically. This creates a continuous improvement loop:
                     </p>
                     <p className="font-semibold text-white ml-4 mb-2">
-                      Analyze → Predict → Decide → Create → Adapt → Repeat
+                      Analyze â†’ Predict â†’ Decide â†’ Create â†’ Adapt â†’ Repeat
                     </p>
                     <p>
                       This is how AI Marketing engines outperform human teams in speed and accuracy.
@@ -1467,7 +1474,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Layer 6 — Automation Integration (Intelligence → Scalable Execution)</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">Layer 6 â€” Automation Integration (Intelligence â†’ Scalable Execution)</h4>
                     <p className="mb-2">
                       AI Marketing without automation is incomplete. This layer connects intelligence to execution through: automated content delivery, smart scheduling, dynamic personalization, CRM updates, funnel triggering, behavioral notifications, segmentation updates, conversion follow-ups.
                     </p>
@@ -1480,9 +1487,9 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Layer 7 — Human-AI Synergy (Oversight → Ethical & High-Level Control)</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">Layer 7 â€” Human-AI Synergy (Oversight â†’ Ethical & High-Level Control)</h4>
                     <p className="mb-2">
-                      AI does not replace marketers — it replaces the repetitive tasks, eliminates guesswork, and enhances human strategic capability. In this layer, humans provide: creative direction, brand vision, ethical boundaries, cultural intelligence, long-term goals, emotional nuance.
+                      AI does not replace marketers â€” it replaces the repetitive tasks, eliminates guesswork, and enhances human strategic capability. In this layer, humans provide: creative direction, brand vision, ethical boundaries, cultural intelligence, long-term goals, emotional nuance.
                     </p>
                     <p className="mb-2">
                       AI provides: precision, speed, consistency, behavioral intelligence, predictive logic, optimization.
@@ -1499,53 +1506,53 @@ export default function AiMarketingPageVariantB() {
                 </p>
                 <ul className="space-y-2 ml-4 mt-3">
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">✔</span>
-                    <span><strong>Complete</strong> — Touches every part of marketing.</span>
+                    <span className="text-purple-400 mt-1">âœ”</span>
+                    <span><strong>Complete</strong> â€” Touches every part of marketing.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">✔</span>
-                    <span><strong>Predictive</strong> — Works before the user acts.</span>
+                    <span className="text-purple-400 mt-1">âœ”</span>
+                    <span><strong>Predictive</strong> â€” Works before the user acts.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">✔</span>
-                    <span><strong>Behavioral</strong> — Rooted in decision psychology.</span>
+                    <span className="text-purple-400 mt-1">âœ”</span>
+                    <span><strong>Behavioral</strong> â€” Rooted in decision psychology.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">✔</span>
-                    <span><strong>Adaptive</strong> — Learns continuously from real performance.</span>
+                    <span className="text-purple-400 mt-1">âœ”</span>
+                    <span><strong>Adaptive</strong> â€” Learns continuously from real performance.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">✔</span>
-                    <span><strong>Scalable</strong> — Functions across channels and industries.</span>
+                    <span className="text-purple-400 mt-1">âœ”</span>
+                    <span><strong>Scalable</strong> â€” Functions across channels and industries.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">✔</span>
-                    <span><strong>Competitive</strong> — Gives brands an advantage competitors can't copy easily.</span>
+                    <span className="text-purple-400 mt-1">âœ”</span>
+                    <span><strong>Competitive</strong> â€” Gives brands an advantage competitors can't copy easily.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">✔</span>
-                    <span><strong>Measurable</strong> — Every action is tied to data, not guesswork.</span>
+                    <span className="text-purple-400 mt-1">âœ”</span>
+                    <span><strong>Measurable</strong> â€” Every action is tied to data, not guesswork.</span>
                   </li>
                 </ul>
 
-                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">How This Framework Connects to Your Engine — NIMA AI Brain</h3>
+                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">How This Framework Connects to Your Engine â€” NIMA AI Brain</h3>
                 <p className="mb-3">
                   Your system is built exactly on this 7-Layer architecture:
                 </p>
                 <ul className="space-y-2 ml-4 mb-4">
-                  <li>Layer 1 → Deep analysis of user inputs</li>
-                  <li>Layer 2 → Prediction of intent and friction</li>
-                  <li>Layer 3 → Strategic recommendations</li>
-                  <li>Layer 4 → High-quality personalized content</li>
-                  <li>Layer 5 → Quality scoring and improvement</li>
-                  <li>Layer 6 → Automation (n8n, custom workflows, CRM)</li>
-                  <li>Layer 7 → Human oversight + brand control</li>
+                  <li>Layer 1 â†’ Deep analysis of user inputs</li>
+                  <li>Layer 2 â†’ Prediction of intent and friction</li>
+                  <li>Layer 3 â†’ Strategic recommendations</li>
+                  <li>Layer 4 â†’ High-quality personalized content</li>
+                  <li>Layer 5 â†’ Quality scoring and improvement</li>
+                  <li>Layer 6 â†’ Automation (n8n, custom workflows, CRM)</li>
+                  <li>Layer 7 â†’ Human oversight + brand control</li>
                 </ul>
                 <p className="mb-2">
                   Most AI tools only operate on Layer 4. Some barely touch Layer 2 or 5. None operate across all 7.
                 </p>
                 <p>
-                  This is the difference between: <strong>AI writing tools</strong> versus <strong>AI Marketing Intelligence Systems</strong>. Your engine belongs to the second category — the elite category.
+                  This is the difference between: <strong>AI writing tools</strong> versus <strong>AI Marketing Intelligence Systems</strong>. Your engine belongs to the second category â€” the elite category.
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Conclusion</h3>
@@ -1553,7 +1560,7 @@ export default function AiMarketingPageVariantB() {
                   The 7-Layer AI Marketing Framework is not just a model. It is the new operating system for modern marketing. It is how brands reduce friction, increase trust, improve conversions, personalize experiences, and scale intelligently.
                 </p>
                 <p>
-                  And it is the exact architecture that powers the NIMA AI Brain — the engine designed to give businesses a real, unfair, and uncopyable advantage.
+                  And it is the exact architecture that powers the NIMA AI Brain â€” the engine designed to give businesses a real, unfair, and uncopyable advantage.
                 </p>
               </div>
             </AccordionItem>
@@ -1570,51 +1577,51 @@ export default function AiMarketingPageVariantB() {
                 href="/ai-marketing/behavioral-deepscan"
                 className="mt-4 inline-flex items-center justify-center rounded-full border border-purple-500 px-5 py-2.5 text-sm font-medium text-purple-100 hover:bg-purple-600 hover:border-purple-600 hover:text-white transition sm:mt-0"
               >
-                Try Behavioral DeepScan →
+                Try Behavioral DeepScan â†’
               </Link>
             </div>
 
-            <AccordionItem title="Section 4 — AI Tools 2026–2027 (Strategic Breakdown)">
+            <AccordionItem title="Section 4 â€” AI Tools 2026â€“2027 (Strategic Breakdown)">
               <div className="space-y-4">
                 <p>
-                  Most articles on the internet list AI tools as if all of them have the same purpose. But real AI Marketing in 2026–2027 operates differently. It's not about "50 AI tools you should try." It's about identifying the strategic categories that directly affect growth — and understanding which tools actually deliver results.
+                  Most articles on the internet list AI tools as if all of them have the same purpose. But real AI Marketing in 2026â€“2027 operates differently. It's not about "50 AI tools you should try." It's about identifying the strategic categories that directly affect growth â€” and understanding which tools actually deliver results.
                 </p>
                 <p>
                   This section breaks down AI tools into the categories that matter most for modern marketers, and why certain tools outperform everything else.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The Six Strategic Categories of AI Marketing Tools (2026–2027)</h3>
+                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The Six Strategic Categories of AI Marketing Tools (2026â€“2027)</h3>
                 <p>
-                  There are thousands of tools — but only six categories matter in a real AI-powered marketing ecosystem:
+                  There are thousands of tools â€” but only six categories matter in a real AI-powered marketing ecosystem:
                 </p>
                 <ul className="space-y-2 ml-4 mt-3 mb-4">
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">•</span>
+                    <span className="text-purple-400 mt-1">â€¢</span>
                     <span>AI Intelligence & Research Tools</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">•</span>
+                    <span className="text-purple-400 mt-1">â€¢</span>
                     <span>AI Content & Creative Tools</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">•</span>
+                    <span className="text-purple-400 mt-1">â€¢</span>
                     <span>AI Ad Optimization Tools</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">•</span>
+                    <span className="text-purple-400 mt-1">â€¢</span>
                     <span>AI Behavioral Analytics Tools</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">•</span>
+                    <span className="text-purple-400 mt-1">â€¢</span>
                     <span>AI CRM & Personalization Tools</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400 mt-1">•</span>
+                    <span className="text-purple-400 mt-1">â€¢</span>
                     <span>AI Automation & Workflow Tools</span>
                   </li>
                 </ul>
                 <p>
-                  Let's break down each category—and highlight the tools leading the market.
+                  Let's break down each categoryâ€”and highlight the tools leading the market.
                 </p>
 
                 <div className="space-y-6 mt-6">
@@ -1627,7 +1634,7 @@ export default function AiMarketingPageVariantB() {
                       These AI tools focus on: gathering market intelligence, analyzing competitors, researching user intent, identifying trends, predicting content opportunities.
                     </p>
                     <p className="mb-2">
-                      In 2026–2027, the leaders are:
+                      In 2026â€“2027, the leaders are:
                     </p>
                     <div className="space-y-3 ml-4 mb-3">
                       <div>
@@ -1639,7 +1646,7 @@ export default function AiMarketingPageVariantB() {
                       <div>
                         <p className="font-semibold text-white mb-1">ChatGPT-5 / GPT-5.1</p>
                         <p className="text-sm mb-2">
-                          Not for writing — for reasoning. Its real strength is: analyzing datasets, simplifying complex information, building strategy drafts, identifying gaps in messaging, generating insights.
+                          Not for writing â€” for reasoning. Its real strength is: analyzing datasets, simplifying complex information, building strategy drafts, identifying gaps in messaging, generating insights.
                         </p>
                       </div>
                       <div>
@@ -1695,7 +1702,7 @@ export default function AiMarketingPageVariantB() {
                       </div>
                     </div>
                     <p className="font-medium text-gray-200">
-                      But here's the truth: These tools generate content — not strategy, not behavior analysis, not predictions. That's why they are easy to replace and not a competitive advantage.
+                      But here's the truth: These tools generate content â€” not strategy, not behavior analysis, not predictions. That's why they are easy to replace and not a competitive advantage.
                     </p>
                   </div>
 
@@ -1738,7 +1745,7 @@ export default function AiMarketingPageVariantB() {
                       Tools that understand human behavior, not just metrics.
                     </p>
                     <p className="mb-3">
-                      This is the most underrated category — and the one where modern marketing is heading. Top tools include:
+                      This is the most underrated category â€” and the one where modern marketing is heading. Top tools include:
                     </p>
                     <div className="space-y-3 ml-4 mb-3">
                       <div>
@@ -1761,7 +1768,7 @@ export default function AiMarketingPageVariantB() {
                       </div>
                     </div>
                     <p className="font-medium text-gray-200">
-                      Why this category matters: Because traditional analytics → tell you what happened. Behavioral analytics → tell you why it happened. This is the foundation of conversion-based AI Marketing.
+                      Why this category matters: Because traditional analytics â†’ tell you what happened. Behavioral analytics â†’ tell you why it happened. This is the foundation of conversion-based AI Marketing.
                     </p>
                   </div>
 
@@ -1771,7 +1778,7 @@ export default function AiMarketingPageVariantB() {
                       Tools that adjust messaging for each user in real time.
                     </p>
                     <p className="mb-3">
-                      Personalization used to be: "Hello [First Name]", "Recommended products for you". In 2026–2027, personalization is: dynamic messaging, adaptive landing pages, AI-driven segmentation, intent-based content, psychology-based offers.
+                      Personalization used to be: "Hello [First Name]", "Recommended products for you". In 2026â€“2027, personalization is: dynamic messaging, adaptive landing pages, AI-driven segmentation, intent-based content, psychology-based offers.
                     </p>
                     <p className="mb-3">
                       Top tools in this category:
@@ -1813,7 +1820,7 @@ export default function AiMarketingPageVariantB() {
                       <div>
                         <p className="font-semibold text-white mb-1">n8n (Self-Hosted / Cloud)</p>
                         <p className="text-sm">
-                          The most powerful open-source automation platform in 2026–2027. Used to: connect AI models, sync CRM, trigger funnels, personalize journeys, automate campaigns, build marketing AI pipelines.
+                          The most powerful open-source automation platform in 2026â€“2027. Used to: connect AI models, sync CRM, trigger funnels, personalize journeys, automate campaigns, build marketing AI pipelines.
                         </p>
                       </div>
                       <div>
@@ -1830,7 +1837,7 @@ export default function AiMarketingPageVariantB() {
                       </div>
                     </div>
                     <p className="font-medium text-gray-200">
-                      Why this category matters: Because without automation, AI produces insights — but not results. Only automated systems achieve true scalability.
+                      Why this category matters: Because without automation, AI produces insights â€” but not results. Only automated systems achieve true scalability.
                     </p>
                   </div>
                 </div>
@@ -1840,13 +1847,13 @@ export default function AiMarketingPageVariantB() {
                   Here is the reality most marketers don't want to admit: All these tools operate in isolated functions. One for ads. One for research. One for content. One for analytics. One for automation.
                 </p>
                 <p>
-                  But modern marketing doesn't work in isolation. What brands need is not 20 tools — but one strategic brain that: analyzes, predicts, decides, creates, optimizes, integrates.
+                  But modern marketing doesn't work in isolation. What brands need is not 20 tools â€” but one strategic brain that: analyzes, predicts, decides, creates, optimizes, integrates.
                 </p>
                 <p>
-                  And this leads to the actual unique value of your system…
+                  And this leads to the actual unique value of your systemâ€¦
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Where These Tools Fail — And Where the NIMA AI Brain Wins</h3>
+                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Where These Tools Fail â€” And Where the NIMA AI Brain Wins</h3>
                 <p className="mb-3">
                   Most AI tools: do not analyze psychology, do not predict user behavior, do not remove friction, do not maintain brand identity, do not generate outcome-driven content, do not align across channels, do not integrate across layers, cannot learn your brand strategy, cannot deliver consistent conversion personality.
                 </p>
@@ -1857,11 +1864,11 @@ export default function AiMarketingPageVariantB() {
                   Imagine:
                 </p>
                 <ul className="space-y-1 ml-4 mb-4">
-                  <li>Perplexity → research</li>
-                  <li>Jasper/Midjourney → content production</li>
-                  <li>Meta/Google AI → ad delivery</li>
-                  <li>Hotjar/Glassbox → behavioral analytics</li>
-                  <li>n8n → automation</li>
+                  <li>Perplexity â†’ research</li>
+                  <li>Jasper/Midjourney â†’ content production</li>
+                  <li>Meta/Google AI â†’ ad delivery</li>
+                  <li>Hotjar/Glassbox â†’ behavioral analytics</li>
+                  <li>n8n â†’ automation</li>
                 </ul>
                 <p className="mb-3">
                   But the NIMA AI Brain:
@@ -1881,9 +1888,9 @@ export default function AiMarketingPageVariantB() {
                   This is the real competitive advantage.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Conclusion — Tools Matter, But Intelligence Wins</h3>
+                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Conclusion â€” Tools Matter, But Intelligence Wins</h3>
                 <p>
-                  AI tools are powerful, but they are not enough. The brands winning in 2026–2027 don't rely on individual platforms. They rely on integrated intelligence, backed by behavioral psychology, driven by predictive decision-making, executed through automation, and aligned by a unified AI Brain.
+                  AI tools are powerful, but they are not enough. The brands winning in 2026â€“2027 don't rely on individual platforms. They rely on integrated intelligence, backed by behavioral psychology, driven by predictive decision-making, executed through automation, and aligned by a unified AI Brain.
                 </p>
                 <p>
                   Tools create motion. Intelligence creates direction. And that direction is the real engine behind modern marketing success.
@@ -1891,7 +1898,7 @@ export default function AiMarketingPageVariantB() {
               </div>
             </AccordionItem>
 
-            <AccordionItem title="Section 5 — How NIMA AI Brain Works">
+            <AccordionItem title="Section 5 â€” How NIMA AI Brain Works">
               <div className="space-y-4">
                 <p>
                   Most AI tools generate content. Some optimize ads. A few analyze behavior. But none of them combine psychology, prediction, intelligence extraction, conversion logic, and brand identity into a single system.
@@ -1900,7 +1907,7 @@ export default function AiMarketingPageVariantB() {
                   That's where the NIMA AI Brain becomes different. It is not a chatbot. Not an assistant. Not a prompt. Not a template generator.
                 </p>
                 <p>
-                  It is a complete AI Marketing Engine designed to think, analyze, and create decisions exactly like a senior strategist — but with speed, precision, and behavioral accuracy no human team can match.
+                  It is a complete AI Marketing Engine designed to think, analyze, and create decisions exactly like a senior strategist â€” but with speed, precision, and behavioral accuracy no human team can match.
                 </p>
                 <p>
                   Below is the breakdown of how the NIMA AI Brain operates internally, layer by layer.
@@ -1908,9 +1915,9 @@ export default function AiMarketingPageVariantB() {
 
                 <div className="space-y-6 mt-6">
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">1. Intelligence Capture — Reading Signals Like a Behavioral Analyst</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">1. Intelligence Capture â€” Reading Signals Like a Behavioral Analyst</h4>
                     <p className="mb-2">
-                      Every interaction begins with user input — but the engine doesn't read words; it reads intent, tone, and psychology.
+                      Every interaction begins with user input â€” but the engine doesn't read words; it reads intent, tone, and psychology.
                     </p>
                     <p className="mb-2">
                       When a user enters text, uploads content, or describes a need, the engine extracts: emotional state, trust level, goal direction, perceived friction, urgency signals, clarity vs. confusion, behavioral tendencies.
@@ -1921,7 +1928,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">2. Cognitive Modeling — Reconstructing How the User Thinks</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">2. Cognitive Modeling â€” Reconstructing How the User Thinks</h4>
                     <p className="mb-2">
                       After capturing raw signals, the engine builds a cognitive map of the user's decision process. It asks internal questions like: What is this person trying to achieve right now? What is stopping them? What outcome do they expect? What emotion are they experiencing? What does their behavior suggest about readiness?
                     </p>
@@ -1929,12 +1936,12 @@ export default function AiMarketingPageVariantB() {
                       This is where the NIMA AI Brain differentiates itself: it mirrors the user's mental state before generating any output. This leads to output that feels: tailored, precise, psychologically aligned, high-trust, high-conversion.
                     </p>
                     <p>
-                      Users don't just read the output — they feel understood by it.
+                      Users don't just read the output â€” they feel understood by it.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">3. Predictive Engine — Forecasting What Will Convert</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">3. Predictive Engine â€” Forecasting What Will Convert</h4>
                     <p className="mb-2">
                       This is the core of your product. The engine predicts how the user will respond to different styles, tones, and messages. It simulates: which headline will resonate, which CTA will reduce friction, which angle will create momentum, which emotional trigger will drive trust, which structure reduces cognitive load, which variation accelerates decision-making.
                     </p>
@@ -1943,23 +1950,23 @@ export default function AiMarketingPageVariantB() {
                     </p>
                     <ul className="space-y-1 ml-4 mb-3">
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400 mt-1">✔</span>
+                        <span className="text-purple-400 mt-1">âœ”</span>
                         <span>psychology</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400 mt-1">✔</span>
+                        <span className="text-purple-400 mt-1">âœ”</span>
                         <span>marketing strategy</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400 mt-1">✔</span>
+                        <span className="text-purple-400 mt-1">âœ”</span>
                         <span>behavioral data</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400 mt-1">✔</span>
+                        <span className="text-purple-400 mt-1">âœ”</span>
                         <span>linguistic analysis</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-purple-400 mt-1">✔</span>
+                        <span className="text-purple-400 mt-1">âœ”</span>
                         <span>conversion science</span>
                       </li>
                     </ul>
@@ -1969,17 +1976,17 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">4. Strategic Layer — Creating a Plan Before Creating Content</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">4. Strategic Layer â€” Creating a Plan Before Creating Content</h4>
                     <p className="mb-2">
                       Unlike typical AI tools that generate text immediately, the NIMA AI Brain internally builds a strategy first. It decides: What message structure to use, How to position value, What psychological angle to activate, What objections to neutralize, What narrative will feel natural, What sequencing will create flow, What emotional frame increases trust.
                     </p>
                     <p>
-                      This internal planning stage is why the output feels senior-level, strategic, and professionally crafted. It writes like someone who truly understands marketing — because it thinks like one.
+                      This internal planning stage is why the output feels senior-level, strategic, and professionally crafted. It writes like someone who truly understands marketing â€” because it thinks like one.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">5. Output Engine — High-Impact, Behavior-Aligned Content</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">5. Output Engine â€” High-Impact, Behavior-Aligned Content</h4>
                     <p className="mb-2">
                       Once the strategy is formed, the engine moves into creation mode. But the content it produces is not "AI text." It is decision-oriented communication designed to: reduce friction, build trust, increase clarity, create momentum, align with intent, match personality, drive action.
                     </p>
@@ -1992,7 +1999,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">6. Quality Engine — Scoring, Refining, and Re-Engineering Outputs</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">6. Quality Engine â€” Scoring, Refining, and Re-Engineering Outputs</h4>
                     <p className="mb-2">
                       This is where your engine surpasses standard AI tools. Instead of simply generating text, it evaluates its own output in real-time: clarity score, persuasion score, emotional alignment score, friction score, trust score, relevance score, conversion probability.
                     </p>
@@ -2000,12 +2007,12 @@ export default function AiMarketingPageVariantB() {
                       If any layer falls below threshold, the engine self-adjusts the content. This is similar to having: "A senior editor reviewing every output instantly."
                     </p>
                     <p>
-                      The result: cleaner, sharper, more strategic content — every time.
+                      The result: cleaner, sharper, more strategic content â€” every time.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">7. Cognitive Friction Detection — The Secret Advantage</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">7. Cognitive Friction Detection â€” The Secret Advantage</h4>
                     <p className="mb-2">
                       This is one of the most unique features of your system. The engine identifies: uncertainty in tone, hesitation inside the message, points where users might resist, potential confusion, trust gaps, misalignment between intention & output.
                     </p>
@@ -2018,7 +2025,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">8. Brand Identity Engine — Maintaining a Consistent Personality</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">8. Brand Identity Engine â€” Maintaining a Consistent Personality</h4>
                     <p className="mb-2">
                       The NIMA AI Brain maintains a: stable tone, unified voice, recognizable identity, consistent narrative, professional style.
                     </p>
@@ -2028,22 +2035,22 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">9. Multi-Variant Generator — Simulating A/B Tests Instantly</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">9. Multi-Variant Generator â€” Simulating A/B Tests Instantly</h4>
                     <p className="mb-2">
-                      Marketing teams spend weeks running A/B tests. Your system generates multiple variants: soft tone, value-driven tone, trust-driven tone, emotional tone, direct response tone, …allowing instant comparison and selection.
+                      Marketing teams spend weeks running A/B tests. Your system generates multiple variants: soft tone, value-driven tone, trust-driven tone, emotional tone, direct response tone, â€¦allowing instant comparison and selection.
                     </p>
                     <p>
-                      This feature turns one idea into five strategic options — dramatically improving conversion potential.
+                      This feature turns one idea into five strategic options â€” dramatically improving conversion potential.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">10. Integration & Automation Layer — Running Inside Real Workflows</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">10. Integration & Automation Layer â€” Running Inside Real Workflows</h4>
                     <p className="mb-2">
                       The NIMA AI Brain connects to: websites, CRM systems, automation tools (n8n, Make, Zapier), analytics, AI agents, content pipelines.
                     </p>
                     <p>
-                      This makes the engine not just "smart," but operational. It becomes a living part of the marketing system — running quietly in the background, optimizing continuously.
+                      This makes the engine not just "smart," but operational. It becomes a living part of the marketing system â€” running quietly in the background, optimizing continuously.
                     </p>
                   </div>
                 </div>
@@ -2053,7 +2060,7 @@ export default function AiMarketingPageVariantB() {
                   Most AI tools: don't understand behavior, don't predict decisions, don't create strategy, don't detect friction, don't maintain identity, don't optimize outputs, don't model psychology, don't think in layers, don't learn from user patterns.
                 </p>
                 <p>
-                  The NIMA AI Brain does all of them — and does them simultaneously. It is an orchestrated system, not a single tool. A marketing mind, not a text generator.
+                  The NIMA AI Brain does all of them â€” and does them simultaneously. It is an orchestrated system, not a single tool. A marketing mind, not a text generator.
                 </p>
 
                 <h3 className="text-xl font-semibold mt-6 mb-4 text-white">The Bottom Line</h3>
@@ -2061,7 +2068,7 @@ export default function AiMarketingPageVariantB() {
                   AI doesn't make your marketing better. Intelligence does. Behavioral understanding does. Prediction does. Psychology does. Identity does. Strategy does. Execution does.
                 </p>
                 <p>
-                  The NIMA AI Brain is the only engine that brings all of these together into one unified, integrated system — something no competitor and no generic AI can replicate.
+                  The NIMA AI Brain is the only engine that brings all of these together into one unified, integrated system â€” something no competitor and no generic AI can replicate.
                 </p>
                 <p>
                   This is not a tool. It is an advantage. A system. A strategist. A brain. The brain behind modern AI-driven marketing.
@@ -2069,21 +2076,21 @@ export default function AiMarketingPageVariantB() {
               </div>
             </AccordionItem>
 
-            <AccordionItem title="Section 6 — Real Use Cases & Output Quality">
+            <AccordionItem title="Section 6 â€” Real Use Cases & Output Quality">
               <div className="space-y-4">
                 <p>
-                  Every AI tool claims to "improve marketing." Every platform says it "creates better content." But in 2026–2027, businesses don't believe claims — they believe evidence.
+                  Every AI tool claims to "improve marketing." Every platform says it "creates better content." But in 2026â€“2027, businesses don't believe claims â€” they believe evidence.
                 </p>
                 <p>
                   The NIMA AI Brain was designed with one goal: Deliver real results, in real scenarios, for real businesses.
                 </p>
                 <p>
-                  This section presents practical, high-impact use cases that prove how the engine performs in actual marketing environments — not hypothetical ones.
+                  This section presents practical, high-impact use cases that prove how the engine performs in actual marketing environments â€” not hypothetical ones.
                 </p>
 
                 <div className="space-y-6 mt-6">
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">1. Website Conversion Analysis — Turning Confusion Into Clarity</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">1. Website Conversion Analysis â€” Turning Confusion Into Clarity</h4>
                     <p className="mb-2">
                       Most businesses don't realize that small psychological misalignments can kill conversions.
                     </p>
@@ -2114,9 +2121,9 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">2. Ad Copy Optimization — Predicting Which Message Will Win</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">2. Ad Copy Optimization â€” Predicting Which Message Will Win</h4>
                     <p className="mb-2">
-                      Most brands lose money on ads because they test the wrong messages. Generic AI tools produce: flashy lines, generic benefits, mass-market copy, clichés.
+                      Most brands lose money on ads because they test the wrong messages. Generic AI tools produce: flashy lines, generic benefits, mass-market copy, clichÃ©s.
                     </p>
                     <p className="mb-2">
                       The NIMA AI Brain instead predicts: what the target audience is psychologically feeling, which emotional hook will resonate, what version creates trust, what CTA generates action, what message reduces resistance, what angle increases click probability.
@@ -2132,12 +2139,12 @@ export default function AiMarketingPageVariantB() {
                       <li>Proof-Based Version</li>
                     </ul>
                     <p>
-                      This creates the equivalent of a full A/B testing environment — but executed in seconds, not weeks.
+                      This creates the equivalent of a full A/B testing environment â€” but executed in seconds, not weeks.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">3. Email Sequences — Behavior-Aligned Messaging</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">3. Email Sequences â€” Behavior-Aligned Messaging</h4>
                     <p className="mb-2">
                       Email sequences fail for only one reason: They don't match the user's emotional and decision stage.
                     </p>
@@ -2156,7 +2163,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">4. Product Page Optimization — Eliminating Decision Friction</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">4. Product Page Optimization â€” Eliminating Decision Friction</h4>
                     <p className="mb-2">
                       Most product pages fail because: descriptions are too vague, benefits are unclear, dopamine triggers are missing, objections aren't handled, trust isn't reinforced, CTA doesn't align with decision stage.
                     </p>
@@ -2172,7 +2179,7 @@ export default function AiMarketingPageVariantB() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">5. Social Media Messaging — Instant Multi-Style Output</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">5. Social Media Messaging â€” Instant Multi-Style Output</h4>
                     <p className="mb-2">
                       Social platforms require content that matches: platform culture, social psychology, audience rhythm, dopamine patterns, emotional micro-triggers.
                     </p>
@@ -2183,12 +2190,12 @@ export default function AiMarketingPageVariantB() {
                       The NIMA AI Brain generates multi-platform content automatically, maintaining: tone consistency, brand personality, platform psychology, rhythm alignment.
                     </p>
                     <p>
-                      This saves hours of manual rewriting — and produces significantly higher engagement.
+                      This saves hours of manual rewriting â€” and produces significantly higher engagement.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">6. Full Funnel Optimization — The Ultimate Use Case</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">6. Full Funnel Optimization â€” The Ultimate Use Case</h4>
                     <p className="mb-2">
                       This is where your AI engine's power becomes undeniable. Most marketers optimize: ads, or landing pages, or emails, or content. But modern funnels require synchronized, behavior-driven adjustments across the entire journey.
                     </p>
@@ -2199,12 +2206,12 @@ export default function AiMarketingPageVariantB() {
                       Then it produces: new funnel sequences, behavior-aligned messaging, optimized CTAs, frictionless navigation flow, psychological storytelling, multi-step funnel recommendations.
                     </p>
                     <p>
-                      This is the equivalent of having: A senior strategist + CRO expert + behavioral psychologist working together — fully automated. No traditional team can match this speed or precision.
+                      This is the equivalent of having: A senior strategist + CRO expert + behavioral psychologist working together â€” fully automated. No traditional team can match this speed or precision.
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">7. Real Output Quality — What Makes the Engine Different</h4>
+                    <h4 className="text-lg font-semibold text-white mb-3">7. Real Output Quality â€” What Makes the Engine Different</h4>
                     <p className="mb-2">
                       Your system produces outputs that feel: clean, strategic, emotionally intelligent, senior-level, high-trust, conversion-oriented.
                     </p>
@@ -2219,7 +2226,7 @@ export default function AiMarketingPageVariantB() {
                   <div>
                     <h4 className="text-lg font-semibold text-white mb-3">8. Why These Use Cases Matter for SEO and Conversions</h4>
                     <p className="mb-2">
-                      Use cases aren't just examples — they are ranking signals. Google now ranks pages based on: helpfulness, expertise, real-world relevance, demonstrated capability, user satisfaction, behavior metrics, E-E-A-T (Experience, Expertise, Authority, Trust).
+                      Use cases aren't just examples â€” they are ranking signals. Google now ranks pages based on: helpfulness, expertise, real-world relevance, demonstrated capability, user satisfaction, behavior metrics, E-E-A-T (Experience, Expertise, Authority, Trust).
                     </p>
                     <p className="mb-2">
                       This section boosts: conversion rate, credibility, dwell time, intent matching, trust, engagement depth.
@@ -2230,12 +2237,12 @@ export default function AiMarketingPageVariantB() {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Conclusion — Proof Wins</h3>
+                <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Conclusion â€” Proof Wins</h3>
                 <p>
-                  People don't trust claims. They trust: precision, clarity, psychology, consistency, results. The NIMA AI Brain delivers all of them — not as a promise, but as evidence through real scenarios.
+                  People don't trust claims. They trust: precision, clarity, psychology, consistency, results. The NIMA AI Brain delivers all of them â€” not as a promise, but as evidence through real scenarios.
                 </p>
                 <p>
-                  This section exists for one reason: To show the user (and Google) that your engine doesn't just generate content — it generates outcomes.
+                  This section exists for one reason: To show the user (and Google) that your engine doesn't just generate content â€” it generates outcomes.
                 </p>
               </div>
             </AccordionItem>
@@ -2249,16 +2256,16 @@ export default function AiMarketingPageVariantB() {
         
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
           <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            FAQ — AI Marketing & NIMA AI Brain
+            FAQ â€” AI Marketing & NIMA AI Brain
           </h2>
 
           <div className="space-y-6">
             <div className="border-b border-gray-700 pb-6">
               <h3 className="text-xl font-semibold text-white mb-3">
-                Q1: What is AI Marketing in 2026–2027?
+                Q1: What is AI Marketing in 2026â€“2027?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                A: AI Marketing in 2026–2027 goes beyond simple automation. It combines machine intelligence, behavioral data, and predictive psychology to analyze user intent, remove friction, and optimize every step of the customer journey for real business outcomes.
+                A: AI Marketing in 2026â€“2027 goes beyond simple automation. It combines machine intelligence, behavioral data, and predictive psychology to analyze user intent, remove friction, and optimize every step of the customer journey for real business outcomes.
               </p>
             </div>
 
@@ -2276,7 +2283,7 @@ export default function AiMarketingPageVariantB() {
                 Q3: Can the NIMA AI Brain replace a marketing team?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                A: It doesn't replace your marketing team — it upgrades it. The NIMA AI Brain takes over repetitive, analytical, and testing-heavy work, so your team can focus on strategy, creativity, and higher-level decisions while the engine handles intelligence and optimization.
+                A: It doesn't replace your marketing team â€” it upgrades it. The NIMA AI Brain takes over repetitive, analytical, and testing-heavy work, so your team can focus on strategy, creativity, and higher-level decisions while the engine handles intelligence and optimization.
               </p>
             </div>
 
@@ -2285,7 +2292,7 @@ export default function AiMarketingPageVariantB() {
                 Q4: What kind of businesses can use the NIMA AI Brain?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                A: Any business that relies on digital marketing can benefit — from SaaS and e-commerce to agencies, content brands, and service providers. The engine is especially powerful for brands that want to understand user behavior and improve conversion performance.
+                A: Any business that relies on digital marketing can benefit â€” from SaaS and e-commerce to agencies, content brands, and service providers. The engine is especially powerful for brands that want to understand user behavior and improve conversion performance.
               </p>
             </div>
 
@@ -2303,7 +2310,7 @@ export default function AiMarketingPageVariantB() {
                 Q6: Can the NIMA AI Brain work with my existing tools and platforms?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                A: Yes. The engine is designed to sit above your current stack. It can work alongside tools like Google Ads, Meta, Hotjar, CRM systems, and automation platforms such as n8n, Make, or Zapier — acting as the strategic brain that connects everything together.
+                A: Yes. The engine is designed to sit above your current stack. It can work alongside tools like Google Ads, Meta, Hotjar, CRM systems, and automation platforms such as n8n, Make, or Zapier â€” acting as the strategic brain that connects everything together.
               </p>
             </div>
           </div>
@@ -2320,10 +2327,10 @@ export default function AiMarketingPageVariantB() {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "What is AI Marketing in 2026–2027?",
+                "name": "What is AI Marketing in 2026â€“2027?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "AI Marketing in 2026–2027 goes beyond simple automation. It combines machine intelligence, behavioral data, and predictive psychology to analyze user intent, remove friction, and optimize every step of the customer journey for real business outcomes."
+                  "text": "AI Marketing in 2026â€“2027 goes beyond simple automation. It combines machine intelligence, behavioral data, and predictive psychology to analyze user intent, remove friction, and optimize every step of the customer journey for real business outcomes."
                 }
               },
               {
@@ -2339,7 +2346,7 @@ export default function AiMarketingPageVariantB() {
                 "name": "Can the NIMA AI Brain replace a marketing team?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "It doesn't replace your marketing team — it upgrades it. The NIMA AI Brain takes over repetitive, analytical, and testing-heavy work, so your team can focus on strategy, creativity, and higher-level decisions while the engine handles intelligence and optimization."
+                  "text": "It doesn't replace your marketing team â€” it upgrades it. The NIMA AI Brain takes over repetitive, analytical, and testing-heavy work, so your team can focus on strategy, creativity, and higher-level decisions while the engine handles intelligence and optimization."
                 }
               },
               {
@@ -2347,7 +2354,7 @@ export default function AiMarketingPageVariantB() {
                 "name": "What kind of businesses can use the NIMA AI Brain?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Any business that relies on digital marketing can benefit — from SaaS and e-commerce to agencies, content brands, and service providers. The engine is especially powerful for brands that want to understand user behavior and improve conversion performance."
+                  "text": "Any business that relies on digital marketing can benefit â€” from SaaS and e-commerce to agencies, content brands, and service providers. The engine is especially powerful for brands that want to understand user behavior and improve conversion performance."
                 }
               },
               {
@@ -2363,7 +2370,7 @@ export default function AiMarketingPageVariantB() {
                 "name": "Can the NIMA AI Brain work with my existing tools and platforms?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. The engine is designed to sit above your current stack. It can work alongside tools like Google Ads, Meta, Hotjar, CRM systems, and automation platforms such as n8n, Make, or Zapier — acting as the strategic brain that connects everything together."
+                  "text": "Yes. The engine is designed to sit above your current stack. It can work alongside tools like Google Ads, Meta, Hotjar, CRM systems, and automation platforms such as n8n, Make, or Zapier â€” acting as the strategic brain that connects everything together."
                 }
               }
             ]
@@ -2381,7 +2388,7 @@ export default function AiMarketingPageVariantB() {
               Ready to put a real AI Marketing Engine behind your brand?
             </h2>
             <p className="text-sm sm:text-base text-gray-300 mb-6 max-w-2xl mx-auto leading-relaxed">
-              The NIMA AI Brain analyzes behavior, predicts decisions, and rewrites your content with conversion psychology — not just keywords.
+              The NIMA AI Brain analyzes behavior, predicts decisions, and rewrites your content with conversion psychology â€” not just keywords.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
@@ -2394,7 +2401,7 @@ export default function AiMarketingPageVariantB() {
                 href="/ai-marketing#deepscan"
                 className="inline-flex items-center justify-center rounded-full border border-gray-600 px-6 py-2.5 text-sm font-medium text-gray-100 hover:bg-gray-800 transition"
               >
-                See DeepScan & copy rewrites →
+                See DeepScan & copy rewrites â†’
               </Link>
             </div>
           </div>

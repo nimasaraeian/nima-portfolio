@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, voice = "alloy", format = "mp3" } = await req.json();
+    const { text, voice = "alloy" } = await req.json();
 
     if (!text || !text.trim()) {
       return NextResponse.json(
@@ -23,7 +23,6 @@ export async function POST(req: NextRequest) {
     const response = await openai.audio.speech.create({
       model: "gpt-4o-mini-tts",
       voice,
-      format,
       input: cleanText,
     });
 

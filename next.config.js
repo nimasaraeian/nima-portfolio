@@ -49,6 +49,11 @@ const nextConfig = {
         destination: '/articles/ai/marketing-tools-2026',
         permanent: true, // 308
       },
+      {
+        source: '/articles/ai/predictive-buyer-intent-ai',
+        destination: '/articles/ai/predictive-buyer-intent-ai-2026',
+        permanent: true, // 308
+      },
     ];
   },
 
