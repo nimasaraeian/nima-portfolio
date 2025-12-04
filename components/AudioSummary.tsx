@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 
-interface AudioSummaryProps {
+export interface AudioSummaryProps {
   /**
    * خلاصه مقاله برای حالت تولید خودکار با OpenAI TTS
    * اگر این مقدار را بدهی و src ندهی، دکمه "Generate & Listen" نمایش داده می‌شود.
