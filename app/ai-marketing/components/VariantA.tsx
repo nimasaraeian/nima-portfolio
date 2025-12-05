@@ -5,7 +5,13 @@ import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
 import MultiStepInputPanel from '../behavioral-deepscan/components/MultiStepInputPanel';
 import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
-import type { CognitiveFrictionResult } from '@/app/ai-marketing/brain-types';
+import type {
+  AIRecommendationItem,
+  CognitiveFrictionResult,
+  DecisionBlockerItem,
+  PageStructure,
+  VisualTrustAnalysis,
+} from '@/app/ai-marketing/brain-types';
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
  * 
