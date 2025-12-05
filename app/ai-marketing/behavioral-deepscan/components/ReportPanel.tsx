@@ -2,30 +2,11 @@
 
 import { useState } from 'react';
 import { postToBrain } from '@/lib/apiClient';
-import {
-  Brain,
-  AlertTriangle,
-  Sparkles,
-  Rocket,
-  Copy,
-  TrendingUp,
-  Zap,
-  Shield,
-  Target,
-  Image as ImageIcon,
-  Home,
-  Snowflake,
-  Star,
-  Download,
-  Settings,
-  Bell,
-  MessageCircle,
-  Search,
-} from 'lucide-react';
+import { Brain, AlertTriangle, Sparkles, Rocket, Copy, Image as ImageIcon } from 'lucide-react';
 import type { PsychologyAnalysisResult, CognitiveFrictionResult } from '@/app/ai-marketing/brain-types';
-import PsychologySummary from '@/components/PsychologySummary';
-import { computeCognitiveFit, computeEmotionalFit } from '@/lib/psychologyMetrics';
-import PsychologyDashboardAdvanced from '@/components/PsychologyDashboardAdvanced';
+import { CognitiveSummaryView } from '@/components/analysis/CognitiveSummaryView';
+import { CognitiveFullView } from '@/components/analysis/CognitiveFullView';
+import { CognitiveAdvancedView } from '@/components/analysis/CognitiveAdvancedView';
 
 type RewriteOutput = {
   soft_version: string;
@@ -63,66 +44,6 @@ interface ReportPanelProps {
   psychologyAnalysis?: PsychologyAnalysisResult | null;
 }
 
-function ScoreCard({ label, value, insights, icon: Icon }: { 
-  label: string; 
-  value: number; 
-  insights?: string[];
-  icon?: any;
-}) {
-  const getColorClass = (score: number) => {
-    if (score <= 30) return 'from-green-500 to-emerald-500';
-    if (score <= 60) return 'from-yellow-500 to-amber-500';
-    return 'from-red-500 to-rose-500';
-  };
-
-  const getStatus = (score: number) => {
-    if (score <= 30) return { text: 'Excellent', color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30' };
-    if (score <= 60) return { text: 'Moderate', color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30' };
-    return { text: 'Critical', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30' };
-  };
-
-  const status = getStatus(value);
-
-  return (
-    <div className="group relative rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 backdrop-blur-xl hover:border-purple-500/30 transition-all shadow-xl hover:shadow-2xl hover:shadow-purple-500/10">
-      <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-      <div className="relative z-10">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4">
-          <div className="flex items-center gap-2 sm:gap-3">
-            {Icon && <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />}
-            <span className="text-xs sm:text-sm font-bold text-slate-300">{label}</span>
-          </div>
-          <span className={`text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full ${status.color} ${status.bg} ${status.border} border`}>
-            {status.text}
-          </span>
-        </div>
-        <div className="mb-3 sm:mb-4">
-          <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
-            <span className="text-3xl sm:text-4xl font-bold text-white">{value}</span>
-            <span className="text-sm sm:text-lg text-slate-400">/ 100</span>
-          </div>
-          <div className="w-full h-2 sm:h-3 bg-slate-800/50 rounded-full overflow-hidden shadow-inner">
-            <div
-              className={`h-full rounded-full bg-gradient-to-r ${getColorClass(value)} transition-all duration-1000 shadow-lg`}
-              style={{ width: `${value}%` }}
-            />
-          </div>
-        </div>
-        {insights && insights.length > 0 && (
-          <div className="space-y-1.5 sm:space-y-2">
-            {insights.map((insight, idx) => (
-              <div key={idx} className="flex items-start gap-2 text-[11px] sm:text-xs text-slate-400">
-                <span className="text-purple-400 mt-0.5 sm:mt-1">▸</span>
-                <span>{insight}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function RewriteVariant({ label, body }: { label: string; body: string }) {
   return (
     <div className="group rounded-lg sm:rounded-xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-5 hover:border-purple-500/30 transition-all shadow-lg">
@@ -152,41 +73,69 @@ function RewriteVariant({ label, body }: { label: string; body: string }) {
 
 // AI Interpretation generator
 function buildAiInterpretation(result: CognitiveFrictionResult): string {
+  const narrative = result.psychology_narrative;
+  if (typeof narrative === 'string' && narrative.trim().length > 0) {
+    return narrative;
+  }
+  if (narrative && typeof narrative === 'object') {
+    if (narrative.ai_interpretation) {
+      return narrative.ai_interpretation;
+    }
+    if (narrative.analysis_summary) {
+      return narrative.analysis_summary;
+    }
+  }
+
   const parts: string[] = [];
-  
+
+  const frictionScore = typeof result.frictionScore === 'number' ? result.frictionScore : result.decision_friction_score ?? 0;
+  const trustScore = typeof result.trustScore === 'number' ? result.trustScore : (result['trust_score'] as number | undefined) ?? 0;
+  const motivationScore =
+    typeof result.motivationMatchScore === 'number'
+      ? result.motivationMatchScore
+      : ((result['motivation_match_score'] as number | undefined) ?? 0);
+  const decisionProbability =
+    typeof result.decisionProbability === 'number'
+      ? result.decisionProbability
+      : ((result['decision_probability'] as number | undefined) ?? 0);
+  const emotionalScore =
+    typeof result.emotionalClarityScore === 'number'
+      ? result.emotionalClarityScore
+      : ((result['emotional_clarity_score'] as number | undefined) ?? 0);
+
   // Friction and Trust analysis
-  if (result.frictionScore >= 60 && result.trustScore <= 40) {
+  if (frictionScore >= 60 && trustScore <= 40) {
     parts.push('Your content currently creates high decision friction and relatively low trust. Users are likely to hesitate and postpone action rather than convert.');
-  } else if (result.frictionScore >= 60) {
+  } else if (frictionScore >= 60) {
     parts.push('The content creates significant cognitive friction that may cause users to abandon the decision process, despite some trust signals.');
-  } else if (result.trustScore <= 40) {
+  } else if (trustScore <= 40) {
     parts.push('Trust levels are low, which creates hesitation even if the content is relatively clear.');
   }
-  
+
   // Motivation analysis
-  if (result.motivationMatchScore < 50) {
+  if (motivationScore < 50 && motivationScore > 0) {
     parts.push('The message does not strongly connect with the audience\'s core motivations, which reduces the emotional drive to take action.');
-  } else if (result.motivationMatchScore >= 70) {
+  } else if (motivationScore >= 70) {
     parts.push('The content aligns well with audience motivations, creating a strong emotional connection.');
   }
-  
+
   // Decision probability analysis
-  if (result.decisionProbability < 0.4) {
+  if (decisionProbability > 0 && decisionProbability < 0.4) {
     parts.push('Overall, the current likelihood of conversion is low. The piece needs clearer value proposition, proof, and emotional resonance.');
-  } else if (result.decisionProbability >= 0.6) {
+  } else if (decisionProbability >= 0.6) {
     parts.push('The content shows strong conversion potential with good decision-making signals.');
   }
-  
+
   // Emotional clarity
-  if (result.emotionalClarityScore < 50) {
+  if (emotionalScore < 50 && emotionalScore > 0) {
     parts.push('Emotional messaging could be clearer to better guide users toward confident decisions.');
   }
-  
+
   // Default if no specific patterns
   if (parts.length === 0) {
     parts.push('The content shows a balanced psychological profile with moderate conversion potential.');
   }
-  
+
   return parts.join(' ');
 }
 
@@ -207,22 +156,6 @@ const buildLinePath = (values: number[], width = 260, height = 130) => {
     .join(' ');
 };
 
-function getFrictionMeaning(score: number): string {
-  if (score <= 20) {
-    return 'This page feels mentally heavy and risky, causing strong hesitation for most new visitors.';
-  }
-  if (score <= 40) {
-    return 'Users understand parts of the message but experience notable doubt and friction before acting.';
-  }
-  if (score <= 60) {
-    return 'Visitors feel a mixed experience: basic clarity is there, but trust gaps and emotional hesitation remain.';
-  }
-  if (score <= 80) {
-    return 'Most visitors experience low friction with occasional hesitation, mainly around trust or commitment.';
-  }
-  return 'The page feels clear, safe, and motivating, giving visitors high confidence to move forward.';
-}
-
 export default function ReportPanel({
   result,
   loading,
@@ -237,25 +170,7 @@ export default function ReportPanel({
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
   const [rewriteLoading, setRewriteLoading] = useState(false);
   const [rewriteError, setRewriteError] = useState<string | null>(null);
-  const [showLegacyLayout, setShowLegacyLayout] = useState(false);
-
-  const getFrictionLevel = (score: number): { label: string; color: string; gradient: string } => {
-    if (score <= 30) return { 
-      label: 'Low Friction', 
-      color: 'text-green-400',
-      gradient: 'from-green-500 to-emerald-500'
-    };
-    if (score <= 60) return { 
-      label: 'Medium Friction', 
-      color: 'text-yellow-400',
-      gradient: 'from-yellow-500 to-amber-500'
-    };
-    return { 
-      label: 'High Friction', 
-      color: 'text-red-400',
-      gradient: 'from-red-500 to-rose-500'
-    };
-  };
+  const [viewMode, setViewMode] = useState<"summary" | "full" | "advanced">("summary");
 
   const runRewrite = async () => {
     setRewriteError(null);
@@ -362,701 +277,56 @@ export default function ReportPanel({
     );
   }
 
+
   // Success State
   if (result) {
-    // Prefer structured psychology metrics when available,
-    // otherwise gracefully fall back to cognitive-friction scores.
-    const clamp100 = (v: number | null | undefined) =>
-      typeof v === 'number' && !isNaN(v) ? Math.max(0, Math.min(100, v)) : null;
-
-    const decisionFrictionScore =
-      clamp100(
-        (psychologyAnalysis?.decision_friction_score as number | null | undefined) ?? null,
-      ) ?? clamp100(result.frictionScore);
-
-    const cognitiveScore =
-      clamp100(
-        (psychologyAnalysis?.cognitive_overload_score as number | null | undefined) ?? null,
-      ) ?? clamp100(result.frictionScore);
-
-    const emotionalScore =
-      clamp100(
-        (psychologyAnalysis?.emotional_resistance_score as number | null | undefined) ?? null,
-      ) ?? clamp100(result.emotionalClarityScore);
-
-    const trustScore =
-      clamp100(
-        (psychologyAnalysis?.trust_breakpoints_score as number | null | undefined) ?? null,
-      ) ?? clamp100(result.trustScore);
-
-    const normalizedScore =
-      clamp100(decisionFrictionScore ?? result.frictionScore) ?? 0;
-    const frictionLevel = getFrictionLevel(decisionFrictionScore ?? result.frictionScore);
-    const frictionMeaning = getFrictionMeaning(normalizedScore);
-    const trustValue = clamp100(trustScore ?? result.trustScore) ?? 0;
-    const emotionValue = clamp100(emotionalScore ?? result.emotionalClarityScore) ?? 0;
-    const motivationValue = clamp100(result.motivationMatchScore) ?? 0;
-    const donutValue = Math.round((result.decisionProbability || 0) * 100);
-    const dashSnapshot = result.psychology_dashboard ?? null;
-    const cognitiveFitValue = dashSnapshot ? computeCognitiveFit(dashSnapshot) : normalizedScore;
-    const emotionalFitValue = dashSnapshot ? computeEmotionalFit(dashSnapshot) : emotionValue;
-    const sparkValues = [normalizedScore, trustValue, emotionValue, motivationValue, donutValue];
-    const sparkPath = buildLinePath(sparkValues, 280, 140);
-    const barSeries = [
-      { label: 'Trust', value: trustValue },
-      { label: 'Emotion', value: emotionValue },
-      { label: 'Motivation', value: motivationValue },
-      {
-        label: 'Conversion Lift',
-        value: Math.max(0, Math.min(100, (result.conversionLiftEstimate ?? 0) + 50)),
-      },
-    ];
-    const progressSeries = [
-      { label: 'Clarity vs Overload', value: cognitiveFitValue },
-      { label: 'Emotional Resonance', value: emotionalFitValue },
-      { label: 'Trust Stability', value: trustValue },
-    ];
-    const miniColumns = [trustValue, emotionValue, motivationValue, normalizedScore, donutValue].map(
-      (v) => Math.max(10, Math.round(v)),
-    );
-    const scatterPoints = sparkValues.map((value, index) => ({
-      x: 20 + index * 35,
-      y: 110 - (value / 100) * 100,
-    }));
-    const areaValues = [progressSeries[0].value, progressSeries[1].value, progressSeries[2].value, motivationValue];
-    const areaPath = buildLinePath(areaValues, 200, 90);
-    const blockers = result.keyDecisionBlockers ?? [];
-    const emotionalResistances = result.emotionalResistanceFactors ?? [];
-    const overloadFactors = result.cognitiveOverloadFactors ?? [];
-    const trustBreakpoints = result.trustBreakpoints ?? [];
-    const quickWins = result.recommendedQuickWins ?? [];
-    const deepChanges = result.recommendedDeepChanges ?? [];
+    const modeButtonClass = (mode: "summary" | "full" | "advanced") =>
+      `rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors ${
+        viewMode === mode ? 'bg-white/15 text-white border-white/40' : 'text-slate-400 border-white/15 hover:text-white'
+      }`;
 
     return (
       <div className="space-y-10">
-        <div className="relative flex rounded-3xl border border-slate-800 bg-[#050b1a] text-white shadow-[0_30px_120px_rgba(15,23,42,0.7)] overflow-hidden">
-          <aside className="hidden lg:flex w-16 flex-col items-center gap-6 bg-black/20 py-8 border-r border-white/5">
-            {[Home, Snowflake, Star, Download, Settings].map((Icon, idx) => (
-              <button
-                key={idx}
-                className="rounded-2xl border border-white/10 bg-white/5 p-2 text-slate-300 hover:text-cyan-300 hover:border-cyan-400 transition"
-              >
-                <Icon className="w-4 h-4" />
-              </button>
-            ))}
-          </aside>
-          <div className="flex-1 space-y-8 p-6 sm:p-8">
-            <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.4em] text-slate-500">Project Name</p>
-                <h1 className="text-2xl font-semibold text-slate-100">Dashboard · Cognitive Friction AI</h1>
-                <p className="text-xs text-slate-500">Live decision psychology telemetry</p>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <div className="flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-slate-300">
-                  <Search className="w-4 h-4 text-slate-500 mr-2" />
-                  <span>Search insights…</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  {[MessageCircle, Bell].map((Icon, idx) => (
-                    <button
-                      key={idx}
-                      className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 hover:text-cyan-300 hover:border-cyan-400 transition"
-                    >
-                      <Icon className="w-4 h-4" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </header>
-
-            <div className="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
-              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-6">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Decision Friction</p>
-                    <p className="text-4xl sm:text-5xl font-bold">{decisionFrictionScore ?? '—'} / 100</p>
-                    <p className="text-xs text-slate-400 mt-2 max-w-sm">{frictionMeaning}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs ${frictionLevel.color} ${frictionLevel.color.replace('text-', 'border-')}/40`}>
-                      {frictionLevel.label}
-                    </span>
-                  </div>
-                </div>
-                <svg className="mt-6 h-36 w-full" viewBox="0 0 280 140">
-                  <defs>
-                    <linearGradient id="spark" x1="0%" x2="100%">
-                      <stop offset="0%" stopColor="#38bdf8" />
-                      <stop offset="100%" stopColor="#6366f1" />
-                    </linearGradient>
-                  </defs>
-                  <path d={sparkPath} fill="none" stroke="url(#spark)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-slate-300 sm:grid-cols-4">
-                  {[
-                    { label: 'Friction', value: normalizedScore },
-                    { label: 'Trust', value: trustValue },
-                    { label: 'Emotion', value: emotionValue },
-                    { label: 'Motivation', value: motivationValue },
-                  ].map((item) => (
-                    <div key={item.label}>
-                      <p className="text-[11px] uppercase tracking-wide text-slate-500">{item.label}</p>
-                      <p className="text-lg font-semibold">{item.value}%</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid gap-6">
-                <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Signal Strength</p>
-                  <p className="text-sm text-slate-300 mb-4">Comparative strength across current pillars</p>
-                  <div className="space-y-3">
-                    {barSeries.map((series) => (
-                      <div key={series.label}>
-                        <div className="flex items-center justify-between text-[11px] text-slate-400">
-                          <span>{series.label}</span>
-                          <span className="font-semibold text-slate-100">{series.value}%</span>
-                        </div>
-                        <div className="h-2 w-full rounded-full bg-slate-800">
-                          <div
-                            className="h-2 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-500 transition-all duration-700"
-                            style={{ width: `${series.value}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Flow Experience</p>
-                  <div className="mt-4 space-y-4">
-                    {progressSeries.map((option) => (
-                      <div key={option.label}>
-                        <div className="flex items-center justify-between text-[11px] text-slate-400">
-                          <span>{option.label}</span>
-                          <span className="font-semibold text-slate-100">{option.value}%</span>
-                        </div>
-                        <div className="h-1.5 w-full rounded-full bg-slate-800">
-                          <div
-                            className="h-1.5 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 transition-all duration-700"
-                            style={{ width: `${option.value}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 flex flex-col items-center text-center">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Decision Likelihood</p>
-                <div
-                  className="mt-4 h-28 w-28 rounded-full border border-cyan-400/30 bg-slate-900/80 flex items-center justify-center"
-                  style={{
-                    background: `conic-gradient(#38bdf8 ${donutValue}%, rgba(56,189,248,0.1) ${donutValue}% 100%)`,
-                  }}
-                >
-                  <span className="text-2xl font-bold">{donutValue}%</span>
-                </div>
-                <p className="mt-3 text-xs text-slate-400 max-w-[140px]">
-                  Confidence that a first-time visitor will move forward.
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Signal Density</p>
-                <div className="mt-4 flex h-28 items-end gap-1">
-                  {miniColumns.map((value, idx) => (
-                    <div
-                      key={idx}
-                      className="flex-1 rounded-full bg-gradient-to-t from-cyan-500/20 to-cyan-400"
-                      style={{ height: `${value}%` }}
-                    />
-                  ))}
-                </div>
-                <p className="mt-3 text-xs text-slate-400">Balance across trust, emotion, motivation, friction.</p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Behavior Scatter</p>
-                <svg className="mt-3 h-32 w-full" viewBox="0 0 180 120">
-                  <rect width="180" height="120" rx="12" className="fill-slate-950/40" />
-                  {scatterPoints.map((point, idx) => (
-                    <circle key={idx} cx={point.x} cy={point.y} r="4" className="fill-cyan-300/80" />
-                  ))}
-                </svg>
-                <p className="mt-3 text-xs text-slate-400">How signals fluctuate across the journey.</p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Momentum Curve</p>
-                <svg className="mt-4 h-32 w-full" viewBox="0 0 200 100">
-                  <defs>
-                    <linearGradient id="areaGradient" x1="0%" x2="0%" y1="0%" y2="100%">
-                      <stop offset="0%" stopColor="#8b5cf6" />
-                      <stop offset="100%" stopColor="transparent" />
-                    </linearGradient>
-                  </defs>
-                  <path d={`${areaPath} L200,90 L0,90 Z`} fill="url(#areaGradient)" opacity="0.35" />
-                  <path d={areaPath} fill="none" stroke="url(#spark)" strokeWidth="3" />
-                </svg>
-                <p className="mt-3 text-xs text-slate-400">Overall flow from clarity to motivation.</p>
-              </div>
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
-              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 space-y-4">
-                <div className="flex items-center gap-3">
-                  <Brain className="w-5 h-5 text-purple-300" />
-                  <h3 className="text-lg font-semibold">Decision Blockers</h3>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {[
-                    { title: 'Key Blockers', color: 'text-red-300', items: blockers },
-                    { title: 'Emotional Resistance', color: 'text-orange-300', items: emotionalResistances },
-                    { title: 'Cognitive Overload', color: 'text-yellow-300', items: overloadFactors },
-                    { title: 'Trust Breakpoints', color: 'text-sky-300', items: trustBreakpoints },
-                  ].map((section) => (
-                    <div key={section.title} className="rounded-xl border border-white/5 bg-black/20 p-4">
-                      <p className={`text-xs font-semibold ${section.color}`}>{section.title}</p>
-                      {section.items.length > 0 ? (
-                        <ul className="mt-2 space-y-1 text-[11px] text-slate-300">
-                          {section.items.slice(0, 4).map((item, idx) => (
-                            <li key={idx} className="flex gap-2">
-                              <span className="text-slate-500">▹</span>
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="mt-2 text-[11px] text-slate-500">No critical risks.</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 space-y-4">
-                <div className="flex items-center gap-3">
-                  <Rocket className="w-5 h-5 text-cyan-300" />
-                  <h3 className="text-lg font-semibold">AI Recommendations</h3>
-                </div>
-                <div className="rounded-xl border border-white/5 bg-green-500/10 p-4">
-                  <p className="text-xs font-semibold text-green-200">Quick Wins</p>
-                  <p className="text-[11px] text-slate-300 mb-2">Fast tweaks to reduce hesitation.</p>
-                  {quickWins.length ? (
-                    <ul className="space-y-1 text-xs text-slate-200">
-                      {quickWins.map((win, idx) => (
-                        <li key={idx} className="flex gap-2">
-                          <span className="text-green-300">⚡</span>
-                          <span>{win}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-[11px] text-slate-400">No quick wins detected.</p>
-                  )}
-                </div>
-                <div className="rounded-xl border border-white/5 bg-indigo-500/10 p-4">
-                  <p className="text-xs font-semibold text-indigo-200">Deep Changes</p>
-                  <p className="text-[11px] text-slate-300 mb-2">Structural shifts for lasting gains.</p>
-                  {deepChanges.length ? (
-                    <ul className="space-y-1 text-xs text-slate-200">
-                      {deepChanges.map((change, idx) => (
-                        <li key={idx} className="flex gap-2">
-                          <span className="text-indigo-300">⟳</span>
-                          <span>{change}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-[11px] text-slate-400">No deep changes suggested.</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6 space-y-6">
-              <div className="flex items-center gap-3">
-                <Target className="w-5 h-5 text-teal-300" />
-                <h3 className="text-lg font-semibold">Psychology Narrative</h3>
-              </div>
-              <div className="grid gap-4 lg:grid-cols-2">
-                <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs font-semibold text-purple-200">Analysis Summary</p>
-                  <p className="mt-2 text-sm text-slate-200 leading-relaxed">{result.explanationSummary}</p>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs font-semibold text-blue-200">AI Interpretation</p>
-                  <p className="mt-2 text-sm text-slate-200 leading-relaxed">{buildAiInterpretation(result)}</p>
-                </div>
-              </div>
-              {(psychologyAnalysis?.human_readable_report || brainResponse) && (
-                <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                  <p className="text-xs font-semibold text-slate-300">Full Narrative</p>
-                  <p className="mt-2 text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
-                    {psychologyAnalysis?.human_readable_report ?? brainResponse}
-                  </p>
-                </div>
-              )}
-              {result.psychology_dashboard && (
-                <div className="rounded-xl border border-white/5 bg-black/20 p-4">
-                  <PsychologySummary result={result} />
-                  <AdvancedPsychologyToggle result={result} />
-                </div>
-              )}
-            </div>
+        <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-4 sm:p-6 space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              className={modeButtonClass("summary")}
+              onClick={() => setViewMode("summary")}
+            >
+              Summary
+            </button>
+            <button
+              type="button"
+              className={modeButtonClass("full")}
+              onClick={() => setViewMode("full")}
+            >
+              Full Analysis
+            </button>
+            <button
+              type="button"
+              className={modeButtonClass("advanced")}
+              onClick={() => setViewMode("advanced")}
+            >
+              Advanced Psychological View
+            </button>
           </div>
+
+          {viewMode === "summary" && (
+            <CognitiveSummaryView result={result} onViewFull={() => setViewMode("full")} />
+          )}
+          {viewMode === "full" && (
+            <CognitiveFullView result={result} onViewAdvanced={() => setViewMode("advanced")} />
+          )}
+          {viewMode === "advanced" && (
+            <CognitiveAdvancedView
+              result={result}
+              psychologyAnalysis={psychologyAnalysis}
+              brainResponse={brainResponse}
+            />
+          )}
         </div>
 
-        <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold text-slate-100">Need the detailed legacy dashboard?</p>
-            <p className="text-xs text-slate-400">
-              View the full analysis cards and legacy layout when you need every datapoint.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowLegacyLayout((prev) => !prev)}
-            className="inline-flex items-center rounded-full border border-cyan-400/40 bg-cyan-400/10 px-4 py-2 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/20 transition"
-          >
-            {showLegacyLayout ? 'Hide detailed layout' : 'Show detailed layout'}
-          </button>
-        </div>
-
-        {showLegacyLayout && (
-          <div className="relative rounded-2xl sm:rounded-3xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-purple-900/10 to-slate-900/90 p-4 sm:p-6 lg:p-10 backdrop-blur-xl shadow-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-cyan-500/5" />
-            <div className="absolute top-0 right-0 w-64 h-64 sm:w-96 sm:h-96 bg-purple-500/10 rounded-full blur-3xl" />
-
-            <div className="relative z-10 space-y-6 sm:space-y-8 lg:space-y-10">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6 sm:mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
-                  Decision Psychology Report
-                </h2>
-                <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-500/30">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-[10px] sm:text-xs font-bold text-purple-300">AI Analysis</span>
-                </div>
-              </div>
-
-              {/* Overall Score Card */}
-              <div className="relative rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-2xl overflow-hidden">
-                <div className={`absolute inset-0 bg-gradient-to-br ${frictionLevel.gradient} opacity-10`} />
-                <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-purple-500/10 rounded-full blur-3xl" />
-                <div className="relative z-10">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
-                      <Target className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
-                      Decision Friction Score
-                    </h3>
-                    <span className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold border-2 ${frictionLevel.color} ${frictionLevel.color.replace('text-', 'bg-')}/20 ${frictionLevel.color.replace('text-', 'border-')}/50`}>
-                      {frictionLevel.label}
-                    </span>
-                  </div>
-                  <div className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-4 sm:mb-6">
-                    {decisionFrictionScore !== null ? `${decisionFrictionScore} / 100` : '– / 100'}
-                  </div>
-                  <div className="w-full h-3 sm:h-4 bg-slate-800/50 rounded-full overflow-hidden shadow-inner mb-4 sm:mb-6">
-                    <div
-                      className={`h-full rounded-full bg-gradient-to-r ${frictionLevel.gradient} transition-all duration-1000 shadow-lg`}
-                      style={{ width: `${decisionFrictionScore ?? 0}%` }}
-                    />
-                  </div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">Psychological meaning</p>
-                  <p className="mt-1 text-[11px] text-slate-400">{frictionMeaning}</p>
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-300">Analysis summary</p>
-                  <p className="mt-1 text-sm sm:text-base text-slate-300 leading-relaxed">
-                    {typeof psychologyAnalysis?.summary === 'string' && psychologyAnalysis.summary.trim().length > 0
-                      ? psychologyAnalysis.summary
-                      : result.explanationSummary}
-                  </p>
-                </div>
-              </div>
-
-              {result.psychology_dashboard && (
-                <section className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
-                  <h3 className="text-base font-semibold text-slate-100">Psychological Interpretation</h3>
-                  <p className="mt-1 text-xs text-slate-400">
-                    How this landing page interacts with the minds, emotions, and decisions of your visitors.
-                  </p>
-                  <PsychologySummary result={result} />
-                  <AdvancedPsychologyToggle result={result} />
-                </section>
-              )}
-
-              {/* Score Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <ScoreCard
-                  label="Cognitive Friction"
-                  value={cognitiveScore ?? result.frictionScore}
-                  insights={
-                    (psychologyAnalysis?.key_blockers && psychologyAnalysis.key_blockers.length > 0)
-                      ? psychologyAnalysis.key_blockers as string[]
-                      : result.keyDecisionBlockers
-                  }
-                  icon={Zap}
-                />
-                <ScoreCard
-                  label="Emotional Resistance"
-                  value={emotionalScore ?? result.emotionalClarityScore}
-                  insights={
-                    (psychologyAnalysis?.emotional_resistance_factors && psychologyAnalysis.emotional_resistance_factors.length > 0)
-                      ? psychologyAnalysis.emotional_resistance_factors as string[]
-                      : result.emotionalResistanceFactors
-                  }
-                  icon={Sparkles}
-                />
-                <ScoreCard
-                  label="Trust & Clarity"
-                  value={trustScore ?? result.trustScore}
-                  insights={
-                    (psychologyAnalysis?.trust_breakpoints_factors && psychologyAnalysis.trust_breakpoints_factors.length > 0)
-                      ? psychologyAnalysis.trust_breakpoints_factors as string[]
-                      : result.trustBreakpoints
-                  }
-                  icon={Shield}
-                />
-                <div className="rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 backdrop-blur-xl shadow-xl">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
-                      <span className="text-xs sm:text-sm font-bold text-slate-300">Action Triggers</span>
-                    </div>
-                  </div>
-                  <div className="space-y-4 sm:space-y-5">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[11px] sm:text-xs text-slate-400">Decision Likelihood</span>
-                        <span className="text-xl sm:text-2xl font-bold text-white">
-                          {Math.round(result.decisionProbability * 100)}%
-                        </span>
-                      </div>
-                      <div className="w-full h-2 sm:h-2.5 bg-slate-800/50 rounded-full overflow-hidden shadow-inner">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-1000 shadow-lg"
-                          style={{ width: `${result.decisionProbability * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] sm:text-xs text-slate-400">Conversion Impact</span>
-                        <span
-                          className={`text-lg sm:text-xl font-bold ${
-                            result.conversionLiftEstimate >= 0 ? 'text-green-400' : 'text-red-400'
-                          }`}
-                        >
-                          {result.conversionLiftEstimate >= 0 ? '+' : ''}
-                          {Math.round(result.conversionLiftEstimate)}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Decision Blockers & Psychological Factors */}
-              <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-2xl">
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                  <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
-                  Decision Blockers & Psychological Factors
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                  {/* Key Decision Blockers */}
-                  <div className="rounded-xl border-2 border-red-500/20 bg-red-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-3 text-red-300 flex items-center gap-2">
-                      <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Key Decision Blockers
-                    </h4>
-                    {result.keyDecisionBlockers && result.keyDecisionBlockers.length > 0 ? (
-                      <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                        {result.keyDecisionBlockers.map((blocker, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-red-400 mt-1">▸</span>
-                            <span>{blocker}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-xs sm:text-sm text-slate-400 italic">No major blockers detected.</p>
-                    )}
-                  </div>
-
-                  {/* Emotional Resistance Factors */}
-                  <div className="rounded-xl border-2 border-orange-500/20 bg-orange-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-3 text-orange-300 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Emotional Resistance
-                    </h4>
-                    {result.emotionalResistanceFactors && result.emotionalResistanceFactors.length > 0 ? (
-                      <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                        {result.emotionalResistanceFactors.map((factor, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-orange-400 mt-1">▸</span>
-                            <span>{factor}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-xs sm:text-sm text-slate-400 italic">No major emotional resistance detected.</p>
-                    )}
-                  </div>
-
-                  {/* Cognitive Overload Factors */}
-                  <div className="rounded-xl border-2 border-yellow-500/20 bg-yellow-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-3 text-yellow-300 flex items-center gap-2">
-                      <Brain className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Cognitive Overload
-                    </h4>
-                    {result.cognitiveOverloadFactors && result.cognitiveOverloadFactors.length > 0 ? (
-                      <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                        {result.cognitiveOverloadFactors.map((factor, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-yellow-400 mt-1">▸</span>
-                            <span>{factor}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-xs sm:text-sm text-slate-400 italic">No cognitive overload detected.</p>
-                    )}
-                  </div>
-
-                  {/* Trust Breakpoints */}
-                  <div className="rounded-xl border-2 border-blue-500/20 bg-blue-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-3 text-blue-300 flex items-center gap-2">
-                      <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Trust Breakpoints
-                    </h4>
-                    {result.trustBreakpoints && result.trustBreakpoints.length > 0 ? (
-                      <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                        {result.trustBreakpoints.map((breakpoint, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-blue-400 mt-1">▸</span>
-                            <span>{breakpoint}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-xs sm:text-sm text-slate-400 italic">No trust breakpoints detected.</p>
-                    )}
-                  </div>
-
-                  {/* Motivation Misalignments */}
-                  {result.motivationMisalignments && result.motivationMisalignments.length > 0 && (
-                    <div className="rounded-xl border-2 border-purple-500/20 bg-purple-900/10 p-4 sm:p-5 md:col-span-2">
-                      <h4 className="text-sm sm:text-base font-semibold mb-3 text-purple-300 flex items-center gap-2">
-                        <Target className="w-4 h-4 sm:w-5 sm:h-5" />
-                        Motivation Misalignments
-                      </h4>
-                      <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                        {result.motivationMisalignments.map((misalignment, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-purple-400 mt-1">▸</span>
-                            <span>{misalignment}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* AI Recommendations */}
-              <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-2xl">
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                  <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
-                  AI Recommendations
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                  {/* Quick Wins */}
-                  <div className="rounded-xl border-2 border-green-500/20 bg-green-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-2 text-green-300 flex items-center gap-2">
-                      <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Quick Wins
-                    </h4>
-                    <p className="text-[10px] sm:text-xs text-slate-400 mb-3">Immediate changes to reduce friction fast.</p>
-                    {result.recommendedQuickWins && result.recommendedQuickWins.length > 0 ? (
-                      <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                        {result.recommendedQuickWins.map((win, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-green-400 mt-1">⚡</span>
-                            <span>{win}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-xs sm:text-sm text-slate-400 italic">No quick wins available.</p>
-                    )}
-                  </div>
-
-                  {/* Deep Changes */}
-                  <div className="rounded-xl border-2 border-indigo-500/20 bg-indigo-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-2 text-indigo-300 flex items-center gap-2">
-                      <Target className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Deep Changes
-                    </h4>
-                    <p className="text-[10px] sm:text-xs text-slate-400 mb-3">Structural and strategic improvements for long-term impact.</p>
-                    {result.recommendedDeepChanges && result.recommendedDeepChanges.length > 0 ? (
-                      <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                        {result.recommendedDeepChanges.map((change, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-indigo-400 mt-1">🔧</span>
-                            <span>{change}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-xs sm:text-sm text-slate-400 italic">No deep changes available.</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Decision Psychology Summary */}
-              <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-2xl">
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                  <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
-                  Decision Psychology Summary
-                </h3>
-                <div className="space-y-4 sm:space-y-6">
-                  <div className="rounded-xl border-2 border-purple-500/20 bg-purple-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-3 text-purple-300">Analysis Summary</h4>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{result.explanationSummary}</p>
-                  </div>
-                  
-                  <div className="rounded-xl border-2 border-blue-500/20 bg-blue-900/10 p-4 sm:p-5">
-                    <h4 className="text-sm sm:text-base font-semibold mb-3 text-blue-300">AI Interpretation</h4>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                      {buildAiInterpretation(result)}
-                    </p>
-                  </div>
-
-                  {(psychologyAnalysis?.human_readable_report || brainResponse) && (
-                    <div className="rounded-xl border-2 border-slate-600/60 bg-slate-900/80 p-4 sm:p-5">
-                      <h4 className="text-sm sm:text-base font-semibold mb-3 text-slate-200">
-                        Full Psychology Narrative
-                      </h4>
-                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">
-                        {psychologyAnalysis?.human_readable_report ?? brainResponse}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Visual Trust Analysis */}
         {(visualTrust || isImageLoading || imageError) && (
           <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-8 backdrop-blur-xl shadow-2xl">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
@@ -1138,7 +408,6 @@ export default function ReportPanel({
           </div>
         )}
 
-        {/* AI Copy Rewrite Suggestions */}
         <div className="mt-8 sm:mt-12 rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/80 to-slate-800/50 p-4 sm:p-6 lg:p-10 backdrop-blur-xl shadow-2xl">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-8">
             <div className="flex-1">
@@ -1207,23 +476,3 @@ export default function ReportPanel({
 
   return null;
 }
-
-const AdvancedPsychologyToggle = ({ result }: { result: CognitiveFrictionResult }) => {
-  const [open, setOpen] = useState(false);
-  const dash = result.psychology_dashboard;
-
-  if (!dash) return null;
-
-  return (
-    <div className="mt-4">
-      <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
-      >
-        {open ? 'Hide Advanced View' : 'Show Advanced View'}
-      </button>
-      {open && <PsychologyDashboardAdvanced dashboard={dash} />}
-    </div>
-  );
-};
