@@ -6,7 +6,7 @@ import type {
   VisualTrustAnalysis,
 } from '@/app/ai-marketing/brain-types';
 
-const PAGE_STRUCTURE_FIELDS: Array<{ key: keyof PageStructure; label: string }> = [
+const PAGE_STRUCTURE_FIELDS: Array<{ key: keyof Omit<PageStructure, 'extra_sections'>; label: string }> = [
   { key: 'hero_title', label: 'Hero Title' },
   { key: 'hero_subtitle', label: 'Hero Subtitle' },
   { key: 'primary_cta', label: 'Primary CTA' },
@@ -25,7 +25,10 @@ export function PageStructureCard({ page }: { page?: PageStructure | null }) {
     return null;
   }
 
-  const entries = PAGE_STRUCTURE_FIELDS.filter(({ key }) => page[key]);
+  const entries = PAGE_STRUCTURE_FIELDS.filter(({ key }) => {
+    const value = page[key];
+    return typeof value === 'string' && value.trim().length > 0;
+  });
   const extraEntries = Object.entries(page.extra_sections ?? {}).filter(
     ([, value]) => typeof value === 'string' && value.trim().length > 0,
   );
@@ -41,12 +44,16 @@ export function PageStructureCard({ page }: { page?: PageStructure | null }) {
         <p className="text-sm text-gray-400">How the AI reconstructed the hero layout.</p>
       </div>
       <div className="grid gap-3 md:grid-cols-2">
-        {entries.map(({ key, label }) => (
-          <div key={key as string} className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3">
-            <p className="text-xs uppercase tracking-wide text-slate-400">{label}</p>
-            <p className="text-sm text-white mt-1">{page[key]}</p>
-          </div>
-        ))}
+        {entries.map(({ key, label }) => {
+          const value = page[key];
+          if (typeof value !== 'string') return null;
+          return (
+            <div key={key as string} className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3">
+              <p className="text-xs uppercase tracking-wide text-slate-400">{label}</p>
+              <p className="text-sm text-white mt-1">{value}</p>
+            </div>
+          );
+        })}
         {extraEntries.length > 0 && (
           <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3">
             <p className="text-xs uppercase tracking-wide text-slate-400">Additional Sections</p>
