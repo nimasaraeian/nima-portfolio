@@ -85,7 +85,7 @@ export function CognitiveFullView({ result, onViewAdvanced }: Props) {
           <div className="grid gap-3 md:grid-cols-2 text-sm">
             {structuredLabels.map(({ key, label }) => {
               const value = page[key];
-              if (!value) return null;
+              if (typeof value !== "string" || value.trim().length === 0) return null;
               return (
                 <div key={key}>
                   <div className="font-semibold text-white">{label}</div>
