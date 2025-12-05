@@ -14,21 +14,71 @@
  */
 
 /**
+ * @typedef {Object} PageStructure
+ * @property {string} ?nav_bar - Navigation headline or CTA labels
+ * @property {string} ?hero_title - Hero/title copy extracted from the page
+ * @property {string} ?hero_subtitle - Supporting hero message
+ * @property {string} ?hero_image - Description or URL of the hero image
+ * @property {string} ?primary_cta - Primary call-to-action text
+ * @property {string} ?secondary_cta - Secondary call-to-action text
+ * @property {string} ?pricing_section - Summary of pricing/value props
+ * @property {string} ?form_area - Form headline or key copy
+ * @property {string} ?footer_legal - Footer/legal microcopy
+ */
+
+/**
+ * @typedef {Object} DecisionBlockerItem
+ * @property {string} ?element - UI element or copy section
+ * @property {string} ?issue - Detected blocker or mismatch
+ * @property {string} ?psychological_impact - Why it breaks trust or clarity
+ * @property {string} ?evidence - Supporting note pulled from the analysis
+ */
+
+/**
+ * @typedef {Object} AIRecommendationItem
+ * @property {string} ?element - Section to improve
+ * @property {string} ?change - Recommended change
+ * @property {string} ?psychological_effect - Expected psychological outcome
+ * @property {string} ?priority - Suggested urgency/priority
+ */
+
+/**
+ * @typedef {Object} VisualTrustAnalysis
+ * @property {string} ?overall_label - Low / medium / high trust label
+ * @property {number} ?low_percent - % of users landing in low-trust zone
+ * @property {number} ?medium_percent - % of users landing in medium-trust zone
+ * @property {number} ?high_percent - % of users landing in high-trust zone
+ * @property {string} ?explanation - Narrative summary
+ */
+
+/**
  * @typedef {Object} CognitiveFrictionResult
- * @property {number} frictionScore - Overall cognitive friction (0-100)
- * @property {number} trustScore - Perceived trust level (0-100)
- * @property {number} emotionalClarityScore - Emotional clarity & resonance (0-100)
- * @property {number} motivationMatchScore - Alignment with user motivation (0-100)
- * @property {number} decisionProbability - Likelihood user will decide/act (0-1)
- * @property {number} conversionLiftEstimate - % improvement if issues fixed (-100 to +100)
- * @property {string[]} ?keyDecisionBlockers - Main blockers (bulleted reasons)
- * @property {string[]} ?emotionalResistanceFactors - Emotional resistance factors
- * @property {string[]} ?cognitiveOverloadFactors - Cognitive overload factors
- * @property {string[]} ?trustBreakpoints - Trust breakpoints
- * @property {string[]} ?motivationMisalignments - Motivation misalignments
- * @property {string[]} ?recommendedQuickWins - Actionable quick fixes
- * @property {string[]} ?recommendedDeepChanges - Deeper structural changes
- * @property {string} explanationSummary - 3-6 sentences, plain language summary of the analysis
+ * @property {number} ?frictionScore - Legacy camelCase overall friction (0-100)
+ * @property {number} ?trustScore - Legacy camelCase trust score (0-100)
+ * @property {number} ?emotionalClarityScore - Legacy camelCase emotion clarity (0-100)
+ * @property {number} ?motivationMatchScore - Legacy camelCase motivation match
+ * @property {number} ?decisionProbability - Legacy camelCase decision probability (0-1)
+ * @property {number} ?conversionLiftEstimate - Legacy camelCase conversion lift (-100 to +100)
+ * @property {number} ?decision_friction_score - Primary snake_case friction score (0-100)
+ * @property {string} ?primary_diagnosis - Headline diagnosis for the page
+ * @property {number} ?decision_probability - Snake_case decision probability (0-1)
+ * @property {number} ?trust_score - Snake_case trust score (0-100)
+ * @property {number} ?emotional_clarity_score - Snake_case emotional clarity (0-100)
+ * @property {number} ?motivation_match_score - Snake_case motivation alignment (0-100)
+ * @property {number} ?conversion_lift_estimate - Snake_case conversion lift estimate
+ * @property {string[]} ?keyDecisionBlockers - Legacy list of blockers
+ * @property {string[]} ?emotionalResistanceFactors - Legacy emotional friction list
+ * @property {string[]} ?cognitiveOverloadFactors - Legacy cognitive overload list
+ * @property {string[]} ?trustBreakpoints - Legacy trust breakpoint list
+ * @property {string[]} ?motivationMisalignments - Legacy motivation issues
+ * @property {string[]} ?recommendedQuickWins - Legacy quick wins list
+ * @property {string[]} ?recommendedDeepChanges - Legacy deep change list
+ * @property {string} ?explanationSummary - Legacy summary paragraph
+ * @property {PageStructure} ?page_structure - Structured reconstruction of the hero layout
+ * @property {Object.<string, DecisionBlockerItem[]>} ?decision_blockers - Structured blockers grouped by element
+ * @property {Object.<string, AIRecommendationItem[]>} ?ai_recommendations - Structured recommendations grouped by type
+ * @property {VisualTrustAnalysis} ?visual_trust_analysis - Visual trust summary from backend
+ * @property {any} ?psychology_narrative - Narrative string or structured object
  */
 
 /**

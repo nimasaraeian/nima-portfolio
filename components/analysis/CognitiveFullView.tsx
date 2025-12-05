@@ -27,7 +27,6 @@ const ensureArray = <T,>(value?: T | T[] | null): T[] => {
 
 const formatNarrative = (result: CognitiveFrictionResult) => {
   if (!result.psychology_narrative) return "";
-  if (typeof result.psychology_narrative === "string") return result.psychology_narrative;
   return (
     result.psychology_narrative.analysis_summary ||
     result.psychology_narrative.ai_interpretation ||

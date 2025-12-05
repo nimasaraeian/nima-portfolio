@@ -17,11 +17,9 @@ export function CognitiveAdvancedView({ result, psychologyAnalysis, brainRespons
   const narrative =
     psychologyAnalysis?.human_readable_report ??
     brainResponse ??
-    (typeof result.psychology_narrative === "string"
-      ? result.psychology_narrative
-      : result.psychology_narrative?.analysis_summary ??
-        result.psychology_narrative?.ai_interpretation ??
-        "");
+    result.psychology_narrative?.analysis_summary ??
+    result.psychology_narrative?.ai_interpretation ??
+    "";
 
   const hasDashboard = !!result.psychology_dashboard;
 

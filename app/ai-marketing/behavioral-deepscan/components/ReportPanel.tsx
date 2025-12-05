@@ -74,16 +74,11 @@ function RewriteVariant({ label, body }: { label: string; body: string }) {
 // AI Interpretation generator
 function buildAiInterpretation(result: CognitiveFrictionResult): string {
   const narrative = result.psychology_narrative;
-  if (typeof narrative === 'string' && narrative.trim().length > 0) {
-    return narrative;
+  if (narrative?.ai_interpretation) {
+    return narrative.ai_interpretation;
   }
-  if (narrative && typeof narrative === 'object') {
-    if (narrative.ai_interpretation) {
-      return narrative.ai_interpretation;
-    }
-    if (narrative.analysis_summary) {
-      return narrative.analysis_summary;
-    }
+  if (narrative?.analysis_summary) {
+    return narrative.analysis_summary;
   }
 
   const parts: string[] = [];
