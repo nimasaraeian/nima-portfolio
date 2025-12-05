@@ -273,6 +273,12 @@ export interface CognitiveFrictionResult {
   recommendedQuickWins: string[];
   recommendedDeepChanges: string[];
   explanationSummary: string;
+  decision_friction_score?: number | null;
+  trust_score?: number | null;
+  emotional_clarity_score?: number | null;
+  motivation_match_score?: number | null;
+  decision_probability?: number | null;
+  conversion_lift_estimate?: number | null;
   primary_diagnosis?: string | null;
   psychology_dashboard?: PsychologyDashboard | null;
   page_structure?: PageStructure | null;

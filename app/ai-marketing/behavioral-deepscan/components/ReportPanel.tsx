@@ -26,6 +26,15 @@ type VisualTrustResult = {
   };
 } | null;
 
+const pickNumber = (...values: Array<number | null | undefined>) => {
+  for (const value of values) {
+    if (typeof value === 'number' && !Number.isNaN(value)) {
+      return value;
+    }
+  }
+  return 0;
+};
+
 interface ReportPanelProps {
   result: CognitiveFrictionResult | null;
   loading: boolean;
@@ -83,20 +92,11 @@ function buildAiInterpretation(result: CognitiveFrictionResult): string {
 
   const parts: string[] = [];
 
-  const frictionScore = typeof result.frictionScore === 'number' ? result.frictionScore : result.decision_friction_score ?? 0;
-  const trustScore = typeof result.trustScore === 'number' ? result.trustScore : (result['trust_score'] as number | undefined) ?? 0;
-  const motivationScore =
-    typeof result.motivationMatchScore === 'number'
-      ? result.motivationMatchScore
-      : ((result['motivation_match_score'] as number | undefined) ?? 0);
-  const decisionProbability =
-    typeof result.decisionProbability === 'number'
-      ? result.decisionProbability
-      : ((result['decision_probability'] as number | undefined) ?? 0);
-  const emotionalScore =
-    typeof result.emotionalClarityScore === 'number'
-      ? result.emotionalClarityScore
-      : ((result['emotional_clarity_score'] as number | undefined) ?? 0);
+  const frictionScore = pickNumber(result.frictionScore, result.decision_friction_score);
+  const trustScore = pickNumber(result.trustScore, result.trust_score);
+  const motivationScore = pickNumber(result.motivationMatchScore, result.motivation_match_score);
+  const decisionProbability = pickNumber(result.decisionProbability, result.decision_probability);
+  const emotionalScore = pickNumber(result.emotionalClarityScore, result.emotional_clarity_score);
 
   // Friction and Trust analysis
   if (frictionScore >= 60 && trustScore <= 40) {
