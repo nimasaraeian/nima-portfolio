@@ -2,6 +2,7 @@ import type {
   AIRecommendationItem,
   CognitiveFrictionResult,
   DecisionBlockerItem,
+  PageStructure,
 } from "@/app/ai-marketing/brain-types";
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
 
 const sectionClass = "rounded-2xl border border-white/10 bg-slate-900/40 p-4 space-y-3";
 
-const structuredLabels: Array<{ key: keyof CognitiveFrictionResult["page_structure"]; label: string }> = [
+const structuredLabels: Array<{ key: keyof Omit<PageStructure, "extra_sections">; label: string }> = [
   { key: "hero_title", label: "Hero Title" },
   { key: "hero_subtitle", label: "Hero Subtitle" },
   { key: "primary_cta", label: "Primary CTA" },
