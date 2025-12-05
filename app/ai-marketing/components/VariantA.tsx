@@ -6,16 +6,6 @@ import AccordionItem from '@/components/Accordion';
 import MultiStepInputPanel from '../behavioral-deepscan/components/MultiStepInputPanel';
 import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
 import type { CognitiveFrictionResult } from '@/app/ai-marketing/brain-types';
-import {
-  PageStructureCard,
-  VisualTrustCard,
-  StructuredBlockerList,
-  RecommendationSection,
-  collectRecommendationItems,
-  getStructuredBlockers,
-  buildAiInterpretation,
-} from './CognitiveFrictionInsights';
-
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
  * 
