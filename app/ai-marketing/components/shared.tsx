@@ -1,21 +1,7 @@
 // Shared types and utilities for AI Marketing page variants
+import type { CognitiveFrictionResult } from '../brain-types';
 
-export interface CognitiveFrictionResult {
-  frictionScore: number;
-  trustScore: number;
-  emotionalClarityScore: number;
-  motivationMatchScore: number;
-  decisionProbability: number;
-  conversionLiftEstimate: number;
-  keyDecisionBlockers: string[];
-  emotionalResistanceFactors: string[];
-  cognitiveOverloadFactors: string[];
-  trustBreakpoints: string[];
-  motivationMisalignments: string[];
-  recommendedQuickWins: string[];
-  recommendedDeepChanges: string[];
-  explanationSummary: string;
-}
+export type { CognitiveFrictionResult };
 
 export type RewriteInputPayload = {
   text: string;
