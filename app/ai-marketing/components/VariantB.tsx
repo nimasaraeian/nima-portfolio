@@ -12,7 +12,6 @@ import {
   RecommendationSection,
   collectRecommendationItems,
   getStructuredBlockers,
-  buildAiInterpretation,
 } from './CognitiveFrictionInsights';
 import {
   analyzeCognitiveFriction,
