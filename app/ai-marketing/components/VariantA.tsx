@@ -579,7 +579,7 @@ function RewriteVariant({ label, body }: RewriteVariantProps) {
 }
 
 // Main Results Panel Component
-function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
+function ResultsPanel({ result, uploadedImageUrl }: { result: CognitiveFrictionResult; uploadedImageUrl?: string | null }) {
   const aiInterpretation = buildAiInterpretation(result);
   const quickWinItems = collectRecommendationItems(result, (key) => key.includes('quick'));
   const deepChangeItems = collectRecommendationItems(result, (key) => key.includes('deep'));
