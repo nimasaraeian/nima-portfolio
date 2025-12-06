@@ -183,6 +183,7 @@ export const HEALTH_URL = `${BACKEND_BASE_URL}/health`;
 
 /**
  * Runs visual trust analysis on an uploaded image file
+ * Uses the Next.js API route proxy to avoid CORS issues and improve error handling
  * 
  * @param file - The image file to analyze
  * @returns Promise resolving to the analysis result
@@ -192,24 +193,39 @@ export async function runVisualTrustAnalysis(file: File) {
   const formData = new FormData();
   formData.append("file", file); // IMPORTANT: must match backend UploadFile name
 
-  console.log("[VisualTrust] Sending request to", IMAGE_TRUST_API_URL);
+  // Use Next.js API route proxy instead of calling backend directly
+  const apiUrl = "/api/analyze/image-trust";
+  console.log("[VisualTrust] Sending request to", apiUrl);
 
-  const res = await fetch(IMAGE_TRUST_API_URL, {
+  const res = await fetch(apiUrl, {
     method: "POST",
     body: formData,
   });
 
   if (!res.ok) {
-    let errorBody = null;
+    let errorBody: any = null;
+    let errorDetail = `Request failed with status ${res.status}`;
+    
     try {
       errorBody = await res.json();
-    } catch {}
-    console.error("[VisualTrust] Backend error", res.status, errorBody);
-    throw new Error(`Image trust analysis failed with status ${res.status}`);
+      errorDetail = errorBody.detail || errorBody.error || errorDetail;
+      console.error("[VisualTrust] API error", res.status, errorBody);
+    } catch (parseError) {
+      // If response is not JSON, try to get text
+      try {
+        const errorText = await res.text();
+        errorDetail = errorText || errorDetail;
+        console.error("[VisualTrust] API error (text)", res.status, errorText);
+      } catch (textError) {
+        console.error("[VisualTrust] API error", res.status, "Unable to parse error response");
+      }
+    }
+    
+    throw new Error(`Image trust analysis failed: ${errorDetail}`);
   }
 
   const data = await res.json();
-  console.log("[VisualTrust] Response", data);
+  console.log("[VisualTrust] Response received", data);
   return data;
 }
 
