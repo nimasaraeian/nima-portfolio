@@ -190,7 +190,7 @@ export const HEALTH_URL = `${BACKEND_BASE_URL}/health`;
  */
 export async function runVisualTrustAnalysis(file: File) {
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("file", file); // IMPORTANT: must match backend UploadFile name
 
   console.log("[VisualTrust] Sending request to", IMAGE_TRUST_API_URL);
 
@@ -200,7 +200,11 @@ export async function runVisualTrustAnalysis(file: File) {
   });
 
   if (!res.ok) {
-    console.error("[VisualTrust] Backend error", res.status, res.statusText);
+    let errorBody = null;
+    try {
+      errorBody = await res.json();
+    } catch {}
+    console.error("[VisualTrust] Backend error", res.status, errorBody);
     throw new Error(`Image trust analysis failed with status ${res.status}`);
   }
 
