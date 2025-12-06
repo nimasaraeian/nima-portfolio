@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { jsonResponse } from '@/lib/jsonResponse';
 
 // Force dynamic rendering - don't pre-render at build time
 export const dynamic = 'force-dynamic';
@@ -9,7 +10,7 @@ export async function POST(request: NextRequest) {
     const { apiKey } = await request.json();
 
     if (!apiKey || apiKey === 'sk-your-actual-openai-api-key-here') {
-      return NextResponse.json(
+      return jsonResponse(
         { error: 'لطفاً API Key معتبر OpenAI را وارد کنید' },
         { status: 400 }
       );
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Generated ${articles.length} articles successfully`);
 
-    return NextResponse.json({
+    return jsonResponse({
       success: true,
       articlesGenerated: articles.length,
       articles: articles.map(article => ({
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(
+    return jsonResponse(
       { error: errorMessage },
       { status: 500 }
     );
@@ -89,7 +90,7 @@ export async function GET() {
       ? fs.readFileSync('.last-run', 'utf8') 
       : null;
 
-    return NextResponse.json({
+    return jsonResponse({
       status: 'Active',
       lastRun,
       totalArticles,
@@ -108,7 +109,7 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error getting system info:', error);
-    return NextResponse.json(
+    return jsonResponse(
       { error: 'خطا در دریافت اطلاعات سیستم' },
       { status: 500 }
     );

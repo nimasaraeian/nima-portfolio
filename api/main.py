@@ -1,7 +1,7 @@
 """
 FastAPI Backend for AI Marketing Brain - DeepScan Endpoint
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI
@@ -32,6 +32,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def enforce_utf8_charset(request: Request, call_next):
+    response = await call_next(request)
+    content_type = response.headers.get("content-type")
+    if content_type and content_type.startswith("application/json"):
+        response.headers["content-type"] = "application/json; charset=utf-8"
+    return response
 
 # Initialize OpenAI client
 def get_openai_client():

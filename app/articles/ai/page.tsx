@@ -65,7 +65,7 @@ export default function AIArticlesPage() {
         ) : (
           <div className="text-center">
             <p className="text-gray-500 mb-8">
-              Ù…Ù‚Ø§Ù„Ø§Øª Ù‡ÙˆØ´ Ù…ØµÙ†ÙˆØ¹ÛŒ Ø¨Ù‡ ØµÙˆØ±Øª Ø®ÙˆØ¯Ú©Ø§Ø± ØªÙˆÙ„ÛŒØ¯ Ù…ÛŒâ€ŒØ´ÙˆÙ†Ø¯
+              AI articles are generated automatically—check back in a moment.
             </p>
           </div>
         )}

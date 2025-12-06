@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { jsonResponse } from '@/lib/jsonResponse';
 import fs from 'fs';
 import path from 'path';
 
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
   
   try {
     if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ success: false, message: 'OPENAI_API_KEY is not set' }, { status: 200 });
+      return jsonResponse({ success: false, message: 'OPENAI_API_KEY is not set' }, { status: 200 });
     }
     
     // Dynamic import to avoid build-time errors
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest) {
     
     console.log('🎉 Daily content generation completed successfully!');
     
-    return NextResponse.json({
+    return jsonResponse({
       success: true,
       message: 'Daily content generated successfully',
       articlesGenerated: articles.length,
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('❌ Error in daily content generation:', error);
     
-    return NextResponse.json({
+    return jsonResponse({
       success: false,
       message: 'Error generating daily content',
       error: error instanceof Error ? error.message : 'Unknown error',

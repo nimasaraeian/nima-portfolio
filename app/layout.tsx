@@ -127,6 +127,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <meta charSet="UTF-8" />
         <link rel="icon" type="image/png" href="/nima-pic.png" />
         <link rel="shortcut icon" type="image/png" href="/nima-pic.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/nima-pic.png" />

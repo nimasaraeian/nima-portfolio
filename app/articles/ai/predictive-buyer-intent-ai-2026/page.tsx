@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE } from '@/app/lib/site';
-import PredictiveBuyerIntentAIPage from './predictive-buyer-intent-ai/page';
+import PredictiveBuyerIntentAIPage from '../predictive-buyer-intent-ai/page';
 
 export const metadata: Metadata = {
   title: 'Predictive Buyer Intent AI — Why Marketing Fails Without Behavioral Signals | 2026 Edition',

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { jsonResponse } from '@/lib/jsonResponse';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -35,31 +36,14 @@ export async function POST(req: NextRequest) {
     
     console.log('[Brain API] Forwarding to backend:', backendEndpoint);
     
-    // Get request body
+    // Get request body without mutating so we forward exactly what the frontend sent
     const body = await req.json();
-    console.log('[Brain API] Incoming payload (raw):', body);
-
-    // سازگار کردن payload برای نسخهٔ فعلی بک‌اند FastAPI:
-    // فقط فیلدهایی را فوروارد می‌کنیم که اسکیمای بک‌اند انتظار دارد،
-    // بقیه (content_type/goals/audience_stage و ...) برای آینده هستند.
-    const sanitizedPayload = {
-      raw_text: body.raw_text,
-      platform: body.platform,
-      goal: body.goal,
-      audience: body.audience,
-      language: body.language ?? 'en',
-      meta: body.meta ?? null,
-      image: body.image,
-      image_type: body.image_type,
-      image_name: body.image_name,
-    };
-
-    console.log('[Brain API] Forwarded payload to backend:', {
-      hasText: !!sanitizedPayload.raw_text,
-      textLength: sanitizedPayload.raw_text?.length || 0,
-      platform: sanitizedPayload.platform,
-      hasImage: !!sanitizedPayload.image,
+    console.log('[Brain API] Incoming payload (raw):', {
+      ...body,
+      image: body.image ? `[base64 image, ${body.image.length} chars]` : undefined,
     });
+
+    console.log('[Brain API] Forwarding payload to backend without sanitization');
     
     // Forward to backend
     let backendResponse: Response;
@@ -69,12 +53,12 @@ export async function POST(req: NextRequest) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(sanitizedPayload),
+        body: JSON.stringify(body),
       });
     } catch (fetchError: any) {
       // Handle connection errors
       console.error('❌ Failed to connect to backend:', backendEndpoint, fetchError.message);
-      return NextResponse.json(
+      return jsonResponse(
         {
           error: 'fetch failed',
           detail: `Failed to connect to backend API at ${backendEndpoint}. Please ensure the backend is running on ${backendUrl}`,
@@ -95,7 +79,7 @@ export async function POST(req: NextRequest) {
         // Not JSON, use text as-is
       }
       
-      return NextResponse.json(
+      return jsonResponse(
         {
           error: `Backend API error: ${backendResponse.status}`,
           detail: errorDetail,
@@ -111,14 +95,14 @@ export async function POST(req: NextRequest) {
       hasBlockers: Array.isArray(backendData.keyDecisionBlockers),
     });
     
-    return NextResponse.json(backendData);
+    return jsonResponse(backendData);
     
   } catch (error: any) {
     console.error('❌ Error in /api/brain/cognitive-friction:', error);
     
     // Check if it's a connection error
     if (error.message?.includes('fetch') || error.message?.includes('connect')) {
-      return NextResponse.json(
+      return jsonResponse(
         {
           error: 'fetch failed',
           detail: 'Failed to connect to backend API. Please ensure the backend is running.',
@@ -127,7 +111,7 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    return NextResponse.json(
+    return jsonResponse(
       {
         error: error.message || 'An error occurred while processing your request',
         detail: 'Failed to connect to backend API. Please ensure the backend is running.',

@@ -24,3 +24,17 @@ export interface BrainAPIResponse {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

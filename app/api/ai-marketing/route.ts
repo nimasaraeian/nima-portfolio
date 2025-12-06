@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { jsonResponse } from "@/lib/jsonResponse";
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     console.log("AI Marketing mock API called with:", body);
 
     // Return a simple, fast, deterministic mock response
-    return NextResponse.json({
+    return jsonResponse({
       campaign:
         "Mock Campaign Audit:\n- Hook is descriptive, not disruptive.\n- Offer is vague and not outcome-based.\n- CTA is generic.\n\nActions:\n- Use a transformation hook.\n- Add 1–2 concrete outcomes.\n- Change CTA to a future-oriented action.",
       content:
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("AI Marketing mock API error:", error);
-    return NextResponse.json(
+    return jsonResponse(
       { error: "Internal error in mock AI marketing API." },
       { status: 500 }
     );

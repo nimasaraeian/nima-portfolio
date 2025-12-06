@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE } from '@/app/lib/site';
+import AudioSummary from '@/components/AudioSummary';
 
 export const metadata: Metadata = {
   title: 'AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology | Nima Saraeian',
@@ -243,6 +244,10 @@ export default function AIMarketing2026CompleteGuidePage() {
       }
     ]
   };
+
+  const summaryText = `
+  This article is a 2026 pillar guide to AI Marketing. It explains how AI is evolving from simple tools into a full decision layer, how behavioral and psychological data drive better targeting and personalization, and how marketers can build AI-powered systems that increase ROI and conversion rates across the whole funnel.
+  `;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -2700,6 +2705,12 @@ export default function AIMarketing2026CompleteGuidePage() {
             </Link>
           </div>
         </section>
+
+        <AudioSummary
+          summaryText={summaryText}
+          src="/audio/Modern_Marketing_Is_Behavioral_Predictive_AI.mp3"
+          title="🎧 Modern Marketing Is Behavioral + Predictive AI"
+        />
       </article>
     </main>
   );

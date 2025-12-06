@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 const filePath = path.join(process.cwd(), 'data', 'articles.json');
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
   if (req.method === 'POST') {
     try {
       const newArticle = {
@@ -28,6 +29,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).json(articles);
   } else {
     res.setHeader('Allow', ['POST', 'GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 }

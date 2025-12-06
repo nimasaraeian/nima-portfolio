@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { jsonResponse } from '@/lib/jsonResponse';
 import OpenAI from 'openai';
 import { WizardInput, StrategyDocSchema } from '@/app/types/strategy';
 
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest) {
     input = await req.json();
     console.log('Received input:', JSON.stringify(input, null, 2));
   } catch (parseError) {
-    return NextResponse.json(
+    return jsonResponse(
       { 
         success: false, 
         error: 'Invalid request format',
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
       console.log('No OpenAI API key found, using fallback strategy');
-      return NextResponse.json({
+      return jsonResponse({
         success: true,
         strategy: generateFallbackStrategy(input),
         usedFallback: true
@@ -92,7 +93,7 @@ REQUIREMENTS
     // Validate against schema
     const validatedStrategy = StrategyDocSchema.parse(strategyData);
     
-    return NextResponse.json({
+    return jsonResponse({
       success: true,
       strategy: validatedStrategy,
       usage: completion.usage,
@@ -102,7 +103,7 @@ REQUIREMENTS
     console.error('Strategy generation error:', error);
     
     // Use fallback strategy for any error
-    return NextResponse.json({
+    return jsonResponse({
       success: true,
       strategy: generateFallbackStrategy(input),
       usedFallback: true,

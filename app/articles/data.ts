@@ -13,6 +13,17 @@ export interface ArticleData {
 
 export const articles: ArticleData[] = [
   {
+    id: 'ai-marketing-new-era-2026',
+    title: 'AI Marketing 2026: The Complete Guide to Data-Driven Growth, Personalization & Behavioral AI',
+    excerpt: 'Discover how AI marketing engines remove cognitive friction, personalize every journey in real time, and create measurable growth across content, CRO, ads, and retention.',
+    category: 'ai',
+    tags: ['AI Marketing 2026', 'Behavioral AI', 'Personalization', 'Cognitive Friction', 'Prompt Engineering', 'Data-Driven Growth'],
+    publishedAt: '2026-02-04T08:00:00.000Z',
+    wordCount: 15000,
+    imageUrl: '/image/ai-marketing-human-and-ai-collaboration-professional-woman-robot.jpg',
+    href: '/articles/ai/ai-marketing-new-era-2026'
+  },
+  {
     id: 'ai-marketing-strategy-2024',
     title: 'AI Marketing Strategy 2024: Complete Guide to AI-Driven Marketing Success',
     excerpt: 'Master AI marketing strategies that drive real results. Learn from industry experts how to implement AI-powered marketing campaigns that convert and scale.',
@@ -121,6 +132,17 @@ export const articles: ArticleData[] = [
     wordCount: 1000,
     imageUrl: '/image/ai-marketing-specialist-cover-2026.png',
     href: '/articles/marketing/ai-marketing-roles-2026'
+  },
+  {
+    id: 'cognitive-friction-ai-cro',
+    title: 'Cognitive Friction AI CRO — How Behavioral AI Becomes the #1 Conversion Advantage',
+    excerpt: 'Understand how cognitive friction silently kills conversion rates and how Marketing Behavior AI scores, predicts, and removes hesitation layers across funnels.',
+    category: 'ai',
+    tags: ['Cognitive Friction', 'Behavioral AI', 'Conversion Optimization', 'AI CRO', 'Marketing Behavior AI', 'Neuroeconomics'],
+    publishedAt: '2026-02-01T08:00:00.000Z',
+    wordCount: 4200,
+    imageUrl: '/image/conversion-rate-cognitive-friction-ai-cover.png',
+    href: '/articles/ai/cognitive-friction-ai-cro'
   }
 ];
 

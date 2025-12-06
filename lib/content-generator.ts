@@ -9,6 +9,17 @@ function getOpenAIClient(): OpenAI {
   return new OpenAI({ apiKey });
 }
 
+function decodeHtmlEntities(value: string): string {
+  return value
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, '/');
+}
+
 // تعریف انواع مقالات
 export interface Article {
   id: string;
@@ -299,6 +310,7 @@ export function saveArticleToFile(article: Article): void {
 
 // تولید کامپوننت React برای مقاله
 function generateArticleComponent(article: Article): string {
+  const normalizedContent = decodeHtmlEntities(article.content);
   return `import { Metadata } from 'next';
 import Image from 'next/image';
 
@@ -361,7 +373,7 @@ export default function ${article.id.charAt(0).toUpperCase() + article.id.slice(
 
         {/* Article Content */}
         <article className="prose prose-lg prose-invert max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: \`${article.content.replace(/`/g, '\\`')}\` }} />
+          <div dangerouslySetInnerHTML={{ __html: \`${normalizedContent.replace(/`/g, '\\`')}\` }} />
         </article>
 
         {/* Footer */}

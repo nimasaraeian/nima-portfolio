@@ -319,3 +319,5 @@ export function buildAiInterpretation(result: CognitiveFrictionResult): string {
   return parts.join(' ');
 }
 
+
+

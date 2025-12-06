@@ -1390,6 +1390,30 @@ export default function AIMarketingNewEra2026Page() {
           </audio>
         </div>
 
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 space-y-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-gray-400">Video Spotlight</p>
+            <h3 className="text-2xl font-semibold text-white">AI Marketing — The Invisible Shift</h3>
+          </div>
+          <p className="text-gray-300 text-sm">
+            Watch the high-level breakdown of how behavioral AI, predictive decisioning, and conversion intelligence rewired marketing between 2023 and 2026. Use the insights to align your funnel strategy with the systems unpacked in this super pillar.
+          </p>
+          <video
+            className="w-full md:w-3/4 lg:w-1/2 mx-auto rounded-2xl border border-white/10 shadow-xl"
+            controls
+            controlsList="nodownload"
+            preload="metadata"
+            poster="/image/226c5a44-6044-4f01-bbd1-32b25dac1556.png"
+            aria-label="AI Marketing 2026 — The Invisible Shift video summary"
+          >
+            <source src="/video/AI_Marketing__The_Invisible_Shift.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <p className="text-gray-400 text-xs">
+            Video: Behavioral AI playbook for eliminating cognitive friction and scaling predictive growth loops.
+          </p>
+        </div>
+
         <SuperPillarToc className="my-8" />
 
         <div className="pt-10 border-t border-white/10 space-y-3">

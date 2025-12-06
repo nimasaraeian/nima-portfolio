@@ -1,280 +1,190 @@
-import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import { NextRequest } from 'next/server';
+import { jsonResponse } from '@/lib/jsonResponse';
 
 // Force dynamic rendering - don't pre-render at build time
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-interface BrainRequest {
-  role: string;
-  locale: string;
-  city: string;
-  industry: string;
-  channel: string;
-  query: string;
+const DEFAULT_BACKEND_URL = 'http://127.0.0.1:8000';
+const BACKEND_PATH = '/cognitive-friction/visual';
+
+function resolveBackendUrl(): string {
+  const baseUrl =
+    process.env.BACKEND_URL ||
+    process.env.NEXT_PUBLIC_BRAIN_API_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    process.env.BRAIN_API_BASE_URL ||
+    DEFAULT_BACKEND_URL;
+
+  return baseUrl.replace(/\/$/, '');
+}
+
+function extractTextFromBody(body: Record<string, any> | null): string {
+  if (!body || typeof body !== 'object') {
+    return '';
+  }
+
+  const candidateFields = [
+    'content',
+    'raw_text',
+    'query',
+    'text',
+    'message',
+    'prompt',
+    'description',
+  ];
+
+  for (const key of candidateFields) {
+    const value = body[key];
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+  }
+
+  const summaryParts: string[] = [];
+  if (body.url) summaryParts.push(`URL: ${body.url}`);
+  if (Array.isArray(body.goals) && body.goals.length) {
+    summaryParts.push(`Goals: ${body.goals.join(', ')}`);
+  }
+  if (body.platform) summaryParts.push(`Platform: ${body.platform}`);
+  if (body.industry) summaryParts.push(`Industry: ${body.industry}`);
+  if (body.city) summaryParts.push(`City: ${body.city}`);
+  if (body.channel) summaryParts.push(`Channel: ${body.channel}`);
+  if (body.role) summaryParts.push(`Role: ${body.role}`);
+  if (body.locale) summaryParts.push(`Locale: ${body.locale}`);
+
+  if (summaryParts.length > 0) {
+    return summaryParts.join('\n');
+  }
+
+  return JSON.stringify(body);
+}
+
+function isFile(value: FormDataEntryValue | null): value is File {
+  return typeof File !== 'undefined' && value instanceof File;
 }
 
 export async function POST(req: NextRequest) {
   console.log('📥 /api/brain POST request received');
-  
+
   try {
-    // Check if request is FormData (for Behavioral DeepScan) or JSON (for other modules)
-    const contentType = req.headers.get('content-type') || '';
-    let body: any;
-    let query: string;
-    let role: string = 'marketer';
-    let locale: string = 'en';
-    let city: string = '';
-    let industry: string = '';
-    let channel: string = '';
+    const contentType = (req.headers.get('content-type') || '').toLowerCase();
+    const isFormRequest =
+      contentType.includes('multipart/form-data') ||
+      contentType.includes('application/x-www-form-urlencoded');
+
+    let content = '';
     let imageFile: File | null = null;
 
-    if (contentType.includes('multipart/form-data')) {
-      // Handle FormData (Behavioral DeepScan with image support)
-      const formData = await req.formData();
-      const content = formData.get('content') as string || '';
-      imageFile = formData.get('image') as File | null;
-      const platform = formData.get('platform') as string || 'landing_page';
-      let goalStr = formData.get('goal') as string || '["leads"]';
-      const audience = formData.get('audience') as string || 'cold';
-      const language = formData.get('language') as string || 'en';
+    if (isFormRequest) {
+      const incomingFormData = await req.formData();
 
-      // Parse goal JSON string safely
-      let goalArray: string[] = ['leads'];
-      try {
-        if (goalStr) {
-          const parsed = JSON.parse(goalStr);
-          goalArray = Array.isArray(parsed) ? parsed : [parsed];
-        }
-      } catch (e) {
-        console.warn('Failed to parse goal, using default:', e);
-        goalArray = ['leads'];
+      const imageEntry = incomingFormData.get('image');
+      if (isFile(imageEntry)) {
+        imageFile = imageEntry;
       }
 
-      // If image is provided, forward to backend API with image
-      if (imageFile) {
-        console.log('📸 Image file received, forwarding to backend API...');
-        
-        // Get backend URL from environment
-        const backendUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
-        
-        // Create FormData for backend
-        const backendFormData = new FormData();
-        backendFormData.append('content', content);
-        backendFormData.append('image', imageFile);
-        
-        try {
-          // Forward to backend API
-          const backendResponse = await fetch(`${backendUrl}/api/brain`, {
-            method: 'POST',
-            body: backendFormData,
-          });
-          
-          if (!backendResponse.ok) {
-            const errorText = await backendResponse.text();
-            throw new Error(`Backend API error: ${backendResponse.status} - ${errorText}`);
-          }
-          
-          const backendData = await backendResponse.json();
-          console.log('✅ Backend API response received');
-          return NextResponse.json(backendData);
-        } catch (backendError: any) {
-          console.error('❌ Error forwarding to backend:', backendError);
-          // Fallback to OpenAI if backend fails
-          query = `Behavioral DeepScan Analysis for ${platform}. Content: ${content || '[Image provided]'}. Goal: ${goalArray.join(', ')}. Audience: ${audience}. Language: ${language}.`;
-        }
-      } else {
-        // No image, build query normally
-        query = `Behavioral DeepScan Analysis for ${platform}. Content: ${content}. Goal: ${goalArray.join(', ')}. Audience: ${audience}. Language: ${language}.`;
+      const contentEntry = incomingFormData.get('content');
+      if (typeof contentEntry === 'string') {
+        content = contentEntry;
       }
-      
-      console.log('📋 FormData received:', { platform, goal: goalArray, audience, language, hasImage: !!imageFile, contentLength: content.length });
     } else {
-      // Handle JSON (other modules)
-      body = await req.json();
-    console.log('📋 Request body:', { role: body.role, industry: body.industry, city: body.city, channel: body.channel });
-    
-      ({ role, locale, city, industry, channel, query } = body);
+      let jsonBody: Record<string, any> | null = null;
+      try {
+        jsonBody = await req.json();
+        console.log('📋 JSON request body received for /api/brain');
+      } catch (jsonError) {
+        console.warn('⚠️ /api/brain received a non-JSON body without multipart form data', jsonError);
+      }
+
+      content = extractTextFromBody(jsonBody);
     }
 
-    // Check for OpenAI API key
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      console.error('❌ OpenAI API key not configured');
-      return NextResponse.json(
+    const hasImage = Boolean(imageFile);
+    const hasContent = typeof content === 'string' && content.trim().length > 0;
+
+    if (!hasImage && !hasContent) {
+      return jsonResponse(
         {
-          error: 'OpenAI API key not configured',
-          response: 'Please configure OPENAI_API_KEY in your environment variables.',
-          quality_score: 0,
+          error: 'Missing content or image',
+          detail: 'Provide either text content or an image for analysis.',
         },
-        { status: 500 }
+        { status: 400 }
       );
     }
-    
-    console.log('✅ OpenAI API key found, proceeding with request...');
 
-    const openai = new OpenAI({ apiKey });
-
-    // Build system prompt based on role and query content
-    let systemPrompt = `You are an expert AI Marketing Strategist specializing in behavior-first marketing systems. 
-You use Selphlyze (psychometrics) and Contlyze (behavior & content intelligence) to provide actionable insights.
-
-Your responses should be:
-- Practical and actionable
-- Based on behavioral psychology and data
-- Specific to the industry, city, and channel provided
-- Structured with clear sections and recommendations
-- Include specific examples and next steps
-
-Format your response in markdown with clear headings (##, ###) and bullet points.`;
-
-    // Check if this is a Behavioral DeepScan request
-    const isDeepScan = query.includes('Behavioral DeepScan Analysis') || query.includes('Psychometric mapping') || contentType.includes('multipart/form-data');
-    
-    if (isDeepScan) {
-      // Specialized prompt for Behavioral DeepScan - must return CognitiveFrictionResult format
-      systemPrompt = `You are an expert Behavioral Psychologist and Marketing Strategist using Selphlyze (proprietary AI psychometric layer).
-Your task is to perform a Behavioral DeepScan analysis and return results in a specific JSON format.
-
-You MUST return a valid JSON object with EXACTLY these fields:
-{
-  "frictionScore": <number 0-100>,  // Cognitive friction score (higher = more friction)
-  "trustScore": <number 0-100>,     // Trust level score (higher = more trust)
-  "emotionalClarityScore": <number 0-100>,  // Emotional clarity score
-  "motivationMatchScore": <number 0-100>,   // How well content matches audience motivation
-  "decisionProbability": <number 0-1>,      // Probability of user making a decision (0.0 to 1.0)
-  "conversionLiftEstimate": <number>,       // Estimated conversion lift percentage (can be negative)
-  "keyDecisionBlockers": [<string>],       // Array of decision blockers
-  "emotionalResistanceFactors": [<string>], // Array of emotional resistance factors
-  "cognitiveOverloadFactors": [<string>],    // Array of cognitive overload factors
-  "trustBreakpoints": [<string>],           // Array of trust breakpoints
-  "motivationMisalignments": [<string>],    // Array of motivation misalignments
-  "recommendedQuickWins": [<string>],       // Array of quick win recommendations
-  "recommendedDeepChanges": [<string>],     // Array of deep change recommendations
-  "explanationSummary": "<string>"           // Overall explanation summary
-}
-
-IMPORTANT: Return ONLY valid JSON, no markdown, no explanations outside the JSON object.`;
-    } else {
-      // Standard prompt for other modules
-      systemPrompt += `\n\nYou are analyzing: ${query}\nIndustry: ${industry}\nCity: ${city}\nChannel: ${channel}\nLocale: ${locale}`;
+    const backendFormData = new FormData();
+    if (hasContent) {
+      backendFormData.append('content', content);
     }
 
-    // Call OpenAI API
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Using cost-effective model, can upgrade to gpt-4o if needed
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: query },
-      ],
-      temperature: isDeepScan ? 0.3 : 0.7, // Lower temperature for more consistent DeepScan results
-      max_tokens: isDeepScan ? 3000 : 2000,
-      ...(isDeepScan && { response_format: { type: 'json_object' } }), // Force JSON for DeepScan
+    if (hasImage && imageFile) {
+      const imageBuffer = await imageFile.arrayBuffer();
+      const blob = new Blob([imageBuffer], {
+        type: imageFile.type || 'application/octet-stream',
+      });
+      const filename = imageFile.name || `upload-${Date.now()}`;
+      backendFormData.append('image', blob, filename);
+    }
+
+    const backendUrl = resolveBackendUrl();
+    const backendEndpoint = `${backendUrl}${BACKEND_PATH}`;
+
+    console.log('[Brain API] Forwarding request to backend:', backendEndpoint, {
+      hasImage,
+      hasContent,
+      contentLength: content?.length || 0,
     });
 
-    const responseText = completion.choices[0]?.message?.content || 'No response generated';
-    console.log('✅ OpenAI response received, length:', responseText.length);
+    let backendResponse: Response;
+    try {
+      backendResponse = await fetch(backendEndpoint, {
+        method: 'POST',
+        body: backendFormData,
+      });
+    } catch (fetchError: any) {
+      console.error('❌ Failed to reach backend:', fetchError);
+      return jsonResponse(
+        {
+          error: 'fetch failed',
+          detail: `Failed to connect to backend API at ${backendEndpoint}. Please ensure the FastAPI server is running.`,
+        },
+        { status: 502 }
+      );
+    }
 
-    // Check if this is a DeepScan response and try to parse structured data
-    // isDeepScan was already declared above, so we reuse it
-    
-    if (isDeepScan) {
-      console.log('🔍 Processing DeepScan response...');
-      // Parse JSON response - should be valid JSON due to response_format
-      let parsedResponse: any;
-      
+    if (!backendResponse.ok) {
+      const errorText = await backendResponse.text();
+      let errorDetail = errorText;
       try {
-        // Parse JSON response directly (response_format ensures it's valid JSON)
-        parsedResponse = JSON.parse(responseText);
-        
-        // Validate and ensure all required fields exist with correct types
-        const result: any = {
-          frictionScore: typeof parsedResponse.frictionScore === 'number' && !isNaN(parsedResponse.frictionScore) ? Math.max(0, Math.min(100, parsedResponse.frictionScore)) : 50,
-          trustScore: typeof parsedResponse.trustScore === 'number' && !isNaN(parsedResponse.trustScore) ? Math.max(0, Math.min(100, parsedResponse.trustScore)) : 50,
-          emotionalClarityScore: typeof parsedResponse.emotionalClarityScore === 'number' && !isNaN(parsedResponse.emotionalClarityScore) ? Math.max(0, Math.min(100, parsedResponse.emotionalClarityScore)) : 50,
-          motivationMatchScore: typeof parsedResponse.motivationMatchScore === 'number' && !isNaN(parsedResponse.motivationMatchScore) ? Math.max(0, Math.min(100, parsedResponse.motivationMatchScore)) : 50,
-          decisionProbability: typeof parsedResponse.decisionProbability === 'number' && !isNaN(parsedResponse.decisionProbability) ? Math.max(0, Math.min(1, parsedResponse.decisionProbability)) : 0.5,
-          conversionLiftEstimate: typeof parsedResponse.conversionLiftEstimate === 'number' && !isNaN(parsedResponse.conversionLiftEstimate) ? parsedResponse.conversionLiftEstimate : 0,
-          keyDecisionBlockers: Array.isArray(parsedResponse.keyDecisionBlockers) ? parsedResponse.keyDecisionBlockers.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
-          emotionalResistanceFactors: Array.isArray(parsedResponse.emotionalResistanceFactors) ? parsedResponse.emotionalResistanceFactors.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
-          cognitiveOverloadFactors: Array.isArray(parsedResponse.cognitiveOverloadFactors) ? parsedResponse.cognitiveOverloadFactors.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
-          trustBreakpoints: Array.isArray(parsedResponse.trustBreakpoints) ? parsedResponse.trustBreakpoints.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
-          motivationMisalignments: Array.isArray(parsedResponse.motivationMisalignments) ? parsedResponse.motivationMisalignments.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
-          recommendedQuickWins: Array.isArray(parsedResponse.recommendedQuickWins) ? parsedResponse.recommendedQuickWins.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
-          recommendedDeepChanges: Array.isArray(parsedResponse.recommendedDeepChanges) ? parsedResponse.recommendedDeepChanges.map((s: any) => String(s)).filter((s: string) => s.trim().length > 0) : [],
-          explanationSummary: typeof parsedResponse.explanationSummary === 'string' && parsedResponse.explanationSummary.trim().length > 0 ? parsedResponse.explanationSummary : (parsedResponse.summary || 'Analysis completed successfully'),
-        };
-        
-        console.log('✅ DeepScan response processed successfully', {
-          frictionScore: result.frictionScore,
-          trustScore: result.trustScore,
-          blockersCount: result.keyDecisionBlockers.length,
-          quickWinsCount: result.recommendedQuickWins.length,
-        });
-        
-        return NextResponse.json(result);
-      } catch (parseError: any) {
-        console.error('❌ Error parsing DeepScan JSON response:', parseError);
-        console.error('Response text (first 500 chars):', responseText.substring(0, 500));
-        
-        // Return a default structure with error indication
-        return NextResponse.json({
-          frictionScore: 50,
-          trustScore: 50,
-          emotionalClarityScore: 50,
-          motivationMatchScore: 50,
-          decisionProbability: 0.5,
-          conversionLiftEstimate: 0,
-          keyDecisionBlockers: ['Error parsing response from AI'],
-          emotionalResistanceFactors: [],
-          cognitiveOverloadFactors: [],
-          trustBreakpoints: [],
-          motivationMisalignments: [],
-          recommendedQuickWins: [],
-          recommendedDeepChanges: [],
-          explanationSummary: 'Error processing analysis. Please try again.',
-        }, { status: 500 });
+        const parsed = JSON.parse(errorText);
+        errorDetail = parsed.detail || parsed.error || errorText;
+      } catch {
+        // Ignore JSON parse failures
       }
+
+      console.error('❌ Backend API error:', backendResponse.status, errorDetail);
+      return jsonResponse(
+        {
+          error: `Backend API error: ${backendResponse.status}`,
+          detail: errorDetail,
+        },
+        { status: backendResponse.status }
+      );
     }
 
-    // Standard response for other modules
-    console.log('📝 Processing standard response...');
-    // Calculate quality score (simple heuristic based on response length and structure)
-    let quality_score = 3; // Base score
-    if (responseText.length > 500) quality_score += 1;
-    if (responseText.includes('##') || responseText.includes('###')) quality_score += 1; // Has structure
-    if (quality_score > 5) quality_score = 5;
-
-    console.log('✅ Standard response processed, quality_score:', quality_score);
-    return NextResponse.json({
-      response: responseText,
-      quality_score: quality_score,
-      quality_checks: {
-        has_structure: responseText.includes('##') || responseText.includes('###'),
-        has_specific_recommendations: responseText.length > 300,
-        has_examples: responseText.toLowerCase().includes('example') || responseText.toLowerCase().includes('مثال'),
-        actionable: responseText.toLowerCase().includes('step') || responseText.toLowerCase().includes('action') || responseText.toLowerCase().includes('گام'),
-      },
-    });
+    const backendData = await backendResponse.json();
+    console.log('✅ Backend API response received and returned to UI');
+    return jsonResponse(backendData);
   } catch (error) {
     console.error('❌ Error in /api/brain:', error);
-    
-    let errorMessage = 'An error occurred while processing your request';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
 
-    return NextResponse.json(
+    return jsonResponse(
       {
-        error: errorMessage,
-        response: 'Please try again later or contact support if the issue persists.',
-        quality_score: 0,
+        error: 'Internal Server Error',
+        detail: error instanceof Error ? error.message : 'An unexpected error occurred.',
       },
       { status: 500 }
     );
   }
 }
-
-
-
-

@@ -4,6 +4,20 @@ import Image from "next/image";
 export default function ArticlesPage() {
   const aiArticles = [
     { 
+      title: "AI Marketing: The New Era of Data-Driven Growth (2026 Edition)", 
+      image: "/image/ai-marketing-human-and-ai-collaboration-professional-woman-robot.jpg", 
+      href: "/articles/ai/ai-marketing-new-era-2026",
+      alt: "AI Marketing 2026 super pillar guide with marketing leader and AI assistant",
+      description: "15,000-word super pillar on behavioral AI, cognitive friction modeling, and AI marketing systems.",
+      superPillar: true
+    },
+    { 
+      title: "Cognitive Friction AI CRO — How Behavioral AI Becomes the #1 Conversion Advantage", 
+      image: "/image/conversion-rate-cognitive-friction-ai-cover.png", 
+      href: "/articles/ai/cognitive-friction-ai-cro",
+      alt: "Marketer reviewing AI behavioral dashboards for cognitive friction insights"
+    },
+    { 
       title: "AI Marketing Roles in 2026: Understanding the Real Differences (Specialist vs Strategist vs Expert vs Consultant vs Engineer)", 
       image: "/image/ai-marketing-specialist-cover-2026.png", 
       href: "/articles/marketing/ai-marketing-roles-2026",
@@ -124,9 +138,16 @@ export default function ArticlesPage() {
                   {/* Content */}
                   <div className="p-5 lg:p-6 relative z-10">
                     <div className="flex items-start justify-between gap-3 mb-2">
-                      <h3 className="text-lg lg:text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-200 leading-tight flex-1">
-                        {card.title}
-                      </h3>
+                      <div className="flex-1 space-y-2">
+                        {card.superPillar && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-amber-400/40 bg-amber-500/10 text-[11px] uppercase tracking-wider text-amber-200 font-semibold">
+                            Super Pillar
+                          </span>
+                        )}
+                        <h3 className="text-lg lg:text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-200 leading-tight">
+                          {card.title}
+                        </h3>
+                      </div>
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center group-hover:bg-blue-500/40 transition-colors duration-200">
                         <svg 
                           className="w-3 h-3 text-gray-400 group-hover:text-white transition-colors duration-200" 
@@ -139,7 +160,7 @@ export default function ArticlesPage() {
                       </div>
                     </div>
                     <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
-                      Explore insights and strategies for AI-powered marketing
+                      {card.description ?? 'Explore insights and strategies for AI-powered marketing'}
                     </p>
                   </div>
                 </article>

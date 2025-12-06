@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { jsonResponse } from "@/lib/jsonResponse";
 import OpenAI from "openai";
 
 export const runtime = "nodejs";
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
     const { text, voice = "alloy" } = await req.json();
 
     if (!text || !text.trim()) {
-      return NextResponse.json(
+      return jsonResponse(
         { error: "Text is required for audio generation." },
         { status: 400 }
       );
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error("TTS error:", err);
 
-    return NextResponse.json(
+    return jsonResponse(
       {
         error: "Failed to generate audio.",
         details: err?.message ?? "Unknown error",

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { FileText, Target, Home, Megaphone, Mail, Smartphone, Briefcase, File, MousePointerClick, DollarSign, MessageSquare, Brain, AlertTriangle, Check, ChevronRight, ChevronLeft, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Target, Home, Megaphone, Mail, FileText, Gift, MessageSquare, MousePointerClick, DollarSign, Brain, AlertTriangle, Check, Sparkles, Image as ImageIcon } from 'lucide-react';
+
+type ContentType = 'landing' | 'social' | 'ads' | 'sales' | 'email' | 'lead_magnet' | 'engagement';
 
 interface MultiStepInputPanelProps {
   formData: {
     raw_text: string;
-    platform: string;
+    platform: string; // Keep for backward compatibility, but we'll use content_type
     goal: string[];
     audience: string;
     language: string;
@@ -19,25 +20,47 @@ interface MultiStepInputPanelProps {
   onGoalChange: (goal: string) => void;
   onImageChange?: (file: File | null) => void;
   selectedImage?: File | null;
-  showImageUpload?: boolean; // Explicit flag to show/hide image upload
+  showImageUpload?: boolean;
   onSubmit: (e: React.FormEvent) => void;
 }
 
-const PLATFORM_OPTIONS = [
-  { value: 'landing_page', label: 'Landing Page', Icon: Home, color: 'blue' },
-  { value: 'ad', label: 'Ad', Icon: Megaphone, color: 'purple' },
+const CONTENT_TYPE_OPTIONS: Array<{ value: ContentType; label: string; Icon: any; color: string }> = [
+  { value: 'landing', label: 'Landing', Icon: Home, color: 'blue' },
+  { value: 'social', label: 'Social', Icon: MessageSquare, color: 'pink' },
+  { value: 'ads', label: 'Ads', Icon: Megaphone, color: 'purple' },
+  { value: 'sales', label: 'Sales Page', Icon: FileText, color: 'indigo' },
   { value: 'email', label: 'Email', Icon: Mail, color: 'green' },
-  { value: 'instagram', label: 'Social', Icon: Smartphone, color: 'pink' },
-  { value: 'linkedin', label: 'LinkedIn', Icon: Briefcase, color: 'indigo' },
-  { value: 'other', label: 'Other', Icon: File, color: 'gray' },
+  { value: 'lead_magnet', label: 'Lead Magnet', Icon: Gift, color: 'green' },
+  { value: 'engagement', label: 'Engagement', Icon: MessageSquare, color: 'orange' },
 ];
 
-const GOAL_OPTIONS = [
-  { value: 'clicks', label: 'Clicks', Icon: MousePointerClick, color: 'purple' },
-  { value: 'leads', label: 'Leads', Icon: Target, color: 'blue' },
-  { value: 'sales', label: 'Sales', Icon: DollarSign, color: 'green' },
-  { value: 'engagement', label: 'Engagement', Icon: MessageSquare, color: 'pink' },
-];
+// Goals based on content type
+const getGoalsForContentType = (contentType: ContentType) => {
+  const allGoals = [
+    { value: 'clicks', label: 'Clicks', Icon: MousePointerClick, color: 'purple' },
+    { value: 'leads', label: 'Leads', Icon: Target, color: 'blue' },
+    { value: 'sales', label: 'Sales', Icon: DollarSign, color: 'green' },
+    { value: 'engagement', label: 'Engagement', Icon: MessageSquare, color: 'pink' },
+  ];
+
+  // Customize goals based on content type
+  switch (contentType) {
+    case 'landing':
+    case 'sales':
+      return allGoals.filter(g => ['leads', 'sales', 'clicks'].includes(g.value));
+    case 'ads':
+      return allGoals.filter(g => ['clicks', 'leads', 'sales'].includes(g.value));
+    case 'social':
+    case 'engagement':
+      return allGoals.filter(g => ['engagement', 'clicks', 'leads'].includes(g.value));
+    case 'email':
+      return allGoals.filter(g => ['leads', 'sales', 'engagement'].includes(g.value));
+    case 'lead_magnet':
+      return allGoals.filter(g => ['leads', 'engagement'].includes(g.value));
+    default:
+      return allGoals;
+  }
+};
 
 const AUDIENCE_OPTIONS = [
   { value: 'cold', label: 'Cold', description: 'New visitors', gradient: 'from-slate-600 to-slate-700' },
@@ -56,15 +79,54 @@ export default function MultiStepInputPanel({
   showImageUpload = false,
   onSubmit,
 }: MultiStepInputPanelProps) {
-  const [currentStep, setCurrentStep] = useState(1);
-
-  const steps = [
-    { number: 1, label: 'Content & Platform', Icon: FileText },
-    { number: 2, label: 'Goals & Audience', Icon: Target },
-  ];
-
   const getCharacterCount = () => formData.raw_text.length;
   const getWordCount = () => formData.raw_text.trim().split(/\s+/).filter(Boolean).length;
+
+  // Determine content type from platform (backward compatibility) or use a default
+  const getContentType = (): ContentType => {
+    const platformMap: Record<string, ContentType> = {
+      'landing_page': 'landing',
+      'social_media': 'social',
+      'social_post': 'social',
+      'ad': 'ads',
+      'ads': 'ads',
+      'sales_page': 'sales',
+      'email': 'email',
+      'lead_magnet': 'lead_magnet',
+      'engagement': 'engagement',
+    };
+    return platformMap[formData.platform] || 'landing';
+  };
+
+  const currentContentType = getContentType();
+
+  // Show audience stage only for Landing, Ads, Sales Page
+  const showAudienceStage = ['landing', 'ads', 'sales'].includes(currentContentType);
+
+  // Show image upload only for Landing, Social, Ads
+  // Hide for Email, Sales Page, Lead Magnet, Engagement
+  const showImageUploadField = ['landing', 'social', 'ads'].includes(currentContentType) && showImageUpload && onImageChange;
+
+  // Get goals for current content type
+  const availableGoals = getGoalsForContentType(currentContentType);
+
+  const handleContentTypeChange = (contentType: ContentType) => {
+    // Map content type to platform value for backward compatibility
+    const platformMap: Record<ContentType, string> = {
+      'landing': 'landing_page',
+      'social': 'social_post',
+      'ads': 'ad',
+      'sales': 'sales_page',
+      'email': 'email',
+      'lead_magnet': 'lead_magnet',
+      'engagement': 'engagement',
+    };
+
+    const event = {
+      target: { name: 'platform', value: platformMap[contentType] },
+    } as React.ChangeEvent<HTMLSelectElement>;
+    onInputChange(event);
+  };
 
   return (
     <div className="w-full relative">
@@ -74,324 +136,242 @@ export default function MultiStepInputPanel({
       <div className="absolute bottom-0 left-0 w-64 h-64 sm:w-96 sm:h-96 bg-cyan-500/10 rounded-full blur-3xl -z-10"></div>
       
       <div className="relative z-10">
-        {/* Progress Indicator - Modern AI Style - Left, Center, Right */}
-        <div className="mb-6 sm:mb-10">
-          <div className="relative flex items-center justify-between max-w-3xl mx-auto">
-            {steps.map((step, index) => (
-              <div key={step.number} className="flex flex-col items-center relative z-10">
-                <div className="relative mb-2 sm:mb-4">
+        <form onSubmit={onSubmit} className="space-y-6 sm:space-y-8" noValidate>
+          {/* (A) Content Type Tabs */}
+          <div>
+            <label className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 text-center">
+              Content Type
+            </label>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto">
+              {CONTENT_TYPE_OPTIONS.map((contentType) => {
+                const IconComponent = contentType.Icon;
+                const isSelected = currentContentType === contentType.value;
+                const colorClasses = {
+                  blue: isSelected ? 'border-blue-500/50 bg-gradient-to-br from-blue-500/20 to-blue-600/10 shadow-xl shadow-blue-500/30' : '',
+                  purple: isSelected ? 'border-purple-500/50 bg-gradient-to-br from-purple-500/20 to-purple-600/10 shadow-xl shadow-purple-500/30' : '',
+                  green: isSelected ? 'border-green-500/50 bg-gradient-to-br from-green-500/20 to-green-600/10 shadow-xl shadow-green-500/30' : '',
+                  pink: isSelected ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/20 to-pink-600/10 shadow-xl shadow-pink-500/30' : '',
+                  indigo: isSelected ? 'border-indigo-500/50 bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 shadow-xl shadow-indigo-500/30' : '',
+                  orange: isSelected ? 'border-orange-500/50 bg-gradient-to-br from-orange-500/20 to-orange-600/10 shadow-xl shadow-orange-500/30' : '',
+                };
+                const glowClasses = {
+                  blue: 'from-blue-600 to-blue-500',
+                  purple: 'from-purple-600 to-purple-500',
+                  green: 'from-green-600 to-green-500',
+                  pink: 'from-pink-600 to-pink-500',
+                  indigo: 'from-indigo-600 to-indigo-500',
+                  orange: 'from-orange-600 to-orange-500',
+                };
+                return (
                   <button
+                    key={contentType.value}
                     type="button"
-                    onClick={() => setCurrentStep(step.number)}
-                    className={`relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-300 transform ${
-                      currentStep === step.number
-                        ? 'bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/50 scale-110'
-                        : currentStep > step.number
-                        ? 'bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-md scale-100'
-                        : 'bg-slate-800/50 text-slate-500 border-2 border-slate-700/50 scale-100'
+                    onClick={() => handleContentTypeChange(contentType.value)}
+                    className={`group relative flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 transform ${
+                      isSelected
+                        ? `${colorClasses[contentType.color as keyof typeof colorClasses]} scale-105`
+                        : 'border-slate-700/50 bg-slate-800/30 hover:border-purple-500/30 hover:bg-slate-800/50 hover:scale-102'
                     }`}
                   >
-                    {currentStep > step.number ? (
-                      <Check className="w-4 h-4 sm:w-5 sm:h-5" />
-                    ) : (
-                      <step.Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    )}
-                    {currentStep === step.number && (
-                      <div className="absolute inset-0 rounded-lg sm:rounded-xl bg-gradient-to-br from-white/20 to-transparent"></div>
+                    <IconComponent className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
+                    }`} />
+                    <span className={`text-xs sm:text-sm font-semibold transition-colors ${
+                      isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
+                    }`}>
+                      {contentType.label}
+                    </span>
+                    {isSelected && (
+                      <div className={`absolute -inset-0.5 bg-gradient-to-r ${glowClasses[contentType.color as keyof typeof glowClasses]} rounded-xl sm:rounded-2xl blur opacity-50 animate-pulse`}></div>
                     )}
                   </button>
-                  {currentStep === step.number && (
-                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg sm:rounded-xl blur opacity-75 animate-pulse"></div>
-                  )}
-                </div>
-                <span
-                  className={`text-[10px] sm:text-xs font-semibold transition-colors text-center px-1 ${
-                    currentStep === step.number
-                      ? 'text-white'
-                      : currentStep > step.number
-                      ? 'text-green-400'
-                      : 'text-slate-500'
-                  }`}
-                >
-                  <span className="hidden sm:inline">{step.label}</span>
-                  <span className="sm:hidden">{step.number}</span>
-                </span>
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        <form onSubmit={onSubmit} className="space-y-6 sm:space-y-8" noValidate>
-          {/* Step 1: Content & Platform */}
-          {currentStep === 1 && (
-            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
-              {/* Content Textarea */}
-              <div className="relative group">
-                <label htmlFor="raw_text" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
-                  Content to Analyze {!selectedImage && <span className="text-red-400">*</span>}
-                </label>
-                <div className="relative">
-                  <textarea
-                    id="raw_text"
-                    name="raw_text"
-                    value={formData.raw_text}
-                    onChange={onInputChange}
-                    placeholder="Paste your marketing copy here... (or upload an image)"
-                    required={!selectedImage}
-                    className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white placeholder-slate-500/70 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all min-h-[140px] sm:min-h-[160px] resize-y shadow-xl group-hover:border-purple-500/30 relative"
-                    style={{
-                      backgroundImage: formData.raw_text.trim() === '' 
-                        ? `radial-gradient(circle, rgba(148, 163, 184, 0.08) 1.2px, transparent 1.2px)`
-                        : 'none',
-                      backgroundSize: '24px 28px',
-                      backgroundPosition: '12px 12px',
-                    }}
-                  />
-                  <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mt-2 sm:mt-3 px-2">
-                  <div className="flex items-center gap-3 sm:gap-4 text-xs">
-                    <span className="text-slate-400 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                      {getWordCount()} words
-                    </span>
-                    <span className="text-slate-400">{getCharacterCount()} chars</span>
-                  </div>
-                  {getWordCount() < 20 && (
-                    <span className="text-xs text-amber-400 flex items-center gap-2">
-                      <AlertTriangle className="w-3 h-3" />
-                      <span className="hidden sm:inline">Minimum 20 words recommended</span>
-                      <span className="sm:hidden">Min 20 words</span>
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Image Upload Field - Only show if showImageUpload is true */}
-              {showImageUpload && onImageChange && (
-                <div className="relative group">
-                  <label htmlFor="image_upload" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
-                    {!formData.raw_text.trim() ? (
-                      <>Upload Landing Page Screenshot <span className="text-red-400">*</span></>
-                    ) : (
-                      <>Optional: Upload Landing Page Screenshot</>
-                    )}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      id="image_upload"
-                      name="image_upload"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0] || null;
-                        onImageChange(file);
+          {/* (B) Audience Stage (conditional) */}
+          {showAudienceStage && (
+            <div>
+              <label className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 text-center">
+                Audience Stage
+              </label>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-2xl mx-auto">
+                {AUDIENCE_OPTIONS.map((audience) => {
+                  const isSelected = formData.audience === audience.value;
+                  return (
+                    <button
+                      key={audience.value}
+                      type="button"
+                      onClick={() => {
+                        const event = {
+                          target: { name: 'audience', value: audience.value },
+                        } as React.ChangeEvent<HTMLSelectElement>;
+                        onInputChange(event);
                       }}
-                      className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all shadow-xl group-hover:border-purple-500/30"
-                    />
-                    {selectedImage && (
-                      <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
-                        <ImageIcon className="w-4 h-4 text-purple-400" />
-                        <span>{selectedImage.name}</span>
-                        <button
-                          type="button"
-                          onClick={() => onImageChange(null)}
-                          className="ml-auto text-red-400 hover:text-red-300 transition-colors"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Platform Selection */}
-              <div>
-                <label className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 text-center">
-                  Platform Type
-                </label>
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-4 max-w-4xl mx-auto">
-                  {PLATFORM_OPTIONS.map((platform) => {
-                    const IconComponent = platform.Icon;
-                    const isSelected = formData.platform === platform.value;
-                    const colorClasses = {
-                      blue: isSelected ? 'border-blue-500/50 bg-gradient-to-br from-blue-500/20 to-blue-600/10 shadow-xl shadow-blue-500/30' : '',
-                      purple: isSelected ? 'border-purple-500/50 bg-gradient-to-br from-purple-500/20 to-purple-600/10 shadow-xl shadow-purple-500/30' : '',
-                      green: isSelected ? 'border-green-500/50 bg-gradient-to-br from-green-500/20 to-green-600/10 shadow-xl shadow-green-500/30' : '',
-                      pink: isSelected ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/20 to-pink-600/10 shadow-xl shadow-pink-500/30' : '',
-                      indigo: isSelected ? 'border-indigo-500/50 bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 shadow-xl shadow-indigo-500/30' : '',
-                      gray: isSelected ? 'border-gray-500/50 bg-gradient-to-br from-gray-500/20 to-gray-600/10 shadow-xl shadow-gray-500/30' : '',
-                    };
-                    const glowClasses = {
-                      blue: 'from-blue-600 to-blue-500',
-                      purple: 'from-purple-600 to-purple-500',
-                      green: 'from-green-600 to-green-500',
-                      pink: 'from-pink-600 to-pink-500',
-                      indigo: 'from-indigo-600 to-indigo-500',
-                      gray: 'from-gray-600 to-gray-500',
-                    };
-                    return (
-                      <label
-                        key={platform.value}
-                        className={`group relative flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-5 rounded-xl sm:rounded-2xl border-2 cursor-pointer transition-all duration-300 transform ${
-                          isSelected
-                            ? `${colorClasses[platform.color as keyof typeof colorClasses]} scale-105`
-                            : 'border-slate-700/50 bg-slate-800/30 hover:border-purple-500/30 hover:bg-slate-800/50 hover:scale-102'
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="platform"
-                          value={platform.value}
-                          checked={isSelected}
-                          onChange={(e) => {
-                            const event = {
-                              target: { name: 'platform', value: e.target.value },
-                            } as React.ChangeEvent<HTMLSelectElement>;
-                            onInputChange(event);
-                          }}
-                          className="sr-only"
-                        />
-                        <div className={`transform transition-transform ${isSelected ? 'scale-110' : 'group-hover:scale-110'}`}>
-                          <IconComponent className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                            isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
-                          }`} />
-                        </div>
-                        <span className={`text-[10px] sm:text-xs font-semibold text-center transition-colors ${
-                          isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
-                        }`}>
-                          {platform.label}
-                        </span>
-                        {isSelected && (
-                          <div className={`absolute -inset-0.5 bg-gradient-to-r ${glowClasses[platform.color as keyof typeof glowClasses]} rounded-xl sm:rounded-2xl blur opacity-50 animate-pulse`}></div>
-                        )}
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Navigation */}
-              <div className="flex justify-center gap-3 sm:gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(2)}
-                  className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
-                >
-                  Next
-                  <ChevronRight className="w-4 h-4" />
-                </button>
+                      className={`flex-1 relative px-4 sm:px-6 py-4 sm:py-5 rounded-xl sm:rounded-2xl border-2 text-sm font-semibold transition-all transform ${
+                        isSelected
+                          ? `bg-gradient-to-br ${audience.gradient} text-white shadow-xl scale-105 border-transparent`
+                          : 'border-slate-700/50 bg-slate-800/30 text-slate-400 hover:border-purple-500/30 hover:bg-slate-800/50 hover:text-slate-300 hover:scale-102'
+                      }`}
+                    >
+                      <div className="font-bold mb-1">{audience.label}</div>
+                      <div className="text-xs font-normal opacity-80">{audience.description}</div>
+                      {isSelected && (
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl sm:rounded-2xl blur opacity-50 animate-pulse"></div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* Step 2: Goals & Audience */}
-          {currentStep === 2 && (
-            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
-              {/* Goals */}
-              <div>
-                <label className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 text-center">
-                  Primary Goals
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
-                  {GOAL_OPTIONS.map((goal) => {
-                    const IconComponent = goal.Icon;
-                    const isSelected = formData.goal.includes(goal.value);
-                    const colorClasses = {
-                      purple: isSelected ? 'border-purple-500/50 bg-gradient-to-br from-purple-500/20 to-purple-600/10 shadow-xl shadow-purple-500/30' : '',
-                      blue: isSelected ? 'border-blue-500/50 bg-gradient-to-br from-blue-500/20 to-blue-600/10 shadow-xl shadow-blue-500/30' : '',
-                      green: isSelected ? 'border-green-500/50 bg-gradient-to-br from-green-500/20 to-green-600/10 shadow-xl shadow-green-500/30' : '',
-                      pink: isSelected ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/20 to-pink-600/10 shadow-xl shadow-pink-500/30' : '',
-                    };
-                    const glowClasses = {
-                      purple: 'from-purple-600 to-purple-500',
-                      blue: 'from-blue-600 to-blue-500',
-                      green: 'from-green-600 to-green-500',
-                      pink: 'from-pink-600 to-pink-500',
-                    };
-                    return (
-                      <button
-                        key={goal.value}
-                        type="button"
-                        onClick={() => onGoalChange(goal.value)}
-                        className={`group relative flex flex-col items-center gap-2 sm:gap-3 p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 transform ${
-                          isSelected
-                            ? `${colorClasses[goal.color as keyof typeof colorClasses]} scale-105`
-                            : 'border-slate-700/50 bg-slate-800/30 hover:border-purple-500/30 hover:bg-slate-800/50 hover:scale-102'
-                        }`}
-                      >
-                        <div className={`transform transition-transform ${isSelected ? 'scale-110' : 'group-hover:scale-110'}`}>
-                          <IconComponent className={`w-5 h-5 sm:w-6 sm:h-6 ${
-                            isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
-                          }`} />
+          {/* (C) Goal Selection (dependent on content type) */}
+          <div>
+            <label className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 text-center">
+              Primary Goals
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
+              {availableGoals.map((goal) => {
+                const IconComponent = goal.Icon;
+                const isSelected = formData.goal.includes(goal.value);
+                const colorClasses = {
+                  purple: isSelected ? 'border-purple-500/50 bg-gradient-to-br from-purple-500/20 to-purple-600/10 shadow-xl shadow-purple-500/30' : '',
+                  blue: isSelected ? 'border-blue-500/50 bg-gradient-to-br from-blue-500/20 to-blue-600/10 shadow-xl shadow-blue-500/30' : '',
+                  green: isSelected ? 'border-green-500/50 bg-gradient-to-br from-green-500/20 to-green-600/10 shadow-xl shadow-green-500/30' : '',
+                  pink: isSelected ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/20 to-pink-600/10 shadow-xl shadow-pink-500/30' : '',
+                };
+                const glowClasses = {
+                  purple: 'from-purple-600 to-purple-500',
+                  blue: 'from-blue-600 to-blue-500',
+                  green: 'from-green-600 to-green-500',
+                  pink: 'from-pink-600 to-pink-500',
+                };
+                return (
+                  <button
+                    key={goal.value}
+                    type="button"
+                    onClick={() => onGoalChange(goal.value)}
+                    className={`group relative flex flex-col items-center gap-2 sm:gap-3 p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 transform ${
+                      isSelected
+                        ? `${colorClasses[goal.color as keyof typeof colorClasses]} scale-105`
+                        : 'border-slate-700/50 bg-slate-800/30 hover:border-purple-500/30 hover:bg-slate-800/50 hover:scale-102'
+                    }`}
+                  >
+                    <div className={`transform transition-transform ${isSelected ? 'scale-110' : 'group-hover:scale-110'}`}>
+                      <IconComponent className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                        isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
+                      }`} />
+                    </div>
+                    <span className={`text-xs sm:text-sm font-semibold transition-colors ${
+                      isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
+                    }`}>
+                      {goal.label}
+                    </span>
+                    {isSelected && (
+                      <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2">
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
+                          <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
                         </div>
-                        <span className={`text-xs sm:text-sm font-semibold transition-colors ${
-                          isSelected ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'
-                        }`}>
-                          {goal.label}
-                        </span>
-                        {isSelected && (
-                          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2">
-                            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
-                              <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
-                            </div>
-                          </div>
-                        )}
-                        {isSelected && (
-                          <div className={`absolute -inset-0.5 bg-gradient-to-r ${glowClasses[goal.color as keyof typeof glowClasses]} rounded-xl sm:rounded-2xl blur opacity-50 animate-pulse`}></div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+                      </div>
+                    )}
+                    {isSelected && (
+                      <div className={`absolute -inset-0.5 bg-gradient-to-r ${glowClasses[goal.color as keyof typeof glowClasses]} rounded-xl sm:rounded-2xl blur opacity-50 animate-pulse`}></div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-              {/* Audience */}
-              <div>
-                <label className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4 text-center">
-                  Audience Stage
-                </label>
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-2xl mx-auto">
-                  {AUDIENCE_OPTIONS.map((audience) => {
-                    const isSelected = formData.audience === audience.value;
-                    return (
-                      <button
-                        key={audience.value}
-                        type="button"
-                        onClick={() => {
-                          const event = {
-                            target: { name: 'audience', value: audience.value },
-                          } as React.ChangeEvent<HTMLSelectElement>;
-                          onInputChange(event);
-                        }}
-                        className={`flex-1 relative px-4 sm:px-6 py-4 sm:py-5 rounded-xl sm:rounded-2xl border-2 text-sm font-semibold transition-all transform ${
-                          isSelected
-                            ? `bg-gradient-to-br ${audience.gradient} text-white shadow-xl scale-105 border-transparent`
-                            : 'border-slate-700/50 bg-slate-800/30 text-slate-400 hover:border-purple-500/30 hover:bg-slate-800/50 hover:text-slate-300 hover:scale-102'
-                        }`}
-                      >
-                        <div className="font-bold mb-1">{audience.label}</div>
-                        <div className="text-xs font-normal opacity-80">{audience.description}</div>
-                        {isSelected && (
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl sm:rounded-2xl blur opacity-50 animate-pulse"></div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+          {/* (D) Input Content (text/image) */}
+          <div className="relative group">
+            <label htmlFor="raw_text" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
+              Content to Analyze {!selectedImage && <span className="text-red-400">*</span>}
+            </label>
+            <div className="relative">
+              <textarea
+                id="raw_text"
+                name="raw_text"
+                value={formData.raw_text}
+                onChange={onInputChange}
+                placeholder="Paste your marketing copy here... (or upload an image)"
+                required={!selectedImage}
+                className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white placeholder-slate-500/70 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all min-h-[140px] sm:min-h-[160px] resize-y shadow-xl group-hover:border-purple-500/30 relative"
+                style={{
+                  backgroundImage: formData.raw_text.trim() === '' 
+                    ? `radial-gradient(circle, rgba(148, 163, 184, 0.08) 1.2px, transparent 1.2px)`
+                    : 'none',
+                  backgroundSize: '24px 28px',
+                  backgroundPosition: '12px 12px',
+                }}
+              />
+              <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mt-2 sm:mt-3 px-2">
+              <div className="flex items-center gap-3 sm:gap-4 text-xs">
+                <span className="text-slate-400 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                  {getWordCount()} words
+                </span>
+                <span className="text-slate-400">{getCharacterCount()} chars</span>
               </div>
+              {getWordCount() < 20 && (
+                <span className="text-xs text-amber-400 flex items-center gap-2">
+                  <AlertTriangle className="w-3 h-3" />
+                  <span className="hidden sm:inline">Minimum 20 words recommended</span>
+                  <span className="sm:hidden">Min 20 words</span>
+                </span>
+              )}
+            </div>
+          </div>
 
-              {/* Navigation */}
-              <div className="flex justify-center gap-3 sm:gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(1)}
-                  className="px-4 sm:px-6 py-3 rounded-xl border-2 border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/50 text-slate-300 text-sm font-semibold transition-all transform hover:scale-105 flex items-center justify-center gap-2"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  <span className="hidden sm:inline">Back</span>
-                </button>
+          {/* Image Upload Field - Conditional */}
+          {showImageUploadField && (
+            <div className="relative group">
+              <label htmlFor="image_upload" className="block text-xs sm:text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-3 sm:mb-4">
+                {!formData.raw_text.trim() ? (
+                  <>Upload Screenshot or Image <span className="text-red-400">*</span></>
+                ) : (
+                  <>Optional: Upload Screenshot or Image</>
+                )}
+              </label>
+              <div className="relative">
+                <input
+                  type="file"
+                  id="image_upload"
+                  name="image_upload"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    onImageChange(file);
+                  }}
+                  className="w-full rounded-xl sm:rounded-2xl border-2 border-slate-700/50 bg-slate-900/80 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4 text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 focus:border-purple-500/50 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-purple-500/20 transition-all shadow-xl group-hover:border-purple-500/30"
+                />
+                {selectedImage && (
+                  <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                    <ImageIcon className="w-4 h-4 text-purple-400" />
+                    <span>{selectedImage.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => onImageChange(null)}
+                      className="ml-auto text-red-400 hover:text-red-300 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Video support note for Engagement */}
+          {currentContentType === 'engagement' && (
+            <div className="rounded-xl border-2 border-orange-500/30 bg-orange-900/20 backdrop-blur-xl p-4">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="w-5 h-5 text-orange-400" />
+                <div className="text-sm text-orange-200 font-medium">Video support coming soon</div>
               </div>
             </div>
           )}
@@ -406,7 +386,7 @@ export default function MultiStepInputPanel({
             </div>
           )}
 
-          {/* Submit Button */}
+          {/* (E) Analyze Button */}
           <div className="pt-6 sm:pt-8 border-t border-slate-800/50">
             <button
               type="submit"
