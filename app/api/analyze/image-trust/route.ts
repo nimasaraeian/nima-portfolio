@@ -71,26 +71,57 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Convert File to Buffer and forward to backend
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    
+    // Create FormData for forwarding - use File constructor with buffer
     const forwardFormData = new FormData();
-    forwardFormData.append('file', file, file.name || 'upload.jpg');
+    // In Node.js 18+, we can use File constructor directly with buffer
+    const fileForUpload = new File([buffer], file.name || 'upload.jpg', { type: file.type });
+    forwardFormData.append('file', fileForUpload);
+
+    console.log(`📤 Forwarding to backend: ${backendEndpoint}`);
+    console.log(`   File: ${file.name || 'upload.jpg'}, Size: ${file.size} bytes, Type: ${file.type}`);
 
     let backendResponse: Response;
     try {
+      // Add timeout for backend request (30 seconds)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      
       backendResponse = await fetch(backendEndpoint, {
         method: 'POST',
         body: forwardFormData,
+        signal: controller.signal,
+        // Don't set Content-Type header - fetch will set it automatically with boundary for FormData
       });
+      
+      clearTimeout(timeoutId);
     } catch (fetchError: any) {
+      if (fetchError?.name === 'AbortError') {
+        console.error('❌ Backend request timed out after 30 seconds:', backendEndpoint);
+        return jsonResponse(
+          {
+            error: 'backend_timeout',
+            detail: 'Backend request timed out. The server may be overloaded or unreachable.',
+            backend_url: backendEndpoint,
+          },
+          { status: 504 }
+        );
+      }
       console.error(
         '❌ Failed to connect to backend for image trust:',
         backendEndpoint,
-        fetchError?.message || fetchError
+        fetchError?.message || fetchError,
+        fetchError?.stack
       );
 
       return jsonResponse(
         {
           error: 'fetch_failed',
-          detail: `Failed to connect to backend API at ${backendEndpoint}. Please ensure the backend is running on ${backendUrl}`,
+          detail: `Failed to connect to backend API at ${backendEndpoint}. The backend server may be down or unreachable.`,
+          backend_url: backendEndpoint,
         },
         { status: 502 }
       );
@@ -113,9 +144,13 @@ export async function POST(req: NextRequest) {
         // ignore JSON parse failure
       }
 
-      // For 422 errors, provide more helpful error message
+      // Provide helpful error messages based on status code
       if (backendResponse.status === 422) {
         errorDetail = errorDetail || 'Backend validation failed. The image may be invalid or unsupported format.';
+      } else if (backendResponse.status === 500) {
+        errorDetail = errorDetail || 'Backend server error. The image trust analysis service encountered an internal error.';
+      } else if (backendResponse.status === 503) {
+        errorDetail = errorDetail || 'Backend service unavailable. The image trust analysis service is temporarily down.';
       }
 
       return jsonResponse(
@@ -123,23 +158,49 @@ export async function POST(req: NextRequest) {
           error: `backend_error_${backendResponse.status}`,
           detail: errorDetail,
           backend_url: backendEndpoint,
+          status: backendResponse.status,
         },
         { status: backendResponse.status }
       );
     }
 
-    const backendData = await backendResponse.json();
-    console.log('✅ Backend image trust response received');
+    let backendData: any;
+    try {
+      const responseText = await backendResponse.text();
+      if (!responseText) {
+        throw new Error('Empty response from backend');
+      }
+      backendData = JSON.parse(responseText);
+    } catch (parseError: any) {
+      console.error('❌ Failed to parse backend response:', parseError);
+      return jsonResponse(
+        {
+          error: 'invalid_backend_response',
+          detail: 'Backend returned invalid response. Please check backend logs.',
+        },
+        { status: 502 }
+      );
+    }
+    
+    console.log('✅ Backend image trust response received:', {
+      success: backendData?.success,
+      hasAnalysis: !!backendData?.analysis,
+    });
 
     return jsonResponse(backendData);
   } catch (error: any) {
-    console.error('❌ Error in /api/analyze/image-trust:', error);
+    console.error('❌ Error in /api/analyze/image-trust:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name,
+    });
+    
     return jsonResponse(
       {
         error: 'image_trust_proxy_error',
         detail:
           error?.message ||
-          'Unexpected error while proxying image trust analysis.',
+          'Unexpected error while proxying image trust analysis. Please check server logs.',
       },
       { status: 500 }
     );
