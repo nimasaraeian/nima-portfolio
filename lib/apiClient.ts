@@ -81,7 +81,7 @@ export const GOALS_BY_TYPE: Record<ContentType, PrimaryGoal[]> = {
 
 /**
  * Sends a POST request to the Brain API.
- *
+ * 
  * @param path - API endpoint path (e.g., '/api/brain/cognitive-friction')
  * @param payload - Request body object (will be JSON stringified)
  * @returns Promise resolving to the JSON response
@@ -171,5 +171,55 @@ export async function analyzeCrictionWithImage(input: CognitiveFrictionInput) {
 // backward‑compatible alias name
 export const analyzeCognitiveFriction = analyzeCrictionWithImage;
 
+/**
+ * Backend base URL for visual trust analysis
+ * Uses NEXT_PUBLIC_BACKEND_URL or falls back to production URL
+ */
+export const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "https://nima-ai-marketing.onrender.com";
 
+export const IMAGE_TRUST_API_URL = `${BACKEND_BASE_URL}/api/analyze/image-trust`;
+export const HEALTH_URL = `${BACKEND_BASE_URL}/health`;
+
+/**
+ * Runs visual trust analysis on an uploaded image file
+ * 
+ * @param file - The image file to analyze
+ * @returns Promise resolving to the analysis result
+ * @throws Error if the request fails
+ */
+export async function runVisualTrustAnalysis(file: File) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  console.log("[VisualTrust] Sending request to", IMAGE_TRUST_API_URL);
+
+  const res = await fetch(IMAGE_TRUST_API_URL, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    console.error("[VisualTrust] Backend error", res.status, res.statusText);
+    throw new Error(`Image trust analysis failed with status ${res.status}`);
+  }
+
+  const data = await res.json();
+  console.log("[VisualTrust] Response", data);
+  return data;
+}
+
+/**
+ * Checks the health status of the backend API
+ * 
+ * @returns Promise resolving to the health check response
+ * @throws Error if the health check fails
+ */
+export async function checkBackendHealth() {
+  const res = await fetch(HEALTH_URL);
+  if (!res.ok) {
+    throw new Error("Backend health check failed");
+  }
+  return res.json();
+}
 

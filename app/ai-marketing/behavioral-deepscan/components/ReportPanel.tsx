@@ -51,6 +51,7 @@ interface ReportPanelProps {
   imageError?: string | null;
   brainResponse?: string | null;
   psychologyAnalysis?: PsychologyAnalysisResult | null;
+  uploadedImageUrl?: string | null;
 }
 
 function RewriteVariant({ label, body }: { label: string; body: string }) {
@@ -161,6 +162,7 @@ export default function ReportPanel({
   imageError,
   brainResponse,
   psychologyAnalysis,
+  uploadedImageUrl,
 }: ReportPanelProps) {
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
   const [rewriteLoading, setRewriteLoading] = useState(false);
@@ -329,77 +331,100 @@ export default function ReportPanel({
               Visual Trust Analysis
             </h3>
 
-            {imageError ? (
-              <div className="flex items-center gap-3 text-sm text-red-400">
-                <AlertTriangle className="w-5 h-5" />
-                <span>Visual analysis error: {imageError}</span>
+            <div className="mt-6 flex flex-col lg:flex-row gap-6">
+              {/* ستون تحلیل‌ها */}
+              <div className="flex-1 space-y-4">
+                {imageError ? (
+                  <div className="flex items-center gap-3 text-sm text-red-400">
+                    <AlertTriangle className="w-5 h-5" />
+                    <span>Visual analysis error: {imageError}</span>
+                  </div>
+                ) : isImageLoading ? (
+                  <div className="flex items-center gap-3 text-sm text-slate-400">
+                    <div className="w-5 h-5 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
+                    <span>Analyzing visual trust...</span>
+                  </div>
+                ) : visualTrust ? (
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="rounded-xl border-2 border-cyan-500/20 bg-cyan-900/10 p-4 sm:p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-sm sm:text-base font-semibold text-cyan-300">Visual Trust:</span>
+                        <span
+                          className={`text-sm sm:text-base font-bold px-3 py-1 rounded-full ${
+                            visualTrust.trust_label === 'high'
+                              ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                              : visualTrust.trust_label === 'medium'
+                              ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                              : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          }`}
+                        >
+                          {visualTrust.trust_label.charAt(0).toUpperCase() + visualTrust.trust_label.slice(1)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-xs sm:text-sm">
+                        <span className="text-slate-300">Low:</span>
+                        <span className="text-slate-400 font-semibold">
+                          {Math.round(visualTrust.trust_scores.low * 100)}%
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-800/50 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-red-500 to-rose-500 transition-all duration-1000"
+                          style={{ width: `${Math.round(visualTrust.trust_scores.low * 100)}%` }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs sm:text-sm">
+                        <span className="text-slate-300">Medium:</span>
+                        <span className="text-slate-400 font-semibold">
+                          {Math.round(visualTrust.trust_scores.medium * 100)}%
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-800/50 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-1000"
+                          style={{ width: `${Math.round(visualTrust.trust_scores.medium * 100)}%` }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs sm:text-sm">
+                        <span className="text-slate-300">High:</span>
+                        <span className="text-slate-400 font-semibold">
+                          {Math.round(visualTrust.trust_scores.high * 100)}%
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-800/50 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-1000"
+                          style={{ width: `${Math.round(visualTrust.trust_scores.high * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
-            ) : isImageLoading ? (
-              <div className="flex items-center gap-3 text-sm text-slate-400">
-                <div className="w-5 h-5 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
-                <span>Analyzing visual trust...</span>
-              </div>
-            ) : visualTrust ? (
-              <div className="space-y-4 sm:space-y-6">
-                <div className="rounded-xl border-2 border-cyan-500/20 bg-cyan-900/10 p-4 sm:p-5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-sm sm:text-base font-semibold text-cyan-300">Visual Trust:</span>
-                    <span
-                      className={`text-sm sm:text-base font-bold px-3 py-1 rounded-full ${
-                        visualTrust.trust_label === 'high'
-                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                          : visualTrust.trust_label === 'medium'
-                          ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                          : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                      }`}
-                    >
-                      {visualTrust.trust_label.charAt(0).toUpperCase() + visualTrust.trust_label.slice(1)}
-                    </span>
+
+              {/* ستون تصویر آپلود شده */}
+              {uploadedImageUrl && (
+                <div className="w-full lg:w-72 xl:w-80">
+                  <div className="border rounded-2xl p-3 bg-white/5 shadow-sm flex flex-col items-center">
+                    <div className="text-sm font-medium mb-2 opacity-80">
+                      Uploaded landing page image
+                    </div>
+                    <div className="w-full aspect-[4/5] overflow-hidden rounded-xl bg-black/5">
+                      <img
+                        src={uploadedImageUrl}
+                        alt="Uploaded for visual trust analysis"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
                 </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs sm:text-sm">
-                    <span className="text-slate-300">Low:</span>
-                    <span className="text-slate-400 font-semibold">
-                      {Math.round(visualTrust.trust_scores.low * 100)}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-800/50 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-red-500 to-rose-500 transition-all duration-1000"
-                      style={{ width: `${Math.round(visualTrust.trust_scores.low * 100)}%` }}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs sm:text-sm">
-                    <span className="text-slate-300">Medium:</span>
-                    <span className="text-slate-400 font-semibold">
-                      {Math.round(visualTrust.trust_scores.medium * 100)}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-800/50 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-1000"
-                      style={{ width: `${Math.round(visualTrust.trust_scores.medium * 100)}%` }}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs sm:text-sm">
-                    <span className="text-slate-300">High:</span>
-                    <span className="text-slate-400 font-semibold">
-                      {Math.round(visualTrust.trust_scores.high * 100)}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-800/50 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-1000"
-                      style={{ width: `${Math.round(visualTrust.trust_scores.high * 100)}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            ) : null}
+              )}
+            </div>
           </div>
         )}
 

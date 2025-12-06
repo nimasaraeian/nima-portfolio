@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
 import MultiStepInputPanel from '../behavioral-deepscan/components/MultiStepInputPanel';
@@ -12,6 +12,7 @@ import type {
   PageStructure,
   VisualTrustAnalysis,
 } from '@/app/ai-marketing/brain-types';
+import { runVisualTrustAnalysis } from '@/lib/apiClient';
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
  * 
@@ -637,9 +638,32 @@ function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
         </div>
       </div>
 
-      {/* 2. Page Structure & Visual Trust */}
-      <PageStructureCard page={result.page_structure} />
-      <VisualTrustCard analysis={result.visual_trust_analysis} score={visualTrustScore} />
+      {/* 2. Page Structure & Visual Trust with Image Preview */}
+      <div className="mt-6 flex flex-col lg:flex-row gap-6">
+        {/* ستون تحلیل‌ها */}
+        <div className="flex-1 space-y-4">
+          <PageStructureCard page={result.page_structure} />
+          <VisualTrustCard analysis={result.visual_trust_analysis} score={visualTrustScore} />
+        </div>
+
+        {/* ستون تصویر آپلود شده */}
+        {uploadedImageUrl && (
+          <div className="w-full lg:w-72 xl:w-80">
+            <div className="border rounded-2xl p-3 bg-white/5 shadow-sm flex flex-col items-center">
+              <div className="text-sm font-medium mb-2 opacity-80">
+                Uploaded landing page image
+              </div>
+              <div className="w-full aspect-[4/5] overflow-hidden rounded-xl bg-black/5">
+                <img
+                  src={uploadedImageUrl}
+                  alt="Uploaded for visual trust analysis"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* 2. Decision Blockers & Psychological Factors (with Tabs) */}
       <PsychologicalFactorsTabs result={result} />
@@ -731,6 +755,7 @@ export default function AiMarketingPageVariantA() {
   
   // Image upload state
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -739,6 +764,15 @@ export default function AiMarketingPageVariantA() {
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
   const [rewriteLoading, setRewriteLoading] = useState(false);
   const [rewriteError, setRewriteError] = useState<string | null>(null);
+
+  // Cleanup preview URL on unmount or when image changes
+  useEffect(() => {
+    return () => {
+      if (uploadedImageUrl) {
+        URL.revokeObjectURL(uploadedImageUrl);
+      }
+    };
+  }, [uploadedImageUrl]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>
@@ -762,34 +796,30 @@ export default function AiMarketingPageVariantA() {
   };
 
   const handleImageChange = (file: File | null) => {
+    // Clean up previous preview URL
+    if (uploadedImageUrl) {
+      URL.revokeObjectURL(uploadedImageUrl);
+    }
+    
     setSelectedImage(file);
     setVisualTrust(null);
     setImageError(null);
+    
+    // Create preview URL for new file
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setUploadedImageUrl(previewUrl);
+    } else {
+      setUploadedImageUrl(null);
+    }
   };
 
-  const runVisualTrustAnalysis = async (file: File) => {
+  const handleVisualTrustAnalysis = async (file: File) => {
     setIsImageLoading(true);
     setImageError(null);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const endpoint = baseUrl
-        ? `${baseUrl.replace(/\/$/, '')}/api/analyze/image-trust`
-        : '/api/analyze/image-trust';
-      
-      const formDataImage = new FormData();
-      formDataImage.append('file', file);
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formDataImage,
-      });
-
-      if (!response.ok) {
-        throw new Error('درخواست تحلیل اعتماد بصری با خطا مواجه شد.');
-      }
-
-      const imageData = await response.json();
+      const imageData = await runVisualTrustAnalysis(file);
 
       if (imageData?.success && imageData.analysis?.trust_label && imageData.analysis?.trust_scores) {
         setVisualTrust({
@@ -870,7 +900,7 @@ export default function AiMarketingPageVariantA() {
       setResult(data);
 
       if (imageForAnalysis) {
-        await runVisualTrustAnalysis(imageForAnalysis);
+        await handleVisualTrustAnalysis(imageForAnalysis);
       }
     } catch (err: any) {
       console.error('Analyze error', err);
@@ -979,6 +1009,7 @@ export default function AiMarketingPageVariantA() {
                 visualTrust={visualTrust}
                 isImageLoading={isImageLoading}
                 imageError={imageError}
+                uploadedImageUrl={uploadedImageUrl}
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
 import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
@@ -15,6 +15,7 @@ import {
 } from './CognitiveFrictionInsights';
 import {
   analyzeCognitiveFriction,
+  runVisualTrustAnalysis,
   type ContentType,
   type AudienceStage,
   type PrimaryGoal,
@@ -251,7 +252,7 @@ function PsychologicalFactorsTabs({ result }: { result: CognitiveFrictionResult 
   return (
     <div>
       <h3 className="text-xl font-semibold mb-4 text-white">Decision Blockers & Psychological Factors</h3>
-      
+
       {/* Tabs */}
       <div className="flex flex-wrap gap-2 mb-4 border-b border-gray-700">
         {tabs.map((tab) => (
@@ -271,23 +272,23 @@ function PsychologicalFactorsTabs({ result }: { result: CognitiveFrictionResult 
 
       {/* Active Tab Content */}
       {activeTabData && (
-        <div className={`rounded-xl border ${activeTabData.borderClass} ${activeTabData.bgClass} p-4`}>
+      <div className={`rounded-xl border ${activeTabData.borderClass} ${activeTabData.bgClass} p-4`}>
           <h4 className={`text-sm font-semibold mb-3 ${activeTabData.titleClass}`}>
             {activeTabData.title}
           </h4>
           {activeTabData.data.length > 0 ? (
-            <ul className="space-y-2 text-sm text-gray-300">
-              {activeTabData.data.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <span className={`${activeTabData.bulletClass} mt-1`}>•</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
+          <ul className="space-y-2 text-sm text-gray-300">
+            {activeTabData.data.map((item, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <span className={`${activeTabData.bulletClass} mt-1`}>•</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
             <p className="text-sm text-gray-400 italic">No major issues detected in this area.</p>
-          )}
-        </div>
+        )}
+      </div>
       )}
     </div>
   );
@@ -419,10 +420,10 @@ function ResultsPanel({ result }: { result: CognitiveFrictionResult }) {
       <div>
         <h3 className="text-xl font-semibold mb-4 text-white">Decision Psychology Summary</h3>
         <div className="space-y-4">
-          <div className="rounded-xl border border-purple-500/20 bg-purple-900/10 p-4">
+            <div className="rounded-xl border border-purple-500/20 bg-purple-900/10 p-4">
             <p className="text-sm text-gray-300 leading-relaxed">{result.explanationSummary}</p>
-          </div>
-          
+            </div>
+
           <div className="rounded-xl border border-blue-500/20 bg-blue-900/10 p-4">
             <h4 className="text-sm font-semibold mb-2 text-blue-300">AI Interpretation</h4>
             <p className="text-sm text-gray-300 leading-relaxed">{aiInterpretation}</p>
@@ -463,6 +464,7 @@ export default function AiMarketingPageVariantB() {
   const [goals, setGoals] = useState<PrimaryGoal[]>([]);
   const [rawText, setRawText] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -475,6 +477,15 @@ export default function AiMarketingPageVariantB() {
   const [rewriteResult, setRewriteResult] = useState<RewriteOutput | null>(null);
   const [rewriteLoading, setRewriteLoading] = useState(false);
   const [rewriteError, setRewriteError] = useState<string | null>(null);
+
+  // Cleanup preview URL on unmount or when image changes
+  useEffect(() => {
+    return () => {
+      if (uploadedImageUrl) {
+        URL.revokeObjectURL(uploadedImageUrl);
+      }
+    };
+  }, [uploadedImageUrl]);
 
   // Derived helpers
   const showAudienceStage = ['landing', 'ad', 'sales_page'].includes(contentType);
@@ -554,34 +565,30 @@ export default function AiMarketingPageVariantB() {
   };
 
   const handleImageChange = (file: File | null) => {
+    // Clean up previous preview URL
+    if (uploadedImageUrl) {
+      URL.revokeObjectURL(uploadedImageUrl);
+    }
+    
     setImageFile(file);
     setVisualTrust(null);
     setImageError(null);
+    
+    // Create preview URL for new file
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setUploadedImageUrl(previewUrl);
+    } else {
+      setUploadedImageUrl(null);
+    }
   };
 
-  const runVisualTrustAnalysis = async (file: File) => {
+  const handleVisualTrustAnalysis = async (file: File) => {
     setIsImageLoading(true);
     setImageError(null);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const endpoint = baseUrl
-        ? `${baseUrl.replace(/\/$/, '')}/api/analyze/image-trust`
-        : '/api/analyze/image-trust';
-      
-      const imageFormData = new FormData();
-      imageFormData.append('file', file);
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: imageFormData,
-      });
-
-      if (!response.ok) {
-        throw new Error('خطا در ارسال درخواست تحلیل اعتماد بصری.');
-      }
-
-      const imageData = await response.json();
+      const imageData = await runVisualTrustAnalysis(file);
 
       if (imageData?.success && imageData.analysis?.trust_label && imageData.analysis?.trust_scores) {
         setVisualTrust({
@@ -689,7 +696,7 @@ export default function AiMarketingPageVariantB() {
       setResult(data as any);
 
       if (imageForAnalysis) {
-        await runVisualTrustAnalysis(imageForAnalysis);
+        await handleVisualTrustAnalysis(imageForAnalysis);
       }
     } catch (err: any) {
       console.error('Analyze error', err);
@@ -1035,6 +1042,7 @@ export default function AiMarketingPageVariantB() {
                 visualTrust={visualTrust}
                 isImageLoading={isImageLoading}
                 imageError={imageError}
+                uploadedImageUrl={uploadedImageUrl}
               />
             </div>
           </div>

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import MultiStepInputPanel from './components/MultiStepInputPanel';
 import ReportPanel from './components/ReportPanel';
+import type { CognitiveFrictionResult } from '@/app/ai-marketing/brain-types';
 
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
@@ -25,25 +26,6 @@ import ReportPanel from './components/ReportPanel';
  * SEO metadata is defined in layout.tsx for this route.
  */
 
-// CognitiveFrictionResult type definition
-// This interface matches the response from POST /api/brain/cognitive-friction
-interface CognitiveFrictionResult {
-  frictionScore: number;
-  trustScore: number;
-  emotionalClarityScore: number;
-  motivationMatchScore: number;
-  decisionProbability: number;
-  conversionLiftEstimate: number;
-  keyDecisionBlockers: string[];
-  emotionalResistanceFactors: string[];
-  cognitiveOverloadFactors: string[];
-  trustBreakpoints: string[];
-  motivationMisalignments: string[];
-  recommendedQuickWins: string[];
-  recommendedDeepChanges: string[];
-  explanationSummary: string;
-}
-
 // Visual Trust Analysis type definition
 type VisualTrustResult = {
   trust_label: "low" | "medium" | "high";
@@ -54,19 +36,23 @@ type VisualTrustResult = {
   };
 } | null;
 
-import { postToBrain } from '@/lib/apiClient';
+import { postToBrain, runVisualTrustAnalysis } from '@/lib/apiClient';
 
 // Helper function to call the Cognitive Friction API
 // Uses the centralized API client helper
 async function analyzeCognitiveFriction(payload: {
   raw_text: string;
   platform: string;
+  content_type?: string;
   goal: string[];
   audience: string;
   language: string;
   audienceType?: string;
   tonePreference?: string;
   meta: null;
+  image?: string;
+  image_type?: string;
+  image_name?: string;
 }): Promise<CognitiveFrictionResult> {
   return postToBrain<CognitiveFrictionResult>('/api/brain/cognitive-friction', payload);
 }
@@ -87,8 +73,18 @@ export default function BehavioralDeepScanPage() {
   const [result, setResult] = useState<CognitiveFrictionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
+
+  // Cleanup preview URL on unmount or when image changes
+  useEffect(() => {
+    return () => {
+      if (uploadedImageUrl) {
+        URL.revokeObjectURL(uploadedImageUrl);
+      }
+    };
+  }, [uploadedImageUrl]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>
@@ -107,8 +103,21 @@ export default function BehavioralDeepScanPage() {
   };
 
   const handleImageChange = (file: File | null) => {
+    // Clean up previous preview URL
+    if (uploadedImageUrl) {
+      URL.revokeObjectURL(uploadedImageUrl);
+    }
+    
     setSelectedImage(file);
     setVisualTrust(null); // Reset visual trust when image changes
+    
+    // Create preview URL for new file
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setUploadedImageUrl(previewUrl);
+    } else {
+      setUploadedImageUrl(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,18 +127,65 @@ export default function BehavioralDeepScanPage() {
     setResult(null);
     setVisualTrust(null);
 
+    const trimmedText = formData.raw_text.trim();
+
     try {
+      if (!trimmedText && !selectedImage) {
+        setError('Please enter your copy or upload a screenshot for analysis.');
+        return;
+      }
+
       const goals = formData.goal.length > 0 ? formData.goal : ['leads'];
 
+      // Map platform to content_type
+      const platformToContentType: Record<string, string> = {
+        'landing_page': 'landing',
+        'social_post': 'social',
+        'social_media': 'social',
+        'ad': 'ads',
+        'ads': 'ads',
+        'sales_page': 'sales',
+        'email': 'email',
+        'lead_magnet': 'lead_magnet',
+        'engagement': 'engagement',
+      };
+
+      const content_type = platformToContentType[formData.platform] || 'landing';
+
+      // Convert selected image (if any) to base64 so backend can run visual analysis
+      let imageBase64: string | undefined;
+      let imageType: string | undefined;
+      let imageName: string | undefined;
+
+      if (selectedImage) {
+        imageBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result as string;
+            resolve(result.split(',')[1]);
+          };
+          reader.onerror = () => reject(new Error('Failed to read image file'));
+          reader.readAsDataURL(selectedImage);
+        });
+        imageType = selectedImage.type || 'image/png';
+        imageName = selectedImage.name;
+      }
+
       const payload = {
-        raw_text: formData.raw_text,
-        platform: formData.platform,
+        raw_text: trimmedText,
+        platform: formData.platform, // Keep for backward compatibility
+        content_type: content_type, // New field
         goal: goals,
         audience: formData.audience,
         language: formData.language,
         audienceType: formData.audienceType,
         tonePreference: formData.tonePreference,
         meta: null,
+        ...(imageBase64 && {
+          image: imageBase64,
+          image_type: imageType,
+          image_name: imageName,
+        }),
       };
 
       // Send text analysis request (existing behavior)
@@ -140,32 +196,12 @@ export default function BehavioralDeepScanPage() {
       if (selectedImage) {
         setIsImageLoading(true);
         try {
-          const formDataImage = new FormData();
-          formDataImage.append('file', selectedImage);
-
-          // Get base URL from environment (same as apiClient)
-          const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-          if (!baseUrl) {
-            throw new Error('NEXT_PUBLIC_API_BASE_URL is not defined');
-          }
-
-          const imageResponse = await fetch(`${baseUrl}/api/analyze/image-trust`, {
-            method: 'POST',
-            body: formDataImage,
-            // Don't set Content-Type header - let browser set it with boundary for multipart/form-data
-          });
-
-          if (imageResponse.ok) {
-            const imageData = await imageResponse.json();
-            if (imageData.success && imageData.analysis) {
-              setVisualTrust({
-                trust_label: imageData.analysis.trust_label,
-                trust_scores: imageData.analysis.trust_scores,
-              });
-            }
-          } else {
-            console.error('Image trust analysis failed:', imageResponse.statusText);
-            // Don't throw - just log the error, main analysis should still work
+          const imageData = await runVisualTrustAnalysis(selectedImage);
+          if (imageData.success && imageData.analysis) {
+            setVisualTrust({
+              trust_label: imageData.analysis.trust_label,
+              trust_scores: imageData.analysis.trust_scores,
+            });
           }
         } catch (imageErr) {
           console.error('Error analyzing image trust:', imageErr);
@@ -260,6 +296,7 @@ export default function BehavioralDeepScanPage() {
                 formData={formData}
                 visualTrust={visualTrust}
                 isImageLoading={isImageLoading}
+                uploadedImageUrl={uploadedImageUrl}
               />
             </div>
           </div>
