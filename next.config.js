@@ -34,8 +34,6 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     optimizeCss: true,
-    // Disable Turbopack to avoid build errors
-    turbo: false,
   },
 
   async redirects() {
