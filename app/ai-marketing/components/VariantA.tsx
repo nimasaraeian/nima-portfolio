@@ -687,7 +687,7 @@ export default function AiMarketingPageVariantA() {
   // Image upload state
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-  const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
+  const [visualTrust, setVisualTrust] = useState<VisualTrustResult | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
   
