@@ -27,14 +27,7 @@ import type { CognitiveFrictionResult } from '@/app/ai-marketing/brain-types';
  */
 
 // Visual Trust Analysis type definition
-type VisualTrustResult = {
-  trust_label: "low" | "medium" | "high";
-  trust_scores: {
-    low: number;
-    medium: number;
-    high: number;
-  };
-} | null;
+import type { VisualTrustResult } from '@/app/ai-marketing/brain-types';
 
 import { postToBrain, runVisualTrustAnalysis } from '@/lib/apiClient';
 
@@ -74,7 +67,7 @@ export default function BehavioralDeepScanPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-  const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
+  const [visualTrust, setVisualTrust] = useState<VisualTrustResult | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
 
   // Cleanup preview URL on unmount or when image changes
@@ -198,10 +191,8 @@ export default function BehavioralDeepScanPage() {
         try {
           const imageData = await runVisualTrustAnalysis(selectedImage);
           if (imageData.success && imageData.analysis) {
-            setVisualTrust({
-              trust_label: imageData.analysis.trust_label,
-              trust_scores: imageData.analysis.trust_scores,
-            });
+            // Store the full analysis result with new structure
+            setVisualTrust(imageData.analysis);
           }
         } catch (imageErr) {
           console.error('Error analyzing image trust:', imageErr);
