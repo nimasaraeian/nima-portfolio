@@ -15,7 +15,8 @@
     "generate-content": "node scripts/daily-content-generator.js",
     "content-manual": "node -e \"require('dotenv').config({ path: '.env.local' }); require('./lib/content-generator.js').generateDailyArticles().then(articles => console.log('Generated', articles.length, 'articles'))\"",
     "test-article": "node scripts/test-single-article.js",
-    "test-daily": "node scripts/test-daily-content.js"
+    "test-daily": "node scripts/test-daily-content.js",
+    "create-favicon": "node scripts/create-favicon.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -49,6 +50,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.5",
     "postcss": "^8.4.39",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.3"
   }
