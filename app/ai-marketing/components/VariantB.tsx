@@ -72,14 +72,7 @@ type RewriteOutput = {
   cta: string;
 };
 
-type VisualTrustResult = {
-  trust_label: 'low' | 'medium' | 'high';
-  trust_scores: {
-    low: number;
-    medium: number;
-    high: number;
-  };
-} | null;
+import type { VisualTrustResult } from '@/app/ai-marketing/brain-types';
 
 import { postToBrain } from '@/lib/apiClient';
 
@@ -465,7 +458,7 @@ export default function AiMarketingPageVariantB() {
   const [rawText, setRawText] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-  const [visualTrust, setVisualTrust] = useState<VisualTrustResult>(null);
+  const [visualTrust, setVisualTrust] = useState<VisualTrustResult | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -590,11 +583,9 @@ export default function AiMarketingPageVariantB() {
     try {
       const imageData = await runVisualTrustAnalysis(file);
 
-      if (imageData?.success && imageData.analysis?.trust_label && imageData.analysis?.trust_scores) {
-        setVisualTrust({
-          trust_label: imageData.analysis.trust_label,
-          trust_scores: imageData.analysis.trust_scores,
-        });
+      if (imageData?.success && imageData.analysis) {
+        // Store the full analysis result with new structure
+        setVisualTrust(imageData.analysis);
       } else {
         throw new Error('پاسخ معتبر از سرویس تحلیل اعتماد بصری دریافت نشد.');
       }
