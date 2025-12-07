@@ -11,7 +11,9 @@ import type {
   DecisionBlockerItem,
   PageStructure,
   VisualTrustAnalysis,
+  VisualTrustResult,
 } from '@/app/ai-marketing/brain-types';
+import { VisualTrustCard } from './CognitiveFrictionInsights';
 import { runVisualTrustAnalysis } from '@/lib/apiClient';
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
@@ -49,14 +51,6 @@ type RewriteOutput = {
   cta: string;
 };
 
-type VisualTrustResult = {
-  trust_label: 'low' | 'medium' | 'high';
-  trust_scores: {
-    low: number;
-    medium: number;
-    high: number;
-  };
-} | null;
 
 import { postToBrain } from '@/lib/apiClient';
 
@@ -201,72 +195,6 @@ function PageStructureCard({ page }: { page?: PageStructure | null }) {
   );
 }
 
-function VisualTrustCard({
-  analysis,
-  score,
-}: {
-  analysis?: VisualTrustAnalysis | null;
-  score?: number | null;
-}) {
-  if (!analysis && (score === undefined || score === null)) {
-    return null;
-  }
-
-  const labelColor =
-    analysis?.overall_label === 'High'
-      ? 'text-green-400'
-      : analysis?.overall_label === 'Low'
-      ? 'text-red-400'
-      : 'text-amber-300';
-
-  const trustScore =
-    typeof score === 'number' && !isNaN(score) ? `${Math.round(score)} / 100` : null;
-
-  const breakdown = [
-    { label: 'Low', value: analysis?.low_percent },
-    { label: 'Medium', value: analysis?.medium_percent },
-    { label: 'High', value: analysis?.high_percent },
-  ].filter(({ value }) => typeof value === 'number' && !isNaN(value as number));
-
-  return (
-    <div className="rounded-xl border border-indigo-500/20 bg-indigo-900/5 p-4 space-y-3">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-        <div>
-          <h3 className="text-xl font-semibold text-white">Visual Trust Analysis</h3>
-          <p className="text-sm text-gray-400">
-            Alignment between hero imagery and psychological trust cues.
-          </p>
-        </div>
-        {(analysis?.overall_label || trustScore) && (
-          <div className="text-right">
-            {analysis?.overall_label && (
-              <p className={`text-sm font-semibold ${labelColor}`}>
-                Overall: {analysis.overall_label}
-              </p>
-            )}
-            {trustScore && <p className="text-xs text-gray-400">Visual trust score: {trustScore}</p>}
-          </div>
-        )}
-      </div>
-      {breakdown.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {breakdown.map(({ label, value }) => (
-            <div
-              key={label}
-              className="flex-1 min-w-[120px] rounded-lg border border-indigo-500/20 bg-indigo-900/20 p-3"
-            >
-              <p className="text-xs uppercase tracking-wide text-indigo-200">{label}</p>
-              <p className="text-lg font-semibold text-white">{Math.round(value as number)}%</p>
-            </div>
-          ))}
-        </div>
-      )}
-      {analysis?.explanation && (
-        <p className="text-sm text-gray-300 leading-relaxed">{analysis.explanation}</p>
-      )}
-    </div>
-  );
-}
 
 function StructuredBlockerList({ items }: { items: DecisionBlockerItem[] }) {
   if (!items.length) {
@@ -639,25 +567,28 @@ function ResultsPanel({ result, uploadedImageUrl }: { result: CognitiveFrictionR
       </div>
 
       {/* 2. Page Structure & Visual Trust with Image Preview */}
-      <div className="mt-6 flex flex-col lg:flex-row gap-6">
+      <div className="mt-6 flex flex-col lg:flex-row gap-6 items-start">
         {/* ستون تحلیل‌ها */}
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 space-y-4 min-w-0 w-full">
           <PageStructureCard page={result.page_structure} />
-          <VisualTrustCard analysis={result.visual_trust_analysis} score={visualTrustScore} />
+          <VisualTrustCard 
+            analysis={visualTrust || result.visual_trust_analysis || null} 
+            score={visualTrust?.overall_score ?? visualTrustScore} 
+          />
         </div>
 
         {/* ستون تصویر آپلود شده */}
         {uploadedImageUrl && (
-          <div className="w-full lg:w-72 xl:w-80">
-            <div className="border rounded-2xl p-3 bg-white/5 shadow-sm flex flex-col items-center">
-              <div className="text-sm font-medium mb-2 opacity-80">
-                Uploaded landing page image
+          <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
+            <div className="border border-slate-700/50 rounded-xl p-4 bg-slate-900/40 shadow-lg">
+              <div className="text-xs font-medium mb-3 text-slate-400 uppercase tracking-wide">
+                Landing Page Preview
               </div>
-              <div className="w-full aspect-[4/5] overflow-hidden rounded-xl bg-black/5">
+              <div className="w-full rounded-lg overflow-hidden bg-black/20 border border-slate-800/50">
                 <img
                   src={uploadedImageUrl}
                   alt="Uploaded for visual trust analysis"
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto max-h-[600px] object-contain"
                 />
               </div>
             </div>
@@ -821,11 +752,9 @@ export default function AiMarketingPageVariantA() {
     try {
       const imageData = await runVisualTrustAnalysis(file);
 
-      if (imageData?.success && imageData.analysis?.trust_label && imageData.analysis?.trust_scores) {
-        setVisualTrust({
-          trust_label: imageData.analysis.trust_label,
-          trust_scores: imageData.analysis.trust_scores,
-        });
+      if (imageData?.success && imageData.analysis) {
+        // Store the full analysis result with new structure
+        setVisualTrust(imageData.analysis);
       } else {
         throw new Error('پاسخ معتبر برای تحلیل اعتماد بصری دریافت نشد.');
       }
