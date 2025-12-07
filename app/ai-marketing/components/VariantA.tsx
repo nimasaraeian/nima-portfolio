@@ -572,8 +572,8 @@ function ResultsPanel({ result, uploadedImageUrl }: { result: CognitiveFrictionR
         <div className="flex-1 space-y-4 min-w-0 w-full">
           <PageStructureCard page={result.page_structure} />
           <VisualTrustCard 
-            analysis={visualTrust || result.visual_trust_analysis || null} 
-            score={visualTrust?.overall_score ?? visualTrustScore} 
+            analysis={result.visual_trust_analysis || null} 
+            score={visualTrustScore} 
           />
         </div>
 
