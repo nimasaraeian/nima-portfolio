@@ -51,12 +51,65 @@ export interface AIRecommendationItem {
   priority?: string | null;
 }
 
+// Legacy type for backward compatibility - deprecated, use VisualTrustResult instead
 export interface VisualTrustAnalysis {
   overall_label?: string | null;
   low_percent?: number | null;
   medium_percent?: number | null;
   high_percent?: number | null;
   explanation?: string | null;
+}
+
+// New Visual Trust types matching the upgraded backend API
+export type VisualElementRole =
+  | "logo"
+  | "headline"
+  | "subheadline"
+  | "primary_cta"
+  | "secondary_cta"
+  | "benefit_card"
+  | "testimonial"
+  | "trust_badge"
+  | "pricing_block"
+  | "hero_image"
+  | "other";
+
+export type VisualElementPosition =
+  | "top-left" | "top-center" | "top-right"
+  | "middle-left" | "middle-center" | "middle-right"
+  | "bottom-left" | "bottom-center" | "bottom-right";
+
+export interface VisualElement {
+  id: string;
+  role: VisualElementRole;
+  approx_position: VisualElementPosition;
+  text?: string | null;
+  visual_cues: string[];
+  analysis: {
+    clarity?: string;
+    trust_impact?: "Low" | "Medium" | "High";
+    notes?: string;
+    [key: string]: any;
+  };
+}
+
+export interface VisualTrustResult {
+  status: "ok" | "fallback" | "unavailable";
+  label?: "Low" | "Medium" | "High" | null;
+  overall_score?: number | null;
+  distribution?: {
+    low: number;
+    medium: number;
+    high: number;
+  } | null;
+  notes?: string | null;
+  elements: VisualElement[];
+  narrative: string[];
+}
+
+export interface ImageTrustAPIResponse {
+  success: boolean;
+  analysis: VisualTrustResult;
 }
 
 export interface PsychologyNarrative {

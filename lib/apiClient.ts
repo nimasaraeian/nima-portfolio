@@ -9,6 +9,8 @@
  *   const result = await postToBrain('/api/brain/cognitive-friction', payload);
  */
 
+import type { ImageTrustAPIResponse } from '@/app/ai-marketing/brain-types';
+
 /**
  * Default backend URL for local development
  */
@@ -186,10 +188,10 @@ export const HEALTH_URL = `${BACKEND_BASE_URL}/health`;
  * Uses the Next.js API route proxy to avoid CORS issues and improve error handling
  * 
  * @param file - The image file to analyze
- * @returns Promise resolving to the analysis result
+ * @returns Promise resolving to the ImageTrustAPIResponse with new structure
  * @throws Error if the request fails
  */
-export async function runVisualTrustAnalysis(file: File) {
+export async function runVisualTrustAnalysis(file: File): Promise<ImageTrustAPIResponse> {
   const formData = new FormData();
   formData.append("file", file); // IMPORTANT: must match backend UploadFile name
 

@@ -1388,7 +1388,7 @@ export default function AIMarketingRoles2026() {
                 </li>
               </ol>
             </div>
-            
+
             <p className="text-lg mb-6 text-gray-300">
               This progression is realistic and achievable. Most successful AI marketing professionals build on traditional marketing foundations rather than starting from scratch. Understanding <Link href="/articles/ai/ai-marketing-new-era-2026" className="text-blue-300 hover:text-blue-200 underline">AI marketing systems</Link> helps accelerate this career development.
             </p>

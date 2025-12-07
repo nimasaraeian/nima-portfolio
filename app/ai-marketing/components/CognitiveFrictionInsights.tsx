@@ -4,7 +4,9 @@ import type {
   DecisionBlockerItem,
   PageStructure,
   VisualTrustAnalysis,
+  VisualTrustResult,
 } from '@/app/ai-marketing/brain-types';
+import VisualTrustCardNew from '@/components/VisualTrustCard';
 
 const PAGE_STRUCTURE_FIELDS: Array<{ key: keyof Omit<PageStructure, 'extra_sections'>; label: string }> = [
   { key: 'hero_title', label: 'Hero Title' },
@@ -71,21 +73,33 @@ export function PageStructureCard({ page }: { page?: PageStructure | null }) {
   );
 }
 
+// Wrapper for backward compatibility - uses the new redesigned component
 export function VisualTrustCard({
   analysis,
   score,
 }: {
-  analysis?: VisualTrustAnalysis | null;
+  analysis?: VisualTrustAnalysis | VisualTrustResult | null;
   score?: number | null;
 }) {
+  // Check if it's the new VisualTrustResult format
+  const isNewFormat = analysis && typeof analysis === 'object' && 'status' in analysis && 'elements' in analysis;
+  
+  // Use new component for VisualTrustResult format
+  if (isNewFormat) {
+    return <VisualTrustCardNew analysis={analysis as VisualTrustResult} />;
+  }
+
+  // Legacy format handling - return null if no valid data
   if (!analysis && (score === undefined || score === null)) {
     return null;
   }
 
+  // Legacy format - show minimal fallback
+  const legacyAnalysis = analysis as VisualTrustAnalysis | null;
   const labelColor =
-    analysis?.overall_label === 'High'
+    legacyAnalysis?.overall_label === 'High'
       ? 'text-green-400'
-      : analysis?.overall_label === 'Low'
+      : legacyAnalysis?.overall_label === 'Low'
       ? 'text-red-400'
       : 'text-amber-300';
 
@@ -93,9 +107,9 @@ export function VisualTrustCard({
     typeof score === 'number' && !isNaN(score) ? `${Math.round(score)} / 100` : null;
 
   const breakdown = [
-    { label: 'Low', value: analysis?.low_percent },
-    { label: 'Medium', value: analysis?.medium_percent },
-    { label: 'High', value: analysis?.high_percent },
+    { label: 'Low', value: legacyAnalysis?.low_percent },
+    { label: 'Medium', value: legacyAnalysis?.medium_percent },
+    { label: 'High', value: legacyAnalysis?.high_percent },
   ].filter(({ value }) => typeof value === 'number' && !isNaN(value as number));
 
   return (
@@ -107,10 +121,10 @@ export function VisualTrustCard({
             Alignment between hero imagery and psychological trust cues.
           </p>
         </div>
-        {(analysis?.overall_label || trustScore) && (
+        {(legacyAnalysis?.overall_label || trustScore) && (
           <div className="text-right">
-            {analysis?.overall_label && (
-              <p className={`text-sm font-semibold ${labelColor}`}>Overall: {analysis.overall_label}</p>
+            {legacyAnalysis?.overall_label && (
+              <p className={`text-sm font-semibold ${labelColor}`}>Overall: {legacyAnalysis.overall_label}</p>
             )}
             {trustScore && <p className="text-xs text-gray-400">Visual trust score: {trustScore}</p>}
           </div>
@@ -129,8 +143,8 @@ export function VisualTrustCard({
           ))}
         </div>
       )}
-      {analysis?.explanation && (
-        <p className="text-sm text-gray-300 leading-relaxed">{analysis.explanation}</p>
+      {legacyAnalysis?.explanation && (
+        <p className="text-sm text-gray-300 leading-relaxed">{legacyAnalysis.explanation}</p>
       )}
     </div>
   );
@@ -318,6 +332,7 @@ export function buildAiInterpretation(result: CognitiveFrictionResult): string {
 
   return parts.join(' ');
 }
+
 
 
 

@@ -274,7 +274,7 @@ export default function PredictiveBuyerIntentAIPage() {
                 <h2 className="text-2xl sm:text-3xl font-semibold text-white">What This Article Covers & Who It's For</h2>
                 <p className="text-gray-300">
                   This guide is for marketers, growth teams, and business leaders who want to understand buyer intent *before* users convert or drop off.
-                </p>
+              </p>
                 <p className="text-gray-300 font-semibold">You will learn:</p>
                 <ul className="list-disc ml-6 space-y-2 text-gray-300">
                   <li>What predictive buyer intent AI really means in 2026</li>
@@ -289,13 +289,13 @@ export default function PredictiveBuyerIntentAIPage() {
                 <h2 className="text-2xl sm:text-3xl font-semibold text-white">What Is Predictive Buyer Intent AI?</h2>
                 <p className="text-lg text-gray-300 leading-relaxed">
                   Predictive buyer intent AI is the use of behavioral data and machine learning to estimate a user's likelihood to buy *before* a conversion action occurs.
-                </p>
+              </p>
                 <p className="text-lg text-gray-300 leading-relaxed">
                   Unlike traditional intent data based on clicks or keywords, predictive buyer intent uses micro-behaviors such as pauses, scroll depth, revisit patterns, and hesitation signals to forecast decision readiness. Understanding <Link href="/articles/ai/ai-marketing-new-era-2026" className="text-blue-300 hover:text-blue-200 underline">AI marketing systems</Link> helps contextualize how predictive intent fits into broader behavioral marketing strategies.
                 </p>
                 <p className="text-lg text-gray-300 leading-relaxed">
                   Traditional analytics track what users do after they act. Predictive buyer intent AI identifies what users will do before they decide. This shift from reactive analysis to proactive prediction enables businesses to adjust messaging, personalize experiences, and optimize conversion paths at the exact moment when intent signals emerge.
-                </p>
+              </p>
               </section>
             </section>
 
