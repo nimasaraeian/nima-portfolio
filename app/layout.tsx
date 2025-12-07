@@ -62,15 +62,15 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/nima-pic.png', sizes: '16x16', type: 'image/png' },
-      { url: '/nima-pic.png', sizes: '32x32', type: 'image/png' },
-      { url: '/nima-pic.png', sizes: '96x96', type: 'image/png' },
-      { url: '/nima-pic.png', sizes: '192x192', type: 'image/png' },
-      { url: '/nima-pic.png', sizes: '512x512', type: 'image/png' },
+      { url: '/image/favicon.png', sizes: '16x16', type: 'image/png' },
+      { url: '/image/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/image/favicon.png', sizes: '96x96', type: 'image/png' },
+      { url: '/image/favicon.png', sizes: '192x192', type: 'image/png' },
+      { url: '/image/favicon.png', sizes: '512x512', type: 'image/png' },
     ],
-    shortcut: '/nima-pic.png',
+    shortcut: '/image/favicon.png',
     apple: [
-      { url: '/nima-pic.png', sizes: '180x180', type: 'image/png' },
+      { url: '/image/favicon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   verification: {
@@ -129,14 +129,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/nima-pic.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/nima-pic.png" />
-        <link rel="icon" type="image/png" sizes="96x96" href="/nima-pic.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/nima-pic.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/nima-pic.png" />
-        <link rel="shortcut icon" type="image/png" href="/nima-pic.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/nima-pic.png" />
-        <meta name="msapplication-TileImage" content="/nima-pic.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/image/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/image/favicon.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/image/favicon.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/image/favicon.png" />
+        <link rel="shortcut icon" type="image/png" href="/image/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/image/favicon.png" />
+        <meta name="msapplication-TileImage" content="/image/favicon.png" />
         <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
