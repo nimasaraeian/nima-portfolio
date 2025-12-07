@@ -129,9 +129,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta charSet="UTF-8" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" href="/nima-pic.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/nima-pic.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/nima-pic.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/nima-pic.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/nima-pic.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/nima-pic.png" />
         <link rel="shortcut icon" type="image/png" href="/nima-pic.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/nima-pic.png" />
+        <meta name="msapplication-TileImage" content="/nima-pic.png" />
         <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
