@@ -1,5 +1,12 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "AI Marketing Articles - Behavioral & Predictive Growth Guides",
+  description:
+    "Deep, long-form guides on AI-driven marketing, behavioral psychology, cognitive friction, and predictive analytics.",
+};
 
 type Article = {
   title: string;
@@ -259,17 +266,19 @@ export default function ArticlesPage() {
                       <article className="h-full flex flex-col rounded-lg border border-neutral-800/80 bg-neutral-950/70 overflow-hidden shadow-sm shadow-black/40 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-400/70 hover:shadow-md hover:shadow-emerald-500/10">
                         {/* Image Container */}
                         {article.image && (
-                          <div className="relative w-full bg-neutral-900/50 overflow-hidden flex items-center justify-center py-3 px-2">
+                          <div className="relative w-full bg-neutral-900/50 overflow-hidden flex items-center justify-center py-3 px-2 aspect-video">
                             <Image
                               src={article.image}
                               alt={article.alt || article.title}
                               width={800}
-                              height={600}
+                              height={450}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              className="w-full h-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-                              loading={articleIndex < 2 ? "eager" : "lazy"}
-                              quality={90}
-                              priority={section.id === "super-pillar" && articleIndex === 0}
+                              className="w-full h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                              loading="lazy"
+                              quality={75}
+                              priority={section.id === "super-pillar" && articleIndex === 0 && index === 0}
+                              placeholder="blur"
+                              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                             />
                           </div>
                         )}

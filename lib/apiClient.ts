@@ -175,10 +175,13 @@ export const analyzeCognitiveFriction = analyzeCrictionWithImage;
 
 /**
  * Backend base URL for visual trust analysis
- * Uses NEXT_PUBLIC_BACKEND_URL or falls back to production URL
+ * Priority: BACKEND_BASE_URL > NEXT_PUBLIC_BACKEND_URL > Railway default
+ * NOTE: Replace <YOUR_RAILWAY_BACKEND_URL> with your actual Railway backend URL
  */
 export const BACKEND_BASE_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "https://nima-ai-marketing.onrender.com";
+  process.env.BACKEND_BASE_URL ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  (process.env.NODE_ENV === 'production' ? '<YOUR_RAILWAY_BACKEND_URL>' : 'http://127.0.0.1:8000');
 
 export const IMAGE_TRUST_API_URL = `${BACKEND_BASE_URL}/api/analyze/image-trust`;
 export const HEALTH_URL = `${BACKEND_BASE_URL}/health`;

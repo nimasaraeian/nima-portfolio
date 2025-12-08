@@ -11,15 +11,19 @@ const DEFAULT_DEV_BRAIN_URL = 'http://127.0.0.1:8000';
 
 /**
  * Get backend URL from environment variables or use default
+ * Priority: BACKEND_BASE_URL > NEXT_PUBLIC_BACKEND_URL > Railway default > other env vars > local dev
  */
 function getBackendUrl(): string {
-  return (
+  const url = 
+    process.env.BACKEND_BASE_URL ||
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
     process.env.NEXT_PUBLIC_NIMA_BRAIN_API_URL ||
     process.env.NEXT_PUBLIC_BRAIN_API_URL ||
     process.env.NEXT_PUBLIC_API_BASE_URL ||
     process.env.BRAIN_API_BASE_URL ||
-    DEFAULT_DEV_BRAIN_URL
-  ).replace(/\/$/, '');
+    (process.env.NODE_ENV === 'production' ? '<YOUR_RAILWAY_BACKEND_URL>' : DEFAULT_DEV_BRAIN_URL);
+  
+  return url.replace(/\/$/, '');
 }
 
 /**
