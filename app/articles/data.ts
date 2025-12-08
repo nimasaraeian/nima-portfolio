@@ -143,6 +143,17 @@ export const articles: ArticleData[] = [
     wordCount: 4200,
     imageUrl: '/image/conversion-rate-cognitive-friction-ai-cover.png',
     href: '/articles/ai/cognitive-friction-ai-cro'
+  },
+  {
+    id: 'ai-marketing-strategy',
+    title: 'AI Marketing Strategy Guide 2025-2026 | Decision Intelligence Framework',
+    excerpt: 'Master AI marketing strategy with decision intelligence. Learn why 60% of strategies fail and how to build frameworks that understand human behavior, not just clicks.',
+    category: 'ai',
+    tags: ['AI Marketing Strategy', 'Decision Framework', 'Human Behavior', 'Cognitive Friction', 'Marketing Strategy', 'AI Decision Systems', 'Behavioral Marketing', 'Decision Intelligence'],
+    publishedAt: '2024-01-15T08:00:00.000Z',
+    wordCount: 10500,
+    imageUrl: '/image/ai-marketing-strategy.png',
+    href: '/articles/ai/ai-marketing-strategy'
   }
 ];
 

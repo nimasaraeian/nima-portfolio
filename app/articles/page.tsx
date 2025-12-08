@@ -108,6 +108,16 @@ const SECTIONS: ArticleSection[] = [
         label: "Tool Stack",
         image: "/image/ai-marketing-tools-2026.jpg",
         alt: "AI Marketing Tools 2026 - Complete guide to essential AI marketing tools and modern marketing stack"
+      },
+      {
+        title:
+          "AI Marketing Strategy — How Humans Decide When Machines Are Watching",
+        href: "/articles/ai/ai-marketing-strategy",
+        description:
+          "AI marketing strategy is not about tools or automation. It's a decision framework that uses AI to detect, interpret, and influence human decision behavior. Most strategies fail because they optimize for output, not for how humans actually decide.",
+        label: "Strategy Guide",
+        image: "/image/ai-marketing-strategy.png",
+        alt: "AI Marketing Strategy - Decision framework for human behavior and AI-driven marketing"
       }
     ]
   },
