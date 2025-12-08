@@ -42,6 +42,9 @@ export default function Header() {
             <Link href="/contact" className="text-gray-300 hover:text-white transition-colors duration-200 font-medium text-lg" style={{ fontFamily: 'Times New Roman, serif' }}>
               Contact
             </Link>
+            <Link href="/decision-demo" className="text-gray-300 hover:text-white transition-colors duration-200 font-medium text-lg" style={{ fontFamily: 'Times New Roman, serif' }}>
+              Decision Demo
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -111,6 +114,14 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
+              </Link>
+              <Link
+                href="/decision-demo"
+                className="block px-3 py-2 text-gray-300 hover:text-white transition-colors duration-200 font-medium text-lg"
+                style={{ fontFamily: 'Times New Roman, serif' }}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Decision Demo
               </Link>
             </div>
           </div>

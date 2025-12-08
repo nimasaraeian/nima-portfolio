@@ -1,181 +1,305 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
 
-export default function ArticlesPage() {
-  const aiArticles = [
-    { 
-      title: "AI Marketing: The New Era of Data-Driven Growth (2026 Edition)", 
-      image: "/image/ai-marketing-human-and-ai-collaboration-professional-woman-robot.jpg", 
-      href: "/articles/ai/ai-marketing-new-era-2026",
-      alt: "AI Marketing 2026 super pillar guide with marketing leader and AI assistant",
-      description: "15,000-word super pillar on behavioral AI, cognitive friction modeling, and AI marketing systems.",
-      superPillar: true
-    },
-    { 
-      title: "Cognitive Friction AI CRO — How Behavioral AI Becomes the #1 Conversion Advantage", 
-      image: "/image/conversion-rate-cognitive-friction-ai-cover.png", 
-      href: "/articles/ai/cognitive-friction-ai-cro",
-      alt: "Marketer reviewing AI behavioral dashboards for cognitive friction insights"
-    },
-    { 
-      title: "AI Marketing Roles in 2026: Understanding the Real Differences (Specialist vs Strategist vs Expert vs Consultant vs Engineer)", 
-      image: "/image/ai-marketing-specialist-cover-2026.png", 
-      href: "/articles/marketing/ai-marketing-roles-2026",
-      alt: "AI Marketing Roles 2026 - Complete guide to understanding differences between AI Marketing Specialist, Strategist, Expert, Consultant, and Engineer roles"
-    },
-    { 
-      title: "Predictive Buyer Intent AI — Why Marketing Fails Without Behavioral Signals", 
-      image: "/image/predictive-buyer-intent-ai-real-person-smiling-cover-image.png", 
-      href: "/articles/ai/predictive-buyer-intent-ai-2026",
-      alt: "Predictive Buyer Intent AI - How AI reads customer behavior signals before purchase decisions to achieve 3-5× higher conversions"
-    },
-    { 
-      title: "How to Use AI in Marketing (2026 Guide to Tools, Strategy & Behavior-Driven Growth)", 
-      image: "/image/how-to-use-ai-in-marketing-prediction-automation.png", 
-      href: "/articles/ai/how-to-use-ai-in-marketing-2026",
-      alt: "How to Use AI in Marketing 2026 - Complete guide to AI marketing tools, strategy, prediction, automation, and behavior-driven growth"
-    },
-    { 
-      title: "AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology", 
-      // cache-busting query برای دور زدن کش یک‌ساله روی Vercel
-      image: "/image/ai-marketing-2026.png?v=2", 
-      href: "/articles/ai-marketing-2026",
-      alt: "AI Marketing 2026 Complete Guide - Nima Saraeian AI Marketing Specialist guide to tools, strategy, behavioral data, and conversion psychology"
-    },
-    { 
-      title: "The Ultimate Guide to CRO Copywriting (2025–2030)", 
-      image: "/image/cro-copywriter-working-with-ai-real-image.jpg", 
-      href: "/articles/ai/cro-copywriting-guide-2025",
-      alt: "CRO Copywriter working with AI - Professional copywriter optimizing conversion copywriting with AI tools and data analysis"
-    },
-    { 
-      title: "AI Marketing Tools 2026: The Complete Guide to the Tools Every Modern Marketer Must Use", 
-      image: "/image/ai-marketing-tools-2026.jpg", 
-      href: "/articles/ai/marketing-tools-2026",
-      alt: "AI Marketing Tools 2026 - Complete guide to essential AI marketing tools and modern marketing stack"
-    },
-    { 
-      title: "AI Marketing Skills 2025: The Essential Skill Map for the Next Generation of Marketing Specialists", 
-      image: "/image/A_promotional_digital_photograph_with_text_overlay.png", 
-      href: "/articles/ai/ai-marketing-skills-2025",
-      alt: "AI Marketing Skills 2025 - Young woman working on smartphone and laptop, showcasing essential AI marketing skills. Text overlay: AI Marketing Skills 2026."
-    },
-    { 
-      title: "What Does an AI Marketing Specialist Do? (2025 Full Guide)", 
-      image: "/image/ai-marketing-specialist-real-hero-image.jpg", 
-      href: "/what-does-an-ai-marketing-specialist-do",
-      alt: "AI Marketing Specialist 2025 - Professional guide to AI marketing roles and responsibilities"
-    },
-    { 
-      title: "Generative AI for Creative Marketing", 
-      image: "/image/Generative AI for Creative Marketing.png", 
-      href: "/articles/ai/generative-ai-creative-marketing",
-      alt: "Generative AI for Creative Marketing - AI-powered content creation and marketing automation"
-    },
-    { 
-      title: "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction", 
-      image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg", 
-      href: "/articles/ai/emotion-ai",
-      alt: "Emotion AI 2025 - Artificial emotional intelligence transforming human-machine interaction and behavioral analysis"
-    },
-    { 
-      title: "AI Personalities: Will Artificial Intelligence Develop a Real Personality by 2026?", 
-      image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg", 
-      href: "/articles/ai/personality-models",
-      alt: "AI Personalities 2026 - Artificial intelligence personality development and human-AI interaction analysis"
-    },
-  ];
+type Article = {
+  title: string;
+  href: string;
+  description: string;
+  label?: string;
+  image?: string;
+  alt?: string;
+};
 
+type ArticleSection = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  articles: Article[];
+};
+
+const SECTIONS: ArticleSection[] = [
+  {
+    id: "super-pillar",
+    title: "Super Pillar – Behavioral & Predictive AI Marketing",
+    subtitle:
+      "The core operating system guide for AI-first, behavior-aware growth.",
+    articles: [
+      {
+        title: "AI Marketing 2026 — The Behavioral & Predictive Growth Engine",
+        href: "/articles/ai/ai-marketing-new-era-2026",
+        description:
+          "15,000-word super pillar on behavioral AI, cognitive friction, predictive growth loops, and the AI marketing operating system.",
+        label: "Super Pillar",
+        image: "/image/ai-marketing-human-and-ai-collaboration-professional-woman-robot.jpg",
+        alt: "AI Marketing 2026 super pillar guide with marketing leader and AI assistant"
+      }
+    ]
+  },
+  {
+    id: "behavioral-ai-cro",
+    title: "Behavioral AI & Conversion Optimization",
+    subtitle:
+      "Guides that show how cognitive friction, trust, and behavior data reshape CRO.",
+    articles: [
+      {
+        title:
+          "Cognitive Friction AI CRO — How Behavioral AI Becomes the #1 Conversion Advantage",
+        href: "/articles/ai/cognitive-friction-ai-cro",
+        description:
+          "Explains the psychology of hesitation, Decision Friction Score, and how AI detects and removes cognitive blockers in your funnel.",
+        label: "Behavioral CRO",
+        image: "/image/conversion-rate-cognitive-friction-ai-cover.png",
+        alt: "Marketer reviewing AI behavioral dashboards for cognitive friction insights"
+      },
+      {
+        title:
+          "Predictive Buyer Intent AI — Why Marketing Fails Without Behavioral Signals",
+        href: "/articles/ai/predictive-buyer-intent-ai-2026",
+        description:
+          "Deep dive into intent states, micro-signals, and how AI uses behavioral traces to predict who is ready to buy — and who will never convert.",
+        label: "Buyer Intent",
+        image: "/image/predictive-buyer-intent-ai-real-person-smiling-cover-image.png",
+        alt: "Predictive Buyer Intent AI - How AI reads customer behavior signals before purchase decisions"
+      },
+      {
+        title:
+          "The Ultimate Guide to CRO Copywriting (2025–2030) — Skills, Salary, A/B Tests & 90+ Examples",
+        href: "/articles/ai/cro-copywriting-guide-2025",
+        description:
+          "Hands-on guide to conversion-focused copywriting with real examples, tests, and a skill map for CRO copywriters.",
+        label: "CRO Copywriting",
+        image: "/image/cro-copywriter-working-with-ai-real-image.jpg",
+        alt: "CRO Copywriter working with AI - Professional copywriter optimizing conversion copywriting"
+      }
+    ]
+  },
+  {
+    id: "ai-marketing-strategy-tools",
+    title: "AI Marketing Strategy, Tools & Operating Systems",
+    subtitle:
+      "From foundations to full-stack AI marketing systems and tool stacks.",
+    articles: [
+      {
+        title:
+          "AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology",
+        href: "/articles/ai-marketing-2026",
+        description:
+          "Strategic overview of how tools, behavioral data, and conversion psychology fuse into a real AI marketing engine.",
+        label: "Strategy Guide",
+        image: "/image/ai-marketing-2026.png?v=2",
+        alt: "AI Marketing 2026 Complete Guide - Tools, strategy, behavioral data, and conversion psychology"
+      },
+      {
+        title:
+          "How to Use AI in Marketing (2026 Guide to Tools, Strategy & Behavior-Driven Growth)",
+        href: "/articles/ai/how-to-use-ai-in-marketing-2026",
+        description:
+          "Practical guide to applying AI across content, funnels, CRO, and growth — without losing sight of human behavior.",
+        label: "How-To",
+        image: "/image/how-to-use-ai-in-marketing-prediction-automation.png",
+        alt: "How to Use AI in Marketing 2026 - Complete guide to AI marketing tools, strategy, and behavior-driven growth"
+      },
+      {
+        title:
+          "AI Marketing Tools 2026: The Complete Guide to the Tools Every Modern Marketer Must Use",
+        href: "/articles/ai/marketing-tools-2026",
+        description:
+          "Map of the AI tools landscape for marketers — from LLMs and automation to behavior analytics and predictive engines.",
+        label: "Tool Stack",
+        image: "/image/ai-marketing-tools-2026.jpg",
+        alt: "AI Marketing Tools 2026 - Complete guide to essential AI marketing tools and modern marketing stack"
+      }
+    ]
+  },
+  {
+    id: "roles-skills-careers",
+    title: "AI Marketing Roles, Skills & Careers",
+    subtitle:
+      "For marketers who want to upgrade their careers into AI-powered roles.",
+    articles: [
+      {
+        title:
+          "AI Marketing Roles in 2026: Specialist vs Strategist vs Expert vs Consultant vs Engineer",
+        href: "/articles/marketing/ai-marketing-roles-2026",
+        description:
+          "Clarifies the real differences between modern AI marketing roles and how they fit together inside growth teams.",
+        label: "Roles Map",
+        image: "/image/ai-marketing-specialist-cover-2026.png",
+        alt: "AI Marketing Roles 2026 - Complete guide to understanding differences between AI Marketing roles"
+      },
+      {
+        title:
+          "AI Marketing Skills 2025 – The Essential Skill Map for the Next Generation of Marketing Specialists",
+        href: "/articles/ai/ai-marketing-skills-2025",
+        description:
+          "Skill map for marketers who want to transition into AI-first roles — from prompt engineering to behavioral analytics.",
+        label: "Skill Map",
+        image: "/image/A_promotional_digital_photograph_with_text_overlay.png",
+        alt: "AI Marketing Skills 2025 - Essential skill map for the next generation of marketing specialists"
+      },
+      {
+        title:
+          "What Does an AI Marketing Specialist Do? (2025 Full Guide)",
+        href: "/what-does-an-ai-marketing-specialist-do",
+        description:
+          "Defines the day-to-day work, responsibilities, and growth path of an AI Marketing Specialist.",
+        label: "Career Guide",
+        image: "/image/ai-marketing-specialist-real-hero-image.jpg",
+        alt: "AI Marketing Specialist 2025 - Professional guide to AI marketing roles and responsibilities"
+      }
+    ]
+  },
+  {
+    id: "creative-emotion-future",
+    title: "Emotion, Creativity & the Future of AI",
+    subtitle:
+      "Where emotional intelligence, creativity, and personality models meet AI marketing.",
+    articles: [
+      {
+        title:
+          "Generative AI for Creative Marketing — Emotional Engineering & Predictive Behavior",
+        href: "/articles/ai/generative-ai-creative-marketing",
+        description:
+          "Explores how generative AI, emotional hooks, and predictive behavior models shape creative marketing campaigns.",
+        label: "Creative AI",
+        image: "/image/Generative AI for Creative Marketing.png",
+        alt: "Generative AI for Creative Marketing - AI-powered content creation and marketing automation"
+      },
+      {
+        title:
+          "Emotion AI in 2025: How Artificial Emotional Intelligence Is Transforming Human–Machine Interaction",
+        href: "/articles/ai/emotion-ai",
+        description:
+          "Looks at Emotion AI, affective computing, and how emotional signals can be used ethically in growth systems.",
+        label: "Emotion AI",
+        image: "/image/emotion-ai-human-machine-interaction-emotional-analysis-2025.jpg",
+        alt: "Emotion AI 2025 - Artificial emotional intelligence transforming human-machine interaction"
+      },
+      {
+        title:
+          "AI Personalities: Will Artificial Intelligence Develop a Real Personality by 2026?",
+        href: "/articles/ai/personality-models",
+        description:
+          "Speculative–analytical guide on personality models in AI and what they mean for branding, UX, and trust.",
+        label: "Future of AI",
+        image: "/image/ai-personality-human-ai-interaction-artificial-emotion-analysis.jpg",
+        alt: "AI Personalities 2026 - Artificial intelligence personality development and human-AI interaction"
+      }
+    ]
+  }
+];
+
+export default function ArticlesPage() {
   return (
     <main className="min-h-screen bg-black text-white relative">
       {/* Static background gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(139,92,246,0.04),transparent_50%)] pointer-events-none" />
       
-      <div className="relative z-10 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Hero Section */}
-          <div className="text-center mb-16 space-y-4">
-            <div className="inline-block">
-              <span className="inline-block px-4 py-2 bg-blue-600/20 border border-blue-500/30 rounded-full text-sm font-medium text-blue-300 mb-4">
+      <div className="relative z-10 pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Page header */}
+          <header className="text-center mb-16 space-y-4">
+            <div className="inline-flex">
+              <span className="inline-flex px-4 py-1.5 bg-emerald-600/20 border border-emerald-500/30 rounded-full text-xs font-semibold uppercase tracking-[0.18em] text-emerald-400">
                 AI Marketing Insights
               </span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white tracking-tight">
               AI Marketing Articles
             </h1>
-            <p className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              Deep insights into AI-driven marketing strategies, behavioral psychology, and predictive analytics
+            <p className="text-sm md:text-base text-neutral-300/90 max-w-2xl mx-auto leading-relaxed">
+              Deep, long-form guides on AI-driven marketing, behavioral psychology,
+              cognitive friction, and predictive analytics. Start from the super
+              pillar, then dive into the category that matches your current
+              question.
             </p>
-          </div>
+          </header>
 
-          {/* Articles Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-            {aiArticles.map((card, index) => (
-              <Link 
-                key={index} 
-                href={card.href} 
-                className="group block"
-              >
-                <article className="relative h-full bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-blue-500/50 transition-colors duration-200 hover:shadow-lg hover:shadow-blue-500/5">
-                  {/* Image Container - Fixed aspect ratio to prevent CLS */}
-                  <div className="relative w-full bg-gray-900 overflow-hidden" style={{ aspectRatio: '4/3' }}>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none" />
-                    <Image
-                      src={card.image}
-                      alt={card.alt || card.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      loading={index < 2 ? "eager" : "lazy"}
-                      quality={70}
-                      priority={index === 0}
-                      placeholder="blur"
-                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-5 lg:p-6 relative z-10">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <div className="flex-1 space-y-2">
-                        {card.superPillar && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full border border-amber-400/40 bg-amber-500/10 text-[11px] uppercase tracking-wider text-amber-200 font-semibold">
-                            Super Pillar
-                          </span>
-                        )}
-                        <h3 className="text-lg lg:text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-200 leading-tight">
-                          {card.title}
-                        </h3>
-                      </div>
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center group-hover:bg-blue-500/40 transition-colors duration-200">
-                        <svg 
-                          className="w-3 h-3 text-gray-400 group-hover:text-white transition-colors duration-200" 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
-                          stroke="currentColor"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </div>
-                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
-                      {card.description ?? 'Explore insights and strategies for AI-powered marketing'}
+          {/* Sections */}
+          <div className="space-y-10">
+            {SECTIONS.map((section, index) => (
+              <section key={section.id} className="space-y-4">
+                {/* Section Header */}
+                <div className="space-y-1.5 pb-2 border-b border-neutral-800/50">
+                  <h2 className="text-lg md:text-xl font-semibold text-white tracking-tight">
+                    {section.title}
+                  </h2>
+                  {section.subtitle && (
+                    <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
+                      {section.subtitle}
                     </p>
-                  </div>
-                </article>
-              </Link>
+                  )}
+                </div>
+
+                {/* Articles Grid */}
+                <div
+                  className={`grid gap-4 ${
+                    section.articles.length > 1
+                      ? "md:grid-cols-2"
+                      : "md:grid-cols-1 max-w-2xl"
+                  }`}
+                >
+                  {section.articles.map((article, articleIndex) => (
+                    <Link
+                      key={article.href}
+                      href={article.href}
+                      className="group block h-full"
+                    >
+                      <article className="h-full flex flex-col rounded-lg border border-neutral-800/80 bg-neutral-950/70 overflow-hidden shadow-sm shadow-black/40 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-400/70 hover:shadow-md hover:shadow-emerald-500/10">
+                        {/* Image Container */}
+                        {article.image && (
+                          <div className="relative w-full bg-neutral-900/50 overflow-hidden flex items-center justify-center py-3 px-2">
+                            <Image
+                              src={article.image}
+                              alt={article.alt || article.title}
+                              width={800}
+                              height={600}
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              className="w-full h-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                              loading={articleIndex < 2 ? "eager" : "lazy"}
+                              quality={90}
+                              priority={section.id === "super-pillar" && articleIndex === 0}
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Content */}
+                        <div className="flex flex-col flex-1 px-4 py-3.5">
+                          <div className="flex items-start justify-between gap-2.5 mb-2">
+                            <h3 className="text-xs md:text-sm font-semibold leading-snug group-hover:text-emerald-300 text-white transition-colors flex-1 min-w-0">
+                              {article.title}
+                            </h3>
+                            {article.label && (
+                              <span className="shrink-0 rounded-full border border-emerald-400/50 bg-emerald-500/10 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.1em] text-emerald-300 whitespace-nowrap">
+                                {article.label}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] md:text-xs leading-relaxed text-neutral-400 line-clamp-2 mb-3 flex-1">
+                            {article.description}
+                          </p>
+                          <div className="flex items-center gap-1.5 text-[9px] font-medium text-neutral-500 group-hover:text-emerald-300 transition-colors mt-auto">
+                            <span>Read article</span>
+                            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">→</span>
+                          </div>
+                        </div>
+                      </article>
+                    </Link>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
 
-          {/* Bottom CTA Section */}
-          <div className="mt-16 text-center">
-            <div className="inline-block px-8 py-4 bg-blue-600/10 border border-blue-500/20 rounded-full">
-              <p className="text-gray-400 text-sm">
-                More articles coming soon
-              </p>
-            </div>
-          </div>
+          {/* Footer note */}
+          <footer className="pt-4 border-t border-neutral-900/80">
+            <p className="text-xs md:text-sm text-neutral-500 text-center">
+              More articles on AI marketing, cognitive friction, and behavioral
+              growth systems are being published. Start with the super pillar, then
+              bookmark this hub as your reference map.
+            </p>
+          </footer>
         </div>
       </div>
     </main>
