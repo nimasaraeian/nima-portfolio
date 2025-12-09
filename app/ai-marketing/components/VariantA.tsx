@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AccordionItem from '@/components/Accordion';
-import MultiStepInputPanel from '../behavioral-deepscan/components/MultiStepInputPanel';
-import ReportPanel from '../behavioral-deepscan/components/ReportPanel';
 import type {
   AIRecommendationItem,
   CognitiveFrictionResult,
@@ -15,6 +13,7 @@ import type {
 } from '@/app/ai-marketing/brain-types';
 import { VisualTrustCard } from './CognitiveFrictionInsights';
 import { runVisualTrustAnalysis } from '@/lib/apiClient';
+import DecisionEngineDemo from './DecisionEngineDemo';
 /**
  * Behavioral DeepScan - AI Decision Psychology Analysis Page
  * 
@@ -873,168 +872,237 @@ export default function AiMarketingPageVariantA() {
   return (
     <div className="min-h-screen bg-black text-white" data-ai-marketing-variant="A">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-black text-white py-16 sm:py-20 md:py-24">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900"></div>
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        
+      <section className="relative bg-black text-white py-20 sm:py-24 md:py-32">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 mb-6">
-            <span className="text-xs font-semibold text-purple-300">AI Behavioral Engine · Cognitive Friction Analysis</span>
-        </div>
-
-          <h1 className="mb-6 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
-            Behavioral DeepScan – AI Decision Psychology for Your Content
+          <h1 className="mb-6 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl text-white tracking-tight">
+            Marketing Doesn't Fail Because of Content.
+            <br />
+            <span className="text-gray-300">It Fails Because of Human Decision Friction.</span>
           </h1>
           
-          <p className="mb-8 text-lg sm:text-xl text-gray-300 leading-relaxed max-w-3xl">
-            This is a specialized AI engine focused on decision psychology. It analyzes cognitive friction, trust, motivation, 
-            and conversion factors in your content. This is NOT a generic chatbot, but a focused analysis tool that helps you 
-            understand how real humans will hesitate, doubt, or decide based on your content.
+          <p className="mb-4 text-lg sm:text-xl text-gray-300 leading-relaxed max-w-3xl">
+            NIMA AI Brain is a behavioral decision engine that analyzes <em className="text-white">why people hesitate, mistrust, or abandon decisions</em>—and translates psychology into precise marketing actions.
           </p>
 
+          <p className="mb-10 text-sm text-gray-400 italic">
+            Built at the intersection of Behavioral Psychology, AI, and Decision Science.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <button
+              onClick={scrollToForm}
+              className="inline-flex items-center justify-center rounded-lg bg-white text-black px-6 py-3 text-base font-medium hover:bg-gray-100 transition-colors"
+            >
+              Analyze Decision Friction
+            </button>
+            <Link
+              href="#system"
+              className="text-sm font-medium text-gray-400 hover:text-white transition-colors inline-flex items-center gap-1"
+            >
+              See how the decision engine works
+              <span>→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Section */}
+      <section className="relative bg-black py-10 border-t border-gray-900">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
+          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-emerald-500/5 bg-black/40">
+            <div className="relative w-full aspect-video">
+              <video
+                controls
+                className="w-full h-full object-contain"
+                preload="metadata"
+                poster="/image/ai-marketing-strategy.png"
+              >
+                <source src="/video/AI_Marketing_s_Big_Mistake.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div className="p-6 bg-white/5">
+              <h3 className="text-xl font-semibold text-white mb-2">AI Marketing's Big Mistake</h3>
+              <p className="text-gray-300 text-sm">Understanding why most AI marketing strategies fail and how to build frameworks that actually work.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What This Is Section */}
+      <section className="relative bg-black py-16 sm:py-20 border-t border-gray-900">
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white mb-12 text-center">
+            This Is Not an AI Writer. It Is a Decision Engine.
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white">Behavioral Signal Analysis</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Instead of generating content, the system analyzes psychological signals: hesitation, trust gaps, cognitive overload, and decision resistance.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white">Cognitive Friction Mapping</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Every page is mapped against known behavioral models to detect where decisions break—not where clicks drop.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white">Actionable Psychological Output</h3>
+              <p className="text-gray-300 leading-relaxed">
+                The output is not advice. It is a ranked diagnosis with behavioral priority.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* System Thinking Section */}
+      <section id="system" className="relative bg-black py-16 sm:py-20 border-t border-gray-900">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white mb-12 text-center">
+            The Behavioral Decision Engine
+          </h2>
+
+          <div className="space-y-8">
+            <div className="flex gap-6">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-sm font-semibold text-white">
+                1
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-2">Input Layer</h3>
+                <p className="text-gray-300">URL, screenshot, or interface segment</p>
+              </div>
+            </div>
+
+            <div className="flex gap-6">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-sm font-semibold text-white">
+                2
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-2">Interpretation Layer</h3>
+                <p className="text-gray-300">Behavioral + cognitive pattern detection (hesitation, trust decay, overload)</p>
+              </div>
+            </div>
+
+            <div className="flex gap-6">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-sm font-semibold text-white">
+                3
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-2">Decision Layer</h3>
+                <p className="text-gray-300">Probability-weighted diagnosis of why users do NOT decide</p>
+              </div>
+            </div>
+
+            <div className="flex gap-6">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-sm font-semibold text-white">
+                4
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-2">Output Layer</h3>
+                <p className="text-gray-300">Clear behavioral fixes, prioritized by decision impact</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Decision Engine Demo Section */}
+      <section id="analysis-form" className="relative bg-black py-16 sm:py-20 border-t border-gray-900">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
+          <div className="text-center mb-8 space-y-3">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white">
+              Test the Decision Engine on Any Page
+            </h2>
+            <p className="text-gray-300 text-lg">
+              Not to see <em className="text-white">what is wrong</em>—but to understand <em className="text-white">why users do not decide</em>.
+            </p>
+            <p className="text-sm text-gray-400">
+              Live behavioral diagnosis — no content generation involved.
+            </p>
+          </div>
+          <DecisionEngineDemo />
+        </div>
+      </section>
+
+      {/* Who This Is For / Not For Section */}
+      <section className="relative bg-black py-16 sm:py-20 border-t border-gray-900">
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-6">Designed For</h3>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-white mt-1">•</span>
+                  <span>Strategy teams</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-white mt-1">•</span>
+                  <span>Growth & CRO leaders</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-white mt-1">•</span>
+                  <span>Researchers & behavioral analysts</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-white mt-1">•</span>
+                  <span>Founders testing real user hesitation</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-6">Not Designed For</h3>
+              <ul className="space-y-3 text-gray-400">
+                <li className="flex items-start gap-3">
+                  <span className="text-gray-500 mt-1">•</span>
+                  <span>Prompt-based content generation</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-gray-500 mt-1">•</span>
+                  <span>Vanity AI tools</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-gray-500 mt-1">•</span>
+                  <span>Generic SEO automation</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Closing Section */}
+      <section className="relative bg-black py-16 sm:py-20 border-t border-gray-900">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10 text-center">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white mb-4">
+            Technology doesn't change behavior.
+            <br />
+            Understanding behavior does.
+          </h2>
+          <p className="text-gray-400 mb-8 text-sm">
+            NIMA AI Brain is an independent decision intelligence system.
+            <br />
+            Use it as a tool, a research instrument, or a strategic layer.
+          </p>
           <button
             onClick={scrollToForm}
-                className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
-              >
-            <span className="relative z-10">Start a Cognitive Friction Scan</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
+            className="inline-flex items-center justify-center rounded-lg bg-white text-black px-6 py-3 text-base font-medium hover:bg-gray-100 transition-colors"
+          >
+            Run Decision Friction Analysis
           </button>
         </div>
       </section>
 
-      {/* Main Analysis Section */}
-      <section id="analysis-form" className="relative bg-black py-12 sm:py-16 md:py-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
-        
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Run an AI Cognitive Friction Scan
-          </h2>
-
-          {/* New Layout: Vertical - Form on top, Results below */}
-          <div className="space-y-6 sm:space-y-8">
-            {/* Input Panel - Top */}
-            <div className="rounded-xl sm:rounded-2xl border border-slate-800 bg-slate-900/30 p-4 sm:p-6 lg:p-8 backdrop-blur-sm">
-              <MultiStepInputPanel
-                formData={formData}
-                loading={loading}
-                error={error}
-                onInputChange={handleInputChange}
-                onGoalChange={handleGoalChange}
-                onSubmit={handleSubmit}
-                showImageUpload={true}
-                onImageChange={handleImageChange}
-                selectedImage={selectedImage}
-              />
-            </div>
-
-            {/* Report Panel - Bottom */}
-            <div>
-              <ReportPanel
-                result={result}
-                loading={loading}
-                error={error}
-                formData={formData}
-                visualTrust={visualTrust}
-                isImageLoading={isImageLoading}
-                imageError={imageError}
-                uploadedImageUrl={uploadedImageUrl}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SEO Content Sections */}
-      <section className="relative bg-black py-12 sm:py-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
-        
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10 space-y-12">
-          <div>
-            <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Why Cognitive Friction Kills Conversion
-            </h2>
-            <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
-                Every moment of hesitation, doubt, or cognitive overload in your content creates friction that reduces conversion rates. 
-                Traditional analytics can tell you what users clicked, but they cannot detect the emotional and cognitive barriers that 
-                prevent decisions.
-              </p>
-              <p>
-                Behavioral DeepScan goes beyond simple copy suggestions. It analyzes how your content triggers hesitation, builds or 
-                breaks trust, aligns with motivations, and guides decision-making. By understanding the psychological factors that 
-                influence behavior, you can create content that removes friction and guides users toward confident decisions.
-              </p>
-              <p>
-                This AI engine uses cognitive friction models, trust psychology, and motivation alignment to identify specific blockers 
-                and provide actionable recommendations. The result is content that not only looks good but actually converts by 
-                addressing the real psychological barriers your audience faces.
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Use Behavioral DeepScan in Your Marketing Workflow
-          </h2>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              Integrate Behavioral DeepScan into your content creation and optimization process to identify and eliminate decision blockers before they cost you conversions.
-            </p>
-            <ul className="space-y-3 text-gray-300">
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Before launching a new landing page – identify friction points before they cost you conversions</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Testing and comparing different ad creatives – compare cognitive friction scores to choose the most effective variant</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Reviewing onboarding or sales emails – ensure your welcome sequence builds trust and reduces hesitation</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Optimizing high-traffic, low-conversion pages – find the psychological blockers that analytics can't detect</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Auditing existing campaigns for decision blockers – identify why high-traffic campaigns aren't converting</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative bg-black py-12 sm:py-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black to-slate-900"></div>
-        
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 sm:p-12 backdrop-blur-sm text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Ready to reduce cognitive friction in your content?
-              </h2>
-            <p className="text-gray-400 mb-6">
-              Get AI-powered decision psychology insights that transform how you write and optimize content.
-            </p>
-              <Link 
-                href="/contact" 
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
-              >
-              <span className="relative z-10">Book an AI Marketing Strategy Call</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
-              </Link>
-          </div>
-        </div>
-      </section>
-
       {/* AI Marketing Guide Accordion Section */}
-      <section className="relative bg-black py-12 sm:py-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-900 to-black"></div>
-        
+      <section className="relative bg-black py-12 sm:py-16 border-t border-gray-900">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-center text-white">
             AI Marketing — Full Guide (2026 Edition)
           </h2>
 
@@ -2299,44 +2367,6 @@ export default function AiMarketingPageVariantA() {
         }}
       />
 
-      {/* Final CTA Section */}
-      <section className="relative bg-black py-12 sm:py-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black to-slate-900"></div>
-        
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 md:px-10 lg:px-16 z-10">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 sm:p-12 backdrop-blur-sm text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Ready to See What a Real AI Marketing Engine Can Do?
-            </h2>
-            <p className="text-gray-400 mb-6 text-lg">
-              Most AI tools give you more content. The NIMA AI Brain gives you clarity, strategy, and measurable growth.
-            </p>
-            
-            <ul className="space-y-3 text-left max-w-2xl mx-auto mb-8 text-gray-300">
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Turn behavioral data into real decisions, not just dashboards.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Remove invisible friction from your funnels and landing pages.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-purple-400 mt-1">•</span>
-                <span>Get senior-level copy, strategy, and testing — on demand.</span>
-              </li>
-            </ul>
-
-            <Link 
-              href="/contact" 
-              className="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white transition-all hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
-            >
-              <span className="relative z-10">Book Your AI Marketing Strategy Session</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* Dev Badge - Variant A */}
       {process.env.NODE_ENV === "development" && (

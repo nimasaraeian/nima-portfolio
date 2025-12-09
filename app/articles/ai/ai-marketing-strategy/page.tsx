@@ -252,6 +252,25 @@ export default function AIMarketingStrategyPage() {
           </ul>
         </div>
 
+        {/* Video Section */}
+        <div className="my-10 rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-emerald-500/5 bg-black/40">
+          <div className="relative w-full aspect-video">
+            <video
+              controls
+              className="w-full h-full object-contain"
+              preload="metadata"
+              poster="/image/ai-marketing-strategy.png"
+            >
+              <source src="/video/AI_Marketing_s_Big_Mistake.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div className="p-6 bg-white/5">
+            <h3 className="text-xl font-semibold text-white mb-2">AI Marketing's Big Mistake</h3>
+            <p className="text-gray-300 text-sm">Understanding why most AI marketing strategies fail and how to build frameworks that actually work.</p>
+          </div>
+        </div>
+
         {/* Sticky Table of Contents */}
         <nav className="sticky top-4 z-10 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 my-10 shadow-lg">
           <p className="text-white font-semibold text-sm uppercase tracking-wider mb-5 flex items-center gap-2">
@@ -1145,6 +1164,23 @@ export default function AIMarketingStrategyPage() {
               </p>
             </div>
 
+          </section>
+
+          {/* Image Section - Mid Article */}
+          <section className="my-16">
+            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-emerald-500/5 bg-black/40">
+              <Image
+                src="/image/ai-marketing-strategist.png"
+                alt="AI Marketing Strategist - Rethinking AI Marketing: From Clicks to Confidence"
+                title="AI Marketing Strategist - Decision-First Strategy Framework"
+                width={1200}
+                height={800}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+                className="w-full h-auto object-contain"
+                quality={85}
+                loading="lazy"
+              />
+            </div>
           </section>
 
           <section id="part-4" className="space-y-6 mt-16">

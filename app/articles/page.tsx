@@ -267,19 +267,22 @@ export default function ArticlesPage() {
                         {/* Image Container */}
                         {article.image && (
                           <div className="relative w-full bg-neutral-900/50 overflow-hidden flex items-center justify-center py-3 px-2 aspect-video">
-                            <Image
-                              src={article.image}
-                              alt={article.alt || article.title}
-                              width={800}
-                              height={450}
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              className="w-full h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-                              loading="lazy"
-                              quality={75}
-                              priority={section.id === "super-pillar" && articleIndex === 0 && index === 0}
-                              placeholder="blur"
-                              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                            />
+                            {(() => {
+                              const isPriority = section.id === "super-pillar" && articleIndex === 0 && index === 0;
+                              const imageProps = {
+                                src: article.image,
+                                alt: article.alt || article.title,
+                                width: 800,
+                                height: 450,
+                                sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+                                className: "w-full h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]",
+                                quality: 75,
+                                placeholder: "blur" as const,
+                                blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q==",
+                                ...(isPriority ? { priority: true } : { loading: "lazy" as const }),
+                              };
+                              return <Image {...imageProps} />;
+                            })()}
                           </div>
                         )}
                         
