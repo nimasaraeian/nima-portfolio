@@ -188,6 +188,105 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* SECTION 3.5 — WAYS I SOLVE DECISION PROBLEMS */}
+      <section className="relative border-b border-white/10 py-16 sm:py-20">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Ways I Solve Decision Problems
+          </h2>
+          <p className="text-lg text-gray-300 leading-relaxed mb-12" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Different projects require different entry points — depending on where the user decision breaks.
+          </p>
+
+          <div className="space-y-6">
+            {/* Subsection 1 */}
+            <Link
+              href="/services/decision-friction-diagnosis"
+              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
+            >
+              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Decision Friction Diagnosis
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Identify why users hesitate, delay, or abandon decisions despite strong offers or traffic.
+              </p>
+              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Explore decision friction diagnosis
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+
+            {/* Subsection 2 */}
+            <Link
+              href="/services/behavioral-cro-strategy"
+              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
+            >
+              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Behavioral Conversion & CRO Strategy
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Redesign conversion paths using behavioral psychology, decision logic, and structured experimentation.
+              </p>
+              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Explore behavioral CRO strategy
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+
+            {/* Subsection 3 */}
+            <Link
+              href="/services/trust-perception-optimization"
+              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
+            >
+              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Trust & Perception Optimization
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Analyze and correct trust breakdowns caused by visual signals, language, risk perception, and emotional cues.
+              </p>
+              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Explore trust & perception work
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+
+            {/* Subsection 4 */}
+            <Link
+              href="/services/ai-driven-funnel-systems"
+              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
+            >
+              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                AI-Driven Funnel & Content Systems
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Build AI-assisted content and funnel systems only after behavioral clarity is established.
+              </p>
+              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Explore AI-driven funnels
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+
+            {/* Subsection 5 */}
+            <Link
+              href="/services/predictive-consumer-modeling"
+              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
+            >
+              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Predictive Consumer & Market Modeling
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Model consumer behavior and market shifts to inform product, positioning, and growth strategy.
+              </p>
+              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Explore predictive modeling
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* SECTION 4 — HOW THIS SHOWS UP */}
       <section className="relative border-b border-white/10 py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
