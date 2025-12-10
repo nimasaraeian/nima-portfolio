@@ -32,20 +32,20 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Service",
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
   name: "AI Marketing Strategy (CRO & Growth)",
-  description:
+    description:
     "AI Marketing Strategist specializing in conversion optimization, growth marketing, behavioral psychology, decision friction analysis, and AI-driven marketing systems.",
-  provider: {
-    "@type": "Person",
-    name: "Nima Saraeian",
+    provider: {
+      "@type": "Person",
+      name: "Nima Saraeian",
     jobTitle: "AI Marketing Strategist",
     url: SITE.baseUrl,
-  },
-  areaServed: { "@type": "Place", name: "Global" },
-  url: `${SITE.baseUrl}/services`,
+    },
+    areaServed: { "@type": "Place", name: "Global" },
+    url: `${SITE.baseUrl}/services`,
 };
 
 export default function ServicesPage() {
@@ -65,7 +65,7 @@ export default function ServicesPage() {
             <div>
               <h1 className="mb-6 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl text-white tracking-tight" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                 AI Marketing Strategist (CRO & Growth)
-              </h1>
+      </h1>
 
               <h2 className="mb-10 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                 Behavioral AI–driven strategy focused on conversion optimization, decision friction analysis, trust psychology, and AI-powered marketing systems.
@@ -89,17 +89,17 @@ export default function ServicesPage() {
 
             {/* Hero Image */}
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-emerald-500/5 bg-black/40">
-              <Image
+                <Image
                 src="/image/nima-saraeian-ai-marketing-strategist.png"
                 alt="Nima Saraeian - AI Marketing Strategist (CRO & Growth) | Behavioral AI, Decision Psychology & Cognitive Friction"
                 title="Nima Saraeian - AI Marketing Strategist"
-                fill
+                  fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
                 priority
                 quality={90}
-              />
-            </div>
+                />
+              </div>
           </div>
         </div>
       </section>
@@ -152,7 +152,7 @@ export default function ServicesPage() {
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-12" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
             Behavioral AI–Driven Marketing Strategy (CRO & Growth Focus)
-          </h2>
+                </h2>
 
           <div className="space-y-12">
             {/* Block 1 */}
@@ -162,7 +162,7 @@ export default function ServicesPage() {
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                 Identify where users feel uncertainty, overload, or risk.
-              </p>
+                </p>
             </div>
 
             {/* Block 2 */}
@@ -183,9 +183,9 @@ export default function ServicesPage() {
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                 Clear actions to realign content, structure, and flow.
               </p>
-            </div>
-          </div>
-        </div>
+                </div>
+                </div>
+              </div>
       </section>
 
       {/* SECTION 3.5 — WAYS I SOLVE DECISION PROBLEMS */}
@@ -268,7 +268,7 @@ export default function ServicesPage() {
             </Link>
 
             {/* Subsection 5 */}
-            <Link
+              <Link
               href="/services/predictive-consumer-modeling"
               className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
             >
@@ -282,7 +282,7 @@ export default function ServicesPage() {
                 Explore predictive modeling
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </span>
-            </Link>
+              </Link>
           </div>
         </div>
       </section>
@@ -323,7 +323,7 @@ export default function ServicesPage() {
               </p>
             </div>
           </div>
-        </div>
+      </div>
       </section>
 
       {/* SECTION 5 — PROOF OF DEPTH */}
@@ -336,7 +336,7 @@ export default function ServicesPage() {
           <div className="space-y-6">
             <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               As an AI Marketing Strategist, I specialize in behavioral psychology, decision friction analysis, and AI-driven optimization. This work is grounded in:
-            </p>
+        </p>
 
             <ul className="space-y-3 text-lg text-gray-300 leading-relaxed ml-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               <li>Behavioral models</li>
@@ -348,8 +348,8 @@ export default function ServicesPage() {
 
             <p className="text-lg text-gray-300 leading-relaxed mt-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               No buzzwords or automation-first tactics — only diagnostic clarity that leads to measurable conversion and growth outcomes.
-            </p>
-          </div>
+        </p>
+      </div>
         </div>
       </section>
 
@@ -361,12 +361,12 @@ export default function ServicesPage() {
           </h2>
 
           <div className="text-center space-y-6">
-            <Link
+        <Link
               href="/contact?utm_source=services&utm_medium=final_cta&utm_campaign=behavioral_diagnosis"
               className="inline-flex items-center justify-center rounded-lg bg-white text-black px-8 py-4 text-base font-medium hover:bg-gray-100 transition-colors"
-            >
+        >
               Start with a Behavioral Diagnosis
-            </Link>
+        </Link>
 
             <p className="text-sm text-gray-400" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               Not a tool. Not automation. A decision analysis.

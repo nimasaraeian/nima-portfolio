@@ -1,13 +1,20 @@
 // app/layout.tsx
 
 import './globals.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { FaFacebook, FaInstagram, FaLinkedin, FaSquareXTwitter, FaYoutube } from 'react-icons/fa6'
 import type { IconType } from 'react-icons'
 import SideMenu from '../components/SideMenu'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nimasaraeian.com'),
@@ -17,12 +24,6 @@ export const metadata: Metadata = {
   authors: [{ name: 'Nima Saraeian' }],
   creator: 'Nima Saraeian',
   publisher: 'Nima Saraeian',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
   robots: {
     index: true,
     follow: true,
