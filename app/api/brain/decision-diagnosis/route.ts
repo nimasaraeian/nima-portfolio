@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { jsonResponse } from '@/lib/jsonResponse';
+import { normalizePriceLevel, normalizeDecisionDepth, normalizeBusinessType } from '@/lib/decisionNormalizers';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
   try {
     // Get backend URL from environment
     const backendUrl = getBackendUrl();
-    const backendEndpoint = `${backendUrl}/api/brain/decision-engine`;
+    const backendEndpoint = `${backendUrl}/api/brain/cognitive-friction`;
 
     console.log('[Decision Diagnosis API] Forwarding to backend:', backendEndpoint);
 
@@ -105,53 +106,78 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Build content string from all fields for the backend
-    // The backend expects { content: string }
-    const contentParts: string[] = [];
+    // Prepare payload for cognitive-friction endpoint
+    // Map frontend field names to backend field names
+    // IMPORTANT: If URL is provided but page_copy is empty, backend will scrape the URL
+    const urlValue = body.url?.trim() || '';
+    const pageCopyValue = body.page_copy?.trim() || '';
     
-    if (body.decision_question) {
-      contentParts.push(`Decision Question: ${body.decision_question}`);
-    }
-    if (body.page_type) {
-      contentParts.push(`Page Type: ${body.page_type}`);
-    }
-    if (body.url) {
-      contentParts.push(`URL: ${body.url}`);
-    }
-    if (body.business_type) {
-      contentParts.push(`Business Type: ${body.business_type}`);
-    }
-    if (body.price_level) {
-      contentParts.push(`Price Level: ${body.price_level}`);
-    }
-    if (body.decision_depth) {
-      contentParts.push(`Decision Depth: ${body.decision_depth}`);
-    }
-    if (body.user_intent) {
-      contentParts.push(`User Intent: ${body.user_intent}`);
-    }
-    if (body.page_copy) {
-      contentParts.push(`\nPage Content:\n${body.page_copy}`);
+    // Validate that we have either raw_text or image
+    if (!pageCopyValue && !body.screenshot && !urlValue) {
+      return jsonResponse(
+        {
+          error: 'validation_error',
+          detail: 'Please provide either page copy text, a screenshot, or a URL for analysis.',
+        },
+        { status: 400 }
+      );
     }
     
-    // If we have page_copy or other content, use it; otherwise combine all fields
-    const content = body.page_copy 
-      ? `${contentParts.filter(p => !p.startsWith('Page Content')).join('\n')}\n\n${body.page_copy}`
-      : contentParts.join('\n');
-
-    // Prepare the request body in the format the backend expects
-    const backendBody = {
-      content: content || 'No content provided',
+    // Normalize price_level, decision_depth, and business_type to match backend expectations
+    const normalizedPriceLevel = normalizePriceLevel(body.price_level);
+    const normalizedDecisionDepth = normalizeDecisionDepth(body.decision_depth);
+    const normalizedBusinessType = normalizeBusinessType(body.business_type);
+    
+    const backendBody: any = {
+      raw_text: pageCopyValue, // Empty if only URL is provided - backend will scrape
+      url: urlValue || null, // NEW: Add URL at top level for direct access
+      platform: 'landing_page', // Default, can be enhanced later
+      goal: ['leads'],
+      audience: 'cold',
+      language: 'en',
+      meta: {
+        url: urlValue || null, // Also keep in meta for backward compatibility
+        page_type: body.page_type || null,
+      },
+      business_type: normalizedBusinessType,
+      price_level: normalizedPriceLevel,
+      decision_depth: normalizedDecisionDepth,
+      user_intent_stage: body.user_intent || null,
     };
+    
+    // Log URL scraping scenario
+    if (urlValue && !pageCopyValue) {
+      console.log('[Decision Diagnosis API] 🔍 URL provided without page_copy - backend will scrape:', urlValue);
+    }
+
+    // Add screenshot if provided
+    if (body.screenshot) {
+      backendBody.image = body.screenshot;
+      backendBody.image_type = body.screenshot_type || 'image/png';
+    }
+
+    // Log payload before sending
+    console.log('[CF FRONTEND] Payload sent to backend:', {
+      url: backendBody.meta?.url,
+      pageType: backendBody.meta?.page_type,
+      businessType: backendBody.business_type,
+      priceLevel: backendBody.price_level,
+      decisionDepth: backendBody.decision_depth,
+      userIntent: backendBody.user_intent_stage,
+      pageCopy: backendBody.raw_text?.substring(0, 50) + '...',
+      screenshotUrl: backendBody.image ? '[image provided]' : null,
+    });
 
     console.log('[Decision Diagnosis API] Sending to backend:', {
-      contentLength: backendBody.content.length,
-      hasContent: !!backendBody.content,
+      raw_text_length: backendBody.raw_text?.length || 0,
+      hasImage: !!backendBody.image,
+      hasContext: !!(backendBody.business_type || backendBody.price_level || backendBody.decision_depth || backendBody.user_intent_stage),
     });
 
     // Forward to backend - no fallback, only backend
     let backendResponse: Response;
     try {
+      // Send as JSON to cognitive-friction endpoint
       backendResponse = await fetch(backendEndpoint, {
         method: 'POST',
         headers: {
@@ -202,12 +228,21 @@ export async function POST(req: NextRequest) {
         // Not JSON, use text as-is
       }
 
+      // Check if it's a scraping error and format it nicely
+      let formattedError = errorDetail;
+      if (errorDetail.includes('Failed to scrape') || errorDetail.includes('does not expose enough')) {
+        // Keep the full error message as it contains helpful instructions
+        formattedError = errorDetail;
+      }
+
       return jsonResponse(
         {
           error: true,
-          message: 'Decision engine backend is not responding.',
+          message: backendResponse.status === 400 
+            ? 'Invalid request or content issue' 
+            : 'Decision engine backend is not responding.',
           status: backendResponse.status,
-          detail: errorDetail,
+          detail: formattedError,
         },
         { status: backendResponse.status }
       );
@@ -217,42 +252,83 @@ export async function POST(req: NextRequest) {
     console.log('✅ Decision diagnosis response received from backend');
     console.log('[Decision Diagnosis API] Backend response data:', JSON.stringify(backendData, null, 2));
 
+    // Normalize cognitive-friction response to UI format
+    // Read from executive_decision_summary and decision_failure_breakdown
+    const execSummary = backendData.executive_decision_summary || {};
+    const failureBreakdown = backendData.decision_failure_breakdown || {};
+    const metadata = backendData.metadata || {};
+    
+    // Extract what_to_fix_first from recommendations or next_better_actions
+    let whatToFixFirst: string[] = [];
+    if (backendData.next_better_actions && Array.isArray(backendData.next_better_actions) && backendData.next_better_actions.length > 0) {
+      whatToFixFirst = backendData.next_better_actions
+        .slice(0, 3)
+        .map((action: any) => action.suggested_change || action.title || '')
+        .filter((item: string) => item);
+    } else if (failureBreakdown.reasons && Array.isArray(failureBreakdown.reasons)) {
+      whatToFixFirst = failureBreakdown.reasons;
+    } else if (metadata.priority_fix) {
+      whatToFixFirst = [metadata.priority_fix];
+    }
+    
+    // Extract recommendations from ai_recommendations
+    const recommendations: any = {
+      message: [],
+      structure: [],
+      timing: [],
+    };
+    
+    if (backendData.ai_recommendations) {
+      if (backendData.ai_recommendations.message && Array.isArray(backendData.ai_recommendations.message)) {
+        recommendations.message = backendData.ai_recommendations.message.map((rec: any) => 
+          rec.description || rec.change || rec
+        );
+      }
+      if (backendData.ai_recommendations.structure && Array.isArray(backendData.ai_recommendations.structure)) {
+        recommendations.structure = backendData.ai_recommendations.structure.map((rec: any) => 
+          rec.description || rec.change || rec
+        );
+      }
+      if (backendData.ai_recommendations.timing && Array.isArray(backendData.ai_recommendations.timing)) {
+        recommendations.timing = backendData.ai_recommendations.timing.map((rec: any) => 
+          rec.description || rec.change || rec
+        );
+      }
+    }
+    
     // Normalize backend response to UI format
+    // Do NOT use hardcoded fallback values - let UI handle null/undefined gracefully
     const normalized = {
-      primary_outcome: backendData.decision_blocker || backendData.primary_outcome || 'Outcome Unclear',
-      primary_confidence: (backendData.confidence ?? backendData.primary_confidence ?? 0) / 100, // Convert from 0-100 to 0-1
-      secondary_outcome: backendData.secondary_outcome,
-      secondary_confidence: backendData.secondary_confidence ? backendData.secondary_confidence / 100 : undefined,
-      decision_stage: backendData.decision_stage_assessment?.stage || backendData.decision_stage || 'unknown',
-      summary: backendData.decision_stage_assessment?.explanation || 
-               backendData.why || 
-               backendData.summary || 
-               'No detailed explanation provided by decision engine.',
+      primary_outcome: execSummary.primary_outcome || 
+                       metadata.primary_outcome || 
+                       failureBreakdown.primary_outcome || 
+                       null,
+      primary_confidence: execSummary.confidence !== undefined ? execSummary.confidence / 100 :
+                         (metadata.primary_confidence !== undefined ? metadata.primary_confidence :
+                         (failureBreakdown.confidence !== undefined ? failureBreakdown.confidence / 100 : null)),
+      secondary_outcome: metadata.secondary_outcome || null,
+      secondary_confidence: metadata.secondary_confidence || null,
+      decision_stage: execSummary.decision_stage || 
+                     metadata.decision_stage || 
+                     null,
+      summary: execSummary.summary || 
+               metadata.psychological_explanation || 
+               null,
       context: {
-        business_type: body.business_type || backendData.context?.business_type || 'Unknown',
-        price_level: body.price_level || backendData.context?.price_level || 'Unknown',
-        decision_depth: body.decision_depth || backendData.context?.decision_depth || 'Unknown',
-        user_intent: body.user_intent || backendData.context?.user_intent || 'Unknown',
-        memory_summary: backendData.context?.memory_summary,
+        business_type: body.business_type || backendData.metadata?.context_snapshot?.business_type || null,
+        price_level: body.price_level || backendData.metadata?.context_snapshot?.price_level || null,
+        decision_depth: body.decision_depth || backendData.metadata?.context_snapshot?.decision_depth || null,
+        user_intent: body.user_intent || backendData.metadata?.context_snapshot?.user_intent_stage || null,
+        memory_summary: backendData.metadata?.context_snapshot?.memory_summary || null,
       },
-      journey_insight: backendData.decision_stage_assessment?.friction_reasoning || backendData.journey_insight,
-      what_to_fix_first: backendData.what_to_change_first 
-        ? (Array.isArray(backendData.what_to_change_first) 
-            ? backendData.what_to_change_first 
-            : [backendData.what_to_change_first])
-        : (backendData.what_to_fix_first || []),
-      recommendations: {
-        message: backendData.recommendations?.message || 
-                 (backendData.decision_stage_assessment?.friction_recommendation 
-                   ? [backendData.decision_stage_assessment.friction_recommendation] 
-                   : []),
-        structure: backendData.recommendations?.structure || [],
-        timing: backendData.recommendations?.timing || [],
-      },
-      next_step: backendData.next_step || 
-                 (backendData.expected_decision_lift 
-                   ? `Expected decision lift: ${backendData.expected_decision_lift}` 
-                   : undefined),
+      journey_insight: metadata.outcome_interaction || 
+                      metadata.psychological_explanation || 
+                      null,
+      what_to_fix_first: whatToFixFirst.length > 0 ? whatToFixFirst : null,
+      recommendations: recommendations,
+      next_step: backendData.conversionLiftEstimate 
+        ? `Expected decision lift: ${backendData.conversionLiftEstimate}`
+        : null,
       // Keep raw backend data for debugging
       _rawBackend: backendData,
     };

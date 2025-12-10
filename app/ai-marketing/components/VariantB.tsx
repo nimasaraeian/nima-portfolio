@@ -666,8 +666,15 @@ export default function AiMarketingPageVariantB() {
       const normalizedGoals = goals.length ? goals : (['leads'] as PrimaryGoal[]);
       const audienceValue = showAudienceStage ? (audienceStage || 'cold') : 'cold';
 
+      // Validate that we have either raw_text or image
+      if (!trimmed && !imageBase64) {
+        setError('Please provide either page copy text or a screenshot for analysis.');
+        setIsLoading(false);
+        return;
+      }
+
       const payload = {
-        raw_text: trimmed,
+        raw_text: trimmed || '',
         platform: mapContentTypeToPlatform(contentType),
         goal: normalizedGoals,
         audience: audienceValue,

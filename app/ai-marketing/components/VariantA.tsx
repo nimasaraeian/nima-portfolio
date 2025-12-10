@@ -52,6 +52,7 @@ type RewriteOutput = {
 
 
 import { postToBrain } from '@/lib/apiClient';
+import { normalizePriceLevel, normalizeDecisionDepth, normalizeBusinessType } from '@/lib/decisionNormalizers';
 
 // Helper function to call the Cognitive Friction API
 // Uses the centralized API client helper
@@ -679,6 +680,18 @@ export default function AiMarketingPageVariantA() {
     language: 'en',
   });
 
+  // Decision Diagnosis form fields
+  const [decisionFormData, setDecisionFormData] = useState({
+    url: '',
+    pageType: '',
+    businessType: '',
+    priceLevel: '',
+    decisionDepth: '',
+    userIntent: '',
+    pageCopy: '',
+    screenshotUrl: '',
+  });
+
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<CognitiveFrictionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -774,11 +787,12 @@ export default function AiMarketingPageVariantA() {
     setImageError(null);
 
     const trimmed = formData.raw_text.trim();
+    const pageCopyTrimmed = (decisionFormData.pageCopy || '').trim();
     const imageForAnalysis = selectedImage;
 
     // تنها حالت غیرمجاز: نه متن، نه تصویر
-    if (!trimmed && !imageForAnalysis) {
-      setError('لطفاً متن لندینگ/تبلیغ خود را وارد کنید یا یک تصویر (اسکرین‌شات) آپلود کنید.');
+    if (!trimmed && !pageCopyTrimmed && !imageForAnalysis) {
+      setError('Please provide either page copy text or a screenshot for analysis.');
       return;
     }
 
@@ -809,19 +823,47 @@ export default function AiMarketingPageVariantA() {
         imageName = imageForAnalysis.name;
       }
 
+      // Normalize price_level, decision_depth, and business_type before sending
+      const normalizedPriceLevel = normalizePriceLevel(decisionFormData.priceLevel);
+      const normalizedDecisionDepth = normalizeDecisionDepth(decisionFormData.decisionDepth);
+      const normalizedBusinessType = normalizeBusinessType(decisionFormData.businessType);
+      
+      // Build payload with decision diagnosis fields
       const payload = {
-        raw_text: trimmed,
+        raw_text: (trimmed || decisionFormData.pageCopy || '').trim(),
         platform: formData.platform,
         goal: goals,
         audience: formData.audience,
         language: formData.language,
-        meta: null,
+        meta: {
+          url: decisionFormData.url || null,
+          page_type: decisionFormData.pageType || null,
+        },
+        business_type: normalizedBusinessType,
+        price_level: normalizedPriceLevel,
+        decision_depth: normalizedDecisionDepth,
+        user_intent_stage: decisionFormData.userIntent || null,
         ...(imageBase64 && {
           image: imageBase64,
           image_type: imageType,
           image_name: imageName,
         }),
+        ...(decisionFormData.screenshotUrl && {
+          image: decisionFormData.screenshotUrl,
+        }),
       };
+
+      // Log payload before sending to backend
+      console.log("[CF FRONTEND] Payload sent to backend:", {
+        url: payload.meta?.url,
+        pageType: payload.meta?.page_type,
+        businessType: payload.business_type,
+        priceLevel: payload.price_level,
+        decisionDepth: payload.decision_depth,
+        userIntent: payload.user_intent_stage,
+        pageCopy: payload.raw_text,
+        screenshotUrl: payload.image ? '[image provided]' : null,
+      });
 
       // Use analyzeCognitiveFriction function which calls the correct endpoint
       const data = await analyzeCognitiveFriction(payload);

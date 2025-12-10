@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { normalizePriceLevel, normalizeDecisionDepth, normalizeBusinessType } from "@/lib/decisionNormalizers";
 
 // Types for the API response
 type DecisionDiagnosisResponse = {
@@ -91,7 +92,7 @@ export default function DecisionBrainDashboard() {
 
     // Basic validation
     if (!formData.url.trim() && !formData.pageCopy.trim() && !formData.screenshot) {
-      setError("Please provide a URL, page copy, or screenshot.");
+      setError("Please provide either page copy text or a screenshot for analysis.");
       return;
     }
 
@@ -103,20 +104,38 @@ export default function DecisionBrainDashboard() {
     setIsLoading(true);
 
     try {
+      // Normalize price_level, decision_depth, and business_type before sending
+      const normalizedPriceLevel = normalizePriceLevel(formData.priceLevel);
+      const normalizedDecisionDepth = normalizeDecisionDepth(formData.decisionDepth);
+      const normalizedBusinessType = normalizeBusinessType(formData.businessType);
+      
       // Prepare form data
       const payload = new FormData();
       payload.append("url", formData.url);
       payload.append("page_type", formData.pageType);
       payload.append("decision_question", formData.decisionQuestion);
-      payload.append("business_type", formData.businessType || "");
-      payload.append("price_level", formData.priceLevel || "");
-      payload.append("decision_depth", formData.decisionDepth || "");
+      payload.append("business_type", normalizedBusinessType || "");
+      payload.append("price_level", normalizedPriceLevel || "");
+      payload.append("decision_depth", normalizedDecisionDepth || "");
       payload.append("user_intent", formData.userIntent || "");
-      payload.append("page_copy", formData.pageCopy || "");
+      payload.append("page_copy", formData.pageCopy.trim() || "");
 
       if (formData.screenshot) {
         payload.append("screenshot", formData.screenshot);
       }
+
+      // Log payload before sending
+      const payloadForLog = {
+        url: formData.url,
+        pageType: formData.pageType,
+        businessType: formData.businessType,
+        priceLevel: formData.priceLevel,
+        decisionDepth: formData.decisionDepth,
+        userIntent: formData.userIntent,
+        pageCopy: formData.pageCopy?.substring(0, 50) + '...',
+        screenshotUrl: formData.screenshot ? '[file provided]' : null,
+      };
+      console.log("[CF FRONTEND] Payload sent to backend:", payloadForLog);
 
       const response = await fetch("/api/brain/decision-diagnosis", {
         method: "POST",
@@ -158,6 +177,18 @@ export default function DecisionBrainDashboard() {
         } catch {
           errorMessage = "Failed to analyze decision. Please try again.";
         }
+        
+        // If it's a URL scraping error and pageCopy is empty, suggest adding pageCopy
+        if (
+          response.status === 400 && 
+          (errorMessage.includes('Failed to scrape') || 
+           errorMessage.includes('Failed to render URL') ||
+           errorMessage.includes('Playwright')) &&
+          !formData.pageCopy.trim()
+        ) {
+          errorMessage = `⚠️ Unable to automatically scrape the URL.\n\n${errorMessage}\n\n💡 Tip: Copy and paste the page content manually in the "Page Copy" field below for better results.`;
+        }
+        
         setError(errorMessage);
         return;
       }
@@ -349,6 +380,11 @@ export default function DecisionBrainDashboard() {
                       placeholder="Paste relevant page content here..."
                       className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-vertical text-white placeholder-gray-500"
                     />
+                    {formData.url.trim() && !formData.pageCopy.trim() && (
+                      <p className="text-xs text-yellow-400/80 mt-1">
+                        💡 Tip: If URL scraping fails, paste the page content here manually for better results.
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -411,8 +447,14 @@ export default function DecisionBrainDashboard() {
                 {/* Error Display */}
                 {error && (
                   <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3">
-                    <p className="text-sm font-medium text-red-400 mb-1">Error</p>
-                    <p className="text-sm text-red-300">{error}</p>
+                    <p className="text-sm font-medium text-red-400 mb-2">Error</p>
+                    <div className="text-sm text-red-300 whitespace-pre-wrap break-words">
+                      {error.split('\n').map((line, index) => (
+                        <p key={index} className={index > 0 ? 'mt-2' : ''}>
+                          {line}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 )}
               </form>

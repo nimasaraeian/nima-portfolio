@@ -66,6 +66,22 @@ class DeepScanResponse(BaseModel):
     recommendations: list[str]
 
 
+# Request/Response Models for Cognitive Friction
+class CognitiveFrictionRequest(BaseModel):
+    raw_text: str = ""
+    platform: str = "landing_page"
+    goal: list[str] = []
+    audience: str = "cold"
+    language: str = "en"
+    meta: dict = None
+    business_type: str = None
+    price_level: str = None
+    decision_depth: str = None
+    user_intent_stage: str = None
+    image: str = None
+    image_type: str = None
+
+
 # System Prompt for DeepScan
 DEEPSCAN_SYSTEM_PROMPT = """You are an AI Behavioral Marketing Strategist specializing in psychometric analysis and audience segmentation.
 
