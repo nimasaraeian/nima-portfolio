@@ -1,7 +1,104 @@
 "use client";
 
 import React, { useState } from "react";
-import { normalizePriceLevel, normalizeDecisionDepth, normalizeBusinessType } from "@/lib/decisionNormalizers";
+import { 
+  ShieldAlert, 
+  AlertTriangle, 
+  HelpCircle, 
+  TrendingDown, 
+  ZapOff,
+  CheckCircle2,
+  Shield,
+  Eye,
+  Target,
+  Zap,
+  MessageSquare,
+  Layout,
+  Clock,
+  type LucideIcon 
+} from "lucide-react";
+
+// Mapping config for primary_outcome constants
+type OutcomeConfig = {
+  icon: LucideIcon;
+  color: {
+    border: string;
+    bg: string;
+    text: string;
+    gradient: string;
+  };
+  message: string;
+  relatedScore?: keyof DecisionDiagnosisResponse['friction_scores'];
+};
+
+const OUTCOME_CONFIG: Record<string, OutcomeConfig> = {
+  TRUST_DEBT: {
+    icon: ShieldAlert,
+    color: {
+      border: "border-red-500/30",
+      bg: "bg-red-500/10",
+      text: "text-red-300",
+      gradient: "from-red-500/20 to-red-600/10",
+    },
+    message: "Safety First",
+    relatedScore: "trust",
+  },
+  RISK_DOMINANT: {
+    icon: AlertTriangle,
+    color: {
+      border: "border-orange-500/30",
+      bg: "bg-orange-500/10",
+      text: "text-orange-300",
+      gradient: "from-orange-500/20 to-orange-600/10",
+    },
+    message: "Reduce Anxiety",
+    relatedScore: "risk_perception",
+  },
+  OUTCOME_UNCLEAR: {
+    icon: HelpCircle,
+    color: {
+      border: "border-yellow-500/30",
+      bg: "bg-yellow-500/10",
+      text: "text-yellow-300",
+      gradient: "from-yellow-500/20 to-yellow-600/10",
+    },
+    message: "Clarify Value",
+    relatedScore: "clarity",
+  },
+  VALUE_GAP: {
+    icon: TrendingDown,
+    color: {
+      border: "border-blue-500/30",
+      bg: "bg-blue-500/10",
+      text: "text-blue-300",
+      gradient: "from-blue-500/20 to-blue-600/10",
+    },
+    message: "Boost Desire",
+    relatedScore: "value",
+  },
+  COGNITIVE_OVERLOAD: {
+    icon: ZapOff,
+    color: {
+      border: "border-purple-500/30",
+      bg: "bg-purple-500/10",
+      text: "text-purple-300",
+      gradient: "from-purple-500/20 to-purple-600/10",
+    },
+    message: "Simplify UX",
+    relatedScore: "cognitive_load",
+  },
+  FRICTION_FREE: {
+    icon: CheckCircle2,
+    color: {
+      border: "border-green-500/30",
+      bg: "bg-green-500/10",
+      text: "text-green-300",
+      gradient: "from-green-500/20 to-emerald-600/10",
+    },
+    message: "Excellent Performance",
+    relatedScore: undefined, // No specific score to highlight for success
+  },
+};
 
 // Types for the API response
 type DecisionDiagnosisResponse = {
@@ -24,8 +121,32 @@ type DecisionDiagnosisResponse = {
     message?: string[];
     structure?: string[];
     timing?: string[];
-  };
+  } | string[] | Array<{
+    action?: string;
+    text?: string;
+    impact?: string;
+    category?: string;
+    priority?: string;
+    icon?: string;
+  }>; // Support structured, simple array, and recommendation_engine format
   next_step?: string;
+  // New fields
+  page_type?: string;
+  friction_scores?: {
+    trust: number;
+    clarity: number;
+    value: number;
+    relevance: number;
+    cognitive_load: number;
+    motivation: number;
+    risk_perception: number;
+  } | null;
+  executive_summary?: string | null;
+  visual_analysis?: {
+    mood?: string;
+    theme?: string;
+    description?: string;
+  } | null;
 };
 
 // Input form state
@@ -92,32 +213,16 @@ export default function DecisionBrainDashboard() {
 
     // Basic validation
     if (!formData.url.trim() && !formData.pageCopy.trim() && !formData.screenshot) {
-      setError("Please provide either page copy text or a screenshot for analysis.");
-      return;
-    }
-
-    if (!formData.pageType || !formData.decisionQuestion.trim()) {
-      setError("Please fill in the page type and decision question.");
+      setError("Please provide either a URL, page copy text, or a screenshot for analysis.");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Normalize price_level, decision_depth, and business_type before sending
-      const normalizedPriceLevel = normalizePriceLevel(formData.priceLevel);
-      const normalizedDecisionDepth = normalizeDecisionDepth(formData.decisionDepth);
-      const normalizedBusinessType = normalizeBusinessType(formData.businessType);
-      
-      // Prepare form data
+      // Prepare form data - only send URL, page_copy, and screenshot
       const payload = new FormData();
       payload.append("url", formData.url);
-      payload.append("page_type", formData.pageType);
-      payload.append("decision_question", formData.decisionQuestion);
-      payload.append("business_type", normalizedBusinessType || "");
-      payload.append("price_level", normalizedPriceLevel || "");
-      payload.append("decision_depth", normalizedDecisionDepth || "");
-      payload.append("user_intent", formData.userIntent || "");
       payload.append("page_copy", formData.pageCopy.trim() || "");
 
       if (formData.screenshot) {
@@ -127,11 +232,6 @@ export default function DecisionBrainDashboard() {
       // Log payload before sending
       const payloadForLog = {
         url: formData.url,
-        pageType: formData.pageType,
-        businessType: formData.businessType,
-        priceLevel: formData.priceLevel,
-        decisionDepth: formData.decisionDepth,
-        userIntent: formData.userIntent,
         pageCopy: formData.pageCopy?.substring(0, 50) + '...',
         screenshotUrl: formData.screenshot ? '[file provided]' : null,
       };
@@ -183,10 +283,12 @@ export default function DecisionBrainDashboard() {
           response.status === 400 && 
           (errorMessage.includes('Failed to scrape') || 
            errorMessage.includes('Failed to render URL') ||
-           errorMessage.includes('Playwright')) &&
+           errorMessage.includes('Playwright') ||
+           errorMessage.includes("name 'requests' is not defined") ||
+           errorMessage.includes('requests is not defined')) &&
           !formData.pageCopy.trim()
         ) {
-          errorMessage = `⚠️ Unable to automatically scrape the URL.\n\n${errorMessage}\n\n💡 Tip: Copy and paste the page content manually in the "Page Copy" field below for better results.`;
+          errorMessage = `⚠️ Unable to automatically scrape the URL.\n\n${errorMessage}\n\nSOLUTION: Please manually copy and paste the page content:\n\n- Hero headline\n\n- CTA button text\n\n- Price (if visible)\n\n- Guarantee/refund information\n\nThen paste this content directly in the input field instead of using the URL.\n\n💡 Tip: Copy and paste the page content manually in the "Page Copy" field below for better results.`;
         }
         
         setError(errorMessage);
@@ -201,7 +303,17 @@ export default function DecisionBrainDashboard() {
         hasDecisionStage: !!data.decision_stage,
         hasContext: !!data.context,
         hasSummary: !!data.summary,
+        hasExecutiveSummary: !!data.executive_summary,
       });
+      
+      // Debug: Check executive_summary
+      console.log('[DecisionBrainDashboard] executive_summary value:', data.executive_summary);
+      if (data.executive_summary) {
+        console.log('[DecisionBrainDashboard] ✅ executive_summary received:', data.executive_summary.substring(0, 100) + '...');
+      } else {
+        console.log('[DecisionBrainDashboard] ⚠️ executive_summary is missing, will use summary fallback');
+      }
+      
       setDiagnosis(data);
     } catch (err: any) {
       console.error("[DecisionBrainDashboard] error:", err);
@@ -229,154 +341,33 @@ export default function DecisionBrainDashboard() {
           <div className="lg:w-96 lg:flex-shrink-0">
             <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 space-y-6 sticky top-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Section A: Target Decision */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-white border-b border-slate-700 pb-2">
-                    Target Decision
-                  </h2>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      URL
-                    </label>
-                    <input
-                      type="url"
-                      name="url"
-                      value={formData.url}
-                      onChange={handleInputChange}
-                      placeholder="https://example.com/pricing"
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-gray-500"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      Page Type
-                    </label>
-                    <select
-                      name="pageType"
-                      value={formData.pageType}
-                      onChange={handleInputChange}
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
-                    >
-                      <option value="">Select page type</option>
-                      <option value="Landing">Landing</option>
-                      <option value="Pricing">Pricing</option>
-                      <option value="Product">Product</option>
-                      <option value="Checkout">Checkout</option>
-                      <option value="Info">Info</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      What decision should the user make on this page?
-                    </label>
-                    <textarea
-                      name="decisionQuestion"
-                      value={formData.decisionQuestion}
-                      onChange={handleInputChange}
-                      rows={4}
-                      placeholder="e.g., Subscribe to premium plan, Book consultation, Purchase product..."
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-vertical text-white placeholder-gray-500"
-                    />
-                  </div>
+                {/* URL Input */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-200">
+                    URL
+                  </label>
+                  <input
+                    type="url"
+                    name="url"
+                    value={formData.url}
+                    onChange={handleInputChange}
+                    placeholder="https://example.com/pricing"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-gray-500"
+                  />
                 </div>
 
-                {/* Section B: Context */}
+                {/* Page Copy Input */}
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-white border-b border-slate-700 pb-2">
-                    Context
-                  </h2>
 
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-200">
-                      Business Type
-                    </label>
-                    <select
-                      name="businessType"
-                      value={formData.businessType}
-                      onChange={handleInputChange}
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
-                    >
-                      <option value="">Select business type</option>
-                      <option value="SaaS">SaaS</option>
-                      <option value="Ecommerce">Ecommerce</option>
-                      <option value="Clinic">Clinic</option>
-                      <option value="Service">Service</option>
-                      <option value="Education">Education</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      Price Level
-                    </label>
-                    <select
-                      name="priceLevel"
-                      value={formData.priceLevel}
-                      onChange={handleInputChange}
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
-                    >
-                      <option value="">Select price level</option>
-                      <option value="Low">Low</option>
-                      <option value="Medium">Medium</option>
-                      <option value="High">High</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      Decision Depth
-                    </label>
-                    <select
-                      name="decisionDepth"
-                      value={formData.decisionDepth}
-                      onChange={handleInputChange}
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
-                    >
-                      <option value="">Select decision depth</option>
-                      <option value="Impulse">Impulse</option>
-                      <option value="Considered">Considered</option>
-                      <option value="High-commitment">High-commitment</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      User Intent
-                    </label>
-                    <select
-                      name="userIntent"
-                      value={formData.userIntent}
-                      onChange={handleInputChange}
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white"
-                    >
-                      <option value="">Select user intent</option>
-                      <option value="Learn">Learn</option>
-                      <option value="Compare">Compare</option>
-                      <option value="Validate">Validate</option>
-                      <option value="Buy">Buy</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Section C: Optional Input */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-white border-b border-slate-700 pb-2">
-                    Optional Input
-                  </h2>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      Paste Page Copy (optional)
+                      Paste Page Copy
                     </label>
                     <textarea
                       name="pageCopy"
                       value={formData.pageCopy}
                       onChange={handleInputChange}
-                      rows={4}
+                      rows={6}
                       placeholder="Paste relevant page content here..."
                       className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-vertical text-white placeholder-gray-500"
                     />
@@ -389,7 +380,7 @@ export default function DecisionBrainDashboard() {
 
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-200">
-                      Upload Screenshot (optional)
+                      Upload Screenshot
                     </label>
                     {screenshotPreview ? (
                       <div className="relative">
@@ -477,11 +468,62 @@ export default function DecisionBrainDashboard() {
                 </div>
               )}
 
-              {!isLoading && diagnosis && (
+              {!isLoading && diagnosis && (() => {
+                const outcomeConfig = diagnosis.primary_outcome 
+                  ? OUTCOME_CONFIG[diagnosis.primary_outcome] 
+                  : null;
+                const OutcomeIcon = outcomeConfig?.icon || HelpCircle;
+                const defaultColors = {
+                  border: "border-slate-800",
+                  bg: "bg-slate-800/70",
+                  text: "text-white",
+                  gradient: "from-slate-800/70 to-slate-800/70",
+                };
+                const colors = outcomeConfig?.color || defaultColors;
+                
+                return (
                 <div className="space-y-6">
                   {/* Executive Decision Summary */}
-                  <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
-                    <h2 className="text-xl font-semibold text-white">Executive Decision Summary</h2>
+                  <div className={`border ${colors.border} rounded-xl bg-gradient-to-br ${colors.gradient} p-6 space-y-4`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {outcomeConfig && (
+                          <OutcomeIcon className={`w-6 h-6 ${colors.text}`} />
+                        )}
+                        <h2 className={`text-xl font-semibold ${colors.text}`}>
+                          {diagnosis.primary_outcome === "IDENTITY_MISMATCH" 
+                            ? "Role ambiguity in the hero section" 
+                            : diagnosis.primary_outcome === "FRICTION_FREE"
+                            ? "✅ Success: Low Decision Friction"
+                            : "Executive Decision Summary"}
+                        </h2>
+                      </div>
+                      {outcomeConfig && (
+                        <span className={`inline-flex items-center rounded-full border ${colors.border} ${colors.bg} px-3 py-1 text-xs font-medium ${colors.text}`}>
+                          {outcomeConfig.message}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* Visual Analysis Badge */}
+                    {diagnosis.visual_analysis && (
+                      <div className="inline-flex items-center rounded-md border border-slate-700 bg-slate-700/50 px-3 py-1.5 text-xs text-gray-300">
+                        <span className="font-medium mr-1">Visual Mood:</span>
+                        {diagnosis.visual_analysis.mood && (
+                          <span className="capitalize">{diagnosis.visual_analysis.mood}</span>
+                        )}
+                        {diagnosis.visual_analysis.theme && (
+                          <span className="ml-1 text-gray-400">
+                            ({diagnosis.visual_analysis.theme})
+                          </span>
+                        )}
+                        {diagnosis.visual_analysis.description && (
+                          <span className="ml-2 text-gray-400 italic">
+                            {diagnosis.visual_analysis.description}
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <div className="space-y-3">
                       <div className="flex items-center gap-4 flex-wrap">
                         <div>
@@ -511,9 +553,122 @@ export default function DecisionBrainDashboard() {
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-200 leading-relaxed">{diagnosis.summary || "No summary available."}</p>
+                      {/* Executive Summary - prioritize executive_summary from API */}
+                      {diagnosis.executive_summary ? (
+                        <pre className="whitespace-pre-wrap text-sm text-gray-200 leading-relaxed bg-slate-700/40 rounded-md p-3 mt-2">
+                          {diagnosis.executive_summary}
+                        </pre>
+                      ) : diagnosis.summary ? (
+                        <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">
+                          {diagnosis.summary}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-gray-400 italic">
+                          No explanation provided by the model.
+                        </p>
+                      )}
                     </div>
                   </div>
+
+                  {/* Behavioral Friction Scores */}
+                  {diagnosis.friction_scores && (() => {
+                    const outcomeConfig = diagnosis.primary_outcome 
+                      ? OUTCOME_CONFIG[diagnosis.primary_outcome] 
+                      : null;
+                    const highlightedScore = outcomeConfig?.relatedScore;
+                    
+                    return (
+                      <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
+                        <h2 className="text-xl font-semibold text-white">Behavioral Friction Scores</h2>
+                        <p className="text-sm text-gray-400 mb-4">7 core friction dimensions (0-100 scale)</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          {Object.entries(diagnosis.friction_scores).map(([key, value]) => {
+                            const isHighlighted = highlightedScore === key;
+                            const scoreValue = typeof value === 'number' ? value : 0;
+                            const isHighScore = scoreValue >= 70; // Highlight if score is high (bad)
+                            
+                            // Determine styling based on outcome type
+                            let borderClass = "border-slate-700";
+                            let bgClass = "bg-slate-700/50";
+                            let textClass = "text-gray-300";
+                            let pulseClass = "";
+                            
+                            if (isHighlighted && outcomeConfig) {
+                              if (isHighScore) {
+                                // High score (bad) - use outcome color with pulse
+                                if (diagnosis.primary_outcome === "TRUST_DEBT") {
+                                  borderClass = "border-red-500/50";
+                                  bgClass = "bg-red-500/20";
+                                  textClass = "text-red-300";
+                                  pulseClass = "animate-pulse";
+                                } else if (diagnosis.primary_outcome === "RISK_DOMINANT") {
+                                  borderClass = "border-orange-500/50";
+                                  bgClass = "bg-orange-500/20";
+                                  textClass = "text-orange-300";
+                                  pulseClass = "animate-pulse";
+                                } else if (diagnosis.primary_outcome === "OUTCOME_UNCLEAR") {
+                                  borderClass = "border-yellow-500/50";
+                                  bgClass = "bg-yellow-500/20";
+                                  textClass = "text-yellow-300";
+                                  pulseClass = "animate-pulse";
+                                } else if (diagnosis.primary_outcome === "VALUE_GAP") {
+                                  borderClass = "border-blue-500/50";
+                                  bgClass = "bg-blue-500/20";
+                                  textClass = "text-blue-300";
+                                  pulseClass = "animate-pulse";
+                                } else if (diagnosis.primary_outcome === "COGNITIVE_OVERLOAD") {
+                                  borderClass = "border-purple-500/50";
+                                  bgClass = "bg-purple-500/20";
+                                  textClass = "text-purple-300";
+                                  pulseClass = "animate-pulse";
+                                }
+                              } else {
+                                // Low score (good) - just highlight with border
+                                if (diagnosis.primary_outcome === "TRUST_DEBT") {
+                                  borderClass = "border-red-500/30 border-2";
+                                  bgClass = "bg-red-500/10";
+                                  textClass = "text-red-300";
+                                } else if (diagnosis.primary_outcome === "RISK_DOMINANT") {
+                                  borderClass = "border-orange-500/30 border-2";
+                                  bgClass = "bg-orange-500/10";
+                                  textClass = "text-orange-300";
+                                } else if (diagnosis.primary_outcome === "OUTCOME_UNCLEAR") {
+                                  borderClass = "border-yellow-500/30 border-2";
+                                  bgClass = "bg-yellow-500/10";
+                                  textClass = "text-yellow-300";
+                                } else if (diagnosis.primary_outcome === "VALUE_GAP") {
+                                  borderClass = "border-blue-500/30 border-2";
+                                  bgClass = "bg-blue-500/10";
+                                  textClass = "text-blue-300";
+                                } else if (diagnosis.primary_outcome === "COGNITIVE_OVERLOAD") {
+                                  borderClass = "border-purple-500/30 border-2";
+                                  bgClass = "bg-purple-500/10";
+                                  textClass = "text-purple-300";
+                                }
+                              }
+                            }
+                            
+                            return (
+                              <div 
+                                key={key} 
+                                className={`flex items-center justify-between rounded-md border px-3 py-2 transition-all ${borderClass} ${bgClass} ${pulseClass}`}
+                              >
+                                <span className={`text-sm capitalize ${textClass} ${isHighlighted ? "font-semibold" : ""}`}>
+                                  {key.replace(/_/g, " ")}
+                                  {isHighlighted && (
+                                    <span className="ml-2 text-xs">⚠️</span>
+                                  )}
+                                </span>
+                                <span className={`text-sm font-semibold ${textClass}`}>
+                                  {typeof value === 'number' ? value : 'N/A'}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Context Snapshot */}
                   {diagnosis.context && (
@@ -548,9 +703,27 @@ export default function DecisionBrainDashboard() {
                     </div>
                   )}
 
-                  {/* Decision Failure Breakdown */}
-                  <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
-                    <h2 className="text-xl font-semibold text-white">Decision Failure Breakdown</h2>
+                  {/* Decision Failure Breakdown / Success Metrics */}
+                  {(() => {
+                    const isSuccess = diagnosis.primary_outcome === "FRICTION_FREE";
+                    const successConfig = OUTCOME_CONFIG.FRICTION_FREE;
+                    
+                    return (
+                      <div className={`border rounded-xl p-6 space-y-4 ${
+                        isSuccess
+                          ? `${successConfig.color.border} bg-gradient-to-br ${successConfig.color.gradient}`
+                          : "border-slate-800 bg-slate-800/70"
+                      }`}>
+                        <div className="flex items-center gap-3">
+                          {isSuccess && (
+                            <successConfig.icon className={`w-6 h-6 ${successConfig.color.text}`} />
+                          )}
+                          <h2 className={`text-xl font-semibold ${
+                            isSuccess ? successConfig.color.text : "text-white"
+                          }`}>
+                            {isSuccess ? "Success Metrics" : "Decision Failure Breakdown"}
+                          </h2>
+                        </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <p className="text-xs uppercase tracking-wider text-gray-400">Primary Outcome</p>
@@ -585,7 +758,9 @@ export default function DecisionBrainDashboard() {
                         </div>
                       )}
                     </div>
-                  </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Decision Journey Insight */}
                   {diagnosis.journey_insight && (
@@ -594,81 +769,234 @@ export default function DecisionBrainDashboard() {
                       <p className="text-sm text-gray-200 leading-relaxed">
                         {diagnosis.journey_insight}
                       </p>
-                    </div>
-                  )}
-
-                  {/* What To Fix First */}
-                  {diagnosis.what_to_fix_first && diagnosis.what_to_fix_first.length > 0 && (
-                    <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
-                      <h2 className="text-xl font-semibold text-white">What To Fix First</h2>
-                      <ul className="space-y-2">
-                        {diagnosis.what_to_fix_first.map((item, index) => (
-                          <li key={index} className="flex items-start gap-3">
-                            <span className="text-indigo-400 mt-0.5">•</span>
-                            <p className="text-sm text-gray-200 flex-1">{item}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Actionable Recommendations */}
-                  {diagnosis.recommendations && (
-                    <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-6">
-                      <h2 className="text-xl font-semibold text-white">Actionable Recommendations</h2>
-
-                      {/* Message-level */}
-                      {diagnosis.recommendations.message && diagnosis.recommendations.message.length > 0 && (
-                        <div className="space-y-3">
-                          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                            Message-level
-                          </h3>
-                          <ul className="space-y-2">
-                            {diagnosis.recommendations.message.map((rec, index) => (
-                              <li key={index} className="flex items-start gap-3">
-                                <span className="text-indigo-400 mt-0.5">•</span>
-                                <p className="text-sm text-gray-200 flex-1">{rec}</p>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {/* Structure-level */}
-                      {diagnosis.recommendations.structure && diagnosis.recommendations.structure.length > 0 && (
-                        <div className="space-y-3">
-                          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                            Structure-level
-                          </h3>
-                          <ul className="space-y-2">
-                            {diagnosis.recommendations.structure.map((rec, index) => (
-                              <li key={index} className="flex items-start gap-3">
-                                <span className="text-indigo-400 mt-0.5">•</span>
-                                <p className="text-sm text-gray-200 flex-1">{rec}</p>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {/* Timing & flow */}
-                      {diagnosis.recommendations.timing && diagnosis.recommendations.timing.length > 0 && (
-                        <div className="space-y-3">
-                          <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                            Timing & Flow
-                          </h3>
-                          <ul className="space-y-2">
-                            {diagnosis.recommendations.timing.map((rec, index) => (
-                              <li key={index} className="flex items-start gap-3">
-                                <span className="text-indigo-400 mt-0.5">•</span>
-                                <p className="text-sm text-gray-200 flex-1">{rec}</p>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                      {diagnosis.primary_outcome === "IDENTITY_MISMATCH" && (
+                        <p className="text-xs text-gray-400 italic mt-3 pt-3 border-t border-slate-700">
+                          At the awareness stage, visitors don't judge your full CV. They only ask one question: 'Is this for someone like me?'. If the hero tries to serve too many roles at once, they hesitate instead of exploring further.
+                        </p>
                       )}
                     </div>
                   )}
+
+                  {/* What To Fix First / Growth Opportunities */}
+                  {diagnosis.what_to_fix_first && diagnosis.what_to_fix_first.length > 0 && (() => {
+                    const isSuccess = diagnosis.primary_outcome === "FRICTION_FREE";
+                    const successConfig = OUTCOME_CONFIG.FRICTION_FREE;
+                    
+                    return (
+                      <div className={`border rounded-xl p-6 space-y-4 ${
+                        isSuccess
+                          ? `${successConfig.color.border} bg-gradient-to-br ${successConfig.color.gradient}`
+                          : diagnosis.primary_outcome === "IDENTITY_MISMATCH" 
+                          ? "border-yellow-500/30 bg-yellow-500/5" 
+                          : "border-slate-800 bg-slate-800/70"
+                      }`}>
+                        <div className="flex items-center gap-3">
+                          {isSuccess && (
+                            <successConfig.icon className={`w-5 h-5 ${successConfig.color.text}`} />
+                          )}
+                          <h2 className={`text-xl font-semibold ${
+                            isSuccess ? successConfig.color.text : "text-white"
+                          }`}>
+                            {isSuccess ? "Growth Opportunities" : "What To Fix First"}
+                          </h2>
+                        </div>
+                        <ul className="space-y-2">
+                          {diagnosis.what_to_fix_first.map((item, index) => (
+                            <li key={index} className="flex items-start gap-3">
+                              <span className={`mt-0.5 ${
+                                isSuccess
+                                  ? successConfig.color.text
+                                  : diagnosis.primary_outcome === "IDENTITY_MISMATCH" 
+                                  ? "text-yellow-400" 
+                                  : "text-indigo-400"
+                              }`}>
+                                {isSuccess ? "✓" : "•"}
+                              </span>
+                              <p className={`text-sm flex-1 ${
+                                isSuccess ? successConfig.color.text : "text-gray-200"
+                              }`}>
+                                {item}
+                              </p>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })()}
+
+                  {/* 🚀 Action Plan: Fix These First */}
+                  {diagnosis.recommendations && (() => {
+                    // Helper function to extract action verb and rest of text
+                    const extractAction = (text: string): { verb: string; rest: string } => {
+                      const actionVerbs = ['add', 'remove', 'change', 'update', 'improve', 'enhance', 'fix', 'replace', 'simplify', 'clarify', 'show', 'hide', 'highlight', 'emphasize', 'reduce', 'increase'];
+                      const lowerText = text.toLowerCase();
+                      for (const verb of actionVerbs) {
+                        if (lowerText.startsWith(verb)) {
+                          const verbLength = verb.length;
+                          return {
+                            verb: text.substring(0, verbLength),
+                            rest: text.substring(verbLength).trim()
+                          };
+                        }
+                      }
+                      // If no action verb found, try to find first word
+                      const firstSpace = text.indexOf(' ');
+                      if (firstSpace > 0) {
+                        return {
+                          verb: text.substring(0, firstSpace),
+                          rest: text.substring(firstSpace).trim()
+                        };
+                      }
+                      return { verb: '', rest: text };
+                    };
+
+                    // Helper function to get icon based on category or text content
+                    const getIcon = (rec: any): LucideIcon => {
+                      const category = rec.category?.toLowerCase() || '';
+                      const text = (rec.text || rec.action || '').toLowerCase();
+                      
+                      if (category.includes('trust') || text.includes('trust') || text.includes('guarantee') || text.includes('badge')) {
+                        return Shield;
+                      }
+                      if (category.includes('clarity') || text.includes('clarity') || text.includes('clear') || text.includes('explain')) {
+                        return Eye;
+                      }
+                      if (category.includes('value') || text.includes('value') || text.includes('benefit')) {
+                        return Target;
+                      }
+                      if (category.includes('message') || text.includes('message') || text.includes('copy')) {
+                        return MessageSquare;
+                      }
+                      if (category.includes('structure') || text.includes('layout') || text.includes('structure')) {
+                        return Layout;
+                      }
+                      if (category.includes('timing') || text.includes('timing') || text.includes('flow')) {
+                        return Clock;
+                      }
+                      if (text.includes('speed') || text.includes('fast') || text.includes('quick')) {
+                        return Zap;
+                      }
+                      // Default icon
+                      return Target;
+                    };
+
+                    // Helper function to get impact label
+                    const getImpactLabel = (rec: any): string => {
+                      if (rec.impact) return rec.impact;
+                      
+                      const text = (rec.text || rec.action || '').toLowerCase();
+                      if (text.includes('trust')) return 'Trust ↑';
+                      if (text.includes('clarity')) return 'Clarity ↑';
+                      if (text.includes('value')) return 'Value ↑';
+                      if (text.includes('conversion')) return 'Conversion ↑';
+                      if (text.includes('engagement')) return 'Engagement ↑';
+                      
+                      return 'Impact: High';
+                    };
+
+                    // Normalize recommendations to a flat array
+                    const normalizeRecommendations = (): Array<{ text: string; category?: string; impact?: string; priority?: string; icon?: string }> => {
+                      const items: Array<{ text: string; category?: string; impact?: string; priority?: string; icon?: string }> = [];
+                      
+                      if (Array.isArray(diagnosis.recommendations)) {
+                        // Check if it's the new recommendation_engine format
+                        if (diagnosis.recommendations.length > 0 && typeof diagnosis.recommendations[0] === 'object' && 'action' in diagnosis.recommendations[0]) {
+                          return diagnosis.recommendations.map((rec: any) => ({
+                            text: rec.action || rec.text || '',
+                            category: rec.category,
+                            impact: rec.impact,
+                            priority: rec.priority,
+                            icon: rec.icon
+                          }));
+                        }
+                        // Simple string array
+                        return diagnosis.recommendations.map((rec: string) => ({
+                          text: rec
+                        }));
+                      }
+                      
+                      // Structured format
+                      if (diagnosis.recommendations.message) {
+                        diagnosis.recommendations.message.forEach((rec: string) => {
+                          items.push({ text: rec, category: 'message' });
+                        });
+                      }
+                      if (diagnosis.recommendations.structure) {
+                        diagnosis.recommendations.structure.forEach((rec: string) => {
+                          items.push({ text: rec, category: 'structure' });
+                        });
+                      }
+                      if (diagnosis.recommendations.timing) {
+                        diagnosis.recommendations.timing.forEach((rec: string) => {
+                          items.push({ text: rec, category: 'timing' });
+                        });
+                      }
+                      
+                      return items;
+                    };
+
+                    const normalizedRecs = normalizeRecommendations();
+                    
+                    if (normalizedRecs.length === 0) return null;
+
+                    return (
+                      <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
+                        <h2 className="text-xl font-semibold text-white">🚀 Action Plan: Fix These First</h2>
+                        
+                        <div className="space-y-3">
+                          {normalizedRecs.map((rec, index) => {
+                            const isFirst = index === 0;
+                            const { verb, rest } = extractAction(rec.text);
+                            const Icon = getIcon(rec);
+                            const impactLabel = getImpactLabel(rec);
+                            
+                            return (
+                              <div
+                                key={index}
+                                className={`rounded-lg border p-4 transition-all ${
+                                  isFirst
+                                    ? 'border-orange-500/50 bg-gradient-to-br from-orange-500/10 to-orange-600/5 border-2'
+                                    : 'border-slate-700 bg-slate-700/30'
+                                }`}
+                              >
+                                <div className="flex items-start gap-3">
+                                  <div className={`mt-0.5 ${isFirst ? 'text-orange-400' : 'text-slate-400'}`}>
+                                    <Icon className="w-5 h-5" />
+                                  </div>
+                                  <div className="flex-1 space-y-2">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div className="flex-1">
+                                        {isFirst && (
+                                          <span className="inline-flex items-center rounded-full bg-orange-500/20 border border-orange-500/30 px-2 py-0.5 text-xs font-semibold text-orange-300 mb-2">
+                                            🔥 High Priority
+                                          </span>
+                                        )}
+                                        <p className="text-sm text-gray-200 leading-relaxed">
+                                          {verb ? (
+                                            <>
+                                              <span className="font-bold text-white">{verb}</span>
+                                              {rest && ` ${rest}`}
+                                            </>
+                                          ) : (
+                                            rec.text
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-xs text-gray-400 font-medium">
+                                        {impactLabel}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Next Diagnostic Step */}
                   {diagnosis.next_step && (
@@ -680,7 +1008,8 @@ export default function DecisionBrainDashboard() {
                     </div>
                   )}
                 </div>
-              )}
+                );
+              })()}
             </div>
           </div>
         </div>
