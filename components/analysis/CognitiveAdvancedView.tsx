@@ -2,9 +2,11 @@ import { useState } from "react";
 import type {
   CognitiveFrictionResult,
   PsychologyAnalysisResult,
+  DecisionBlockerItem,
+  AIRecommendationItem,
 } from "@/app/ai-marketing/brain-types";
 import PsychologySummary from "@/components/PsychologySummary";
-import PsychologyDashboardAdvanced from "@/components/PsychologyDashboardAdvanced";
+import KeyInsights from "@/components/KeyInsights";
 
 type Props = {
   result: CognitiveFrictionResult;
@@ -13,7 +15,6 @@ type Props = {
 };
 
 export function CognitiveAdvancedView({ result, psychologyAnalysis, brainResponse }: Props) {
-  const [showDashboard, setShowDashboard] = useState(true);
   const narrative =
     psychologyAnalysis?.human_readable_report ??
     brainResponse ??
@@ -21,36 +22,95 @@ export function CognitiveAdvancedView({ result, psychologyAnalysis, brainRespons
     result.psychology_narrative?.ai_interpretation ??
     "";
 
-  const hasDashboard = !!result.psychology_dashboard;
+  // Extract blockers from various possible sources
+  const extractBlockers = (): Array<{ name: string; feedback: string }> => {
+    const blockers: Array<{ name: string; feedback: string }> = [];
+    
+    // Check for new structured blockers format (blockers array with name/feedback)
+    if (result.blockers && Array.isArray(result.blockers)) {
+      return result.blockers.map((item: any) => ({
+        name: item.name || item.element || "Unknown",
+        feedback: item.feedback || item.issue || item.psychological_impact || "",
+      }));
+    }
+    
+    // Check for decision_blockers (structured format)
+    if (result.decision_blockers) {
+      Object.entries(result.decision_blockers).forEach(([category, items]) => {
+        if (Array.isArray(items)) {
+          items.forEach((item: DecisionBlockerItem) => {
+            blockers.push({
+              name: item.element || category,
+              feedback: item.issue || item.psychological_impact || "",
+            });
+          });
+        }
+      });
+    }
+    
+    // Check for simple string arrays
+    if (result.keyDecisionBlockers && Array.isArray(result.keyDecisionBlockers)) {
+      result.keyDecisionBlockers.forEach((blocker: string) => {
+        blockers.push({
+          name: blocker,
+          feedback: blocker,
+        });
+      });
+    }
+    
+    return blockers;
+  };
+
+  // Extract boosters from various possible sources
+  const extractBoosters = (): Array<{ name: string; feedback: string }> => {
+    const boosters: Array<{ name: string; feedback: string }> = [];
+    
+    // Check for new structured boosters format (boosters array with name/feedback)
+    if (result.boosters && Array.isArray(result.boosters)) {
+      return result.boosters.map((item: any) => ({
+        name: item.name || item.element || "Unknown",
+        feedback: item.feedback || item.change || item.psychological_effect || "",
+      }));
+    }
+    
+    // Check for ai_recommendations (structured format) - treat as boosters
+    if (result.ai_recommendations) {
+      Object.entries(result.ai_recommendations).forEach(([category, items]) => {
+        if (Array.isArray(items)) {
+          items.forEach((item: AIRecommendationItem) => {
+            boosters.push({
+              name: item.element || category,
+              feedback: item.change || item.psychological_effect || "",
+            });
+          });
+        }
+      });
+    }
+    
+    // Check for recommendedQuickWins as boosters
+    if (result.recommendedQuickWins && Array.isArray(result.recommendedQuickWins)) {
+      result.recommendedQuickWins.forEach((win: string) => {
+        boosters.push({
+          name: win,
+          feedback: win,
+        });
+      });
+    }
+    
+    return boosters;
+  };
+
+  const blockers = extractBlockers();
+  const boosters = extractBoosters();
 
   return (
     <div className="space-y-6">
-      {hasDashboard ? (
-        <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-4 space-y-4">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <div className="text-sm font-semibold text-white">Advanced Psychological View</div>
-              <p className="text-xs text-slate-400">
-                13-dimension decision psychology dashboard with personality, trust, motivation, and
-                behavioral predictors.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowDashboard((prev) => !prev)}
-              className="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition-colors"
-            >
-              {showDashboard ? "Hide Advanced View" : "Show Advanced View"}
-            </button>
-          </div>
+      {/* Key Insights - Simplified View */}
+      <KeyInsights blockers={blockers} boosters={boosters} />
 
-          <PsychologySummary result={result} />
-          {showDashboard && <PsychologyDashboardAdvanced dashboard={result.psychology_dashboard} />}
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-4 text-sm text-slate-400">
-          Advanced psychological metrics were not returned for this analysis run.
-        </div>
+      {/* Psychology Summary - Keep for high-level metrics */}
+      {result.psychology_dashboard && (
+        <PsychologySummary result={result} />
       )}
 
       {narrative && (

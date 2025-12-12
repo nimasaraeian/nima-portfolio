@@ -28,7 +28,7 @@ type OutcomeConfig = {
     gradient: string;
   };
   message: string;
-  relatedScore?: keyof DecisionDiagnosisResponse['friction_scores'];
+  relatedScore?: 'trust' | 'clarity' | 'value' | 'relevance' | 'cognitive_load' | 'motivation' | 'risk_perception' | null;
 };
 
 const OUTCOME_CONFIG: Record<string, OutcomeConfig> = {
@@ -206,68 +206,64 @@ export default function DecisionBrainDashboard() {
     setScreenshotPreview(null);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setDiagnosis(null);
 
-    // Basic validation
-    if (!formData.url.trim() && !formData.pageCopy.trim() && !formData.screenshot) {
-      setError("Please provide either a URL, page copy text, or a screenshot for analysis.");
+    // این‌ها را با stateهای واقعی خودت replace کن:
+    // screenshotFile: فایل اسکرین‌شات -> formData.screenshot
+    // pageText: متن کپی‌شده از صفحه -> formData.pageCopy
+    if (!formData.screenshot && !formData.pageCopy.trim()) {
+      console.warn("No screenshot or text provided");
+      setError("Please provide either page copy text or a screenshot for analysis.");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Prepare form data - only send URL, page_copy, and screenshot
-      const payload = new FormData();
-      payload.append("url", formData.url);
-      payload.append("page_copy", formData.pageCopy.trim() || "");
+      const formDataToSend = new FormData();
 
+      // 👇 اسم فیلد باید EXACTLY "image" باشد
       if (formData.screenshot) {
-        payload.append("screenshot", formData.screenshot);
+        formDataToSend.append("image", formData.screenshot);
       }
 
-      // Log payload before sending
-      const payloadForLog = {
-        url: formData.url,
-        pageCopy: formData.pageCopy?.substring(0, 50) + '...',
-        screenshotUrl: formData.screenshot ? '[file provided]' : null,
-      };
-      console.log("[CF FRONTEND] Payload sent to backend:", payloadForLog);
+      // 👇 متن با نام "raw_text" ارسال شود
+      if (formData.pageCopy && formData.pageCopy.trim().length > 0) {
+        formDataToSend.append("raw_text", formData.pageCopy.trim());
+      }
 
-      const response = await fetch("/api/brain/decision-diagnosis", {
+      const res = await fetch("/api/brain/decision-diagnosis", {
         method: "POST",
-        body: payload,
+        body: formDataToSend, // ❗ هیچ headers: { "Content-Type": ... } نگذار
       });
 
-      if (!response.ok) {
+      if (!res.ok) {
         let errorMessage = "Request failed";
         try {
-          const text = await response.text();
+          const text = await res.text();
           try {
             const errorData = JSON.parse(text);
-            // Handle different error formats
             if (errorData.detail) {
-              // If detail is an array (validation errors), format it
               if (Array.isArray(errorData.detail)) {
                 errorMessage = errorData.detail
                   .map((err: any) => {
                     if (typeof err === 'string') return err;
                     if (err.msg) return err.msg;
-                    return JSON.stringify(err);
+                    return String(err);
                   })
                   .join(', ');
               } else if (typeof errorData.detail === 'string') {
                 errorMessage = errorData.detail;
               } else {
-                errorMessage = JSON.stringify(errorData.detail);
+                errorMessage = String(errorData.detail);
               }
             } else if (errorData.error) {
               errorMessage = typeof errorData.error === 'string' 
                 ? errorData.error 
-                : JSON.stringify(errorData.error);
+                : String(errorData.error);
             } else {
               errorMessage = text || "Request failed";
             }
@@ -278,49 +274,38 @@ export default function DecisionBrainDashboard() {
           errorMessage = "Failed to analyze decision. Please try again.";
         }
         
-        // If it's a URL scraping error and pageCopy is empty, suggest adding pageCopy
-        if (
-          response.status === 400 && 
-          (errorMessage.includes('Failed to scrape') || 
-           errorMessage.includes('Failed to render URL') ||
-           errorMessage.includes('Playwright') ||
-           errorMessage.includes("name 'requests' is not defined") ||
-           errorMessage.includes('requests is not defined')) &&
-          !formData.pageCopy.trim()
-        ) {
-          errorMessage = `⚠️ Unable to automatically scrape the URL.\n\n${errorMessage}\n\nSOLUTION: Please manually copy and paste the page content:\n\n- Hero headline\n\n- CTA button text\n\n- Price (if visible)\n\n- Guarantee/refund information\n\nThen paste this content directly in the input field instead of using the URL.\n\n💡 Tip: Copy and paste the page content manually in the "Page Copy" field below for better results.`;
-        }
-        
         setError(errorMessage);
+        setIsLoading(false);
         return;
       }
 
-      const data = (await response.json()) as DecisionDiagnosisResponse;
-      console.log('[DecisionBrainDashboard] Received diagnosis data:', data);
-      console.log('[DecisionBrainDashboard] Data structure:', {
-        hasPrimaryOutcome: !!data.primary_outcome,
-        hasPrimaryConfidence: data.primary_confidence != null,
-        hasDecisionStage: !!data.decision_stage,
-        hasContext: !!data.context,
-        hasSummary: !!data.summary,
-        hasExecutiveSummary: !!data.executive_summary,
-      });
+      const responseText = await res.text();
+      console.log("DEBUG raw response text:", responseText.substring(0, 500));
       
-      // Debug: Check executive_summary
-      console.log('[DecisionBrainDashboard] executive_summary value:', data.executive_summary);
-      if (data.executive_summary) {
-        console.log('[DecisionBrainDashboard] ✅ executive_summary received:', data.executive_summary.substring(0, 100) + '...');
-      } else {
-        console.log('[DecisionBrainDashboard] ⚠️ executive_summary is missing, will use summary fallback');
+      let data: DecisionDiagnosisResponse;
+      try {
+        data = JSON.parse(responseText) as DecisionDiagnosisResponse;
+      } catch (parseError) {
+        console.error("DEBUG Failed to parse JSON:", parseError);
+        console.error("DEBUG Full response text:", responseText);
+        setError(`Invalid response from server: ${responseText.substring(0, 200)}`);
+        setIsLoading(false);
+        return;
       }
       
+      console.log("DEBUG decision-diagnosis response:", data);
+      console.log("DEBUG response keys:", data ? Object.keys(data) : []);
+      console.log("DEBUG primary_outcome:", data?.primary_outcome);
+      console.log("DEBUG executive_decision_summary:", data?.executive_decision_summary);
+      console.log("DEBUG executive_summary:", data?.executive_summary);
+      console.log("DEBUG full response structure:", JSON.stringify(data, null, 2).substring(0, 1000));
+
+      // اینجا همان state قبلیت که نتیجه را نگه می‌دارد آپدیت کن:
       setDiagnosis(data);
-    } catch (err: any) {
-      console.error("[DecisionBrainDashboard] error:", err);
-      // Ensure error is always a string
-      const errorMsg = err?.message || err?.toString() || "Failed to analyze decision. Please try again.";
-      setError(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg));
-    } finally {
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Decision diagnosis request failed:", err);
+      setError(err instanceof Error ? err.message : "Failed to analyze decision. Please try again.");
       setIsLoading(false);
     }
   };
@@ -898,10 +883,13 @@ export default function DecisionBrainDashboard() {
                     const normalizeRecommendations = (): Array<{ text: string; category?: string; impact?: string; priority?: string; icon?: string }> => {
                       const items: Array<{ text: string; category?: string; impact?: string; priority?: string; icon?: string }> = [];
                       
-                      if (Array.isArray(diagnosis.recommendations)) {
-                        // Check if it's the new recommendation_engine format
-                        if (diagnosis.recommendations.length > 0 && typeof diagnosis.recommendations[0] === 'object' && 'action' in diagnosis.recommendations[0]) {
-                          return diagnosis.recommendations.map((rec: any) => ({
+                      const recs = diagnosis.recommendations;
+                      if (!recs) return items;
+                      
+                      if (Array.isArray(recs)) {
+                        // Check if it's the new recommendation_engine format (object array)
+                        if (recs.length > 0 && typeof recs[0] === 'object' && recs[0] !== null && ('action' in recs[0] || 'text' in recs[0])) {
+                          return recs.map((rec: any) => ({
                             text: rec.action || rec.text || '',
                             category: rec.category,
                             impact: rec.impact,
@@ -910,26 +898,32 @@ export default function DecisionBrainDashboard() {
                           }));
                         }
                         // Simple string array
-                        return diagnosis.recommendations.map((rec: string) => ({
-                          text: rec
-                        }));
+                        return recs.map((rec: any) => {
+                          if (typeof rec === 'string') {
+                            return { text: rec };
+                          }
+                          return { text: rec.action || rec.text || '' };
+                        });
                       }
                       
-                      // Structured format
-                      if (diagnosis.recommendations.message) {
-                        diagnosis.recommendations.message.forEach((rec: string) => {
-                          items.push({ text: rec, category: 'message' });
-                        });
-                      }
-                      if (diagnosis.recommendations.structure) {
-                        diagnosis.recommendations.structure.forEach((rec: string) => {
-                          items.push({ text: rec, category: 'structure' });
-                        });
-                      }
-                      if (diagnosis.recommendations.timing) {
-                        diagnosis.recommendations.timing.forEach((rec: string) => {
-                          items.push({ text: rec, category: 'timing' });
-                        });
+                      // Structured format (object with message/structure/timing)
+                      if (typeof recs === 'object' && 'message' in recs) {
+                        const structured = recs as { message?: string[]; structure?: string[]; timing?: string[] };
+                        if (structured.message) {
+                          structured.message.forEach((rec: string) => {
+                            items.push({ text: rec, category: 'message' });
+                          });
+                        }
+                        if (structured.structure) {
+                          structured.structure.forEach((rec: string) => {
+                            items.push({ text: rec, category: 'structure' });
+                          });
+                        }
+                        if (structured.timing) {
+                          structured.timing.forEach((rec: string) => {
+                            items.push({ text: rec, category: 'timing' });
+                          });
+                        }
                       }
                       
                       return items;

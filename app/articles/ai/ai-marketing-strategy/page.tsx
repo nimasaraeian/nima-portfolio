@@ -21,10 +21,10 @@ export const metadata: Metadata = {
     modifiedTime: new Date().toISOString(),
     images: [
       {
-        url: `${SITE.baseUrl}/image/ai-marketing-strategy.png`,
+        url: `${SITE.baseUrl}/image/ai-marketing-strategy.jpg`,
         width: 1200,
         height: 630,
-        alt: 'AI Marketing Strategy — How Humans Decide When Machines Are Watching',
+        alt: 'AI Marketing Strategy — How Humans Decide When Machines Are Watching | Nima Saraeian',
       },
     ],
   },
@@ -34,10 +34,10 @@ export const metadata: Metadata = {
     description: 'Master AI marketing strategy with decision intelligence. Learn why 60% of strategies fail and how to build frameworks that understand human behavior, not just clicks.',
     images: [
       {
-        url: `${SITE.baseUrl}/image/ai-marketing-strategy.png`,
+        url: `${SITE.baseUrl}/image/ai-marketing-strategy.jpg`,
         width: 1200,
         height: 630,
-        alt: 'AI Marketing Strategy',
+        alt: 'AI Marketing Strategy — How Humans Decide When Machines Are Watching | Nima Saraeian',
       },
     ],
   },
@@ -55,9 +55,12 @@ export default function AIMarketingStrategyPage() {
     "description": "Master AI marketing strategy with decision intelligence. Learn why 60% of strategies fail and how to build frameworks that understand human behavior, not just clicks.",
     "image": {
       "@type": "ImageObject",
-      "url": `${SITE.baseUrl}/image/ai-marketing-strategy.png`,
+      "url": `${SITE.baseUrl}/image/ai-marketing-strategy.jpg`,
       "width": 1200,
-      "height": 630
+      "height": 630,
+      "caption": "AI Marketing Strategy — How Humans Decide When Machines Are Watching",
+      "name": "AI Marketing Strategy Guide",
+      "description": "Professional image of AI Marketing Strategy guide by Nima Saraeian"
     },
     "author": {
       "@type": "Person",
@@ -166,6 +169,40 @@ export default function AIMarketingStrategyPage() {
     ]
   };
 
+  // ImageObject Schema for enhanced image SEO
+  const imageObjectSchema = {
+    "@context": "https://schema.org",
+    "@type": "ImageObject",
+    "url": `${SITE.baseUrl}/image/ai-marketing-strategy.jpg`,
+    "contentUrl": `${SITE.baseUrl}/image/ai-marketing-strategy.jpg`,
+    "name": "AI Marketing Strategy — How Humans Decide When Machines Are Watching",
+    "alternateName": "AI Marketing Strategy Guide by Nima Saraeian",
+    "description": "Professional guide to AI Marketing Strategy featuring decision intelligence framework. Complete 10,500-word guide on how humans decide when machines are watching. By Nima Saraeian.",
+    "caption": "AI Marketing Strategy — How Humans Decide When Machines Are Watching | Decision Intelligence Framework",
+    "width": 1200,
+    "height": 630,
+    "encodingFormat": "image/jpeg",
+    "author": {
+      "@type": "Person",
+      "name": "Nima Saraeian",
+      "url": SITE.baseUrl,
+      "jobTitle": "AI Marketing Strategist"
+    },
+    "copyrightHolder": {
+      "@type": "Person",
+      "name": "Nima Saraeian",
+      "url": SITE.baseUrl
+    },
+    "license": `${SITE.baseUrl}/articles/ai/ai-marketing-strategy`,
+    "datePublished": "2024-01-15T08:00:00.000Z",
+    "dateModified": new Date().toISOString(),
+    "isPartOf": {
+      "@type": "Article",
+      "headline": "AI Marketing Strategy Guide 2025-2026 | Decision Intelligence Framework",
+      "url": `${SITE.baseUrl}/articles/ai/ai-marketing-strategy`
+    }
+  };
+
   return (
     <main className="min-h-screen bg-black text-white">
       {/* JSON-LD Structured Data */}
@@ -181,20 +218,25 @@ export default function AIMarketingStrategyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(imageObjectSchema) }}
+      />
       
       <article className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-16 space-y-10" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
         {/* Hero Image */}
         <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-emerald-500/5">
           <Image
-            src="/image/ai-marketing-strategy.png"
-            alt="AI Marketing Strategy — How Humans Decide When Machines Are Watching"
+            src="/image/ai-marketing-strategy.jpg"
+            alt="AI Marketing Strategy — How Humans Decide When Machines Are Watching | Complete Guide by Nima Saraeian | Decision Intelligence Framework"
             title="AI Marketing Strategy — How Humans Decide When Machines Are Watching"
             width={1200}
             height={630}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
             className="w-full h-auto object-cover"
             priority
-            quality={85}
+            quality={95}
+            itemProp="image"
           />
         </div>
 
@@ -259,7 +301,7 @@ export default function AIMarketingStrategyPage() {
               controls
               className="w-full h-full object-contain"
               preload="metadata"
-              poster="/image/ai-marketing-strategy.png"
+              poster="/image/ai-marketing-strategy.jpg"
             >
               <source src="/video/AI_Marketing_s_Big_Mistake.mp4" type="video/mp4" />
               Your browser does not support the video tag.

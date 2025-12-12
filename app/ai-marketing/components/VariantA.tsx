@@ -62,12 +62,16 @@ async function analyzeCognitiveFriction(payload: {
   goal: string[];
   audience: string;
   language: string;
-  meta: null;
+  meta: null | { url?: string | null; page_type?: string | null };
   image?: string;
   image_type?: string;
   image_name?: string;
+  business_type?: string | null;
+  price_level?: string | null;
+  decision_depth?: string | null;
+  user_intent_stage?: string | null;
 }): Promise<CognitiveFrictionResult> {
-  return postToBrain<CognitiveFrictionResult>('/api/brain/cognitive-friction', payload);
+  return postToBrain<CognitiveFrictionResult>('/api/brain/decision-diagnosis', payload);
 }
 
 // Score display component with improved visuals

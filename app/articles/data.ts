@@ -152,7 +152,7 @@ export const articles: ArticleData[] = [
     tags: ['AI Marketing Strategy', 'Decision Framework', 'Human Behavior', 'Cognitive Friction', 'Marketing Strategy', 'AI Decision Systems', 'Behavioral Marketing', 'Decision Intelligence'],
     publishedAt: '2024-01-15T08:00:00.000Z',
     wordCount: 10500,
-    imageUrl: '/image/ai-marketing-strategy.png',
+    imageUrl: '/image/ai-marketing-strategy.jpg',
     href: '/articles/ai/ai-marketing-strategy'
   }
 ];

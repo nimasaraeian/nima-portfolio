@@ -341,6 +341,9 @@ export interface CognitiveFrictionResult {
   visual_trust_score?: number | null;
   psychology_narrative?: PsychologyNarrative | null;
   visual_textual_psychology_analysis?: Record<string, any> | null;
+  // New simplified format for KeyInsights component
+  blockers?: Array<{ name: string; feedback: string; score?: number }> | null;
+  boosters?: Array<{ name: string; feedback: string; score?: number }> | null;
   [key: string]: unknown;
 }
 

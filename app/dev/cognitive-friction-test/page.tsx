@@ -58,7 +58,7 @@ export default function CognitiveFrictionTestPage() {
       };
 
       const { postToBrain } = await import('@/lib/apiClient');
-      const data = await postToBrain<CognitiveFrictionResult>('/api/brain/cognitive-friction', payload);
+      const data = await postToBrain<CognitiveFrictionResult>('/api/brain/decision-diagnosis', payload);
       setResult(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');

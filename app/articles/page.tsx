@@ -108,6 +108,16 @@ const SECTIONS: ArticleSection[] = [
         label: "Tool Stack",
         image: "/image/ai-marketing-tools-2026.jpg",
         alt: "AI Marketing Tools 2026 - Complete guide to essential AI marketing tools and modern marketing stack"
+      },
+      {
+        title:
+          "AI Marketing Strategy — How Humans Decide When Machines Are Watching",
+        href: "/articles/ai/ai-marketing-strategy",
+        description:
+          "Master AI marketing strategy with decision intelligence. Learn why 60% of strategies fail and how to build frameworks that understand human behavior, not just clicks. 10,500-word guide.",
+        label: "Strategy Guide",
+        image: "/image/ai-marketing-strategy.jpg",
+        alt: "AI Marketing Strategy — How Humans Decide When Machines Are Watching | Decision Intelligence Framework by Nima Saraeian"
       }
     ]
   },
