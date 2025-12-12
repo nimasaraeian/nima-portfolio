@@ -26,10 +26,6 @@ const nextConfig = {
   
   // Performance optimizations
   reactStrictMode: true,
-  i18n: {
-    locales: ['en'],
-    defaultLocale: 'en',
-  },
   
   // Experimental features for better performance
   experimental: {
