@@ -206,7 +206,7 @@ export default function DecisionBrainDashboard() {
     setScreenshotPreview(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setDiagnosis(null);
