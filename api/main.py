@@ -405,9 +405,16 @@ async def cognitive_friction(
             error_msg = str(e)
             if hasattr(e, 'response') and e.response is not None:
                 try:
-                    error_detail = e.response.json().get('detail', error_msg)
+                    error_json = e.response.json()
+                    error_detail = error_json.get('detail', error_json.get('error', error_json.get('message', error_msg)))
+                    # Check if the error is a Python error (like "name 'logger' is not defined")
+                    if isinstance(error_detail, str) and ("name '" in error_detail and "' is not defined" in error_detail):
+                        error_detail = f"Backend code error: {error_detail}. This is a bug in the Main Brain Backend service."
                 except:
                     error_detail = e.response.text or error_msg
+                    # Check if it's a Python error in the response text
+                    if isinstance(error_detail, str) and ("name '" in error_detail and "' is not defined" in error_detail):
+                        error_detail = f"Backend code error: {error_detail}. This is a bug in the Main Brain Backend service."
                 raise HTTPException(
                     status_code=e.response.status_code,
                     detail=f"Main brain backend error: {error_detail}"
