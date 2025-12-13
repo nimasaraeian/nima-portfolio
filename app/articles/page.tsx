@@ -53,6 +53,16 @@ const SECTIONS: ArticleSection[] = [
       },
       {
         title:
+          "How AI-Driven Hyper-Personalization Actually Increases Conversion (Not Just Engagement)",
+        href: "/articles/ai/new-article-placeholder",
+        description:
+          "Learn how AI-driven hyper-personalization boosts conversion—not just engagement—by aligning decision psychology with real user intent.",
+        label: "Conversion Psychology",
+        image: "/image/ai-driven-hyper-personalization-conversion-strategy.png",
+        alt: "A conceptual image illustrating how AI-driven hyper-personalization improves conversion by addressing decision friction and user hesitation, not just engagement metrics."
+      },
+      {
+        title:
           "Predictive Buyer Intent AI — Why Marketing Fails Without Behavioral Signals",
         href: "/articles/ai/predictive-buyer-intent-ai-2026",
         description:

@@ -154,6 +154,17 @@ export const articles: ArticleData[] = [
     wordCount: 10500,
     imageUrl: '/image/ai-marketing-strategy.jpg',
     href: '/articles/ai/ai-marketing-strategy'
+  },
+  {
+    id: 'ai-driven-hyper-personalization-increases-conversion',
+    title: 'How AI-Driven Hyper-Personalization Actually Increases Conversion (Not Just Engagement)',
+    excerpt: 'Learn how AI-driven hyper-personalization boosts conversion—not just engagement—by aligning decision psychology with real user intent.',
+    category: 'ai',
+    tags: ['AI-Driven Hyper-Personalization', 'hyper-personalization in AI marketing', 'AI personalization strategy', 'AI conversion optimization', 'decision psychology marketing', 'Engagement vs Conversion', 'Behavioral Marketing'],
+    publishedAt: new Date().toISOString(),
+    wordCount: 3000,
+    imageUrl: '/image/ai-driven-hyper-personalization-conversion-strategy.png',
+    href: '/articles/ai/new-article-placeholder'
   }
 ];
 

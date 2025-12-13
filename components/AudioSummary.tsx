@@ -69,7 +69,18 @@ export default function AudioSummary({ summaryText, src, title }: AudioSummaryPr
       {/* حالت استاتیک: اگر src داده شده باشد، فقط پلیر (بدون دکمه دانلود برای کاربر نهایی) */}
       {src && (
         <div className="space-y-3">
-          <audio controls src={src} className="w-full" controlsList="nodownload">
+          <audio 
+            controls 
+            src={src} 
+            className="w-full" 
+            controlsList="nodownload"
+            preload="metadata"
+            aria-label={title || "Audio summary of this article"}
+            itemScope
+            itemType="https://schema.org/AudioObject"
+          >
+            <source src={src} type="audio/mpeg" />
+            <source src={src} type="audio/mp3" />
             Your browser does not support the audio element.
           </audio>
         </div>
@@ -97,7 +108,18 @@ export default function AudioSummary({ summaryText, src, title }: AudioSummaryPr
       {/* پلیر برای حالت داینامیک بعد از تولید (بدون دکمه دانلود برای کاربر) */}
       {!src && finalSrc && (
         <div className="mt-4">
-          <audio controls src={finalSrc} className="w-full" controlsList="nodownload">
+          <audio 
+            controls 
+            src={finalSrc} 
+            className="w-full" 
+            controlsList="nodownload"
+            preload="metadata"
+            aria-label={title || "Audio summary of this article"}
+            itemScope
+            itemType="https://schema.org/AudioObject"
+          >
+            <source src={finalSrc} type="audio/mpeg" />
+            <source src={finalSrc} type="audio/mp3" />
             Your browser does not support the audio element.
           </audio>
         </div>
