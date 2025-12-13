@@ -102,6 +102,9 @@ const OUTCOME_CONFIG: Record<string, OutcomeConfig> = {
 
 // Types for the API response
 type DecisionDiagnosisResponse = {
+  analysisStatus?: string;
+  mode?: "insight_only" | "verdict";
+  verdictAllowed?: boolean;
   primary_outcome?: string;
   primary_confidence?: number;
   secondary_outcome?: string;
@@ -206,7 +209,7 @@ export default function DecisionBrainDashboard() {
     setScreenshotPreview(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setError(null);
     setDiagnosis(null);
@@ -296,9 +299,17 @@ export default function DecisionBrainDashboard() {
       console.log("DEBUG decision-diagnosis response:", data);
       console.log("DEBUG response keys:", data ? Object.keys(data) : []);
       console.log("DEBUG primary_outcome:", data?.primary_outcome);
-      console.log("DEBUG executive_decision_summary:", data?.executive_decision_summary);
       console.log("DEBUG executive_summary:", data?.executive_summary);
       console.log("DEBUG full response structure:", JSON.stringify(data, null, 2).substring(0, 1000));
+
+      // Ensure analysisStatus exists (required by UI)
+      if (!data.analysisStatus) {
+        const confidence = data.primary_confidence ?? 0;
+        data.analysisStatus = confidence >= 65 ? "ok" : "low_signal";
+        data.mode = data.mode ?? (confidence >= 65 ? "verdict" : "insight_only");
+        data.verdictAllowed = data.verdictAllowed ?? (confidence >= 65);
+        console.log("⚠️ Added missing analysisStatus:", data.analysisStatus);
+      }
 
       // اینجا همان state قبلیت که نتیجه را نگه می‌دارد آپدیت کن:
       setDiagnosis(data);

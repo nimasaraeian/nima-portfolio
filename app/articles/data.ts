@@ -164,7 +164,7 @@ export const articles: ArticleData[] = [
     publishedAt: new Date().toISOString(),
     wordCount: 3000,
     imageUrl: '/image/ai-driven-hyper-personalization-conversion-strategy.png',
-    href: '/articles/ai/new-article-placeholder'
+    href: '/articles/ai/ai-hyper-personalization-conversion'
   }
 ];
 

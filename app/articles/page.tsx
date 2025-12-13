@@ -54,7 +54,7 @@ const SECTIONS: ArticleSection[] = [
       {
         title:
           "How AI-Driven Hyper-Personalization Actually Increases Conversion (Not Just Engagement)",
-        href: "/articles/ai/new-article-placeholder",
+        href: "/articles/ai/ai-hyper-personalization-conversion",
         description:
           "Learn how AI-driven hyper-personalization boosts conversion—not just engagement—by aligning decision psychology with real user intent.",
         label: "Conversion Psychology",

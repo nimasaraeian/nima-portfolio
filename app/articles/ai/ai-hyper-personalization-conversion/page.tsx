@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import AudioSummary from "@/components/AudioSummary";
 
-const canonicalUrl = "https://nimasaraeian.com/articles/ai/ai-driven-hyper-personalization-increases-conversion";
+const canonicalUrl = "https://nimasaraeian.com/articles/ai/ai-hyper-personalization-conversion";
 const articleTitle = "How AI-Driven Hyper-Personalization Actually Increases Conversion (Not Just Engagement)";
 const articleDescription = "Learn how AI-driven hyper-personalization boosts conversion—not just engagement—by aligning decision psychology with real user intent.";
 const publishedDate = "2025-01-15T00:00:00Z";
@@ -144,7 +144,7 @@ export const metadata: Metadata = {
     "decision friction"
   ],
   alternates: {
-    canonical: "https://nimasaraeian.com/articles/ai/ai-driven-hyper-personalization-increases-conversion",
+    canonical: canonicalUrl,
   },
   openGraph: {
     title: "AI-Driven Hyper-Personalization That Increases Conversion",
