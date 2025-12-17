@@ -1,3 +1,17 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Resume | Nima Saraeian - AI Marketing Specialist',
+  description: 'Resume of Nima Saraeian - AI Marketing Specialist, Behavioral Marketing Strategist, and Founder of Selphlyze.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: 'https://nimasaraeian.com/resume',
+  },
+};
+
 export default function ResumePage() {
   return (
     <main className="min-h-screen bg-white text-gray-900 p-6">

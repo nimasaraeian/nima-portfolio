@@ -4,17 +4,21 @@ import Image from 'next/image';
 import { SITE } from '@/app/lib/site';
 
 export const metadata: Metadata = {
-  title: 'AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology | Nima Saraeian',
-  description: 'AI Marketing 2026 explained: tools, predictive analytics, behavioral data, personalization engines, CRO psychology, automation, and the future of AI-driven marketing.',
+  title: 'AI Marketing 2026 Complete Guide — Redirect to Main Guide | Nima Saraeian',
+  description: 'This page redirects to the main AI Marketing 2026 guide. See the complete guide with tools, strategy, behavioral data, and conversion psychology.',
   keywords: 'AI Marketing 2026, AI Marketing Strategy, Behavioral Data, Conversion Psychology, Predictive Marketing, AI Personalization, CRO Psychology, Marketing Automation',
   alternates: {
-    canonical: `${SITE.baseUrl}/articles/ai/ai-marketing-2026-complete-guide`,
+    canonical: `${SITE.baseUrl}/articles/ai-marketing-2026`,
+  },
+  robots: {
+    index: false,
+    follow: true,
   },
   openGraph: {
     type: 'article',
     url: `${SITE.baseUrl}/articles/ai/ai-marketing-2026-complete-guide`,
     title: 'AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology',
-    description: 'AI Marketing 2026 explained: tools, predictive analytics, behavioral data, personalization engines, CRO psychology, automation, and the future of AI-driven marketing.',
+    description: 'This page redirects to the main AI Marketing 2026 guide. See the complete guide with tools, strategy, behavioral data, and conversion psychology.',
     siteName: 'Nima Saraeian',
     authors: ['Nima Saraeian'],
     publishedTime: '2026-01-01T08:00:00.000Z',
@@ -31,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology',
-    description: 'AI Marketing 2026 explained: tools, predictive analytics, behavioral data, personalization engines, CRO psychology, automation, and the future of AI-driven marketing.',
+    description: 'This page redirects to the main AI Marketing 2026 guide. See the complete guide with tools, strategy, behavioral data, and conversion psychology.',
     images: [
       {
         url: `${SITE.baseUrl}/image/ai-marketing-2026-pillar-nima-saraeian.png`,
@@ -176,8 +180,11 @@ export default function AIMarketing2026CompleteGuidePage() {
           </div>
           
           <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
-            AI Marketing 2026 — The Complete Guide to Tools, Strategy, Behavioral Data, and Conversion Psychology
+            AI Marketing 2026 Complete Guide — See Main Guide
           </h1>
+          <p className="mt-4 text-lg text-gray-300">
+            This page redirects to the <Link href="/articles/ai-marketing-2026" className="text-blue-300 hover:text-blue-200 underline">main AI Marketing 2026 guide</Link>.
+          </p>
           
           <div className="flex items-center gap-4 text-sm text-gray-400">
             <span>Part 5 of 5 (Complete Guide)</span>

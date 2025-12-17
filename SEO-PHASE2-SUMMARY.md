@@ -175,3 +175,4 @@ npm run start
 - ✅ Reduced redirect chains from internal links
 - ✅ Cleaner sitemap with only indexable pages
 
+

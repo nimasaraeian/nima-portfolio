@@ -86,7 +86,7 @@ export const metadata: Metadata = {
 const socialLinks: { name: string; href: string; icon: IconType }[] = [
   { name: 'LinkedIn', href: 'https://www.linkedin.com/in/nimasaraian/', icon: FaLinkedin },
   { name: 'Instagram', href: 'https://www.instagram.com/nima.saraeian?igsh=YWN5d2s5bmRlY2xm&utm_source=qr', icon: FaInstagram },
-  { name: 'YouTube', href: 'http://www.youtube.com/@nimasaraeian8664', icon: FaYoutube },
+  { name: 'YouTube', href: 'https://www.youtube.com/@nimasaraeian8664', icon: FaYoutube },
   { name: 'Facebook', href: 'https://www.facebook.com/nima.saraeian', icon: FaFacebook },
   { name: 'X', href: 'https://x.com/NSaraeian', icon: FaSquareXTwitter },
 ]

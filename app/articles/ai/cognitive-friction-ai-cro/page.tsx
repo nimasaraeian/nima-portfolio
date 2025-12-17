@@ -522,7 +522,7 @@ export default function CognitiveFrictionAICROPage() {
             >
               AI Marketing 2026
             </Link>{" "}
-            guide to align friction insights with broader <Link href="/articles/ai/ai-marketing-new-era-2026" className="text-teal-300 underline hover:text-teal-200">behavioral AI marketing strategy</Link>.
+            guide to align friction insights with broader <Link href="/articles/ai/ai-marketing-new-era-2026" className="text-teal-300 underline hover:text-teal-200">behavioral AI marketing strategy</Link>. For conversion-focused copywriting, see our <Link href="/cro-copywriting" className="text-teal-300 underline hover:text-teal-200">AI-first CRO copywriting services</Link>.
           </p>
           </div>
           <p className="text-sm text-gray-400">
@@ -686,7 +686,7 @@ export default function CognitiveFrictionAICROPage() {
               <a
                 href="https://neuroscience.stanford.edu"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-teal-300 underline hover:text-teal-200"
               >
                 Stanford Neuroscience
@@ -934,7 +934,7 @@ export default function CognitiveFrictionAICROPage() {
               <a
                 href="https://coglabs.mit.edu"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-teal-300 underline hover:text-teal-200"
               >
                 MIT Cognitive Science Lab
@@ -1082,7 +1082,7 @@ export default function CognitiveFrictionAICROPage() {
               <a
                 href="https://www.nngroup.com/articles"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-teal-300 underline hover:text-teal-200"
               >
                 Nielsen Norman Group
@@ -1129,7 +1129,7 @@ export default function CognitiveFrictionAICROPage() {
         <section className="space-y-6 scroll-mt-24 my-10">
           <h2 className="text-2xl sm:text-3xl font-semibold text-white">Real-World Examples of Cognitive Friction AI CRO</h2>
           <p className="text-lg text-gray-300 leading-relaxed">
-            Understanding <Link href="/what-does-an-ai-marketing-specialist-do" className="text-blue-300 hover:text-blue-200 underline">how AI marketing specialists</Link> apply cognitive friction analysis reveals the practical impact of behavioral AI on conversion optimization. These examples demonstrate how friction detection transforms conversion rates across different industries.
+            Understanding <Link href="/what-does-an-ai-marketing-specialist-do" className="text-blue-300 hover:text-blue-200 underline">how AI marketing specialists</Link> apply cognitive friction analysis reveals the practical impact of behavioral AI on conversion optimization. These examples demonstrate how friction detection transforms conversion rates across different industries. For hands-on implementation, explore our <Link href="/services/decision-friction-diagnosis" className="text-blue-300 hover:text-blue-200 underline">decision friction diagnosis service</Link> and <Link href="/services/behavioral-cro-strategy" className="text-blue-300 hover:text-blue-200 underline">behavioral CRO strategy framework</Link>.
           </p>
 
           <div className="space-y-6">
@@ -1393,7 +1393,7 @@ export default function CognitiveFrictionAICROPage() {
             The Cognitive Friction AI CRO Framework
           </h2>
           <p className="text-lg text-gray-300 leading-relaxed">
-            This framework transforms cognitive friction analysis into actionable optimization steps. Each step addresses decision-making barriers, not surface-level UI changes. Understanding <Link href="/what-does-an-ai-marketing-specialist-do" className="text-blue-300 hover:text-blue-200 underline">how AI marketing specialists</Link> apply this framework helps teams implement behavioral optimization systematically.
+            This framework transforms cognitive friction analysis into actionable optimization steps. Each step addresses decision-making barriers, not surface-level UI changes. Understanding <Link href="/what-does-an-ai-marketing-specialist-do" className="text-blue-300 hover:text-blue-200 underline">how AI marketing specialists</Link> apply this framework helps teams implement behavioral optimization systematically. Ready to implement? <Link href="/services" className="text-blue-300 hover:text-blue-200 underline">Explore our AI marketing services</Link> or <Link href="/contact" className="text-blue-300 hover:text-blue-200 underline">request a behavioral diagnosis</Link> for your funnel.
           </p>
           <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4 mb-6">
             <h3 className="text-xl font-semibold text-white mb-4">The Five-Step Framework</h3>

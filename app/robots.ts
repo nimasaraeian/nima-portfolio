@@ -27,6 +27,10 @@ export default function robots(): MetadataRoute.Robots {
     '/dev/',
     '/result',
     '/content-analysis',
+    '/articles/new',
+    '/healthz',
+    '/portfolio',
+    '/strategy',
     '/_next/',
   ];
   

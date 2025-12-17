@@ -59,13 +59,13 @@ function normalizeDecision(data: DecisionDiagnosisResponse): NormalizedDecision 
   const primary = blockers[0] || data.brain?.primaryBlocker || null;
   
   // Extract string fields from blocker object
-  const primaryBlockerName = typeof primary?.name === "string" 
+  const primaryBlockerName = (primary && typeof primary === "object" && "name" in primary && typeof primary.name === "string")
     ? primary.name 
     : (typeof primary === "string" 
         ? primary 
         : (data.primary_outcome || "unknown_blocker"));
   
-  const primaryBlockerSeverity = typeof primary?.severity === "string" 
+  const primaryBlockerSeverity = (primary && typeof primary === "object" && "severity" in primary && typeof primary.severity === "string")
     ? primary.severity 
     : (data.primary_outcome === "TRUST_DEBT" || data.primary_outcome === "RISK_DOMINANT" 
         ? "high" 
@@ -73,13 +73,13 @@ function normalizeDecision(data: DecisionDiagnosisResponse): NormalizedDecision 
         ? "low" 
         : "medium");
   
-  const primaryBlockerFix = typeof primary?.fix === "string" 
+  const primaryBlockerFix = (primary && typeof primary === "object" && "fix" in primary && typeof primary.fix === "string")
     ? primary.fix 
     : "";
   
-  const primaryBlockerEvidence = Array.isArray(primary?.evidence) 
+  const primaryBlockerEvidence = (primary && typeof primary === "object" && "evidence" in primary && Array.isArray(primary.evidence))
     ? primary.evidence.join(" | ") 
-    : (typeof primary?.evidence === "string" ? primary.evidence : "");
+    : (primary && typeof primary === "object" && "evidence" in primary && typeof primary.evidence === "string" ? primary.evidence : "");
   
   // Generate hesitation explanation using name + evidence
   const hesitationExplanation = data.brain?.hesitationExplanation || 
@@ -245,7 +245,7 @@ function normalizeDecision(data: DecisionDiagnosisResponse): NormalizedDecision 
     missingTrustSignals,
     // Preserve legacy fields
     primary_outcome: data.primary_outcome,
-    executive_summary: data.executive_summary || data.executive_decision_summary,
+    executive_summary: data.executive_summary || data.executive_decision_summary || undefined,
     friction_scores: data.friction_scores || undefined,
   };
 }
@@ -401,7 +401,7 @@ export default function DecisionBrainDashboard() {
     setScreenshotPreview(null);
   };
 
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: { preventDefault: () => void; currentTarget: HTMLFormElement }) => {
     e.preventDefault();
     setError(null);
     setDiagnosis(null);

@@ -46,7 +46,7 @@ export default function NewArticlePage() {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-4 py-20">
       <form onSubmit={handleSubmit} className="w-full max-w-2xl bg-zinc-900 p-10 rounded-xl shadow-xl border border-zinc-800 space-y-10">
-        <h2 className="text-center text-2xl font-bold mb-6">Submit New Article</h2>
+        <h1 className="text-center text-2xl font-bold mb-6">Submit New Article</h1>
 
         {/* Title */}
         <div>

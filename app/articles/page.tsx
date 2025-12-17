@@ -1,5 +1,7 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
+import { getCanonicalUrl } from '@/app/lib/seo';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
 
 type Article = {
   title: string;

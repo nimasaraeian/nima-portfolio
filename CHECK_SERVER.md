@@ -72,3 +72,4 @@ app.add_middleware(
 - اگر خطای CORS می‌گیرید → سرور را ری‌استارت کنید
 - اگر خطای 404 می‌گیرید → endpoint `/analyze-url` موجود نیست (باید در `api/main.py` باشد)
 
+

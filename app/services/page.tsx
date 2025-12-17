@@ -87,11 +87,11 @@ export default function ServicesPage() {
             {/* Text Content */}
             <div>
               <h1 className="mb-6 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl text-white tracking-tight" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                AI Marketing Services
+                AI Marketing Services: CRO Strategy & Conversion Optimization
       </h1>
 
               <p className="mb-6 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Our AI Marketing Services combine CRO strategy, performance marketing consulting, and conversion optimization to transform user hesitation into measurable growth. We deliver data-driven services that leverage behavioral psychology and AI-driven optimization.
+                Our AI Marketing Services combine CRO strategy, performance marketing consulting, and conversion optimization to transform user hesitation into measurable growth. We deliver data-driven services that leverage behavioral psychology and AI-driven optimization. Learn more about our <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">cognitive friction framework</Link> and <Link href="/cro-copywriting" className="underline text-emerald-300 hover:text-emerald-200">AI-first CRO copywriting approach</Link>.
               </p>
 
               <h2 className="mb-10 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
@@ -135,7 +135,7 @@ export default function ServicesPage() {
       <section className="relative border-b border-white/10 py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            What I do — in practical terms
+            What I Do — In Practical Terms
           </h2>
 
           <ul className="space-y-4 text-lg text-gray-300 leading-relaxed ml-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
@@ -144,7 +144,7 @@ export default function ServicesPage() {
             <li>Optimize landing pages, content, and funnels using behavioral psychology</li>
             <li>Apply AI to diagnose and improve marketing performance</li>
             <li>Support growth, revenue, and user decision KPIs</li>
-            <li>Improve funnel performance, conversion rates, and revenue-related KPIs through behavioral analysis, testing, and iteration</li>
+            <li>Improve funnel performance, conversion rates, and revenue-related KPIs through behavioral analysis, testing, and iteration. See <Link href="/projects" className="underline text-emerald-300 hover:text-emerald-200">real case studies</Link> and <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">behavioral conversion frameworks</Link>.</li>
           </ul>
         </div>
       </section>
@@ -362,7 +362,7 @@ export default function ServicesPage() {
 
           <div className="space-y-6">
             <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              As an AI Marketing Strategist, I specialize in behavioral psychology, decision friction analysis, and AI-driven optimization. This work is grounded in:
+              As an AI Marketing Strategist, I specialize in behavioral psychology, decision friction analysis, and AI-driven optimization. This work is grounded in research-backed frameworks detailed in my <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">cognitive friction guide</Link> and <Link href="/research" className="underline text-emerald-300 hover:text-emerald-200">academic research</Link>:
         </p>
 
             <ul className="space-y-3 text-lg text-gray-300 leading-relaxed ml-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>

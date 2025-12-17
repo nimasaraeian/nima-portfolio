@@ -3,11 +3,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Consumer Behavior Strategist — AI-Driven Decision Psychology to Increase Conversions | Nima Saraeian',
-  description: 'Work with a Consumer Behavior Strategist who uses AI-driven decision psychology, cognitive biases, and digital behavior analysis to understand why users convert, hesitate, or drop off — and increase conversions by 30–150%.',
+  title: 'Consumer Behavior Analyst — Redirect to Consumer Behavior Strategist | Nima Saraeian',
+  description: 'Consumer Behavior Analyst page. See Consumer Behavior Strategist for AI-driven decision psychology and conversion optimization services.',
   keywords: 'consumer behavior strategist, decision psychology, AI behavioral marketing, cognitive biases, conversion rate optimization, behavioral strategy, digital decision science, consumer psychology, AI marketing specialist',
   alternates: {
-    canonical: 'https://nimasaraeian.com/consumer-behavior-analyst',
+    canonical: 'https://nimasaraeian.com/consumer-behavior-strategist',
+  },
+  robots: {
+    index: false,
+    follow: true,
   },
   openGraph: {
     type: 'article',
@@ -163,7 +167,7 @@ export default function ConsumerBehaviorAnalystPage() {
         {/* Article Header */}
         <header className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-            Consumer Behavior Strategist — AI-Driven Decision Psychology for Conversion Growth
+            Consumer Behavior Analyst — See Consumer Behavior Strategist
           </h1>
           <h2 className="text-xl text-gray-300 font-semibold">
             Part 1: Why People Really Buy — And Why They Don't (The Hidden Decision Game)

@@ -22,7 +22,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "seminars",
     "contact",
     "research",
-    "portfolio",
     "performance-marketing",
     "cro-copywriting",
     "what-does-an-ai-marketing-specialist-do",

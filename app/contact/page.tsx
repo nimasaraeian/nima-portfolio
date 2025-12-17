@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 
-import { getCanonicalUrl } from '@/app/lib/seo'
+import { getCanonicalUrl } from '@/app/lib/seo';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
 
 export const metadata: Metadata = {
   title: 'Contact AI Marketing Consultant | Remote & Istanbul Marketing Consulting | Nima Saraeian',

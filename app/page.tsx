@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from 'next';
 import { FaCircleCheck } from 'react-icons/fa6';
 import { getCanonicalUrl } from '@/app/lib/seo';
+import { generateWebPageSchema } from '@/app/lib/structured-data';
 
 export const metadata: Metadata = {
   title: 'AI Marketing Specialist | Behavioral Marketing Strategist & CRO Expert | Nima Saraeian',
@@ -137,7 +138,7 @@ export default function Home() {
               AI Marketing Specialist & Behavioral Marketing Strategist
             </h1>
             <p className="mt-6 text-lg text-gray-300 sm:text-xl">
-              I am an AI Marketing Specialist who builds AI-powered marketing systems that understand customers deeply, predict behavior, and turn insight into measurable growth — combining automation, psychometrics, and data-driven strategy.
+              I am an AI Marketing Specialist who builds AI-powered marketing systems that understand customers deeply, predict behavior, and turn insight into measurable growth — combining automation, psychometrics, and data-driven strategy. My approach focuses on <Link href="/services" className="underline text-blue-300 hover:text-blue-200">conversion optimization</Link> and <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-blue-300 hover:text-blue-200">behavioral AI frameworks</Link> that transform hesitation into decisions.
             </p>
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
               <Link
@@ -147,10 +148,10 @@ export default function Home() {
                 Work With Me
               </Link>
               <Link
-                href="/ai-marketing"
+                href="/services"
                 className="w-full rounded-full border border-white/50 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
               >
-                Discover AI Solutions
+                View AI Marketing Services
               </Link>
             </div>
           </div>
@@ -183,6 +184,9 @@ export default function Home() {
           <h2 className="text-xl font-semibold text-white sm:text-2xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
             How I Help Businesses as an AI Marketing Specialist
           </h2>
+          <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Every business faces unique conversion challenges. Whether you need <Link href="/services/behavioral-cro-strategy" className="underline text-blue-300 hover:text-blue-200">behavioral CRO strategy</Link>, <Link href="/services/decision-friction-diagnosis" className="underline text-blue-300 hover:text-blue-200">decision friction diagnosis</Link>, or complete <Link href="/services" className="underline text-blue-300 hover:text-blue-200">AI marketing transformation</Link>, I deliver measurable results through data-driven optimization.
+          </p>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
               {focusAreas.map((item) => (
                 <li key={item.title} className="flex items-start gap-3 rounded-2xl border border-white/5 bg-black/40 p-4 shadow-inner transition hover:border-white/20">
@@ -278,13 +282,16 @@ export default function Home() {
             </h3>
             <div className="flex flex-wrap justify-center gap-3">
               <Link href="/articles/ai/ai-marketing-new-era-2026" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
-                AI Marketing 2026 Guide
+                Complete AI Marketing Guide 2026
               </Link>
               <Link href="/articles/ai/cognitive-friction-ai-cro" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
-                Cognitive Friction AI CRO
+                Cognitive Friction & Behavioral CRO Framework
+              </Link>
+              <Link href="/cro-copywriting" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
+                AI-First CRO Copywriting Services
               </Link>
               <Link href="/articles/marketing/ai-marketing-roles-2026" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
-                AI Marketing Roles 2026
+                AI Marketing Roles & Skills 2026
               </Link>
             </div>
           </div>

@@ -1,19 +1,18 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Development Tools | Nima Saraeian',
+  title: 'AI Marketing Strategy Builder | Nima Saraeian',
   robots: {
     index: false,
     follow: false,
   },
 }
 
-export default function DevLayout({
+export default function StrategyLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return children
 }
-
 
