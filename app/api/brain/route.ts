@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const DEFAULT_BACKEND_URL = 'http://127.0.0.1:8000';
-const BACKEND_PATH = '/cognitive-friction/visual';
+const BACKEND_PATH = '/api/brain/cognitive-friction';
 
 function resolveBackendUrl(): string {
   const baseUrl =
@@ -115,7 +115,8 @@ export async function POST(req: NextRequest) {
 
     const backendFormData = new FormData();
     if (hasContent) {
-      backendFormData.append('content', content);
+      // Backend expects 'raw_text' not 'content'
+      backendFormData.append('raw_text', content);
     }
 
     if (hasImage && imageFile) {
@@ -138,16 +139,39 @@ export async function POST(req: NextRequest) {
 
     let backendResponse: Response;
     try {
-      backendResponse = await fetch(backendEndpoint, {
-        method: 'POST',
-        body: backendFormData,
-      });
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutes timeout
+      
+      try {
+        backendResponse = await fetch(backendEndpoint, {
+          method: 'POST',
+          body: backendFormData,
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+      } catch (abortError) {
+        clearTimeout(timeoutId);
+        if (abortError instanceof Error && abortError.name === 'AbortError') {
+          throw new Error('Request timeout: Backend did not respond within 2 minutes');
+        }
+        throw abortError;
+      }
     } catch (fetchError: any) {
       console.error('❌ Failed to reach backend:', fetchError);
+      const errorMessage = fetchError.message || String(fetchError);
+      const isTimeout = errorMessage.includes('timeout') || errorMessage.includes('AbortError');
+      const isConnectionError = errorMessage.includes('fetch') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('ENOTFOUND');
+      
       return jsonResponse(
         {
-          error: 'fetch failed',
-          detail: `Failed to connect to backend API at ${backendEndpoint}. Please ensure the FastAPI server is running.`,
+          error: isTimeout ? 'Request timeout' : isConnectionError ? 'Connection failed' : 'fetch failed',
+          detail: isTimeout 
+            ? `Backend did not respond within 2 minutes. The request may be taking too long or the backend may be unavailable.`
+            : isConnectionError
+            ? `Failed to connect to backend API at ${backendEndpoint}. Please ensure the FastAPI server is running and accessible. Error: ${errorMessage}`
+            : `Failed to reach backend API at ${backendEndpoint}. Error: ${errorMessage}`,
+          request_id: req.headers.get('x-request-id') || undefined,
         },
         { status: 502 }
       );

@@ -210,8 +210,29 @@ const SECTIONS: ArticleSection[] = [
 ];
 
 export default function ArticlesPage() {
+  const canonicalUrl = getCanonicalUrl('/articles');
+  
+  const webPageSchema = generateWebPageSchema({
+    name: "AI Marketing Articles",
+    description: "Comprehensive AI Marketing Articles covering behavioral AI, conversion frameworks, predictive marketing strategies, and research-backed guides.",
+    url: canonicalUrl,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: getCanonicalUrl('/') },
+    { name: "AI Marketing Articles", url: canonicalUrl },
+  ]);
+
   return (
     <main className="min-h-screen bg-black text-white relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Static background gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(139,92,246,0.04),transparent_50%)] pointer-events-none" />
@@ -226,15 +247,25 @@ export default function ArticlesPage() {
               </span>
             </div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white tracking-tight">
-              AI Marketing Articles
+              AI Marketing Articles & Strategic Guides
             </h1>
             <p className="text-sm md:text-base text-neutral-300/90 max-w-2xl mx-auto leading-relaxed">
-              Deep, long-form guides on AI-driven marketing, behavioral psychology,
-              cognitive friction, and predictive analytics. Start from the super
-              pillar, then dive into the category that matches your current
-              question.
+              Deep, long-form guides on AI-driven marketing, behavioral psychology, cognitive friction, and predictive analytics. Start from the super pillar, then dive into the category that matches your current question.
             </p>
           </header>
+
+          {/* SEO-Enhanced Intro Block */}
+          <section className="mb-12 max-w-4xl mx-auto px-4">
+            <div className="rounded-2xl border border-neutral-800/80 bg-neutral-950/70 p-6 sm:p-8">
+              <h2 className="text-xl font-semibold text-white mb-4">Comprehensive AI Marketing Guides & Research</h2>
+              <p className="text-base text-neutral-300 leading-relaxed mb-4">
+                These AI Marketing Articles provide in-depth frameworks, research, and practical guides on behavioral AI, conversion optimization, predictive marketing, and strategic decision-making. Whether you're exploring cognitive friction analysis, learning about AI marketing tools, or understanding how behavioral psychology transforms conversion rates, these comprehensive guides offer actionable insights backed by data and real-world applications.
+              </p>
+              <p className="text-base text-neutral-300 leading-relaxed">
+                Explore our guides on <Link href="/articles/ai/ai-marketing-new-era-2026" className="text-emerald-400 hover:text-emerald-300 underline">AI Marketing Strategy</Link>, <Link href="/articles/ai/cognitive-friction-ai-cro" className="text-emerald-400 hover:text-emerald-300 underline">Behavioral CRO Frameworks</Link>, and <Link href="/articles/marketing/ai-marketing-roles-2026" className="text-emerald-400 hover:text-emerald-300 underline">Marketing Roles</Link>. For services, see our <Link href="/services" className="text-emerald-400 hover:text-emerald-300 underline">AI Marketing Services</Link> or view <Link href="/projects" className="text-emerald-400 hover:text-emerald-300 underline">AI Marketing Projects</Link> for case studies.
+              </p>
+            </div>
+          </section>
 
           {/* Sections */}
           <div className="space-y-10">
@@ -312,8 +343,35 @@ export default function ArticlesPage() {
             ))}
           </div>
 
+          {/* Internal Links Section */}
+          <section className="mt-12 pt-8 border-t border-neutral-900/80">
+            <div className="text-center space-y-4">
+              <h2 className="text-xl font-semibold text-white">Explore More</h2>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link
+                  href="/services"
+                  className="px-4 py-2 rounded-lg border border-neutral-700 bg-neutral-900/50 text-sm text-neutral-300 hover:border-emerald-500/50 hover:text-emerald-300 transition-colors"
+                >
+                  AI Marketing Services
+                </Link>
+                <Link
+                  href="/projects"
+                  className="px-4 py-2 rounded-lg border border-neutral-700 bg-neutral-900/50 text-sm text-neutral-300 hover:border-emerald-500/50 hover:text-emerald-300 transition-colors"
+                >
+                  View Projects
+                </Link>
+                <Link
+                  href="/about"
+                  className="px-4 py-2 rounded-lg border border-neutral-700 bg-neutral-900/50 text-sm text-neutral-300 hover:border-emerald-500/50 hover:text-emerald-300 transition-colors"
+                >
+                  About Nima
+                </Link>
+              </div>
+            </div>
+          </section>
+
           {/* Footer note */}
-          <footer className="pt-4 border-t border-neutral-900/80">
+          <footer className="pt-8 border-t border-neutral-900/80">
             <p className="text-xs md:text-sm text-neutral-500 text-center">
               More articles on AI marketing, cognitive friction, and behavioral
               growth systems are being published. Start with the super pillar, then

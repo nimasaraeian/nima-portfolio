@@ -2,23 +2,24 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from 'next';
 import { FaCircleCheck } from 'react-icons/fa6';
+import { getCanonicalUrl } from '@/app/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
-  description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
+  title: 'AI Marketing Specialist | Behavioral Marketing Strategist & CRO Expert | Nima Saraeian',
+  description: 'AI Marketing Specialist who builds AI-powered marketing systems combining behavioral psychology, decision analysis, and automation. Expert in CRO, conversion optimization, and data-driven growth strategies.',
   keywords: 'Nima Saraeian, AI Marketing, Marketing Strategy, Selflyzer, Consumer Behavior, AI-Driven Marketing, Digital Marketing',
   alternates: {
-    canonical: 'https://www.nimasaraeian.com',
+    canonical: getCanonicalUrl('/'),
   },
   openGraph: {
     title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
     description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
-    url: 'https://www.nimasaraeian.com',
+    url: 'https://nimasaraeian.com',
     siteName: 'Nima Saraeian',
     type: 'website',
     images: [
       {
-        url: 'https://www.nimasaraeian.com/nima-pic.png',
+        url: 'https://nimasaraeian.com/nima-pic.png',
         type: 'image/png',
         width: 512,
         height: 512,
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
     description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
     images: [
-      'https://www.nimasaraeian.com/nima-pic.png'
+      'https://nimasaraeian.com/nima-pic.png'
     ],
     creator: '@nimasaraeian',
   },
@@ -109,20 +110,34 @@ const exploreLinks = [
   { label: 'View AI Marketing Projects', href: '/projects', description: 'Real-world case studies, automation systems, and AI-powered campaign designs.' },
   { label: 'Explore Research', href: '/research', description: 'Academic work on AI, digital psychology, and predictive behavioral models.' },
   { label: 'Read Articles', href: '/articles', description: 'Insights on AI marketing, automation, and emerging digital strategy trends.' },
+  { label: 'AI Marketing Services', href: '/services', description: 'Comprehensive AI marketing strategy and conversion optimization services.' },
 ];
 
 export default function Home() {
+  const webPageSchema = generateWebPageSchema({
+    name: "AI Marketing Specialist | Nima Saraeian",
+    description: "AI Marketing Specialist who builds AI-powered marketing systems combining behavioral psychology, decision analysis, and automation.",
+    url: getCanonicalUrl('/'),
+  });
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageSchema),
+        }}
+      />
     <main className="min-h-screen bg-black text-white w-full overflow-x-hidden">
       <section className="relative isolate overflow-hidden border-b border-white/10 bg-gradient-to-b from-black via-black/60 to-black/90">
         <div className="mx-auto flex w-full max-w-6xl flex-col-reverse items-center gap-10 px-4 pb-16 pt-20 sm:px-6 md:flex-row md:px-10 lg:gap-16 lg:px-12 lg:pt-24">
           <div className="flex-1 text-center md:text-left">
             <p className="text-sm uppercase tracking-[0.4em] text-blue-200/80">AI Marketing Specialist · Behavioral Marketing Strategist · Growth Consultant</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl lg:text-7xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Nima Saraeian
+              AI Marketing Specialist & Behavioral Marketing Strategist
             </h1>
             <p className="mt-6 text-lg text-gray-300 sm:text-xl">
-              I build AI-powered marketing systems that understand customers deeply, predict behavior, and turn insight into measurable growth — combining automation, psychometrics, and data-driven strategy.
+              I am an AI Marketing Specialist who builds AI-powered marketing systems that understand customers deeply, predict behavior, and turn insight into measurable growth — combining automation, psychometrics, and data-driven strategy.
             </p>
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
               <Link
@@ -164,9 +179,9 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
+          <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
           <h2 className="text-xl font-semibold text-white sm:text-2xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Today, I help brands, clinics, startups, and global businesses:
+            How I Help Businesses as an AI Marketing Specialist
           </h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
               {focusAreas.map((item) => (
@@ -195,10 +210,10 @@ export default function Home() {
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="space-y-6">
               <h2 className="text-2xl font-semibold text-white sm:text-3xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                What I Do
+                AI Marketing Services & Solutions
               </h2>
               <p className="text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                I partner with leadership teams to integrate AI into marketing, growth, and operations — combining strategy, creativity, and deep technical execution.
+                As an AI Marketing Specialist, I partner with leadership teams to integrate AI into marketing, growth, and operations — combining strategy, creativity, and deep technical execution.
               </p>
             </div>
             <div className="grid gap-4">
@@ -255,6 +270,24 @@ export default function Home() {
               </Link>
             ))}
           </div>
+          
+          {/* Additional Internal Links */}
+          <div className="mt-8 pt-8 border-t border-white/10">
+            <h3 className="text-lg font-semibold text-white mb-4 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              Top AI Marketing Articles
+            </h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/articles/ai/ai-marketing-new-era-2026" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
+                AI Marketing 2026 Guide
+              </Link>
+              <Link href="/articles/ai/cognitive-friction-ai-cro" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
+                Cognitive Friction AI CRO
+              </Link>
+              <Link href="/articles/marketing/ai-marketing-roles-2026" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
+                AI Marketing Roles 2026
+              </Link>
+            </div>
+          </div>
           <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6 text-center sm:p-8">
             <h2 className="text-2xl font-semibold text-white sm:text-3xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
               Let’s build your AI-powered growth system.
@@ -272,5 +305,6 @@ export default function Home() {
         </div>
       </section>
     </main>
+    </>
   );
 }

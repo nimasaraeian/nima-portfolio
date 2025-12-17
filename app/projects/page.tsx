@@ -1,6 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
+import { getCanonicalUrl } from '@/app/lib/seo';
 
 interface Project {
   id: number;
@@ -26,6 +30,37 @@ interface ResearchArea {
 }
 
 export default function ProjectsPage() {
+  useEffect(() => {
+    const canonicalUrl = getCanonicalUrl('/projects');
+    
+    const webPageSchema = generateWebPageSchema({
+      name: "AI Marketing Projects",
+      description: "AI Marketing Projects including case studies, marketing dashboards, and real-world experiments.",
+      url: canonicalUrl,
+    });
+
+    const breadcrumbSchema = generateBreadcrumbSchema([
+      { name: "Home", url: getCanonicalUrl('/') },
+      { name: "AI Marketing Projects", url: canonicalUrl },
+    ]);
+
+    // Inject schemas into page
+    const webPageScript = document.createElement('script');
+    webPageScript.type = 'application/ld+json';
+    webPageScript.text = JSON.stringify(webPageSchema);
+    document.head.appendChild(webPageScript);
+
+    const breadcrumbScript = document.createElement('script');
+    breadcrumbScript.type = 'application/ld+json';
+    breadcrumbScript.text = JSON.stringify(breadcrumbSchema);
+    document.head.appendChild(breadcrumbScript);
+
+    return () => {
+      document.head.removeChild(webPageScript);
+      document.head.removeChild(breadcrumbScript);
+    };
+  }, []);
+
   const projects: Project[] = [
     {
       id: 1,
@@ -120,10 +155,21 @@ export default function ProjectsPage() {
     <main className="min-h-screen bg-black text-white pt-20 px-6">
         <div className="max-w-screen-xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>Projects & Innovations</h1>
-            <p className="text-gray-400 max-w-xl mx-auto" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Exploring the intersection of AI, psychology, and human behavior through innovative digital solutions.
+            <h1 className="text-5xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI Marketing Projects</h1>
+            <p className="text-gray-400 max-w-xl mx-auto text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              Exploring the intersection of AI marketing, psychology, and human behavior through innovative digital solutions and AI-powered platforms.
             </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/services" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
+                View Services
+              </Link>
+              <Link href="/articles" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
+                Read Articles
+              </Link>
+              <Link href="/research" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
+                Explore Research
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-16">

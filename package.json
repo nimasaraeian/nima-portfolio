@@ -16,7 +16,8 @@
     "content-manual": "node -e \"require('dotenv').config({ path: '.env.local' }); require('./lib/content-generator.js').generateDailyArticles().then(articles => console.log('Generated', articles.length, 'articles'))\"",
     "test-article": "node scripts/test-single-article.js",
     "test-daily": "node scripts/test-daily-content.js",
-    "create-favicon": "node scripts/create-favicon.js"
+    "create-favicon": "node scripts/create-favicon.js",
+    "seo-check": "node scripts/seo-check.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -38,6 +39,7 @@
     "remark-gfm": "^4.0.1",
     "styled-jsx": "^5.1.7",
     "swr": "^2.3.6",
+    "xml2js": "^0.6.2",
     "zod": "^3.25.76",
     "zustand": "^4.5.2"
   },

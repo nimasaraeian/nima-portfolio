@@ -1,5 +1,5 @@
 export const SITE = {
-  baseUrl: "https://www.nimasaraeian.com",
+  baseUrl: "https://nimasaraeian.com",
   ogImage: "/image/nima-bw.jpg"
 };
 

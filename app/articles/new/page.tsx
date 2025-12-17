@@ -24,7 +24,7 @@ export default function NewArticlePage() {
     if (file) setSelectedFile(file);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const payload = { ...formData };
     if (selectedFile) payload.coverImage = selectedFile.name;

@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
+import { getCanonicalUrl } from '@/app/lib/seo';
 
 const journeyHighlights = [
   'cognitive psychology',
@@ -87,8 +89,29 @@ const projects = [
 ];
 
 export default function AboutPage() {
+  const canonicalUrl = getCanonicalUrl('/about');
+  
+  const webPageSchema = generateWebPageSchema({
+    name: "Nima Saraeian | AI Marketing Background",
+    description: "Learn about Nima Saraeian, AI Marketing Specialist with extensive background in behavioral marketing and strategic consulting.",
+    url: canonicalUrl,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: getCanonicalUrl('/') },
+    { name: "About", url: canonicalUrl },
+  ]);
+
   return (
     <main className="bg-black text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <section className="border-b border-white/10 bg-gradient-to-b from-black via-black/80 to-black">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-4 pb-16 pt-24 sm:px-6 md:flex-row md:items-start md:px-10 lg:px-12">
           <div className="flex-1 text-center md:text-left">

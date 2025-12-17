@@ -3,7 +3,7 @@ export async function POST(req: Request) {
     process.env.BACKEND_BASE_URL ?? "http://127.0.0.1:8000";
 
   try {
-    const formData = await req.formData();
+      const formData = await req.formData();
 
     console.log('[Decision Diagnosis Proxy] Received FormData:', {
       hasImage: formData.has('image'),
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
       decisionProbability: parsed.decisionProbability,
       keys: Object.keys(parsed),
     });
-
+    
     // ۲) قوانین ساده برای ساخت primaryOutcome و confidence
     const frictionScore = parsed.frictionScore ?? 0;
     const trustScore = parsed.trustScore ?? 50;
@@ -117,17 +117,9 @@ export async function POST(req: Request) {
 
     const confidence = Math.round(decisionProbability * 100) / 100;
 
-    // Determine analysisStatus and mode from backend response or infer from confidence
-    const analysisStatus = parsed.analysisStatus ?? (confidence >= 65 ? "ok" : "low_signal");
-    const mode = parsed.mode ?? (confidence >= 65 ? "verdict" : "insight_only");
-    const verdictAllowed = parsed.verdictAllowed ?? (confidence >= 65);
-
     // ۳) مپ به ساختاری که UI انتظار دارد
     // UI expects: primary_outcome, executive_summary (string), friction_scores, etc.
     const mappedResult = {
-      analysisStatus: analysisStatus,
-      mode: mode,
-      verdictAllowed: verdictAllowed,
       primary_outcome: primaryOutcome,
       primary_confidence: confidence,
       decision_stage: parsed.decisionStage ?? "awareness",
@@ -172,7 +164,7 @@ export async function POST(req: Request) {
         status: 500,
         headers: {
           "Content-Type": "application/json",
-        },
+      },
       }
     );
   }

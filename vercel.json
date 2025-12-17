@@ -9,6 +9,12 @@
     },
     "app/api/generate-daily-content/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/brain/route.ts": {
+      "maxDuration": 120
+    },
+    "app/api/brain/**/*.ts": {
+      "maxDuration": 120
     }
   },
   "crons": [

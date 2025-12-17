@@ -1,10 +1,22 @@
 import PaperCard from "@/components/research/PaperCard";
 import { getAllPapers } from "@/lib/papers";
 import { Metadata } from "next";
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
+import { getCanonicalUrl } from '@/app/lib/seo';
 
 export const metadata: Metadata = {
-  title: "Research & Publications – Nima Saraeian",
-  description: "Working papers, preprints, and publications by Nima Saraeian.",
+  title: "AI Marketing Research | Digital Psychology & Consumer Behavior Studies | Nima Saraeian",
+  description: "AI Marketing Research including working papers, preprints, and academic publications on digital psychology, consumer behavior studies, and AI marketing research. Explore research-backed insights.",
+  alternates: {
+    canonical: getCanonicalUrl('/research'),
+  },
+  openGraph: {
+    title: "Research & Publications – Nima Saraeian",
+    description: "Working papers, preprints, and publications on AI psychology, digital behavior, and consumer analytics.",
+    url: getCanonicalUrl('/research'),
+    type: 'website',
+    siteName: 'Nima Saraeian',
+  },
 };
 
 export default function ResearchPage() {
@@ -23,7 +35,7 @@ export default function ResearchPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Research & Publications</h1>
+      <h1 className="text-3xl font-bold">AI Marketing Research</h1>
       <p className="mt-2 text-muted-foreground">
         AI Psychology · Aesthetics · Consumer Behavior
       </p>

@@ -1,38 +1,70 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 
+import { getCanonicalUrl } from '@/app/lib/seo'
+
 export const metadata: Metadata = {
-  title: 'Contact NIMA SARAEIAN | AI Psychology Expert نیما سرائیان',
-  description: 'Get in touch with NIMA SARAEIAN (نیما سرائیان), AI Psychology Expert. Contact for consultations, speaking engagements, and AI-powered psychology solutions.',
+  title: 'Contact AI Marketing Consultant | Remote & Istanbul Marketing Consulting | Nima Saraeian',
+  description: 'Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting, Istanbul-based services, and marketing collaboration. Available for consultations, speaking engagements, and strategic partnerships.',
+  alternates: {
+    canonical: getCanonicalUrl('/contact'),
+  },
   keywords: 'NIMA SARAEIAN contact, نیما سرائیان, AI psychology consultant, digital psychology expert, psychometric analysis, consumer behavior specialist, speaking engagements, AI consulting',
   openGraph: {
-    title: 'Contact NIMA SARAEIAN - AI Psychology Expert',
-    description: 'Connect with Dr. NIMA SARAEIAN for AI psychology consultations, speaking engagements, and innovative digital solutions.',
-    url: 'https://www.nimasaraeian.com/contact',
-    siteName: 'NIMA SARAEIAN نیما سرائیان',
+    title: 'Contact AI Marketing Consultant | Remote & Istanbul Marketing Consulting | Nima Saraeian',
+    description: 'Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting, Istanbul-based services, and marketing collaboration.',
+    url: getCanonicalUrl('/contact'),
+    siteName: 'Nima Saraeian',
     images: [
       {
-        url: 'https://www.nimasaraeian.com/image/nima-bw.jpg',
+        url: 'https://nimasaraeian.com/image/nima-bw.jpg',
         width: 1200,
         height: 630,
-        alt: 'NIMA SARAEIAN - AI Psychology Expert',
+        alt: 'Contact Nima Saraeian - AI Marketing Consultant',
       },
     ],
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact AI Marketing Consultant | Remote & Istanbul Marketing Consulting',
+    description: 'Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting and marketing collaboration.',
+    images: ['https://nimasaraeian.com/image/nima-bw.jpg'],
+  },
 };
 
 export default function ContactPage() {
+  const canonicalUrl = getCanonicalUrl('/contact');
+  
+  const webPageSchema = generateWebPageSchema({
+    name: "Contact AI Marketing Consultant",
+    description: "Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting and marketing collaboration.",
+    url: canonicalUrl,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: getCanonicalUrl('/') },
+    { name: "Contact", url: canonicalUrl },
+  ]);
+
   return (
     <main className="min-h-screen bg-black text-white pt-20 px-4 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <header className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold mb-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Contact NIMA SARAEIAN
+            Contact AI Marketing Consultant
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            AI Psychology Expert | Digital Innovation Consultant | International Speaker
+            Remote Marketing Consulting | Istanbul-Based Services | Marketing Collaboration
           </p>
         </header>
 

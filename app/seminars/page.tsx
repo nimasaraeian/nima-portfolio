@@ -1,10 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
+import { getCanonicalUrl } from '@/app/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Nima Saraeian International Seminars & Conference Presentations | AI Psychology Expert نیما سرائیان',
-  description: 'View Nima Saraeian (نیما سرائیان) international conference presentations on AI, Digital Psychology, Consumer Behavior, Psychometrics, and Innovation. Expert speaker in artificial intelligence, emotional intelligence, and behavioral analytics.',
+  title: 'AI Marketing Seminars | Marketing Talks, Workshops & Speaking Engagements | Nima Saraeian',
+  description: 'AI Marketing Seminars featuring international talks, workshops, and speaking engagements on AI marketing, digital psychology, consumer behavior, and behavioral analytics. Expert marketing speaker at global conferences.',
   keywords: [
     'Nima Saraeian',
     'نیما سرائیان',
@@ -26,7 +28,7 @@ export const metadata: Metadata = {
   creator: 'Nima Saraeian',
   publisher: 'Nima Saraeian',
   alternates: {
-    canonical: 'https://nimasaraeian.com/seminars',
+    canonical: getCanonicalUrl('/seminars'),
   },
   openGraph: {
     title: 'Nima Saraeian International Seminars & Conference Presentations',
@@ -242,7 +244,7 @@ export default function SeminarsPage() {
           {/* Header Section */}
           <header className="max-w-6xl mx-auto text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-snug drop-shadow-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            International Seminars & Talks
+            AI Marketing Seminars
           </h1>
             <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto font-light mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
             Presentations on <span className="font-semibold text-white">AI</span>, 

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 
   const extension = imageNumber >= 26 ? '.JPG' : '.jpg';
-  const imageUrl = `https://www.nimasaraeian.com/image/nimasaraeian${imageNumber}${extension}`;
+  const imageUrl = `https://nimasaraeian.com/image/nimasaraeian${imageNumber}${extension}`;
   
   const altTexts = [
     `Nima Saraeian نیما سرائیان presenting AI and Digital Psychology at International Conference ${imageNumber}`,
@@ -56,12 +56,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     description,
     keywords: ['Nima Saraeian', 'نیما سرائیان', 'AI Psychology', 'Digital Psychology', 'Seminar', 'Conference', 'Psychometrics', 'Consumer Behavior', 'AI Expert'],
     alternates: {
-      canonical: `https://www.nimasaraeian.com/seminars/${imageNumber}`,
+      canonical: `https://nimasaraeian.com/seminars/${imageNumber}`,
     },
     openGraph: {
       title: `Nima Saraeian نیما سرائیان - Seminar ${imageNumber}`,
       description,
-      url: `https://www.nimasaraeian.com/seminars/${imageNumber}`,
+      url: `https://nimasaraeian.com/seminars/${imageNumber}`,
       type: 'article',
       images: [
         {
@@ -109,7 +109,7 @@ export default async function SeminarImagePage({ params }: { params: Promise<{ i
 
   const extension = imageNumber >= 26 ? '.JPG' : '.jpg';
   const imageSrc = `/image/nimasaraeian${imageNumber}${extension}`;
-  const imageUrl = `https://www.nimasaraeian.com${imageSrc}`;
+  const imageUrl = `https://nimasaraeian.com${imageSrc}`;
 
   const altTexts = [
     `Nima Saraeian نیما سرائیان presenting AI and Digital Psychology at International Conference ${imageNumber}`,
@@ -162,14 +162,14 @@ export default async function SeminarImagePage({ params }: { params: Promise<{ i
       "name": "Nima Saraeian",
       "alternateName": "نیما سرائیان",
       "jobTitle": "AI Marketing Strategist",
-      "url": "https://www.nimasaraeian.com"
+      "url": "https://nimasaraeian.com"
     },
     "copyrightHolder": {
       "@type": "Person",
       "name": "Nima Saraeian",
       "alternateName": "نیما سرائیان"
     },
-    "license": "https://www.nimasaraeian.com",
+    "license": "https://nimasaraeian.com",
     "contentLocation": {
       "@type": "Place",
       "name": `International Conference ${imageNumber}`

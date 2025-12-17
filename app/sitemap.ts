@@ -1,7 +1,10 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://www.nimasaraeian.com";
+  const base = "https://nimasaraeian.com";
+  
+  // Only include indexable, canonical, 200 pages
+  // Exclude: tool pages, dashboards, dev routes, API routes
   const routes = [
     "",
     "services",
@@ -18,10 +21,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "projects",
     "seminars",
     "contact",
-    "research"
+    "research",
+    "portfolio",
+    "performance-marketing",
+    "cro-copywriting",
+    "what-does-an-ai-marketing-specialist-do",
   ];
 
-  // Add individual seminar image pages
+  // Add individual seminar image pages (only indexable ones)
   const seminarPages = Array.from({ length: 29 }, (_, i) => ({
     url: `${base}/seminars/${i + 2}`,
     lastModified: new Date().toISOString(),
@@ -30,7 +37,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const mainRoutes = routes.map(r => ({
-    url: `${base}/${r}`,
+    url: r === "" ? base : `${base}/${r}`,
     lastModified: new Date().toISOString(),
     changeFrequency: r === "" ? "daily" as const : "weekly" as const,
     priority: r === "" ? 1 : 0.8

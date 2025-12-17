@@ -110,7 +110,7 @@ export function CognitiveAdvancedView({ result, psychologyAnalysis, brainRespons
 
       {/* Psychology Summary - Keep for high-level metrics */}
       {result.psychology_dashboard && (
-        <PsychologySummary result={result} />
+          <PsychologySummary result={result} />
       )}
 
       {narrative && (

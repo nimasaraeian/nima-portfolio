@@ -2,11 +2,13 @@ import { Metadata } from "next";
 import { SITE } from "../lib/site";
 import Link from "next/link";
 import Image from "next/image";
+import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
+import { getCanonicalUrl } from '@/app/lib/seo';
 
 export const metadata: Metadata = {
-  title: "AI Marketing Strategist (CRO & Growth) | Behavioral AI, Decision Psychology & Conversion Optimization — Nima Saraeian",
+  title: "AI Marketing Services | CRO & Performance Marketing Strategy Consulting | Nima Saraeian",
   description:
-    "AI Marketing Strategist specializing in CRO, growth, behavioral psychology, decision friction analysis, and AI-driven optimization. Behavioral AI–driven strategy for conversion optimization.",
+    "AI Marketing Services including CRO strategy, performance marketing consulting, and conversion optimization. Data-driven services that transform user hesitation into measurable growth through behavioral psychology and AI-driven optimization.",
   keywords: [
     "AI Marketing Strategist",
     "CRO Strategist",
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
     "AI Marketing",
   ],
   alternates: {
-    canonical: `${SITE.baseUrl}/services`,
+    canonical: getCanonicalUrl('/services'),
   },
   openGraph: {
     type: "website",
@@ -49,12 +51,33 @@ export const metadata: Metadata = {
 };
 
 export default function ServicesPage() {
+  const canonicalUrl = getCanonicalUrl('/services');
+  
+  const webPageSchema = generateWebPageSchema({
+    name: "AI Marketing Services",
+    description: "AI Marketing Services including CRO strategy, performance marketing consulting, and conversion optimization.",
+    url: canonicalUrl,
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: getCanonicalUrl('/') },
+    { name: "AI Marketing Services", url: canonicalUrl },
+  ]);
+
   return (
     <main className="min-h-screen bg-black text-white">
       {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       {/* SECTION 1 — HERO */}
@@ -64,8 +87,12 @@ export default function ServicesPage() {
             {/* Text Content */}
             <div>
               <h1 className="mb-6 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl text-white tracking-tight" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                AI Marketing Strategist (CRO & Growth)
+                AI Marketing Services
       </h1>
+
+              <p className="mb-6 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Our AI Marketing Services combine CRO strategy, performance marketing consulting, and conversion optimization to transform user hesitation into measurable growth. We deliver data-driven services that leverage behavioral psychology and AI-driven optimization.
+              </p>
 
               <h2 className="mb-10 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
                 Behavioral AI–driven strategy focused on conversion optimization, decision friction analysis, trust psychology, and AI-powered marketing systems.

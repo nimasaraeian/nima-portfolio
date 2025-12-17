@@ -101,7 +101,7 @@ function updateSitemap(articles) {
   
   for (const article of articles) {
     sitemapContent += `  <url>
-    <loc>https://www.nimasaraeian.com/articles/${article.category}/${article.id}</loc>
+    <loc>https://nimasaraeian.com/articles/${article.category}/${article.id}</loc>
     <lastmod>${article.publishedAt}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

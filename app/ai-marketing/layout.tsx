@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { getCanonicalUrl } from '@/app/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'AI Marketing Engine 2026 — Full Guide & NIMA AI Brain',
+  title: 'AI Marketing Strategy | Hyper-Personalization & Behavioral AI Marketing Guide | Nima Saraeian',
   description:
-    'Discover how AI Marketing really works in 2026–2027. Explore behavioral data, conversion psychology, and the NIMA AI Brain — your own AI marketing engine.',
+    'AI Marketing Strategy guide covering hyper-personalization, behavioral AI marketing, and decision friction analysis. Learn how to build data-driven marketing systems that understand customer behavior.',
   alternates: {
-    canonical: 'https://nimasaraeian.com/ai-marketing',
+    canonical: getCanonicalUrl('/ai-marketing'),
   },
   keywords: [
     'Behavioral DeepScan',
@@ -21,12 +22,26 @@ export const metadata: Metadata = {
     'NIMA AI Brain',
   ],
   openGraph: {
-    title: 'AI Marketing Engine 2026 — Full Guide & NIMA AI Brain',
+    title: 'AI Marketing Strategy | Hyper-Personalization & Behavioral AI Marketing Guide',
     description:
-      'Discover how AI Marketing really works in 2026–2027. Explore behavioral data, conversion psychology, and the NIMA AI Brain — your own AI marketing engine.',
-    url: 'https://nimasaraeian.com/ai-marketing',
+      'AI Marketing Strategy guide covering hyper-personalization, behavioral AI marketing, and decision friction analysis.',
+    url: getCanonicalUrl('/ai-marketing'),
     siteName: 'Nima Saraeian',
     type: 'website',
+    images: [
+      {
+        url: 'https://nimasaraeian.com/image/nima-bw.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'AI Marketing Strategy Guide by Nima Saraeian',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI Marketing Strategy | Hyper-Personalization & Behavioral AI Marketing Guide',
+    description: 'AI Marketing Strategy guide covering hyper-personalization, behavioral AI marketing, and decision friction analysis.',
+    images: ['https://nimasaraeian.com/image/nima-bw.jpg'],
   },
 };
 

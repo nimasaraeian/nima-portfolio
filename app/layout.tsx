@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: '/',
+    canonical: 'https://nimasaraeian.com',
   },
   openGraph: {
     type: 'website',
@@ -92,14 +92,15 @@ const socialLinks: { name: string; href: string; icon: IconType }[] = [
 ]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const structuredData = {
+  // Person schema
+  const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Nima Saraeian",
-    "url": "https://www.nimasaraeian.com",
+    "url": "https://nimasaraeian.com",
     "image": [
-      "https://www.nimasaraeian.com/image/nima-pic.png",
-      "https://www.nimasaraeian.com/image/nima-bw.jpg"
+      "https://nimasaraeian.com/image/nima-pic.png",
+      "https://nimasaraeian.com/image/nima-bw.jpg"
     ],
     "jobTitle": "AI Marketing Strategist",
     "description": "AI Marketing Strategist and researcher at the intersection of artificial intelligence and digital marketing. Founder of Selflyzer platform.",
@@ -121,9 +122,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       "name": "Master's in E-Commerce"
     },
     "sameAs": [
-      "https://www.nimasaraeian.com"
+      "https://www.linkedin.com/in/nimasaraian/",
+      "https://x.com/NSaraeian",
+      "https://www.instagram.com/nima.saraeian",
+      "https://www.youtube.com/@nimasaraeian8664",
+      "https://nimasaraeian.com"
     ]
   };
+
+  // WebSite schema with potential search action
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Nima Saraeian",
+    "url": "https://nimasaraeian.com",
+    "author": {
+      "@type": "Person",
+      "name": "Nima Saraeian"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Nima Saraeian"
+    }
+  };
+
+  const structuredData = [personSchema, websiteSchema];
 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
@@ -139,12 +162,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
         <meta name="msapplication-TileImage" content="/favicon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
+        {structuredData.map((schema, index) => (
+          <script
+            key={index}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(schema),
+            }}
+          />
+        ))}
         {/* Google tag (gtag.js) */}
         <script
           async

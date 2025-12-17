@@ -1,110 +1,258 @@
 "use client";
 
 import React, { useState } from "react";
-import { 
-  ShieldAlert, 
-  AlertTriangle, 
-  HelpCircle, 
-  TrendingDown, 
-  ZapOff,
-  CheckCircle2,
-  Shield,
-  Eye,
-  Target,
-  Zap,
-  MessageSquare,
-  Layout,
-  Clock,
-  type LucideIcon 
-} from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import DecisionReport from "./DecisionReport";
 
-// Mapping config for primary_outcome constants
-type OutcomeConfig = {
-  icon: LucideIcon;
-  color: {
-    border: string;
-    bg: string;
-    text: string;
-    gradient: string;
+// Normalized decision data structure
+type NormalizedDecision = {
+  // Decision Diagnosis
+  primaryBlocker: {
+    name: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
   };
-  message: string;
-  relatedScore?: 'trust' | 'clarity' | 'value' | 'relevance' | 'cognitive_load' | 'motivation' | 'risk_perception' | null;
+  primaryBlockerName: string;
+  primaryBlockerSeverity: string;
+  primaryBlockerFix: string;
+  primaryBlockerEvidence: string;
+  hesitationExplanation: string;
+  decisionProbability: number; // 0-1
+  modelConfidence: number; // 0-1
+  visualTrustConfidence: number; // 0-1
+  
+  // Quick Wins
+  quickWins: Array<{
+    action: string;
+    effort: string;
+    liftRange: string;
+    exampleCopy?: string;
+  }>;
+  
+  // Evidence
+  visualTrust: {
+    label: string;
+    confidence: number;
+    narrative: string[];
+  };
+  notedElements: string[];
+  keyLines: string[];
+  
+  // Trust & Risk Gaps
+  missingTrustSignals: Array<{
+    signal: string;
+    suggestion: string;
+  }>;
+  
+  // Legacy fields for backward compatibility
+  primary_outcome?: string;
+  executive_summary?: string;
+  friction_scores?: Record<string, number>;
 };
 
-const OUTCOME_CONFIG: Record<string, OutcomeConfig> = {
-  TRUST_DEBT: {
-    icon: ShieldAlert,
-    color: {
-      border: "border-red-500/30",
-      bg: "bg-red-500/10",
-      text: "text-red-300",
-      gradient: "from-red-500/20 to-red-600/10",
+// Normalize decision data from backend response
+// This function converts the backend API response into a normalized format for UI rendering
+function normalizeDecision(data: DecisionDiagnosisResponse): NormalizedDecision {
+  // Extract primary blocker from objects array
+  const blockers = Array.isArray(data.brain?.keyDecisionBlockers) 
+    ? data.brain.keyDecisionBlockers 
+    : [];
+  const primary = blockers[0] || data.brain?.primaryBlocker || null;
+  
+  // Extract string fields from blocker object
+  const primaryBlockerName = typeof primary?.name === "string" 
+    ? primary.name 
+    : (typeof primary === "string" 
+        ? primary 
+        : (data.primary_outcome || "unknown_blocker"));
+  
+  const primaryBlockerSeverity = typeof primary?.severity === "string" 
+    ? primary.severity 
+    : (data.primary_outcome === "TRUST_DEBT" || data.primary_outcome === "RISK_DOMINANT" 
+        ? "high" 
+        : data.primary_outcome === "FRICTION_FREE" 
+        ? "low" 
+        : "medium");
+  
+  const primaryBlockerFix = typeof primary?.fix === "string" 
+    ? primary.fix 
+    : "";
+  
+  const primaryBlockerEvidence = Array.isArray(primary?.evidence) 
+    ? primary.evidence.join(" | ") 
+    : (typeof primary?.evidence === "string" ? primary.evidence : "");
+  
+  // Generate hesitation explanation using name + evidence
+  const hesitationExplanation = data.brain?.hesitationExplanation || 
+                                data.executive_summary || 
+                                data.summary || 
+                                (primaryBlockerEvidence
+                                  ? `Users are hesitating because: ${primaryBlockerEvidence}.`
+                                  : `Users are hesitating due to: ${primaryBlockerName}.`);
+  
+  // Extract decision probability and confidence
+  const decisionProbability = data.brain?.decisionProbability ?? 
+                             (data.primary_confidence != null ? data.primary_confidence : 0.5);
+  const modelConfidence = data.brain?.modelConfidence ?? 
+                          (data.primary_confidence != null ? data.primary_confidence : 0.7);
+  
+  // Extract visual trust confidence separately
+  const visualTrustConfidence = data.visualTrust?.confidence ?? 0.7;
+  
+  // Extract quick wins
+  const quickWins: NormalizedDecision['quickWins'] = [];
+  if (data.recommendedQuickWins && Array.isArray(data.recommendedQuickWins)) {
+    data.recommendedQuickWins.slice(0, 3).forEach((win, index) => {
+      if (typeof win === 'string') {
+        // Heuristic: estimate effort and lift based on action type
+        const lowerWin = win.toLowerCase();
+        let effort = "30 min";
+        let liftRange = "5-10%";
+        
+        if (lowerWin.includes('add') || lowerWin.includes('include')) {
+          effort = "10 min";
+          liftRange = "3-7%";
+        } else if (lowerWin.includes('change') || lowerWin.includes('update')) {
+          effort = "20 min";
+          liftRange = "5-12%";
+        } else if (lowerWin.includes('remove') || lowerWin.includes('simplify')) {
+          effort = "15 min";
+          liftRange = "4-9%";
+        }
+        
+        quickWins.push({
+          action: win,
+          effort,
+          liftRange,
+        });
+      } else if (typeof win === 'object' && win !== null) {
+        quickWins.push({
+          action: win.action || win.text || "Improve element",
+          effort: win.effort || "20 min",
+          liftRange: win.liftRange || "5-10%",
+          exampleCopy: win.exampleCopy,
+        });
+      }
+    });
+  } else if (data.what_to_fix_first && Array.isArray(data.what_to_fix_first)) {
+    data.what_to_fix_first.slice(0, 3).forEach((fix) => {
+      if (typeof fix === 'string') {
+        const lowerFix = fix.toLowerCase();
+        let effort = "30 min";
+        let liftRange = "5-10%";
+        
+        if (lowerFix.includes('add') || lowerFix.includes('include')) {
+          effort = "10 min";
+          liftRange = "3-7%";
+        } else if (lowerFix.includes('change') || lowerFix.includes('update')) {
+          effort = "20 min";
+          liftRange = "5-12%";
+        }
+        
+        quickWins.push({
+          action: fix,
+          effort,
+          liftRange,
+        });
+      }
+    });
+  }
+  
+  // Extract visual trust
+  const visualTrust = {
+    label: data.visualTrust?.label || 
+           (data.visual_analysis?.mood ? `${data.visual_analysis.mood} trust` : "Medium trust"),
+    confidence: data.visualTrust?.confidence ?? 0.7,
+    narrative: data.visualTrust?.narrative || 
+               (data.visual_analysis?.description ? [data.visual_analysis.description] : []),
+  };
+  
+  // Extract noted elements and key lines
+  const notedElements = data.features?.visual?.noted_elements || [];
+  const keyLines = data.features?.text?.key_lines || [];
+  
+  // Infer missing trust signals
+  const missingTrustSignals: NormalizedDecision['missingTrustSignals'] = [];
+  // Convert blockers to strings for trust signal checking
+  const blockerStrings: string[] = Array.isArray(blockers) 
+    ? blockers
+        .map(b => {
+          if (typeof b === 'string') return b;
+          if (typeof b === 'object' && b !== null && 'name' in b) {
+            // If it's a blocker object, use the name
+            return typeof b.name === 'string' ? b.name : String(b.name || '');
+          }
+          if (b == null || b === undefined) return '';
+          try {
+            return String(b);
+          } catch {
+            return '';
+          }
+        })
+        .filter((b): b is string => typeof b === 'string' && b.length > 0)
+    : [];
+  const hasPricing = data.features?.visual?.has_pricing ?? false;
+  const hasTestimonials = data.features?.visual?.has_testimonials ?? false;
+  const hasLogos = data.features?.visual?.has_logos ?? false;
+  
+  // Check if any blocker mentions trust or credibility (all blockers are now guaranteed to be strings)
+  const hasTrustIssue = blockerStrings.length > 0 && blockerStrings.some(b => {
+    try {
+      const lower = b.toLowerCase();
+      return lower.includes('trust') || lower.includes('credibility');
+    } catch {
+      return false;
+    }
+  });
+  
+  if (hasTrustIssue) {
+    if (!hasPricing) {
+      missingTrustSignals.push({
+        signal: "Pricing transparency",
+        suggestion: "Add clear pricing information to reduce uncertainty and build trust",
+      });
+    }
+    if (!hasTestimonials) {
+      missingTrustSignals.push({
+        signal: "Social proof",
+        suggestion: "Include customer testimonials or case studies to demonstrate credibility",
+      });
+    }
+    if (!hasLogos) {
+      missingTrustSignals.push({
+        signal: "Brand recognition",
+        suggestion: "Display partner logos, certifications, or trust badges",
+      });
+    }
+  }
+  
+  return {
+    primaryBlocker: {
+      name: primaryBlockerName,
+      severity: primaryBlockerSeverity as 'low' | 'medium' | 'high' | 'critical',
     },
-    message: "Safety First",
-    relatedScore: "trust",
-  },
-  RISK_DOMINANT: {
-    icon: AlertTriangle,
-    color: {
-      border: "border-orange-500/30",
-      bg: "bg-orange-500/10",
-      text: "text-orange-300",
-      gradient: "from-orange-500/20 to-orange-600/10",
-    },
-    message: "Reduce Anxiety",
-    relatedScore: "risk_perception",
-  },
-  OUTCOME_UNCLEAR: {
-    icon: HelpCircle,
-    color: {
-      border: "border-yellow-500/30",
-      bg: "bg-yellow-500/10",
-      text: "text-yellow-300",
-      gradient: "from-yellow-500/20 to-yellow-600/10",
-    },
-    message: "Clarify Value",
-    relatedScore: "clarity",
-  },
-  VALUE_GAP: {
-    icon: TrendingDown,
-    color: {
-      border: "border-blue-500/30",
-      bg: "bg-blue-500/10",
-      text: "text-blue-300",
-      gradient: "from-blue-500/20 to-blue-600/10",
-    },
-    message: "Boost Desire",
-    relatedScore: "value",
-  },
-  COGNITIVE_OVERLOAD: {
-    icon: ZapOff,
-    color: {
-      border: "border-purple-500/30",
-      bg: "bg-purple-500/10",
-      text: "text-purple-300",
-      gradient: "from-purple-500/20 to-purple-600/10",
-    },
-    message: "Simplify UX",
-    relatedScore: "cognitive_load",
-  },
-  FRICTION_FREE: {
-    icon: CheckCircle2,
-    color: {
-      border: "border-green-500/30",
-      bg: "bg-green-500/10",
-      text: "text-green-300",
-      gradient: "from-green-500/20 to-emerald-600/10",
-    },
-    message: "Excellent Performance",
-    relatedScore: undefined, // No specific score to highlight for success
-  },
-};
+    primaryBlockerName,
+    primaryBlockerSeverity,
+    primaryBlockerFix,
+    primaryBlockerEvidence,
+    hesitationExplanation,
+    decisionProbability,
+    modelConfidence,
+    visualTrustConfidence,
+    quickWins,
+    visualTrust,
+    notedElements,
+    keyLines,
+    missingTrustSignals,
+    // Preserve legacy fields
+    primary_outcome: data.primary_outcome,
+    executive_summary: data.executive_summary || data.executive_decision_summary,
+    friction_scores: data.friction_scores || undefined,
+  };
+}
 
-// Types for the API response
+// Types for the API response - supports both old and new formats
 type DecisionDiagnosisResponse = {
-  analysisStatus?: string;
-  mode?: "insight_only" | "verdict";
-  verdictAllowed?: boolean;
+  // Legacy fields (for backward compatibility)
   primary_outcome?: string;
   primary_confidence?: number;
   secondary_outcome?: string;
@@ -131,9 +279,8 @@ type DecisionDiagnosisResponse = {
     category?: string;
     priority?: string;
     icon?: string;
-  }>; // Support structured, simple array, and recommendation_engine format
+  }>;
   next_step?: string;
-  // New fields
   page_type?: string;
   friction_scores?: {
     trust: number;
@@ -145,11 +292,55 @@ type DecisionDiagnosisResponse = {
     risk_perception: number;
   } | null;
   executive_summary?: string | null;
+  executive_decision_summary?: string | null;
   visual_analysis?: {
     mood?: string;
     theme?: string;
     description?: string;
   } | null;
+  
+  // New structured format
+  brain?: {
+    keyDecisionBlockers?: Array<{
+      name?: string;
+      severity?: string;
+      evidence?: string[] | string;
+      fix?: string;
+    }> | string[];
+    decisionProbability?: number;
+    modelConfidence?: number;
+    confidence?: number;
+    primaryBlocker?: {
+      name?: string;
+      severity?: 'low' | 'medium' | 'high' | 'critical';
+      evidence?: string[] | string;
+      fix?: string;
+    };
+    hesitationExplanation?: string;
+  };
+  visualTrust?: {
+    label?: string;
+    confidence?: number;
+    narrative?: string[];
+  };
+  features?: {
+    visual?: {
+      noted_elements?: string[];
+      has_pricing?: boolean;
+      has_testimonials?: boolean;
+      has_logos?: boolean;
+    };
+    text?: {
+      key_lines?: string[];
+    };
+  };
+  recommendedQuickWins?: Array<{
+    action?: string;
+    text?: string;
+    effort?: string;
+    liftRange?: string;
+    exampleCopy?: string;
+  }> | string[];
 };
 
 // Input form state
@@ -182,6 +373,7 @@ export default function DecisionBrainDashboard() {
   const [diagnosis, setDiagnosis] = useState<DecisionDiagnosisResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -209,39 +401,73 @@ export default function DecisionBrainDashboard() {
     setScreenshotPreview(null);
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setDiagnosis(null);
 
-    // این‌ها را با stateهای واقعی خودت replace کن:
-    // screenshotFile: فایل اسکرین‌شات -> formData.screenshot
-    // pageText: متن کپی‌شده از صفحه -> formData.pageCopy
-    if (!formData.screenshot && !formData.pageCopy.trim()) {
-      console.warn("No screenshot or text provided");
-      setError("Please provide either page copy text or a screenshot for analysis.");
+    // Validation: Allow submit if URL is provided OR pageCopy is provided
+    if (!formData.url.trim() && !formData.pageCopy.trim()) {
+      setError("Please provide a URL or paste page copy.");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const formDataToSend = new FormData();
+      // Get FastAPI base URL from environment variable or use default
+      const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000";
+      
+      // Build JSON payload - convert FormData to JSON
+      const payload: Record<string, any> = {};
 
-      // 👇 اسم فیلد باید EXACTLY "image" باشد
+      // Add URL if provided
+      if (formData.url.trim()) {
+        payload.url = formData.url.trim();
+      }
+
+      // Add raw_text if provided
+      if (formData.pageCopy.trim()) {
+        payload.raw_text = formData.pageCopy.trim();
+      }
+
+      // Convert image to base64 if present
       if (formData.screenshot) {
-        formDataToSend.append("image", formData.screenshot);
+        const imageBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const result = reader.result as string;
+            // Remove data URL prefix (e.g., "data:image/png;base64,")
+            const base64String = result.split(',')[1] || result;
+            resolve(base64String);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(formData.screenshot!);
+        });
+        payload.image = imageBase64;
+        payload.image_type = formData.screenshot.type || 'image/png';
       }
 
-      // 👇 متن با نام "raw_text" ارسال شود
-      if (formData.pageCopy && formData.pageCopy.trim().length > 0) {
-        formDataToSend.append("raw_text", formData.pageCopy.trim());
+      // Call FastAPI directly - bypass Next.js API route
+      let res: Response;
+      try {
+        res = await fetch(`${API_BASE}/analyze-url`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+      } catch (fetchError) {
+        // Handle network errors (server not running, CORS, etc.)
+        console.error("Fetch error:", fetchError);
+        const errorMsg = fetchError instanceof TypeError && fetchError.message.includes('fetch')
+          ? `Cannot connect to API server at ${API_BASE}. Please make sure the FastAPI server is running on port 8000.`
+          : `Network error: ${fetchError instanceof Error ? fetchError.message : String(fetchError)}`;
+        setError(errorMsg);
+        setIsLoading(false);
+        return;
       }
-
-      const res = await fetch("/api/brain/decision-diagnosis", {
-        method: "POST",
-        body: formDataToSend, // ❗ هیچ headers: { "Content-Type": ... } نگذار
-      });
 
       if (!res.ok) {
         let errorMessage = "Request failed";
@@ -271,10 +497,10 @@ export default function DecisionBrainDashboard() {
               errorMessage = text || "Request failed";
             }
           } catch {
-            errorMessage = text || "Request failed";
+            errorMessage = text || `Request failed with status ${res.status}`;
           }
         } catch {
-          errorMessage = "Failed to analyze decision. Please try again.";
+          errorMessage = `Request failed with status ${res.status}. Please check if the API server is running and accessible.`;
         }
         
         setError(errorMessage);
@@ -299,17 +525,9 @@ export default function DecisionBrainDashboard() {
       console.log("DEBUG decision-diagnosis response:", data);
       console.log("DEBUG response keys:", data ? Object.keys(data) : []);
       console.log("DEBUG primary_outcome:", data?.primary_outcome);
+      console.log("DEBUG executive_decision_summary:", data?.executive_decision_summary);
       console.log("DEBUG executive_summary:", data?.executive_summary);
       console.log("DEBUG full response structure:", JSON.stringify(data, null, 2).substring(0, 1000));
-
-      // Ensure analysisStatus exists (required by UI)
-      if (!data.analysisStatus) {
-        const confidence = data.primary_confidence ?? 0;
-        data.analysisStatus = confidence >= 65 ? "ok" : "low_signal";
-        data.mode = data.mode ?? (confidence >= 65 ? "verdict" : "insight_only");
-        data.verdictAllowed = data.verdictAllowed ?? (confidence >= 65);
-        console.log("⚠️ Added missing analysisStatus:", data.analysisStatus);
-      }
 
       // اینجا همان state قبلیت که نتیجه را نگه می‌دارد آپدیت کن:
       setDiagnosis(data);
@@ -336,7 +554,7 @@ export default function DecisionBrainDashboard() {
           {/* Left: InputPanel */}
           <div className="lg:w-96 lg:flex-shrink-0">
             <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 space-y-6 sticky top-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6" suppressHydrationWarning>
                 {/* URL Input */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-200">
@@ -352,84 +570,97 @@ export default function DecisionBrainDashboard() {
                   />
                 </div>
 
-                {/* Page Copy Input */}
-                <div className="space-y-4">
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      Paste Page Copy
-                    </label>
-                    <textarea
-                      name="pageCopy"
-                      value={formData.pageCopy}
-                      onChange={handleInputChange}
-                      rows={6}
-                      placeholder="Paste relevant page content here..."
-                      className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-vertical text-white placeholder-gray-500"
-                    />
-                    {formData.url.trim() && !formData.pageCopy.trim() && (
-                      <p className="text-xs text-yellow-400/80 mt-1">
-                        💡 Tip: If URL scraping fails, paste the page content here manually for better results.
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-200">
-                      Upload Screenshot
-                    </label>
-                    {screenshotPreview ? (
-                      <div className="relative">
-                        <img
-                          src={screenshotPreview}
-                          alt="Screenshot preview"
-                          className="w-full rounded-lg border border-slate-700"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleRemoveScreenshot}
-                          className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 text-xs"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ) : (
-                      <label className="flex items-center justify-center w-full h-32 border-2 border-dashed border-slate-700 rounded-lg bg-slate-800/40 hover:border-indigo-500 cursor-pointer transition">
-                        <div className="flex flex-col items-center justify-center text-gray-400">
-                          <svg
-                            className="w-8 h-8 mb-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                          <span className="text-sm">Click to upload screenshot</span>
-                        </div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleScreenshotChange}
-                          className="hidden"
-                        />
-                      </label>
-                    )}
-                  </div>
-                </div>
-
-                {/* Submit Button */}
+                {/* Run Button */}
                 <button
                   type="submit"
                   disabled={isLoading}
                   className="w-full inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-medium bg-white text-black hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed transition"
                 >
-                  {isLoading ? "Analyzing decision..." : "Run Decision Diagnosis"}
+                  {isLoading ? "Analyzing decision..." : "Run"}
                 </button>
+
+                {/* Advanced inputs (optional) - Collapsible section */}
+                <div className="border-t border-slate-700 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+                    className="w-full flex items-center justify-between text-sm font-medium text-gray-200 hover:text-white transition"
+                  >
+                    <span>Advanced inputs (optional)</span>
+                    {isAdvancedOpen ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
+                  </button>
+
+                  {isAdvancedOpen && (
+                    <div className="mt-4 space-y-4">
+                      {/* Paste Page Copy */}
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-200">
+                          Paste Page Copy
+                        </label>
+                        <textarea
+                          name="pageCopy"
+                          value={formData.pageCopy}
+                          onChange={handleInputChange}
+                          rows={6}
+                          placeholder="Paste relevant page content here..."
+                          className="w-full rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-vertical text-white placeholder-gray-500"
+                        />
+                      </div>
+
+                      {/* Upload Screenshot */}
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-200">
+                          Upload Screenshot
+                        </label>
+                        {screenshotPreview ? (
+                          <div className="relative">
+                            <img
+                              src={screenshotPreview}
+                              alt="Screenshot preview"
+                              className="w-full rounded-lg border border-slate-700"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleRemoveScreenshot}
+                              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 text-xs"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <label className="flex items-center justify-center w-full h-32 border-2 border-dashed border-slate-700 rounded-lg bg-slate-800/40 hover:border-indigo-500 cursor-pointer transition">
+                            <div className="flex flex-col items-center justify-center text-gray-400">
+                              <svg
+                                className="w-8 h-8 mb-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                              <span className="text-sm">Click to upload screenshot</span>
+                            </div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleScreenshotChange}
+                              className="hidden"
+                            />
+                          </label>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {/* Error Display */}
                 {error && (
@@ -460,560 +691,13 @@ export default function DecisionBrainDashboard() {
 
               {!isLoading && !diagnosis && (
                 <div className="text-center py-12 text-gray-400">
-                  <p>Submit the form to see the decision diagnosis</p>
+                  <p>Enter a URL and click Run to see the decision diagnosis</p>
                 </div>
               )}
 
               {!isLoading && diagnosis && (() => {
-                const outcomeConfig = diagnosis.primary_outcome 
-                  ? OUTCOME_CONFIG[diagnosis.primary_outcome] 
-                  : null;
-                const OutcomeIcon = outcomeConfig?.icon || HelpCircle;
-                const defaultColors = {
-                  border: "border-slate-800",
-                  bg: "bg-slate-800/70",
-                  text: "text-white",
-                  gradient: "from-slate-800/70 to-slate-800/70",
-                };
-                const colors = outcomeConfig?.color || defaultColors;
-                
-                return (
-                <div className="space-y-6">
-                  {/* Executive Decision Summary */}
-                  <div className={`border ${colors.border} rounded-xl bg-gradient-to-br ${colors.gradient} p-6 space-y-4`}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        {outcomeConfig && (
-                          <OutcomeIcon className={`w-6 h-6 ${colors.text}`} />
-                        )}
-                        <h2 className={`text-xl font-semibold ${colors.text}`}>
-                          {diagnosis.primary_outcome === "IDENTITY_MISMATCH" 
-                            ? "Role ambiguity in the hero section" 
-                            : diagnosis.primary_outcome === "FRICTION_FREE"
-                            ? "✅ Success: Low Decision Friction"
-                            : "Executive Decision Summary"}
-                        </h2>
-                      </div>
-                      {outcomeConfig && (
-                        <span className={`inline-flex items-center rounded-full border ${colors.border} ${colors.bg} px-3 py-1 text-xs font-medium ${colors.text}`}>
-                          {outcomeConfig.message}
-                        </span>
-                      )}
-                    </div>
-                    
-                    {/* Visual Analysis Badge */}
-                    {diagnosis.visual_analysis && (
-                      <div className="inline-flex items-center rounded-md border border-slate-700 bg-slate-700/50 px-3 py-1.5 text-xs text-gray-300">
-                        <span className="font-medium mr-1">Visual Mood:</span>
-                        {diagnosis.visual_analysis.mood && (
-                          <span className="capitalize">{diagnosis.visual_analysis.mood}</span>
-                        )}
-                        {diagnosis.visual_analysis.theme && (
-                          <span className="ml-1 text-gray-400">
-                            ({diagnosis.visual_analysis.theme})
-                          </span>
-                        )}
-                        {diagnosis.visual_analysis.description && (
-                          <span className="ml-2 text-gray-400 italic">
-                            {diagnosis.visual_analysis.description}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <div>
-                          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">
-                            Primary Outcome
-                          </p>
-                          <p className="text-lg font-semibold text-white">
-                            {diagnosis.primary_outcome || "N/A"}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">
-                            Confidence
-                          </p>
-                          <p className="text-lg font-semibold text-white">
-                            {diagnosis.primary_confidence != null && typeof diagnosis.primary_confidence === 'number'
-                              ? `${(diagnosis.primary_confidence * 100).toFixed(0)}%`
-                              : "N/A"}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">
-                            Decision Stage
-                          </p>
-                          <p className="text-lg font-semibold text-white">
-                            {diagnosis.decision_stage || "N/A"}
-                          </p>
-                        </div>
-                      </div>
-                      {/* Executive Summary - prioritize executive_summary from API */}
-                      {diagnosis.executive_summary ? (
-                        <pre className="whitespace-pre-wrap text-sm text-gray-200 leading-relaxed bg-slate-700/40 rounded-md p-3 mt-2">
-                          {diagnosis.executive_summary}
-                        </pre>
-                      ) : diagnosis.summary ? (
-                        <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">
-                          {diagnosis.summary}
-                        </p>
-                      ) : (
-                        <p className="text-xs text-gray-400 italic">
-                          No explanation provided by the model.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Behavioral Friction Scores */}
-                  {diagnosis.friction_scores && (() => {
-                    const outcomeConfig = diagnosis.primary_outcome 
-                      ? OUTCOME_CONFIG[diagnosis.primary_outcome] 
-                      : null;
-                    const highlightedScore = outcomeConfig?.relatedScore;
-                    
-                    return (
-                      <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
-                        <h2 className="text-xl font-semibold text-white">Behavioral Friction Scores</h2>
-                        <p className="text-sm text-gray-400 mb-4">7 core friction dimensions (0-100 scale)</p>
-                        <div className="grid grid-cols-2 gap-3">
-                          {Object.entries(diagnosis.friction_scores).map(([key, value]) => {
-                            const isHighlighted = highlightedScore === key;
-                            const scoreValue = typeof value === 'number' ? value : 0;
-                            const isHighScore = scoreValue >= 70; // Highlight if score is high (bad)
-                            
-                            // Determine styling based on outcome type
-                            let borderClass = "border-slate-700";
-                            let bgClass = "bg-slate-700/50";
-                            let textClass = "text-gray-300";
-                            let pulseClass = "";
-                            
-                            if (isHighlighted && outcomeConfig) {
-                              if (isHighScore) {
-                                // High score (bad) - use outcome color with pulse
-                                if (diagnosis.primary_outcome === "TRUST_DEBT") {
-                                  borderClass = "border-red-500/50";
-                                  bgClass = "bg-red-500/20";
-                                  textClass = "text-red-300";
-                                  pulseClass = "animate-pulse";
-                                } else if (diagnosis.primary_outcome === "RISK_DOMINANT") {
-                                  borderClass = "border-orange-500/50";
-                                  bgClass = "bg-orange-500/20";
-                                  textClass = "text-orange-300";
-                                  pulseClass = "animate-pulse";
-                                } else if (diagnosis.primary_outcome === "OUTCOME_UNCLEAR") {
-                                  borderClass = "border-yellow-500/50";
-                                  bgClass = "bg-yellow-500/20";
-                                  textClass = "text-yellow-300";
-                                  pulseClass = "animate-pulse";
-                                } else if (diagnosis.primary_outcome === "VALUE_GAP") {
-                                  borderClass = "border-blue-500/50";
-                                  bgClass = "bg-blue-500/20";
-                                  textClass = "text-blue-300";
-                                  pulseClass = "animate-pulse";
-                                } else if (diagnosis.primary_outcome === "COGNITIVE_OVERLOAD") {
-                                  borderClass = "border-purple-500/50";
-                                  bgClass = "bg-purple-500/20";
-                                  textClass = "text-purple-300";
-                                  pulseClass = "animate-pulse";
-                                }
-                              } else {
-                                // Low score (good) - just highlight with border
-                                if (diagnosis.primary_outcome === "TRUST_DEBT") {
-                                  borderClass = "border-red-500/30 border-2";
-                                  bgClass = "bg-red-500/10";
-                                  textClass = "text-red-300";
-                                } else if (diagnosis.primary_outcome === "RISK_DOMINANT") {
-                                  borderClass = "border-orange-500/30 border-2";
-                                  bgClass = "bg-orange-500/10";
-                                  textClass = "text-orange-300";
-                                } else if (diagnosis.primary_outcome === "OUTCOME_UNCLEAR") {
-                                  borderClass = "border-yellow-500/30 border-2";
-                                  bgClass = "bg-yellow-500/10";
-                                  textClass = "text-yellow-300";
-                                } else if (diagnosis.primary_outcome === "VALUE_GAP") {
-                                  borderClass = "border-blue-500/30 border-2";
-                                  bgClass = "bg-blue-500/10";
-                                  textClass = "text-blue-300";
-                                } else if (diagnosis.primary_outcome === "COGNITIVE_OVERLOAD") {
-                                  borderClass = "border-purple-500/30 border-2";
-                                  bgClass = "bg-purple-500/10";
-                                  textClass = "text-purple-300";
-                                }
-                              }
-                            }
-                            
-                            return (
-                              <div 
-                                key={key} 
-                                className={`flex items-center justify-between rounded-md border px-3 py-2 transition-all ${borderClass} ${bgClass} ${pulseClass}`}
-                              >
-                                <span className={`text-sm capitalize ${textClass} ${isHighlighted ? "font-semibold" : ""}`}>
-                                  {key.replace(/_/g, " ")}
-                                  {isHighlighted && (
-                                    <span className="ml-2 text-xs">⚠️</span>
-                                  )}
-                                </span>
-                                <span className={`text-sm font-semibold ${textClass}`}>
-                                  {typeof value === 'number' ? value : 'N/A'}
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Context Snapshot */}
-                  {diagnosis.context && (
-                    <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
-                      <h2 className="text-xl font-semibold text-white">Context Snapshot</h2>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="text-gray-400 mb-1">Business Type</p>
-                          <p className="text-white font-medium">{diagnosis.context.business_type || "N/A"}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400 mb-1">Price Level</p>
-                          <p className="text-white font-medium">{diagnosis.context.price_level || "N/A"}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400 mb-1">Decision Depth</p>
-                          <p className="text-white font-medium">{diagnosis.context.decision_depth || "N/A"}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400 mb-1">User Intent</p>
-                          <p className="text-white font-medium">{diagnosis.context.user_intent || "N/A"}</p>
-                        </div>
-                      </div>
-                      {diagnosis.context.memory_summary && (
-                        <div className="pt-2 border-t border-slate-700">
-                          <p className="text-xs uppercase tracking-wider text-gray-400 mb-1">
-                            Memory Summary
-                          </p>
-                          <p className="text-sm text-gray-200">{diagnosis.context.memory_summary}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Decision Failure Breakdown / Success Metrics */}
-                  {(() => {
-                    const isSuccess = diagnosis.primary_outcome === "FRICTION_FREE";
-                    const successConfig = OUTCOME_CONFIG.FRICTION_FREE;
-                    
-                    return (
-                      <div className={`border rounded-xl p-6 space-y-4 ${
-                        isSuccess
-                          ? `${successConfig.color.border} bg-gradient-to-br ${successConfig.color.gradient}`
-                          : "border-slate-800 bg-slate-800/70"
-                      }`}>
-                        <div className="flex items-center gap-3">
-                          {isSuccess && (
-                            <successConfig.icon className={`w-6 h-6 ${successConfig.color.text}`} />
-                          )}
-                          <h2 className={`text-xl font-semibold ${
-                            isSuccess ? successConfig.color.text : "text-white"
-                          }`}>
-                            {isSuccess ? "Success Metrics" : "Decision Failure Breakdown"}
-                          </h2>
-                        </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <p className="text-xs uppercase tracking-wider text-gray-400">Primary Outcome</p>
-                        <div className="bg-slate-700/80 rounded-lg px-4 py-3">
-                          <p className="text-sm font-semibold text-white mb-1">
-                            {diagnosis.primary_outcome || "N/A"}
-                          </p>
-                          <p className="text-xs text-gray-300">
-                            Confidence: {diagnosis.primary_confidence != null && typeof diagnosis.primary_confidence === 'number'
-                              ? `${(diagnosis.primary_confidence * 100).toFixed(0)}%`
-                              : "N/A"}
-                          </p>
-                        </div>
-                      </div>
-                      {diagnosis.secondary_outcome && (
-                        <div className="space-y-2">
-                          <p className="text-xs uppercase tracking-wider text-gray-400">
-                            Secondary Outcome
-                          </p>
-                          <div className="bg-slate-700/80 rounded-lg px-4 py-3">
-                            <p className="text-sm font-semibold text-white mb-1">
-                              {diagnosis.secondary_outcome}
-                            </p>
-                            <p className="text-xs text-gray-300">
-                              Confidence:{" "}
-                              {diagnosis.secondary_confidence
-                                ? (diagnosis.secondary_confidence * 100).toFixed(0)
-                                : "N/A"}
-                              %
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Decision Journey Insight */}
-                  {diagnosis.journey_insight && (
-                    <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
-                      <h2 className="text-xl font-semibold text-white">Decision Journey Insight</h2>
-                      <p className="text-sm text-gray-200 leading-relaxed">
-                        {diagnosis.journey_insight}
-                      </p>
-                      {diagnosis.primary_outcome === "IDENTITY_MISMATCH" && (
-                        <p className="text-xs text-gray-400 italic mt-3 pt-3 border-t border-slate-700">
-                          At the awareness stage, visitors don't judge your full CV. They only ask one question: 'Is this for someone like me?'. If the hero tries to serve too many roles at once, they hesitate instead of exploring further.
-                        </p>
-                      )}
-                    </div>
-                  )}
-
-                  {/* What To Fix First / Growth Opportunities */}
-                  {diagnosis.what_to_fix_first && diagnosis.what_to_fix_first.length > 0 && (() => {
-                    const isSuccess = diagnosis.primary_outcome === "FRICTION_FREE";
-                    const successConfig = OUTCOME_CONFIG.FRICTION_FREE;
-                    
-                    return (
-                      <div className={`border rounded-xl p-6 space-y-4 ${
-                        isSuccess
-                          ? `${successConfig.color.border} bg-gradient-to-br ${successConfig.color.gradient}`
-                          : diagnosis.primary_outcome === "IDENTITY_MISMATCH" 
-                          ? "border-yellow-500/30 bg-yellow-500/5" 
-                          : "border-slate-800 bg-slate-800/70"
-                      }`}>
-                        <div className="flex items-center gap-3">
-                          {isSuccess && (
-                            <successConfig.icon className={`w-5 h-5 ${successConfig.color.text}`} />
-                          )}
-                          <h2 className={`text-xl font-semibold ${
-                            isSuccess ? successConfig.color.text : "text-white"
-                          }`}>
-                            {isSuccess ? "Growth Opportunities" : "What To Fix First"}
-                          </h2>
-                        </div>
-                        <ul className="space-y-2">
-                          {diagnosis.what_to_fix_first.map((item, index) => (
-                            <li key={index} className="flex items-start gap-3">
-                              <span className={`mt-0.5 ${
-                                isSuccess
-                                  ? successConfig.color.text
-                                  : diagnosis.primary_outcome === "IDENTITY_MISMATCH" 
-                                  ? "text-yellow-400" 
-                                  : "text-indigo-400"
-                              }`}>
-                                {isSuccess ? "✓" : "•"}
-                              </span>
-                              <p className={`text-sm flex-1 ${
-                                isSuccess ? successConfig.color.text : "text-gray-200"
-                              }`}>
-                                {item}
-                              </p>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })()}
-
-                  {/* 🚀 Action Plan: Fix These First */}
-                  {diagnosis.recommendations && (() => {
-                    // Helper function to extract action verb and rest of text
-                    const extractAction = (text: string): { verb: string; rest: string } => {
-                      const actionVerbs = ['add', 'remove', 'change', 'update', 'improve', 'enhance', 'fix', 'replace', 'simplify', 'clarify', 'show', 'hide', 'highlight', 'emphasize', 'reduce', 'increase'];
-                      const lowerText = text.toLowerCase();
-                      for (const verb of actionVerbs) {
-                        if (lowerText.startsWith(verb)) {
-                          const verbLength = verb.length;
-                          return {
-                            verb: text.substring(0, verbLength),
-                            rest: text.substring(verbLength).trim()
-                          };
-                        }
-                      }
-                      // If no action verb found, try to find first word
-                      const firstSpace = text.indexOf(' ');
-                      if (firstSpace > 0) {
-                        return {
-                          verb: text.substring(0, firstSpace),
-                          rest: text.substring(firstSpace).trim()
-                        };
-                      }
-                      return { verb: '', rest: text };
-                    };
-
-                    // Helper function to get icon based on category or text content
-                    const getIcon = (rec: any): LucideIcon => {
-                      const category = rec.category?.toLowerCase() || '';
-                      const text = (rec.text || rec.action || '').toLowerCase();
-                      
-                      if (category.includes('trust') || text.includes('trust') || text.includes('guarantee') || text.includes('badge')) {
-                        return Shield;
-                      }
-                      if (category.includes('clarity') || text.includes('clarity') || text.includes('clear') || text.includes('explain')) {
-                        return Eye;
-                      }
-                      if (category.includes('value') || text.includes('value') || text.includes('benefit')) {
-                        return Target;
-                      }
-                      if (category.includes('message') || text.includes('message') || text.includes('copy')) {
-                        return MessageSquare;
-                      }
-                      if (category.includes('structure') || text.includes('layout') || text.includes('structure')) {
-                        return Layout;
-                      }
-                      if (category.includes('timing') || text.includes('timing') || text.includes('flow')) {
-                        return Clock;
-                      }
-                      if (text.includes('speed') || text.includes('fast') || text.includes('quick')) {
-                        return Zap;
-                      }
-                      // Default icon
-                      return Target;
-                    };
-
-                    // Helper function to get impact label
-                    const getImpactLabel = (rec: any): string => {
-                      if (rec.impact) return rec.impact;
-                      
-                      const text = (rec.text || rec.action || '').toLowerCase();
-                      if (text.includes('trust')) return 'Trust ↑';
-                      if (text.includes('clarity')) return 'Clarity ↑';
-                      if (text.includes('value')) return 'Value ↑';
-                      if (text.includes('conversion')) return 'Conversion ↑';
-                      if (text.includes('engagement')) return 'Engagement ↑';
-                      
-                      return 'Impact: High';
-                    };
-
-                    // Normalize recommendations to a flat array
-                    const normalizeRecommendations = (): Array<{ text: string; category?: string; impact?: string; priority?: string; icon?: string }> => {
-                      const items: Array<{ text: string; category?: string; impact?: string; priority?: string; icon?: string }> = [];
-                      
-                      const recs = diagnosis.recommendations;
-                      if (!recs) return items;
-                      
-                      if (Array.isArray(recs)) {
-                        // Check if it's the new recommendation_engine format (object array)
-                        if (recs.length > 0 && typeof recs[0] === 'object' && recs[0] !== null && ('action' in recs[0] || 'text' in recs[0])) {
-                          return recs.map((rec: any) => ({
-                            text: rec.action || rec.text || '',
-                            category: rec.category,
-                            impact: rec.impact,
-                            priority: rec.priority,
-                            icon: rec.icon
-                          }));
-                        }
-                        // Simple string array
-                        return recs.map((rec: any) => {
-                          if (typeof rec === 'string') {
-                            return { text: rec };
-                          }
-                          return { text: rec.action || rec.text || '' };
-                        });
-                      }
-                      
-                      // Structured format (object with message/structure/timing)
-                      if (typeof recs === 'object' && 'message' in recs) {
-                        const structured = recs as { message?: string[]; structure?: string[]; timing?: string[] };
-                        if (structured.message) {
-                          structured.message.forEach((rec: string) => {
-                            items.push({ text: rec, category: 'message' });
-                          });
-                        }
-                        if (structured.structure) {
-                          structured.structure.forEach((rec: string) => {
-                            items.push({ text: rec, category: 'structure' });
-                          });
-                        }
-                        if (structured.timing) {
-                          structured.timing.forEach((rec: string) => {
-                            items.push({ text: rec, category: 'timing' });
-                          });
-                        }
-                      }
-                      
-                      return items;
-                    };
-
-                    const normalizedRecs = normalizeRecommendations();
-                    
-                    if (normalizedRecs.length === 0) return null;
-
-                    return (
-                      <div className="border border-slate-800 rounded-xl bg-slate-800/70 p-6 space-y-4">
-                        <h2 className="text-xl font-semibold text-white">🚀 Action Plan: Fix These First</h2>
-                        
-                        <div className="space-y-3">
-                          {normalizedRecs.map((rec, index) => {
-                            const isFirst = index === 0;
-                            const { verb, rest } = extractAction(rec.text);
-                            const Icon = getIcon(rec);
-                            const impactLabel = getImpactLabel(rec);
-                            
-                            return (
-                              <div
-                                key={index}
-                                className={`rounded-lg border p-4 transition-all ${
-                                  isFirst
-                                    ? 'border-orange-500/50 bg-gradient-to-br from-orange-500/10 to-orange-600/5 border-2'
-                                    : 'border-slate-700 bg-slate-700/30'
-                                }`}
-                              >
-                                <div className="flex items-start gap-3">
-                                  <div className={`mt-0.5 ${isFirst ? 'text-orange-400' : 'text-slate-400'}`}>
-                                    <Icon className="w-5 h-5" />
-                                  </div>
-                                  <div className="flex-1 space-y-2">
-                                    <div className="flex items-start justify-between gap-2">
-                                      <div className="flex-1">
-                                        {isFirst && (
-                                          <span className="inline-flex items-center rounded-full bg-orange-500/20 border border-orange-500/30 px-2 py-0.5 text-xs font-semibold text-orange-300 mb-2">
-                                            🔥 High Priority
-                                          </span>
-                                        )}
-                                        <p className="text-sm text-gray-200 leading-relaxed">
-                                          {verb ? (
-                                            <>
-                                              <span className="font-bold text-white">{verb}</span>
-                                              {rest && ` ${rest}`}
-                                            </>
-                                          ) : (
-                                            rec.text
-                                          )}
-                                        </p>
-                                      </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xs text-gray-400 font-medium">
-                                        {impactLabel}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  {/* Next Diagnostic Step */}
-                  {diagnosis.next_step && (
-                    <div className="border border-indigo-500/30 rounded-xl bg-indigo-500/10 p-6">
-                      <h2 className="text-lg font-semibold text-indigo-300 mb-2">
-                        Next Diagnostic Step
-                      </h2>
-                      <p className="text-sm text-gray-200">{diagnosis.next_step}</p>
-                    </div>
-                  )}
-                </div>
-                );
+                const normalized = normalizeDecision(diagnosis);
+                return <DecisionReport normalized={normalized} raw={diagnosis} />;
               })()}
             </div>
           </div>

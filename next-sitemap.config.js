@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://www.nimasaraeian.com',
+  siteUrl: 'https://nimasaraeian.com',
   generateRobotsTxt: true,
   changefreq: 'weekly',
   priority: 0.7,
@@ -51,8 +51,8 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      'https://www.nimasaraeian.com/image-sitemap.xml',
-      'https://www.nimasaraeian.com/articles-sitemap.xml'
+      'https://nimasaraeian.com/image-sitemap.xml',
+      'https://nimasaraeian.com/articles-sitemap.xml'
     ],
   },
 };

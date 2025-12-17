@@ -33,7 +33,7 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -427,6 +427,128 @@ async def cognitive_friction(
         
     except HTTPException:
         raise  # Re-raise HTTP exceptions
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+@app.api_route("/analyze-url", methods=["OPTIONS", "POST"])
+async def analyze_url(request: Request):
+    """
+    Analyze URL endpoint for Decision Brain Dashboard.
+    
+    Handles both OPTIONS (for CORS preflight) and POST requests.
+    
+    Accepts JSON payload with:
+    - url: Optional URL to scrape
+    - raw_text: Optional text content
+    - image: Optional base64-encoded image
+    - image_type: Optional image MIME type
+    
+    If URL is provided, scrapes it and uses the content for analysis.
+    Forwards the request to the main brain backend for analysis.
+    """
+    # Handle OPTIONS preflight request
+    if request.method == "OPTIONS":
+        from fastapi.responses import Response
+        return Response(
+            status_code=200,
+            headers={
+                "Access-Control-Allow-Origin": "http://localhost:3001",
+                "Access-Control-Allow-Methods": "POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Max-Age": "3600",
+            }
+        )
+    
+    try:
+        # Parse JSON request body (only for POST requests)
+        body = await request.json()
+        url = body.get("url")
+        raw_text = body.get("raw_text", "")
+        image_base64 = body.get("image")
+        image_type = body.get("image_type")
+        
+        # If URL is provided, scrape it
+        if url:
+            try:
+                scraped_text = scrape_url(url)
+                # Combine with raw_text if provided
+                if raw_text:
+                    raw_text = f"{raw_text}\n\n{scraped_text}"
+                else:
+                    raw_text = scraped_text
+            except Exception as e:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Failed to scrape URL: {str(e)}"
+                )
+        
+        # Validate that we have content
+        if not raw_text and not image_base64:
+            raise HTTPException(
+                status_code=400,
+                detail="Either URL, raw_text, or image must be provided for analysis."
+            )
+        
+        # Get the main Brain backend URL from environment
+        main_brain_url = os.getenv("MAIN_BRAIN_BACKEND_URL") or os.getenv("BRAIN_BACKEND_URL")
+        
+        if not main_brain_url or main_brain_url == "https://your-main-brain-backend.com":
+            raise HTTPException(
+                status_code=500,
+                detail="Main brain backend URL not configured. Please set MAIN_BRAIN_BACKEND_URL or BRAIN_BACKEND_URL environment variable."
+            )
+        
+        # Prepare payload for main brain backend
+        brain_payload = {
+            "raw_text": raw_text,
+            "platform": "landing_page",
+            "goal": [],
+            "audience": "cold",
+            "language": "en",
+            "meta": {},
+        }
+        
+        if image_base64:
+            brain_payload["image"] = image_base64
+            if image_type:
+                brain_payload["image_type"] = image_type
+        
+        # Forward to main brain backend
+        brain_endpoint = f"{main_brain_url.rstrip('/')}/api/brain"
+        print(f"🔄 Forwarding to main brain backend: {brain_endpoint}")
+        print(f"📦 Payload: raw_text length={len(raw_text) if raw_text else 0}, has_image={bool(image_base64)}")
+        
+        try:
+            response = requests.post(
+                brain_endpoint,
+                json=brain_payload,
+                headers={"Content-Type": "application/json"},
+                timeout=120
+            )
+            response.raise_for_status()
+            result = response.json()
+            print(f"✅ Received analysis from main brain backend")
+            return result
+        except requests.exceptions.RequestException as e:
+            error_msg = str(e)
+            if hasattr(e, 'response') and e.response is not None:
+                try:
+                    error_json = e.response.json()
+                    error_detail = error_json.get('detail', error_json.get('error', error_json.get('message', error_msg)))
+                except:
+                    error_detail = e.response.text or error_msg
+                raise HTTPException(
+                    status_code=e.response.status_code,
+                    detail=f"Main brain backend error: {error_detail}"
+                )
+            else:
+                raise HTTPException(
+                    status_code=502,
+                    detail=f"Failed to connect to main brain backend at {brain_endpoint}: {error_msg}"
+                )
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
