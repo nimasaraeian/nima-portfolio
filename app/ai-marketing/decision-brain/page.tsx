@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 import DecisionVisualEvidence from "./DecisionVisualEvidence";
 import { ScreenshotPreviewSectionWrapper, screenshotSrc } from "@/components/ScreenshotPreviewSection";
 
@@ -116,6 +119,17 @@ type Result = HDRResponse & {
 function formatReport(text?: string): string {
   if (!text) return "";
   return text.trim();
+}
+
+// Report component with ReactMarkdown + GFM support
+function Report({ text }: { text: string }) {
+  return (
+    <div className="prose prose-invert max-w-none prose-sm prose-headings:text-white prose-p:text-white/90 prose-strong:text-white prose-a:text-blue-400 prose-code:text-blue-300 prose-pre:bg-slate-900 prose-pre:border prose-pre:border-white/10">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
+        {text || ""}
+      </ReactMarkdown>
+    </div>
+  );
 }
 
 // Helper to convert relative URLs to absolute
@@ -499,7 +513,7 @@ export default function DecisionBrainHumanUI() {
             Human Decision Review
           </h1>
           <p className="mt-2 text-sm text-white/70">
-            Paste a URL. You'll get a human-readable conversion report — no scores, no dashboards.
+            Paste a URL. You'll get a human-readable conversion report with visual evidence.
           </p>
         </header>
 
@@ -560,29 +574,6 @@ export default function DecisionBrainHumanUI() {
           </div>
           ) : (
             <>
-              {/* Decision Visual Evidence Dashboard */}
-              <DecisionVisualEvidence
-                screenshots={{
-                  hero: result?.screenshots?.hero,
-                  full: result?.screenshots?.full,
-                  desktop: result?.screenshot?.desktop || result?.screenshots?.desktop || result?.screenshot?.url,
-                  mobile: result?.screenshot?.mobile || result?.screenshots?.mobile || result?.screenshot?.url,
-                  desktop_fold: result?.screenshots?.desktop_fold,
-                  mobile_fold: result?.screenshots?.mobile_fold,
-                  desktop_full: result?.screenshots?.desktop_full,
-                  mobile_full: result?.screenshots?.mobile_full,
-                }}
-                signals={{
-                  clarity: result?.decisionSignals?.clarity,
-                  trust: result?.decisionSignals?.trust,
-                  friction: result?.decisionSignals?.friction,
-                }}
-                categories={result?.categories}
-                score={result?.score}
-                issues={result?.issues}
-                uxMetrics={result?.uxMetrics}
-              />
-
               {/* Screenshot Preview Section - Desktop + Mobile (MANDATORY) */}
               {(() => {
                 // Extract screenshot data - ensure desktop gets desktop, mobile gets mobile (no mixing)
@@ -649,8 +640,8 @@ export default function DecisionBrainHumanUI() {
                       {copySuccess ? "Copied!" : "Copy report"}
                     </button>
                   </div>
-                  <div className="mt-4 whitespace-pre-wrap text-sm leading-7 text-white/90">
-                    {report}
+                  <div className="mt-4 text-sm leading-7 text-white/90">
+                    <Report text={report} />
                   </div>
                 </div>
               ) : (
