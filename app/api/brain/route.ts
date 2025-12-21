@@ -1,22 +1,24 @@
 import { NextRequest } from 'next/server';
 import { jsonResponse } from '@/lib/jsonResponse';
+import { getApiBase } from '@/src/lib/apiBase';
 
 // Force dynamic rendering - don't pre-render at build time
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-const DEFAULT_BACKEND_URL = 'http://127.0.0.1:8000';
 const BACKEND_PATH = '/api/brain/cognitive-friction';
 
 function resolveBackendUrl(): string {
-  const baseUrl =
-    process.env.BACKEND_URL ||
-    process.env.NEXT_PUBLIC_BRAIN_API_URL ||
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    process.env.BRAIN_API_BASE_URL ||
-    DEFAULT_BACKEND_URL;
-
-  return baseUrl.replace(/\/$/, '');
+  const baseUrl = getApiBase();
+  
+  // If no base URL is set, log a warning (should be set in production)
+  if (!baseUrl) {
+    console.warn(
+      '⚠️ No backend URL configured. Set NEXT_PUBLIC_BACKEND_URL or NEXT_PUBLIC_BRAIN_API_URL in environment variables.'
+    );
+  }
+  
+  return baseUrl;
 }
 
 function extractTextFromBody(body: Record<string, any> | null): string {

@@ -6,8 +6,8 @@ import { getCanonicalUrl } from '@/app/lib/seo';
 import { generateWebPageSchema } from '@/app/lib/structured-data';
 
 export const metadata: Metadata = {
-  title: 'AI Marketing Specialist | Behavioral Marketing Strategist & CRO Expert | Nima Saraeian',
-  description: 'AI Marketing Specialist who builds AI-powered marketing systems combining behavioral psychology, decision analysis, and automation. Expert in CRO, conversion optimization, and data-driven growth strategies.',
+  title: 'AI Marketing & Performance Marketing Strategist | Behavioral Conversion',
+  description: 'AI Marketing strategist specializing in performance marketing, behavioral psychology, and decision-based CRO. I design AI-powered systems that diagnose conversion friction and optimize user decisions.',
   keywords: 'Nima Saraeian, AI Marketing, Marketing Strategy, Selflyzer, Consumer Behavior, AI-Driven Marketing, Digital Marketing',
   alternates: {
     canonical: getCanonicalUrl('/'),
@@ -135,7 +135,7 @@ export default function Home() {
           <div className="flex-1 text-center md:text-left">
             <p className="text-sm uppercase tracking-[0.4em] text-blue-200/80">AI Marketing Specialist · Behavioral Marketing Strategist · Growth Consultant</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl lg:text-7xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              AI Marketing Specialist & Behavioral Marketing Strategist
+              AI Marketing & Performance Marketing Strategist
             </h1>
             <p className="mt-6 text-lg text-gray-300 sm:text-xl">
               I am an AI Marketing Specialist who builds AI-powered marketing systems that understand customers deeply, predict behavior, and turn insight into measurable growth — combining automation, psychometrics, and data-driven strategy. My approach focuses on <Link href="/services" className="underline text-blue-300 hover:text-blue-200">conversion optimization</Link> and <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-blue-300 hover:text-blue-200">behavioral AI frameworks</Link> that transform hesitation into decisions.
@@ -168,6 +168,28 @@ export default function Home() {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
+        <div className="space-y-6 mb-12">
+          <h2 className="text-2xl font-semibold text-white sm:text-3xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Decision-Driven Performance Marketing with AI
+          </h2>
+          <p className="text-base leading-relaxed text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Performance marketing has evolved beyond clicks, impressions, and CPA.
+            Today, AI marketing systems must understand <strong>why users hesitate</strong>,
+            <strong>where decision friction occurs</strong>, and <strong>how behavioral signals shape conversion</strong>.
+          </p>
+          <p className="text-base leading-relaxed text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            I specialize in <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI-driven performance marketing</Link> that combines behavioral psychology,
+            decision intelligence, and <Link href="/ai-marketing/decision-brain" className="underline text-blue-300 hover:text-blue-200">decision-based conversion optimization</Link> to diagnose
+            hidden blockers in digital journeys.
+          </p>
+          <p className="text-base leading-relaxed text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Instead of optimizing metrics alone, I analyze user decision patterns,
+            cognitive friction, and trust signals to improve real business outcomes. Learn more about <Link href="/articles" className="underline text-blue-300 hover:text-blue-200">performance marketing strategies</Link> and behavioral AI marketing systems.
+          </p>
         </div>
       </section>
 

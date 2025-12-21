@@ -1,6 +1,22 @@
+import { getApiBase } from '@/src/lib/apiBase';
+
 export async function POST(req: Request) {
-  const backendBaseUrl =
-    process.env.BACKEND_BASE_URL ?? "http://127.0.0.1:8000";
+  const backendBaseUrl = getApiBase() || (process.env.BACKEND_BASE_URL ?? '');
+  
+  if (!backendBaseUrl) {
+    return new Response(
+      JSON.stringify({
+        error: 'backend_not_configured',
+        detail: 'Backend URL not configured. Please set NEXT_PUBLIC_BACKEND_URL or NEXT_PUBLIC_BRAIN_API_URL in environment variables.',
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 
   try {
       const formData = await req.formData();

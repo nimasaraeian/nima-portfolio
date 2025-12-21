@@ -1,14 +1,13 @@
 /// <reference path="../shared/ai-brain-types/types-generated.js" />
 
-const API_BASE = process.env.NEXT_PUBLIC_BRAIN_API_URL;
-
 /**
  * Call the Brain API
+ * Uses relative URL to work with Next.js API routes
  * @param {BrainRequest} payload
  * @returns {Promise<BrainResponse>}
  */
 export async function callBrainAPI(payload) {
-  const res = await fetch(`${API_BASE}/api/brain`, {
+  const res = await fetch('/api/brain', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

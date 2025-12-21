@@ -2,7 +2,7 @@
  * API Client Helper for Brain API
  * 
  * This module provides a centralized way to communicate with the backend Brain API.
- * It uses the NEXT_PUBLIC_API_BASE_URL environment variable for configuration.
+ * It uses the centralized getApiBase() function for configuration.
  * 
  * Usage:
  *   import { postToBrain } from '@/lib/apiClient';
@@ -10,46 +10,7 @@
  */
 
 import type { ImageTrustAPIResponse } from '@/app/ai-marketing/brain-types';
-
-/**
- * Default backend URL for local development
- */
-const DEFAULT_DEV_BRAIN_URL = 'http://127.0.0.1:8000';
-
-/**
- * Gets the base URL for the Brain API.
- * In browser: uses relative URLs (Next.js API routes)
- * In server: uses NEXT_PUBLIC_API_BASE_URL or falls back to default dev URL
- */
-function getApiBaseUrl(): string {
-  // In browser, always use relative URLs (Next.js API routes)
-  if (typeof window !== 'undefined') {
-    return '';
-  }
-  
-  // In server-side code, try environment variables first
-  const baseUrl = 
-    process.env.NEXT_PUBLIC_BRAIN_API_URL ||
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    process.env.BRAIN_API_BASE_URL;
-  
-  if (baseUrl) {
-    return baseUrl;
-  }
-  
-  // Fallback to default dev URL
-  if (process.env.NODE_ENV === 'development') {
-    console.warn(
-      '⚠️  No Brain API URL configured. ' +
-      `Using default dev URL: ${DEFAULT_DEV_BRAIN_URL}. ` +
-      'Set NEXT_PUBLIC_BRAIN_API_URL to override.'
-    );
-    return DEFAULT_DEV_BRAIN_URL;
-  }
-  
-  // Production fallback (can be updated later)
-  return DEFAULT_DEV_BRAIN_URL;
-}
+import { getApiBase } from '@/src/lib/apiBase';
 
 // Shared marketing/behavior types
 export type ContentType =
@@ -90,10 +51,10 @@ export const GOALS_BY_TYPE: Record<ContentType, PrimaryGoal[]> = {
  * @throws Error if the request fails or environment variable is missing
  */
 export async function postToBrain<T = any>(path: string, payload: any): Promise<T> {
-  const baseUrl = getApiBaseUrl();
-  // Ensure path starts with / if baseUrl is provided
+  const baseUrl = getApiBase();
+  // Ensure path starts with /
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  const url = `${baseUrl}${normalizedPath}`;
+  const url = baseUrl ? `${baseUrl}${normalizedPath}` : normalizedPath;
 
   // Log payload info (without full base64 to avoid console spam)
   const payloadInfo = { ...payload };
@@ -143,8 +104,8 @@ export async function postToBrain<T = any>(path: string, payload: any): Promise<
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       console.error(`❌ Brain API connection failed for ${url}:`, error.message);
       throw new Error(
-        `Failed to connect to backend API at ${url}. ` +
-        'Please ensure the backend is running on http://127.0.0.1:8000'
+        `Failed to connect to backend API${baseUrl ? ` at ${baseUrl}` : ''}. ` +
+        'Please ensure the backend is running and NEXT_PUBLIC_BACKEND_URL is configured.'
       );
     }
     
@@ -172,19 +133,6 @@ export async function analyzeCrictionWithImage(input: CognitiveFrictionInput) {
 
 // backward‑compatible alias name
 export const analyzeCognitiveFriction = analyzeCrictionWithImage;
-
-/**
- * Backend base URL for visual trust analysis
- * Priority: BACKEND_BASE_URL > NEXT_PUBLIC_BACKEND_URL > Railway default
- * NOTE: Replace <YOUR_RAILWAY_BACKEND_URL> with your actual Railway backend URL
- */
-export const BACKEND_BASE_URL =
-  process.env.BACKEND_BASE_URL ||
-  process.env.NEXT_PUBLIC_BACKEND_URL ||
-  (process.env.NODE_ENV === 'production' ? '<YOUR_RAILWAY_BACKEND_URL>' : 'http://127.0.0.1:8000');
-
-export const IMAGE_TRUST_API_URL = `${BACKEND_BASE_URL}/api/analyze/image-trust`;
-export const HEALTH_URL = `${BACKEND_BASE_URL}/health`;
 
 /**
  * Runs visual trust analysis on an uploaded image file
@@ -241,7 +189,9 @@ export async function runVisualTrustAnalysis(file: File): Promise<ImageTrustAPIR
  * @throws Error if the health check fails
  */
 export async function checkBackendHealth() {
-  const res = await fetch(HEALTH_URL);
+  const baseUrl = getApiBase();
+  const healthUrl = baseUrl ? `${baseUrl}/health` : '/api/health';
+  const res = await fetch(healthUrl, { method: 'GET' });
   if (!res.ok) {
     throw new Error("Backend health check failed");
   }

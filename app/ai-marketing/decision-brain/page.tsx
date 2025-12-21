@@ -132,11 +132,19 @@ function Report({ text }: { text: string }) {
   );
 }
 
+import { getApiBase } from '@/src/lib/apiBase';
+
 // Helper to convert relative URLs to absolute
 const toAbsolute = (u: string | undefined): string => {
   if (!u) return "";
   if (u.startsWith("http")) return u;
-  const base = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+  
+  const base = getApiBase();
+  if (!base) {
+    // If no base URL, assume relative path works
+    return u.startsWith('/') ? u : `/${u}`;
+  }
+  
   return `${base}${u}`;
 };
 
@@ -297,7 +305,7 @@ export default function DecisionBrainHumanUI() {
     setError(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setError(null);
     setResult(null);
@@ -311,11 +319,9 @@ export default function DecisionBrainHumanUI() {
     setIsLoading(true);
 
     try {
-      const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000";
-      
       let res: Response;
       try {
-        res = await fetch(`${API_BASE}/api/analyze/url-human`, {
+        res = await fetch('/api/analyze/url-human', {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
@@ -599,20 +605,21 @@ export default function DecisionBrainHumanUI() {
                 });
                 
                 // Extract evidence payloads (support both single evidence and separate desktop/mobile)
-                const desktopEvidence = result?.evidence?.desktop || 
-                                      (result?.evidence?.viewport === "desktop" ? result?.evidence : undefined);
-                const mobileEvidence = result?.evidence?.mobile || 
-                                     (result?.evidence?.viewport === "mobile" ? result?.evidence : undefined);
+                const evidence = result?.evidence;
+                const desktopEvidence = (evidence && 'desktop' in evidence ? evidence.desktop : undefined) || 
+                                      (evidence && 'viewport' in evidence && evidence.viewport === "desktop" ? evidence : undefined);
+                const mobileEvidence = (evidence && 'mobile' in evidence ? evidence.mobile : undefined) || 
+                                     (evidence && 'viewport' in evidence && evidence.viewport === "mobile" ? evidence : undefined);
                 
                 // Get status and error from new schema
-                const desktopStatus = typeof desktopShot === "object" && desktopShot?.status 
-                  ? desktopShot.status 
-                  : (desktopShot ? "ok" : "error");
-                const mobileStatus = typeof mobileShot === "object" && mobileShot?.status 
-                  ? mobileShot.status 
-                  : (mobileShot ? "ok" : "error");
-                const desktopError = typeof desktopShot === "object" && desktopShot?.error 
-                  ? desktopShot.error 
+                const desktopStatus = (typeof desktopShot === "object" && desktopShot !== null && 'status' in desktopShot) 
+                  ? (desktopShot as { status?: "ok" | "error" }).status 
+                  : (desktopShot ? "ok" : "error") as "ok" | "error";
+                const mobileStatus = (typeof mobileShot === "object" && mobileShot !== null && 'status' in mobileShot) 
+                  ? (mobileShot as { status?: "ok" | "error" }).status 
+                  : (mobileShot ? "ok" : "error") as "ok" | "error";
+                const desktopError = (typeof desktopShot === "object" && desktopShot !== null && 'error' in desktopShot) 
+                  ? (desktopShot as { error?: string }).error 
                   : undefined;
                 
                 return (

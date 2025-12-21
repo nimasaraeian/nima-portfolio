@@ -9,6 +9,23 @@ FastAPI backend for AI Marketing Brain modules.
    pip install -r requirements.txt
    ```
 
+2. **Install Playwright browsers (for screenshot functionality):**
+   ```bash
+   # Install Playwright package (if not already installed)
+   pip install playwright
+   
+   # Install Chromium browser (REQUIRED for screenshots)
+   playwright install chromium
+   
+   # Verify installation
+   python -c "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); p.stop(); print('✅ Playwright is working!')"
+   ```
+   
+   **Important:** If you see "Desktop preview not available – screenshot service failed", it usually means:
+   - Playwright is not installed: `pip install playwright`
+   - Chromium browser is not installed: `playwright install chromium`
+   - Check backend logs for specific error messages
+
 2. **Set environment variables:**
    
    Create `.env.local` in the project root:

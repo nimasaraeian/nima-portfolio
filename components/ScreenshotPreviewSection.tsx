@@ -36,16 +36,22 @@ const getScreenshotPathOrUrl = (s: ScreenshotAny): string => {
   return "";
 };
 
+import { getApiBase } from '@/src/lib/apiBase';
+
 // Helper to build absolute URL from relative path
 const buildAbsoluteUrl = (u: string): string => {
   if (!u) return "";
   if (u.startsWith("http") || u.startsWith("data:")) return u;
-  const base =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    process.env.NEXT_PUBLIC_BACKEND_URL ||
-    "http://127.0.0.1:8000";
+  
+  // For client-side, use relative URLs (Next.js API routes)
+  const base = getApiBase();
+  if (!base) {
+    // If no base URL, assume relative path works
+    return u.startsWith('/') ? u : `/${u}`;
+  }
+  
   // Ensure single slash between base and path
-  return `${base.replace(/\/$/, "")}/${u.replace(/^\//, "")}`;
+  return `${base}/${u.replace(/^\//, "")}`;
 };
 
 // Main helper to get screenshot src URL

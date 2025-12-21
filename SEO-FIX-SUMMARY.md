@@ -224,3 +224,9 @@ node scripts/seo-check.mjs
 - ✅ Improved index ratio (should increase from 15/156 to much higher as tools are excluded)
 
 
+
+
+
+
+
+

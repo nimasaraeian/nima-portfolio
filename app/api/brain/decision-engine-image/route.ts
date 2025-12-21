@@ -58,22 +58,13 @@ If the image contains NO pricing, CTA, guarantee, or decision-related informatio
 
 Focus on text that directly impacts whether a user will make a purchase, signup, or conversion decision.`;
 
-/**
- * Default backend URL for local development
- */
-const DEFAULT_DEV_BRAIN_URL = 'http://127.0.0.1:8000';
+import { getApiBase } from '@/src/lib/apiBase';
 
 /**
- * Get backend URL from environment variables or use default
+ * Get backend URL from environment variables
  */
 function getBackendUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_NIMA_BRAIN_API_URL ||
-    process.env.NEXT_PUBLIC_BRAIN_API_URL ||
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    process.env.BRAIN_API_BASE_URL ||
-    DEFAULT_DEV_BRAIN_URL
-  ).replace(/\/$/, '');
+  return getApiBase();
 }
 
 export async function POST(req: NextRequest) {

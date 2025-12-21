@@ -87,11 +87,11 @@ export default function ServicesPage() {
             {/* Text Content */}
             <div>
               <h1 className="mb-6 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl text-white tracking-tight" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                AI Marketing Services: CRO Strategy & Conversion Optimization
+                AI Marketing Services for Conversion, CRO & Performance Growth
       </h1>
 
               <p className="mb-6 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Our AI Marketing Services combine CRO strategy, performance marketing consulting, and conversion optimization to transform user hesitation into measurable growth. We deliver data-driven services that leverage behavioral psychology and AI-driven optimization. Learn more about our <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">cognitive friction framework</Link> and <Link href="/cro-copywriting" className="underline text-emerald-300 hover:text-emerald-200">AI-first CRO copywriting approach</Link>.
+                I deliver AI marketing services focused on conversion growth—combining CRO strategy, performance marketing, and behavioral psychology to reduce decision friction and increase revenue. These services are built around trust signals, user hesitation diagnosis, and AI-driven optimization.
               </p>
 
               <h2 className="mb-10 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
@@ -106,10 +106,10 @@ export default function ServicesPage() {
                   Request a Behavioral Diagnosis
                 </Link>
                 <Link
-                  href="/projects?utm_source=services&utm_medium=secondary_cta&utm_campaign=view_work"
-                  className="inline-flex items-center justify-center text-gray-300 hover:text-white px-8 py-4 text-base font-medium transition-colors underline decoration-2 underline-offset-4"
+                  href="/contact?utm_source=services&utm_medium=hero_cta&utm_campaign=growth_cro_project"
+                  className="inline-flex items-center justify-center rounded-lg border border-white/50 bg-transparent text-white px-8 py-4 text-base font-medium hover:bg-white/10 transition-colors"
                 >
-                  View Strategy & Optimization Work
+                  Discuss a Growth & CRO Project
                 </Link>
               </div>
             </div>
@@ -226,6 +226,23 @@ export default function ServicesPage() {
           </p>
 
           <div className="space-y-6">
+            {/* Subsection 0 - Conversion Audit */}
+            <Link
+              href="/decision-diagnostic"
+              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
+            >
+              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Conversion Audit
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                A structured decision audit to identify why users hesitate before converting. Get a concise report with top blockers, trust gaps, and prioritized fixes within 48 hours.
+              </p>
+              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Explore conversion audit
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
+
             {/* Subsection 1 */}
             <Link
               href="/services/decision-friction-diagnosis"

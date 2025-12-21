@@ -64,3 +64,9 @@ MAIN_BRAIN_BACKEND_URL=http://your-main-brain-backend-url.com
 ✅ OPTIONS handler حذف شد (CORS middleware خودش handle می‌کند)
 
 
+
+
+
+
+
+

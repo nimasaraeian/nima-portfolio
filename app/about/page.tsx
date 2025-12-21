@@ -52,12 +52,13 @@ const ecosystemBenefits = [
 
 const capabilities = [
   'AI Marketing Strategy',
+  'Performance Marketing & CRO',
   'Behavioral & Psychometric Analysis',
-  'UX Research & Product Design',
   'AI-Driven Content Systems',
+  'UX Research & Product Design',
   'Social Media Behavior Mapping',
-  'Automation Systems for Clinics & Service Businesses',
   'Predictive Consumer Modeling',
+  'Automation Systems for Clinics & Service Businesses',
 ];
 
 const researchFocus = [
@@ -93,7 +94,7 @@ export default function AboutPage() {
   
   const webPageSchema = generateWebPageSchema({
     name: "Nima Saraeian | AI Marketing Background",
-    description: "Learn about Nima Saraeian, AI Marketing Specialist with extensive background in behavioral marketing and strategic consulting.",
+    description: "Learn about Nima Saraeian, AI & performance marketing strategist with extensive background in behavioral marketing and strategic consulting.",
     url: canonicalUrl,
   });
 
@@ -101,6 +102,21 @@ export default function AboutPage() {
     { name: "Home", url: getCanonicalUrl('/') },
     { name: "About", url: canonicalUrl },
   ]);
+
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Nima Saraeian",
+    "jobTitle": "AI Marketing & Performance Marketing Strategist",
+    "image": "https://nimasaraeian.com/image/nima-saraeian-ai-marketing-strategist.jpg",
+    "url": "https://nimasaraeian.com/",
+    "sameAs": [
+      "https://www.linkedin.com/in/nimasaraian/",
+      "https://x.com/NSaraeian",
+      "https://www.instagram.com/nima.saraeian",
+      "https://www.youtube.com/@nimasaraeian8664"
+    ]
+  };
 
   return (
     <main className="bg-black text-white">
@@ -112,42 +128,44 @@ export default function AboutPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
       <section className="border-b border-white/10 bg-gradient-to-b from-black via-black/80 to-black">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-4 pb-16 pt-24 sm:px-6 md:flex-row md:items-start md:px-10 lg:px-12">
           <div className="flex-1 text-center md:text-left">
             <p className="text-sm uppercase tracking-[0.4em] text-blue-200/80">About Nima Saraeian</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              AI Marketing Specialist · Behavioral Marketing Strategist · UX Researcher
+              AI Marketing & Performance Marketing Strategist
             </h1>
-            <p className="mt-3 text-base text-gray-400" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Founder of Selphlyze & Contlyze
-            </p>
-            <p className="mt-6 text-lg text-gray-300 sm:text-xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              I'm Nima Saraeian — an AI Marketing Specialist, strategist, and researcher working at the intersection of AI, behavioral psychology, UX, and digital marketing.
-            </p>
             <p className="mt-4 text-lg text-gray-300 sm:text-xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              For more than 12 years, my work has focused on one core question: why do people think, feel, decide, and behave the way they do online — and how can we turn those patterns into intelligent, human-centered marketing systems?
+              Behavioral strategist focused on decision psychology, AI-driven performance systems, and human-centered design.
+            </p>
+            <p className="mt-2 text-sm text-gray-400" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              UX Researcher · Founder of Selphlyze & Contlyze
             </p>
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
               <Link
                 href="/contact"
                 className="w-full rounded-full bg-white px-6 py-3 text-center text-sm font-semibold text-black transition hover:bg-gray-200 sm:w-auto"
               >
-                Get In Touch
+                Work With Me
               </Link>
-              <a
-                href="/cv-nima-saraeian.pdf"
-                className="w-full rounded-full border border-white/40 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
+              <Link
+                href="/services"
+                className="w-full rounded-full border border-white/50 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
               >
-                Download CV
-              </a>
+                View AI Marketing Services
+              </Link>
             </div>
           </div>
           <div className="flex-1">
             <div className="relative mx-auto max-w-xs overflow-hidden rounded-[46%] border border-white/10 bg-white/5 p-4 shadow-2xl">
               <Image
-                src="/image/nima-bw.jpg"
-                alt="Portrait of Nima Saraeian"
+                src="/image/nima-saraeian-ai-marketing-strategist.jpg"
+                alt="Nima Saraeian – AI Marketing & Performance Marketing Strategist"
+                title="Nima Saraeian, AI Marketing & Performance Marketing Strategist"
                 width={360}
                 height={360}
                 className="h-auto w-full grayscale"
@@ -156,6 +174,20 @@ export default function AboutPage() {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
+        <div className="space-y-4 text-lg leading-relaxed text-gray-300 mb-12" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+          <p>
+            I'm Nima Saraeian — an AI and performance marketing strategist working at the intersection of behavioral psychology, CRO, and human-centered design.
+          </p>
+          <p>
+            I design AI-powered systems that <Link href="/ai-marketing/decision-brain" className="underline text-blue-300 hover:text-blue-200">diagnose decision friction</Link> and turn behavioral signals into measurable growth.
+          </p>
+          <p>
+            This page outlines my background, approach, and the Selphlyze & Contlyze ecosystem behind my work.
+          </p>
         </div>
       </section>
 
@@ -190,6 +222,9 @@ export default function AboutPage() {
         <p className="mt-8 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
           This combination allows me to design AI-driven marketing strategies and UX frameworks that are both intelligent and emotionally aligned.
         </p>
+        <p className="mt-4 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+          Together, these pillars shape how I approach <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI-driven performance marketing</Link> and decision-based conversion optimization.
+        </p>
       </section>
 
       <section className="border-t border-white/10 bg-black/80">
@@ -200,7 +235,10 @@ export default function AboutPage() {
                 ✅ What I Do
               </h2>
               <p className="mt-4 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                I design AI-powered systems and strategies for companies that want to understand their users deeply, improve digital experiences, and grow with intelligent automation.
+                I design <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI-powered systems</Link> and strategies for companies that want to understand their users deeply, improve digital experiences, and grow with intelligent automation.
+              </p>
+              <p className="mt-4 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Learn more about my <Link href="/research" className="underline text-blue-300 hover:text-blue-200">research</Link> and <Link href="/ai-marketing/decision-brain" className="underline text-blue-300 hover:text-blue-200">decision friction analysis</Link> approaches.
               </p>
             </div>
             <ul className="grid gap-4">
@@ -242,7 +280,7 @@ export default function AboutPage() {
             ))}
           </ul>
           <p className="mt-6 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            This ecosystem is the backbone of how I design AI-driven marketing strategies for businesses, clinics, creators, and global brands.
+            This ecosystem is the backbone of how I design <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI-driven marketing strategies</Link> for businesses, clinics, creators, and global brands.
           </p>
         </div>
       </section>
@@ -255,7 +293,7 @@ export default function AboutPage() {
                 ✅ Research Background
               </h2>
               <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                My research integrates cognitive psychology, aesthetic perception, behavioral data, and AI-driven decision modeling. I'm designing a unified framework that explains and predicts digital consumer decisions across cultures using real-world datasets, AI models, and long-term behavioral patterns.
+                My <Link href="/research" className="underline text-blue-300 hover:text-blue-200">research</Link> integrates cognitive psychology, aesthetic perception, behavioral data, and AI-driven decision modeling. I'm designing a unified framework that explains and predicts digital consumer decisions across cultures using real-world datasets, AI models, and long-term behavioral patterns.
               </p>
             </div>
             <div>
@@ -267,12 +305,6 @@ export default function AboutPage() {
                   </li>
                 ))}
               </ul>
-              <Link
-                href="/research"
-                className="mt-6 inline-flex items-center text-sm font-semibold text-blue-200 hover:text-blue-100"
-              >
-                Explore Research →
-              </Link>
             </div>
           </div>
         </div>
@@ -321,24 +353,40 @@ export default function AboutPage() {
 
       <section className="mx-auto w-full max-w-5xl px-4 py-16 text-center sm:px-6 lg:px-12 lg:py-20">
         <h2 className="text-2xl font-semibold text-white sm:text-3xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-          ✅ Let’s Connect
+          ✅ Let's Connect
         </h2>
         <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-          If you're exploring the future of AI-driven marketing, behavioral strategy, or human-centered design, I’d love to collaborate.
+          If you're exploring the future of AI-driven marketing, behavioral strategy, or human-centered design, I'd love to collaborate.
         </p>
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/contact"
             className="w-full rounded-full bg-white px-8 py-3 text-center text-sm font-semibold text-black transition hover:bg-gray-200 sm:w-auto"
           >
-            Get In Touch →
+            Work With Me
           </Link>
-          <a
-            href="/cv-nima-saraeian.pdf"
-            className="w-full rounded-full border border-white/40 px-8 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
+          <Link
+            href="/services"
+            className="w-full rounded-full border border-white/50 px-8 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
           >
-            Download CV →
-          </a>
+            View AI Marketing Services
+          </Link>
+        </div>
+        <div className="mt-12 pt-8 border-t border-white/10">
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-[0.2em] mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Explore more
+          </h3>
+          <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <Link href="/projects" className="text-gray-300 hover:text-white underline">
+              Projects
+            </Link>
+            <Link href="/research" className="text-gray-300 hover:text-white underline">
+              Research
+            </Link>
+            <Link href="/articles" className="text-gray-300 hover:text-white underline">
+              Articles
+            </Link>
+          </div>
         </div>
       </section>
     </main>

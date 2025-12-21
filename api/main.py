@@ -1,9 +1,11 @@
 """
 FastAPI Backend for AI Marketing Brain - DeepScan Endpoint
 """
-from fastapi import FastAPI, HTTPException, Request, Form, File, UploadFile
+from fastapi import FastAPI, HTTPException, Form, File, UploadFile, Request
+from fastapi.responses import JSONResponse
+from starlette.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from openai import OpenAI
 from typing import Optional
 import os
@@ -14,6 +16,24 @@ from bs4 import BeautifulSoup
 import json
 import re
 import base64
+import asyncio
+from pathlib import Path
+import uuid
+import sys
+import io
+
+# Fix encoding for Windows console to support emojis
+if sys.platform == 'win32':
+    try:
+        # Try to set UTF-8 encoding for stdout/stderr
+        if hasattr(sys.stdout, 'reconfigure'):
+            sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        if hasattr(sys.stderr, 'reconfigure'):
+            sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):
+        # Fallback: wrap stdout/stderr with UTF-8 encoding
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
 # Load environment variables
 project_root = Path(__file__).parent.parent
@@ -30,11 +50,39 @@ app = FastAPI(
     description="AI Marketing Brain API for DeepScan and other modules"
 )
 
+# Exception handler for Pydantic validation errors
+@app.exception_handler(ValidationError)
+async def validation_exception_handler(request: Request, exc: ValidationError):
+    """Handle Pydantic validation errors"""
+    print(f"❌ Validation error: {exc}")
+    return JSONResponse(
+        status_code=422,
+        content={"detail": f"Validation error: {str(exc)}"}
+    )
+
+# Global exception handler for unhandled exceptions
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Handle all unhandled exceptions"""
+    # Don't handle HTTPException here - let FastAPI handle it
+    if isinstance(exc, HTTPException):
+        raise exc
+    
+    import traceback
+    error_type = type(exc).__name__
+    error_msg = str(exc) if str(exc) else "Unknown error"
+    print(f"❌ Global exception handler caught: {error_type}: {error_msg}")
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal server error: {error_type}: {error_msg}"}
+    )
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins in development
+    allow_credentials=False,  # Must be False when using allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -87,6 +135,208 @@ class CognitiveFrictionRequest(BaseModel):
     user_intent_stage: Optional[str] = None
     image: Optional[str] = None
     image_type: Optional[str] = None
+
+
+async def take_screenshot(url: str, viewport: dict, is_mobile: bool = False) -> Optional[str]:
+    """
+    Take an above-the-fold screenshot of a webpage using Playwright.
+    
+    IMPORTANT: Only captures the first viewport (above-the-fold), NOT full page.
+
+    Args:
+        url: The URL to screenshot
+        viewport: Viewport size dict with width and height
+        is_mobile: Whether this is a mobile screenshot (affects device settings)
+        
+    Returns:
+        Base64-encoded screenshot image, or None if failed
+    """
+    try:
+        try:
+            from playwright.async_api import async_playwright
+        except ImportError as import_err:
+            print(f"❌ Playwright not installed. Run: pip install playwright && playwright install chromium")
+            print(f"❌ Import error: {str(import_err)}")
+            return None
+        
+        viewport_str = f"{viewport['width']}x{viewport['height']}"
+        device_type = "mobile" if is_mobile else "desktop"
+        print(f"📥 Taking {device_type} screenshot with viewport: {viewport_str} (above-the-fold only)")
+        
+        async with async_playwright() as p:
+            # Launch browser
+            try:
+                browser = await p.chromium.launch(headless=True)
+            except Exception as browser_err:
+                error_msg = str(browser_err)
+                if "Executable doesn't exist" in error_msg or "browser" in error_msg.lower():
+                    print(f"❌ Chromium browser not installed. Run: playwright install chromium")
+                    print(f"❌ Browser launch error: {error_msg}")
+                else:
+                    print(f"❌ Browser launch error: {error_msg}")
+                raise
+            
+            # Configure context based on device type
+            if is_mobile:
+                context = await browser.new_context(
+                    viewport=viewport,
+                    device_scale_factor=2,
+                    is_mobile=True,
+                    has_touch=True,
+                    user_agent='Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1'
+                )
+            else:
+                context = await browser.new_context(
+                    viewport=viewport,
+                    device_scale_factor=1,
+                    user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                )
+            
+            page = await context.new_page()
+            
+            # Disable animations (prefers-reduced-motion)
+            await page.add_init_script("""
+                const style = document.createElement('style');
+                style.textContent = `
+                    *, *::before, *::after {
+                        animation-duration: 0s !important;
+                        animation-delay: 0s !important;
+                        transition-duration: 0s !important;
+                        transition-delay: 0s !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            """)
+            
+            # Navigate to URL
+            print(f"📥 Navigating to {url}...")
+            try:
+                await page.goto(url, wait_until="networkidle", timeout=45000)
+            except Exception as nav_err:
+                error_msg = str(nav_err)
+                print(f"❌ Navigation failed: {error_msg}")
+                # Try with a shorter timeout as fallback
+                try:
+                    print(f"📥 Retrying with shorter timeout...")
+                    await page.goto(url, wait_until="domcontentloaded", timeout=20000)
+                except Exception as retry_err:
+                    print(f"❌ Retry also failed: {str(retry_err)}")
+                    raise nav_err
+            
+            # Additional wait for dynamic content (1200ms as per spec)
+            await page.wait_for_timeout(1200)
+            
+            # Take screenshot - IMPORTANT: full_page=False (only first viewport)
+            print(f"📥 Capturing above-the-fold screenshot (full_page=False)...")
+            screenshot_bytes = await page.screenshot(full_page=False, type="png")
+            print(f"📥 Screenshot captured: {len(screenshot_bytes)} bytes")
+            
+            # Convert to base64
+            screenshot_base64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+            
+            await browser.close()
+            
+            result = f"data:image/png;base64,{screenshot_base64}"
+            print(f"✅ {device_type.capitalize()} screenshot created successfully (above-the-fold only, {len(result)} chars)")
+            return result
+    except Exception as e:
+        device_type = "mobile" if is_mobile else "desktop"
+        error_msg = str(e)
+        print(f"⚠️ Failed to take {device_type} screenshot with viewport {viewport}: {error_msg}")
+        import traceback
+        traceback.print_exc()
+        
+        # Log specific error types for better debugging
+        if "timeout" in error_msg.lower():
+            print(f"⚠️ Timeout error - URL might be slow or unreachable")
+        elif "net::" in error_msg or "navigation" in error_msg.lower():
+            print(f"⚠️ Navigation error - URL might be invalid or blocked")
+        elif "executable" in error_msg.lower() or "browser" in error_msg.lower():
+            print(f"⚠️ Browser executable error - Run: playwright install chromium")
+        
+        return None
+
+
+async def take_screenshots(url: str) -> dict:
+    """
+    Take both desktop and mobile above-the-fold screenshots of a webpage.
+    
+    SPEC:
+    - Desktop: 1440x900 viewport, fullPage=False, wait 1200ms, disable animations
+    - Mobile: 390x844 viewport, deviceScaleFactor=2, isMobile=True, fullPage=False, wait 1200ms
+    
+    Args:
+        url: The URL to screenshot
+        
+    Returns:
+        Dict with 'desktop' and 'mobile' screenshot URLs (above-the-fold only), or empty dict if failed
+    """
+    screenshots = {}
+    errors = {}
+    
+    # Desktop screenshot (1440x900 - above-the-fold only)
+    # Try with full size first, then fallback to smaller if it fails
+    desktop_viewports = [
+        {"width": 1440, "height": 900, "name": "1440x900"},
+        {"width": 1280, "height": 720, "name": "1280x720"},  # Fallback
+    ]
+    
+    desktop_success = False
+    for viewport_config in desktop_viewports:
+        if desktop_success:
+            break
+            
+        viewport = {"width": viewport_config["width"], "height": viewport_config["height"]}
+        try:
+            print(f"📥 Taking desktop screenshot ({viewport_config['name']}, above-the-fold only)...")
+            desktop_screenshot = await take_screenshot(url, viewport, is_mobile=False)
+            if desktop_screenshot:
+                screenshots["desktop"] = desktop_screenshot
+                print(f"✅ Desktop screenshot taken at {viewport_config['name']} (length: {len(desktop_screenshot)} chars)")
+                desktop_success = True
+            else:
+                error_msg = f"Desktop screenshot at {viewport_config['name']} returned None"
+                print(f"⚠️ {error_msg}")
+                if "desktop" not in errors:
+                    errors["desktop"] = error_msg
+        except Exception as e:
+            error_msg = f"Desktop screenshot at {viewport_config['name']} failed: {str(e)}"
+            print(f"⚠️ {error_msg}")
+            if "desktop" not in errors:
+                errors["desktop"] = error_msg
+            import traceback
+            traceback.print_exc()
+    
+    if not desktop_success:
+        print(f"⚠️ All desktop screenshot attempts failed")
+    
+    # Mobile screenshot (390x844 - iPhone 13/14 style, above-the-fold only)
+    try:
+        print(f"📥 Taking mobile screenshot (390x844, above-the-fold only)...")
+        mobile_screenshot = await take_screenshot(url, {"width": 390, "height": 844}, is_mobile=True)
+        if mobile_screenshot:
+            screenshots["mobile"] = mobile_screenshot
+            print(f"✅ Mobile screenshot taken (length: {len(mobile_screenshot)} chars)")
+        else:
+            error_msg = "Mobile screenshot returned None - check logs above for details"
+            print(f"⚠️ {error_msg}")
+            errors["mobile"] = error_msg
+    except Exception as e:
+        error_msg = f"Mobile screenshot exception: {str(e)}"
+        print(f"⚠️ {error_msg}")
+        errors["mobile"] = error_msg
+        import traceback
+        traceback.print_exc()
+    
+    print(f"📥 Final screenshots dict keys: {list(screenshots.keys())}")
+    if errors:
+        print(f"⚠️ Screenshot errors: {errors}")
+    
+    # Store errors in screenshots dict for debugging (optional)
+    if errors:
+        screenshots["_errors"] = errors
+    
+    return screenshots
 
 
 def scrape_url(url: str) -> str:
@@ -198,6 +448,63 @@ def root():
 def health():
     """Health check endpoint"""
     return {"status": "healthy"}
+
+@app.get("/health/screenshot")
+async def health_screenshot():
+    """Test screenshot service health"""
+    try:
+        # Test if Playwright is available
+        try:
+            from playwright.async_api import async_playwright
+        except ImportError:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "unhealthy",
+                    "error": "Playwright not installed",
+                    "solution": "Run: pip install playwright && playwright install chromium"
+                }
+            )
+        
+        # Test if we can launch browser
+        try:
+            async with async_playwright() as p:
+                browser = await p.chromium.launch(headless=True)
+                browser.close()
+        except Exception as e:
+            error_msg = str(e)
+            if "Executable doesn't exist" in error_msg or "browser" in error_msg.lower():
+                return JSONResponse(
+                    status_code=503,
+                    content={
+                        "status": "unhealthy",
+                        "error": "Chromium browser not installed",
+                        "solution": "Run: playwright install chromium"
+                    }
+                )
+            else:
+                return JSONResponse(
+                    status_code=503,
+                    content={
+                        "status": "unhealthy",
+                        "error": f"Browser launch failed: {error_msg}"
+                    }
+                )
+        
+        return {
+            "status": "healthy",
+            "screenshot_service": "ready",
+            "playwright": "installed",
+            "chromium": "installed"
+        }
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "error": str(e)
+            }
+        )
 
 
 @app.post("/brain/deepscan", response_model=DeepScanResponse)
@@ -631,6 +938,202 @@ async def brain_endpoint(request: CognitiveFrictionRequest):
         status_code=500,
         detail="Main Brain Backend endpoint /api/brain requires MAIN_BRAIN_BACKEND_URL to point to the actual main Brain service that performs AI analysis. This endpoint does not perform analysis directly."
     )
+
+
+# Request model for url-human endpoint
+class UrlHumanRequest(BaseModel):
+    url: str
+    goal: str = "leads"
+    locale: str = "fa"
+    raw_text: Optional[str] = None
+    image: Optional[str] = None
+    image_type: Optional[str] = None
+
+
+# System prompt for human-readable report
+HUMAN_REPORT_SYSTEM_PROMPT = """You are a conversion optimization consultant. Your task is to analyze landing pages and provide human-readable, actionable feedback.
+
+مثل یک مشاور واقعی بنویس. کوتاه، عملی، و با اشاره به محل. از جملات کلی پرهیز کن.
+
+Write in a conversational, practical tone. Be specific about what you see on the page. Avoid generic statements. Point to exact locations or elements when possible.
+
+Your report should:
+- Be written in Persian (Farsi) if locale is "fa", otherwise English
+- Focus on conversion optimization for the goal specified (e.g., "leads")
+- Be structured with clear sections
+- Provide specific, actionable recommendations
+- Avoid technical jargon, scores, or percentages
+- Read like advice from a real consultant
+
+Format your response as plain text, not JSON. Use natural paragraph breaks and section headers if needed."""
+
+
+@app.post("/api/analyze/url-human")
+async def analyze_url_human(request: UrlHumanRequest):
+    """
+    Human-readable URL analysis endpoint.
+    """
+    import traceback
+    
+    try:
+        print(f"📥 Received POST request to /api/analyze/url-human")
+        print(f"📥 Request: {request}")
+        
+        url = request.url
+        goal = request.goal or "leads"
+        locale = request.locale or "fa"
+        raw_text = request.raw_text or ""
+        
+        print(f"📥 Extracted: url={url}, goal={goal}, locale={locale}")
+        
+        if not url:
+            raise HTTPException(status_code=400, detail="URL is required")
+        
+        # Scrape URL
+        print(f"📥 Scraping URL: {url}")
+        try:
+            scraped_text = scrape_url(url)
+            raw_text = scraped_text if not raw_text else f"{raw_text}\n\n{scraped_text}"
+            print(f"📥 Scraped {len(raw_text)} characters")
+        except Exception as e:
+            error_msg = str(e) or "Unknown scraping error"
+            print(f"❌ Failed to scrape URL: {error_msg}")
+            traceback.print_exc()
+            raise HTTPException(status_code=400, detail=f"Failed to scrape URL: {error_msg}")
+        
+        if not raw_text:
+            raise HTTPException(status_code=400, detail="No content extracted from URL")
+        
+        # Take screenshots (optional, don't fail if it doesn't work)
+        screenshots = {}
+        try:
+            print(f"📥 Taking screenshots of URL: {url}")
+            screenshots = await take_screenshots(url)
+            if screenshots:
+                print(f"✅ Screenshots taken: {list(screenshots.keys())}")
+            else:
+                print(f"⚠️ Screenshots failed, continuing without screenshots")
+        except Exception as e:
+            print(f"⚠️ Screenshot error (non-fatal): {str(e)}")
+            traceback.print_exc()
+            # Continue without screenshots
+        
+        # Get OpenAI client
+        print(f"📥 Getting OpenAI client...")
+        try:
+            client = get_openai_client()
+            print(f"✅ OpenAI client created")
+        except Exception as e:
+            error_msg = str(e) or "Unknown OpenAI error"
+            print(f"❌ Failed to get OpenAI client: {error_msg}")
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"OpenAI client error: {error_msg}")
+        
+        # Build prompt
+        user_prompt = f"""Analyze this landing page for conversion optimization.
+
+Goal: {goal}
+Locale: {locale}
+
+Page Content:
+{raw_text[:8000]}
+
+Provide a human-readable conversion optimization report. Write in {"Persian (Farsi)" if locale == "fa" else "English"}.
+
+Focus on:
+- What's working well
+- What's blocking conversions
+- Specific, actionable recommendations
+- Where to make changes
+
+Be practical and conversational. Avoid scores, percentages, or technical metrics."""
+        
+        # Call OpenAI
+        print(f"📥 Calling OpenAI...")
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": HUMAN_REPORT_SYSTEM_PROMPT},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.7,
+            )
+            
+            human_report = response.choices[0].message.content
+            
+            if not human_report:
+                raise HTTPException(status_code=500, detail="Empty response from OpenAI")
+            
+            print(f"✅ Generated report ({len(human_report)} characters)")
+            
+            response_data = {
+                "human_report": human_report,
+                "analysis_json": {
+                    "url": url,
+                    "goal": goal,
+                    "locale": locale
+                }
+            }
+            
+            # Add screenshots if available - STRICT STRUCTURE (MANDATORY)
+            print(f"📥 Checking screenshots dict: {list(screenshots.keys()) if screenshots else 'empty'}")
+            if screenshots:
+                screenshots_response = {}
+                
+                # Desktop screenshot
+                if "desktop" in screenshots:
+                    screenshots_response["desktop"] = {
+                        "aboveFold": screenshots["desktop"]
+                    }
+                    print(f"✅ Added desktop screenshot to response (length: {len(screenshots['desktop'])} chars)")
+                else:
+                    print(f"⚠️ Desktop screenshot missing!")
+                
+                # Mobile screenshot (MANDATORY)
+                if "mobile" in screenshots:
+                    screenshots_response["mobile"] = {
+                        "aboveFold": screenshots["mobile"]
+                    }
+                    print(f"✅ Added mobile screenshot to response (length: {len(screenshots['mobile'])} chars)")
+                else:
+                    print(f"❌ Mobile screenshot MISSING - report will be incomplete!")
+                
+                if screenshots_response:
+                    response_data["screenshots"] = screenshots_response
+                    print(f"📥 Final screenshots structure: {list(screenshots_response.keys())}")
+                    
+                    # Backward compatibility: also add old format
+                    if "desktop" in screenshots_response:
+                        response_data["screenshot"] = {
+                            "desktop": screenshots_response["desktop"]["aboveFold"],
+                            "url": screenshots_response["desktop"]["aboveFold"]
+                        }
+                        if "mobile" in screenshots_response:
+                            response_data["screenshot"]["mobile"] = screenshots_response["mobile"]["aboveFold"]
+                else:
+                    print(f"⚠️ No screenshot data to add (screenshots_response is empty)")
+            else:
+                print(f"⚠️ Screenshots dict is empty or None")
+            
+            return response_data
+        except Exception as e:
+            error_msg = str(e) or "Unknown OpenAI API error"
+            print(f"❌ OpenAI API error: {error_msg}")
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"OpenAI API error: {error_msg}")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        error_type = type(e).__name__
+        error_msg = str(e) or "Unknown error"
+        print(f"❌ Unexpected error: {error_type}: {error_msg}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {error_type}: {error_msg}"
+        )
 
 
 if __name__ == "__main__":

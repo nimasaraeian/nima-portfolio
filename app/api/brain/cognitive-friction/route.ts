@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { jsonResponse } from '@/lib/jsonResponse';
+import { getApiBase } from '@/src/lib/apiBase';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -9,25 +10,12 @@ export const runtime = 'nodejs';
  * Proxy endpoint for /api/brain/cognitive-friction
  * Forwards requests to the backend API
  */
-/**
- * Default backend URL for local development
- */
-const DEFAULT_DEV_BRAIN_URL = 'http://127.0.0.1:8000';
 
 /**
- * Get backend URL from environment variables or use default
- * Priority: BACKEND_BASE_URL > NEXT_PUBLIC_BACKEND_URL > Railway default > other env vars > local dev
+ * Get backend URL from environment variables
  */
 function getBackendUrl(): string {
-  const url = 
-    process.env.BACKEND_BASE_URL ||
-    process.env.NEXT_PUBLIC_BACKEND_URL ||
-    process.env.NEXT_PUBLIC_BRAIN_API_URL ||
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    process.env.BRAIN_API_BASE_URL ||
-    (process.env.NODE_ENV === 'production' ? '<YOUR_RAILWAY_BACKEND_URL>' : DEFAULT_DEV_BRAIN_URL);
-  
-  return url.replace(/\/$/, '');
+  return getApiBase();
 }
 
 export async function POST(req: NextRequest) {

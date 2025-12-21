@@ -65,3 +65,5 @@ When returning screenshot data from your API, use this format:
 - Paths starting with `/` will be appended to the base URL correctly
 - Paths without `/` will have it added automatically
 
+
+
