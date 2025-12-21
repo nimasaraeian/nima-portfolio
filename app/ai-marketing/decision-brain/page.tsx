@@ -337,9 +337,9 @@ export default function DecisionBrainHumanUI() {
         
         if (fetchError instanceof TypeError) {
           if (fetchError.message.includes('fetch') || fetchError.message.includes('Failed to fetch')) {
-            errorMsg = `Cannot connect to API server at ${API_BASE}.\n\nPossible causes:\n• The FastAPI server is not running\n• The server is running on a different port\n• CORS is blocking the request\n• Network connectivity issues\n\nPlease make sure the FastAPI server is running on port 8000.`;
+            errorMsg = `Cannot connect to API server.\n\nPossible causes:\n• The backend server is not running\n• Network connectivity issues\n• The API route is not responding\n\nPlease check your network connection and ensure the backend is properly configured.`;
           } else if (fetchError.message.includes('CORS')) {
-            errorMsg = `CORS error: The API server at ${API_BASE} is blocking cross-origin requests. Please check the server's CORS configuration.`;
+            errorMsg = `CORS error: The API server is blocking cross-origin requests. Please check the server's CORS configuration.`;
           } else {
             errorMsg = `Network error: ${fetchError.message}`;
           }
