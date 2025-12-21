@@ -17,14 +17,26 @@ export async function POST(req: NextRequest) {
     // Get backend URL from environment
     const backendUrl = getApiBase();
     
+    console.log('[URL Human API] Backend URL from getApiBase():', backendUrl || '(empty - using relative URLs)');
+    console.log('[URL Human API] Environment variables:', {
+      NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL ? '(set)' : '(not set)',
+      NEXT_PUBLIC_BRAIN_API_URL: process.env.NEXT_PUBLIC_BRAIN_API_URL ? '(set)' : '(not set)',
+    });
+    
     if (!backendUrl) {
       return jsonResponse(
         {
           error: 'backend_not_configured',
-          detail: 'Backend URL not configured. Please set NEXT_PUBLIC_BACKEND_URL or NEXT_PUBLIC_BRAIN_API_URL in environment variables.',
+          detail: 'Backend URL not configured. Please set NEXT_PUBLIC_BACKEND_URL in Vercel environment variables to your Railway backend URL (e.g., https://your-backend.railway.app).',
         },
         { status: 500 }
       );
+    }
+    
+    // Warn if using localhost URL in production
+    if (backendUrl.includes('127.0.0.1') || backendUrl.includes('localhost')) {
+      console.warn('⚠️ WARNING: Using localhost/127.0.0.1 backend URL in production:', backendUrl);
+      console.warn('⚠️ This will not work in production. Set NEXT_PUBLIC_BACKEND_URL to your Railway backend URL.');
     }
     
     const backendEndpoint = `${backendUrl}/api/analyze/url-human`;
