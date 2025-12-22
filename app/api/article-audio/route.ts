@@ -3,10 +3,15 @@ import { jsonResponse } from "@/lib/jsonResponse";
 import OpenAI from "openai";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error("OPENAI_API_KEY environment variable is not set");
+  }
+  return new OpenAI({ apiKey });
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,6 +26,7 @@ export async function POST(req: NextRequest) {
 
     const cleanText = text.trim().slice(0, 4000);
 
+    const openai = getOpenAIClient();
     const response = await openai.audio.speech.create({
       model: "gpt-4o-mini-tts",
       voice,
