@@ -39,7 +39,8 @@ export async function POST(req: NextRequest) {
       console.warn('⚠️ This will not work in production. Set NEXT_PUBLIC_BACKEND_URL to your Railway backend URL.');
     }
     
-    const backendEndpoint = `${backendUrl}/api/brain/decision-engine/report-from-url`;
+    // Use the existing url-human endpoint which returns screenshots
+    const backendEndpoint = `${backendUrl}/api/analyze/url-human`;
     
     console.log('[Report From URL API] Forwarding to backend:', backendEndpoint);
     

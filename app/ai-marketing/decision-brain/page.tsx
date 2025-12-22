@@ -399,8 +399,9 @@ export default function DecisionBrainHumanUI() {
         return "";
       };
       
-      // Check all possible screenshot paths (new schema first, then fallback to old)
+      // Check all possible screenshot paths (new backend format first, then fallback to old)
       const desktopSrc = getScreenshotUrl(
+        data?.screenshots?.desktop?.aboveFold ||
         data?.screenshots?.desktop ||
         data?.screenshots?.desktop_fold ||
         data?.screenshots?.desktop_full ||
@@ -408,6 +409,7 @@ export default function DecisionBrainHumanUI() {
         ""
       );
       const mobileSrc = getScreenshotUrl(
+        data?.screenshots?.mobile?.aboveFold ||
         data?.screenshots?.mobile ||
         data?.screenshots?.mobile_fold ||
         data?.screenshots?.mobile_full ||
@@ -583,13 +585,15 @@ export default function DecisionBrainHumanUI() {
               {/* Screenshot Preview Section - Desktop + Mobile (MANDATORY) */}
               {(() => {
                 // Extract screenshot data - ensure desktop gets desktop, mobile gets mobile (no mixing)
-                // Priority: screenshots.desktop/mobile > screenshots.desktop_fold/mobile_fold > screenshots.desktop_full/mobile_full > screenshot.desktop/mobile (legacy)
-                const desktopShot = result?.screenshots?.desktop ||
+                // Priority: screenshots.desktop.aboveFold/mobile.aboveFold (new backend format) > screenshots.desktop/mobile > screenshots.desktop_fold/mobile_fold > screenshots.desktop_full/mobile_full > screenshot.desktop/mobile (legacy)
+                const desktopShot = result?.screenshots?.desktop?.aboveFold ||
+                                  result?.screenshots?.desktop ||
                                   result?.screenshots?.desktop_fold ||
                                   result?.screenshots?.desktop_full ||
                                   result?.screenshot?.desktop;
                 
-                const mobileShot = result?.screenshots?.mobile ||
+                const mobileShot = result?.screenshots?.mobile?.aboveFold ||
+                                 result?.screenshots?.mobile ||
                                  result?.screenshots?.mobile_fold ||
                                  result?.screenshots?.mobile_full ||
                                  result?.screenshot?.mobile;
