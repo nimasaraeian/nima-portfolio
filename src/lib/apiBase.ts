@@ -24,7 +24,8 @@ export function getApiBase(): string {
   // Server-side: get from environment variables
   const baseUrl = 
     process.env.NEXT_PUBLIC_BACKEND_URL ||
-    process.env.NEXT_PUBLIC_BRAIN_API_URL;
+    process.env.NEXT_PUBLIC_BRAIN_API_URL ||
+    'https://nima-ai-marketing-production-82df.up.railway.app'; // Default Railway backend URL
 
   if (!baseUrl) {
     // Server-side fallback: if no env var is set, log a warning

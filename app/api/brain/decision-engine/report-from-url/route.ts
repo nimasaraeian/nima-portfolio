@@ -7,18 +7,18 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 /**
- * Proxy endpoint for /api/analyze/url-human
+ * Proxy endpoint for /api/brain/decision-engine/report-from-url
  * Forwards requests to the backend API
  */
 export async function POST(req: NextRequest) {
-  console.log('📥 /api/analyze/url-human POST request received');
+  console.log('📥 /api/brain/decision-engine/report-from-url POST request received');
   
   try {
     // Get backend URL from environment
     const backendUrl = getApiBase();
     
-    console.log('[URL Human API] Backend URL from getApiBase():', backendUrl || '(empty - using relative URLs)');
-    console.log('[URL Human API] Environment variables:', {
+    console.log('[Report From URL API] Backend URL from getApiBase():', backendUrl || '(empty - using relative URLs)');
+    console.log('[Report From URL API] Environment variables:', {
       NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL ? '(set)' : '(not set)',
       NEXT_PUBLIC_BRAIN_API_URL: process.env.NEXT_PUBLIC_BRAIN_API_URL ? '(set)' : '(not set)',
     });
@@ -39,13 +39,13 @@ export async function POST(req: NextRequest) {
       console.warn('⚠️ This will not work in production. Set NEXT_PUBLIC_BACKEND_URL to your Railway backend URL.');
     }
     
-    const backendEndpoint = `${backendUrl}/api/analyze/url-human`;
+    const backendEndpoint = `${backendUrl}/api/brain/decision-engine/report-from-url`;
     
-    console.log('[URL Human API] Forwarding to backend:', backendEndpoint);
+    console.log('[Report From URL API] Forwarding to backend:', backendEndpoint);
     
     // Get request body
     const body = await req.json();
-    console.log('[URL Human API] Incoming payload:', {
+    console.log('[Report From URL API] Incoming payload:', {
       url: body.url,
       goal: body.goal,
       locale: body.locale,
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     return jsonResponse(backendData);
     
   } catch (error: any) {
-    console.error('❌ Error in /api/analyze/url-human:', error);
+    console.error('❌ Error in /api/brain/decision-engine/report-from-url:', error);
     
     // Check if it's a connection error
     if (error.message?.includes('fetch') || error.message?.includes('connect')) {

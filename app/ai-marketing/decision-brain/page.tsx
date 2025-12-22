@@ -321,7 +321,7 @@ export default function DecisionBrainHumanUI() {
     try {
       let res: Response;
       try {
-        res = await fetch('/api/analyze/url-human', {
+        res = await fetch('/api/brain/decision-engine/report-from-url', {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
