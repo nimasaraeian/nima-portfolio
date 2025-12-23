@@ -7,6 +7,8 @@ import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import DecisionVisualEvidence from "./DecisionVisualEvidence";
 import { ScreenshotPreviewSectionWrapper, screenshotSrc } from "@/components/ScreenshotPreviewSection";
+import { ScreenshotOnlyATF } from "@/components/ScreenshotOnlyATF";
+import { postJSON, getApiBaseUrl } from "@/lib/api";
 
 // Type definitions
 type ScreenshotSet = {
@@ -203,7 +205,6 @@ function ScreenshotTabs({ screenshot }: { screenshot: { desktop?: string; mobile
               <div className="w-3 h-3 rounded-full bg-red-500"></div>
               <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              <span className="ml-3 text-sm font-medium opacity-90">Desktop View</span>
             </div>
           </div>
           <div className="bg-gradient-to-b from-gray-900 to-gray-800 p-4">
@@ -251,7 +252,6 @@ function ScreenshotTabs({ screenshot }: { screenshot: { desktop?: string; mobile
               <svg className="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
-              <span className="text-sm font-medium opacity-90">Mobile View</span>
             </div>
           </div>
           <div className="bg-gradient-to-b from-gray-900 to-gray-800 p-6 flex justify-center">
@@ -319,60 +319,21 @@ export default function DecisionBrainHumanUI() {
     setIsLoading(true);
 
     try {
-      let res: Response;
-      try {
-        res = await fetch('/api/brain/decision-engine/report-from-url', {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            url: formData.url.trim(), 
-            goal: "leads", 
-            locale: "en" 
-          }),
-        });
-      } catch (fetchError) {
-        // Handle network errors (server not running, CORS, etc.)
-        console.error("Fetch error:", fetchError);
-        let errorMsg = "Failed to connect to the API server.";
-        
-        if (fetchError instanceof TypeError) {
-          if (fetchError.message.includes('fetch') || fetchError.message.includes('Failed to fetch')) {
-            errorMsg = `Cannot connect to API server.\n\nPossible causes:\n• The backend server is not running\n• Network connectivity issues\n• The API route is not responding\n\nPlease check your network connection and ensure the backend is properly configured.`;
-          } else if (fetchError.message.includes('CORS')) {
-            errorMsg = `CORS error: The API server is blocking cross-origin requests. Please check the server's CORS configuration.`;
-          } else {
-            errorMsg = `Network error: ${fetchError.message}`;
-          }
-        } else if (fetchError instanceof Error) {
-          errorMsg = `Network error: ${fetchError.message}`;
-        } else {
-          errorMsg = `Network error: ${String(fetchError)}`;
-        }
-        
-        setError(errorMsg);
-        setIsLoading(false);
-        return;
-      }
-
-      if (!res.ok) {
-        let errorMessage = "Request failed";
-        try {
-          const text = await res.text();
-          try {
-            const errorData = JSON.parse(text);
-            errorMessage = String(errorData.detail || errorData.error || text || "Request failed");
-          } catch {
-            errorMessage = String(text || `Request failed with status ${res.status}`);
-          }
-        } catch {
-          errorMessage = `Request failed with status ${res.status}. Please check if the API server is running.`;
-        }
-        setError(String(errorMessage));
-        setIsLoading(false);
-        return;
-      }
-
-      const data = await res.json();
+      // IMPORTANT: Only send URL as data, do NOT fetch URL from frontend
+      // The backend will handle fetching and screenshotting the URL
+      console.log("🔵 Calling backend:", getApiBaseUrl());
+      console.log("🔵 User URL (will be sent to backend):", formData.url.trim());
+      
+      const data = await postJSON<any>(
+        '/api/brain/decision-engine/report-from-url',
+        {
+          url: formData.url.trim(),
+          goal: "leads",
+          locale: "en"
+        },
+        180000 // 3 minutes timeout
+      );
+      console.log("✅ Backend API response received");
       console.log("📥 API Response:", data);
       console.log("📥 Response keys:", Object.keys(data || {}));
       console.log("📥 human_report exists:", !!data?.human_report);
@@ -399,22 +360,24 @@ export default function DecisionBrainHumanUI() {
         return "";
       };
       
-      // Check all possible screenshot paths (new backend format first, then fallback to old)
+      // Check all possible screenshot paths - ONLY use above-the-fold (not full page)
+      const desktopScreenshot = data?.screenshots?.desktop;
       const desktopSrc = getScreenshotUrl(
-        data?.screenshots?.desktop?.aboveFold ||
-        data?.screenshots?.desktop ||
-        data?.screenshots?.desktop_fold ||
-        data?.screenshots?.desktop_full ||
-        data?.screenshot?.desktop ||
-        ""
+        (typeof desktopScreenshot === 'object' && desktopScreenshot !== null && 'aboveFold' in desktopScreenshot)
+          ? (desktopScreenshot as { aboveFold?: string }).aboveFold
+          : (typeof desktopScreenshot === 'string' ? desktopScreenshot : undefined) ||
+            data?.screenshots?.desktop_fold ||
+            data?.screenshot?.desktop ||
+            ""
       );
+      const mobileScreenshot = data?.screenshots?.mobile;
       const mobileSrc = getScreenshotUrl(
-        data?.screenshots?.mobile?.aboveFold ||
-        data?.screenshots?.mobile ||
-        data?.screenshots?.mobile_fold ||
-        data?.screenshots?.mobile_full ||
-        data?.screenshot?.mobile ||
-        ""
+        (typeof mobileScreenshot === 'object' && mobileScreenshot !== null && 'aboveFold' in mobileScreenshot)
+          ? (mobileScreenshot as { aboveFold?: string }).aboveFold
+          : (typeof mobileScreenshot === 'string' ? mobileScreenshot : undefined) ||
+            data?.screenshots?.mobile_fold ||
+            data?.screenshot?.mobile ||
+            ""
       );
       
       console.log("📥 Desktop source:", desktopSrc ? `${desktopSrc.substring(0, 50)}...` : "NOT FOUND");
@@ -582,21 +545,26 @@ export default function DecisionBrainHumanUI() {
           </div>
           ) : (
             <>
-              {/* Screenshot Preview Section - Desktop + Mobile (MANDATORY) */}
-              {(() => {
-                // Extract screenshot data - ensure desktop gets desktop, mobile gets mobile (no mixing)
-                // Priority: screenshots.desktop.aboveFold/mobile.aboveFold (new backend format) > screenshots.desktop/mobile > screenshots.desktop_fold/mobile_fold > screenshots.desktop_full/mobile_full > screenshot.desktop/mobile (legacy)
-                const desktopShot = result?.screenshots?.desktop?.aboveFold ||
-                                  result?.screenshots?.desktop ||
-                                  result?.screenshots?.desktop_fold ||
-                                  result?.screenshots?.desktop_full ||
-                                  result?.screenshot?.desktop;
+              {/* Screenshot Panel - ATF only */}
+              <ScreenshotOnlyATF data={result as any} />
+
+              {/* Legacy Screenshot Preview (fallback) - disabled now to avoid duplicate screenshots */}
+              {false && (() => {
+                // Extract screenshot data - ONLY use above-the-fold (not full page)
+                // Priority: screenshots.desktop.aboveFold/mobile.aboveFold (new backend format) > screenshots.desktop/mobile > screenshots.desktop_fold/mobile_fold > screenshot.desktop/mobile (legacy)
+                const desktopScreenshot = result?.screenshots?.desktop;
+                const desktopShot = (typeof desktopScreenshot === 'object' && desktopScreenshot !== null && 'aboveFold' in desktopScreenshot)
+                  ? (desktopScreenshot as { aboveFold?: string }).aboveFold
+                  : (typeof desktopScreenshot === 'string' ? desktopScreenshot : undefined) ||
+                    result?.screenshots?.desktop_fold ||
+                    result?.screenshot?.desktop;
                 
-                const mobileShot = result?.screenshots?.mobile?.aboveFold ||
-                                 result?.screenshots?.mobile ||
-                                 result?.screenshots?.mobile_fold ||
-                                 result?.screenshots?.mobile_full ||
-                                 result?.screenshot?.mobile;
+                const mobileScreenshot = result?.screenshots?.mobile;
+                const mobileShot = (typeof mobileScreenshot === 'object' && mobileScreenshot !== null && 'aboveFold' in mobileScreenshot)
+                  ? (mobileScreenshot as { aboveFold?: string }).aboveFold
+                  : (typeof mobileScreenshot === 'string' ? mobileScreenshot : undefined) ||
+                    result?.screenshots?.mobile_fold ||
+                    result?.screenshot?.mobile;
                 
                 // Debug logging
                 console.log("[screenshots-extract]", {
@@ -607,6 +575,11 @@ export default function DecisionBrainHumanUI() {
                   "desktop-src": desktopShot ? screenshotSrc(desktopShot) : "MISSING",
                   "mobile-src": mobileShot ? screenshotSrc(mobileShot) : "MISSING"
                 });
+                
+                // Only show legacy component if ScreenshotPanel didn't render
+                if (!desktopShot && !mobileShot) {
+                  return null;
+                }
                 
                 // Extract evidence payloads (support both single evidence and separate desktop/mobile)
                 const evidence = result?.evidence;
