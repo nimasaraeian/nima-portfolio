@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { X, Loader2 } from 'lucide-react'
 import type { BrainAPIRequest, BrainAPIResponse } from '@/types/api'
+import { ScreenshotOnlyATF } from './ScreenshotOnlyATF'
 
 interface ModuleConfig {
   id: string
@@ -166,6 +167,24 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
   }
 
   if (result) {
+    // Safe access to capture property using 'as any' to avoid TS errors
+    const anyResult = result as any;
+    const capture = anyResult?.capture as any | undefined;
+
+    // Support both shapes just in case:
+    const screenshots = (capture?.screenshots ?? anyResult?.screenshots) as any | undefined;
+
+    const desktopATF =
+      screenshots?.desktop?.above_the_fold ??
+      screenshots?.desktop?.aboveFold ??
+      screenshots?.above_the_fold ?? // fallback old shape
+      null;
+
+    const mobileATF =
+      screenshots?.mobile?.above_the_fold ??
+      screenshots?.mobile?.aboveFold ??
+      null;
+
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6">
         {/* Animated Background Lights */}
@@ -207,6 +226,31 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
           </div>
 
           <div className="prose prose-invert max-w-none space-y-4">
+            {/* Screenshot Panel */}
+            {result && (
+              <>
+                {/* Debug: Show result structure */}
+                {process.env.NODE_ENV === 'development' && (
+                  <details className="mb-4 rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+                    <summary className="cursor-pointer text-sm text-purple-300 mb-2">
+                      🔍 Debug: Result Structure
+                    </summary>
+                    <pre className="text-xs text-purple-200/80 overflow-auto max-h-60 mt-2">
+                      {JSON.stringify({
+                        hasCapture: !!capture,
+                        captureKeys: capture ? Object.keys(capture) : [],
+                        hasScreenshots: !!screenshots,
+                        desktopATF: desktopATF ? `${desktopATF.substring(0, 50)}...` : null,
+                        mobileATF: mobileATF ? `${mobileATF.substring(0, 50)}...` : null,
+                        allKeys: Object.keys(result || {})
+                      }, null, 2)}
+                    </pre>
+                  </details>
+                )}
+                <ScreenshotOnlyATF data={result as any} />
+              </>
+            )}
+
             {/* Display new response format */}
             {result.mainIssues && result.mainIssues.length > 0 ? (
               <div className="space-y-4">
