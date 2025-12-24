@@ -82,6 +82,7 @@ type EvidencePayload = {
 type Result = HDRResponse & {
   human_report?: string;
   analysis_json?: any;
+  analysis_id?: number; // For feedback loop
   screenshot?: {
     url?: string;
     desktop?: string;
