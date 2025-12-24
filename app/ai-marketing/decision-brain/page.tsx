@@ -8,6 +8,10 @@ import rehypeSanitize from "rehype-sanitize";
 import DecisionVisualEvidence from "./DecisionVisualEvidence";
 import { ScreenshotOnlyATF } from "@/components/ScreenshotOnlyATF";
 import { postJSON, getApiBaseUrl } from "@/lib/api";
+import SignatureInsightCard from "@/components/report/SignatureInsightCard";
+import CTARecommendationsCard from "@/components/report/CTARecommendationsCard";
+import CostOfInactionCard from "@/components/report/CostOfInactionCard";
+import MindsetPersonasCard from "@/components/report/MindsetPersonasCard";
 
 // Type definitions
 type ScreenshotSet = {
@@ -79,6 +83,33 @@ type EvidencePayload = {
   detected_elements: DetectedElement[];
 };
 
+type SignatureLayers = {
+  decision_psychology_insight?: {
+    headline?: string;
+    insight?: string;
+    why_now?: string;
+    micro_risk_reducer?: string;
+  };
+  cta_recommendations?: {
+    primary?: { label?: string; reason?: string };
+    secondary?: { label?: string; reason?: string }[];
+    do_not_use?: { label?: string; reason?: string }[];
+  };
+  cost_of_inaction?: {
+    headline?: string;
+    bullets?: string[];
+    metric_hint?: string;
+  };
+  mindset_personas?: {
+    id: "hesitant" | "curious" | "ready" | string;
+    title?: string;
+    signal?: string;
+    goal?: string;
+    best_cta?: string;
+    next_step?: string;
+  }[];
+};
+
 type Result = HDRResponse & {
   human_report?: string;
   analysis_json?: any;
@@ -116,7 +147,7 @@ type Result = HDRResponse & {
     warnings?: number;
     errors?: number;
   };
-};
+} & SignatureLayers;
 
 function formatReport(text?: string): string {
   if (!text) return "";
@@ -564,6 +595,55 @@ export default function DecisionBrainHumanUI() {
                       {copySuccess ? "Copied!" : "Copy report"}
                     </button>
                   </div>
+                  
+                  {/* Report Summary Anchor Navigation */}
+                  {(result?.decision_psychology_insight || result?.cta_recommendations || result?.cost_of_inaction || result?.mindset_personas) && (
+                    <div className="mb-4 pb-4 border-b border-white/10">
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        {result?.decision_psychology_insight && (
+                          <button
+                            onClick={() => {
+                              document.getElementById("report-insight")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }}
+                            className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
+                          >
+                            Insight
+                          </button>
+                        )}
+                        {result?.cta_recommendations && (
+                          <button
+                            onClick={() => {
+                              document.getElementById("report-ctas")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }}
+                            className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
+                          >
+                            CTAs
+                          </button>
+                        )}
+                        {result?.cost_of_inaction && (
+                          <button
+                            onClick={() => {
+                              document.getElementById("report-cost")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }}
+                            className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
+                          >
+                            Cost
+                          </button>
+                        )}
+                        {result?.mindset_personas && result.mindset_personas.length > 0 && (
+                          <button
+                            onClick={() => {
+                              document.getElementById("report-personas")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }}
+                            className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
+                          >
+                            Personas
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="mt-4 text-sm leading-7 text-white/90">
                     <Report text={report} />
                   </div>
@@ -582,6 +662,31 @@ export default function DecisionBrainHumanUI() {
                       </details>
                     )}
                   </p>
+                </div>
+              )}
+
+              {/* New Report Sections */}
+              {result?.decision_psychology_insight && (
+                <div id="report-insight" className="mt-6">
+                  <SignatureInsightCard data={result.decision_psychology_insight} />
+                </div>
+              )}
+
+              {result?.cta_recommendations && (
+                <div id="report-ctas" className="mt-6">
+                  <CTARecommendationsCard data={result.cta_recommendations} />
+                </div>
+              )}
+
+              {result?.cost_of_inaction && (
+                <div id="report-cost" className="mt-6">
+                  <CostOfInactionCard data={result.cost_of_inaction} />
+                </div>
+              )}
+
+              {result?.mindset_personas && result.mindset_personas.length > 0 && (
+                <div id="report-personas" className="mt-6">
+                  <MindsetPersonasCard data={result.mindset_personas} />
                 </div>
               )}
 
