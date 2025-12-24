@@ -7,7 +7,8 @@ from starlette.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ValidationError
 from openai import OpenAI
-from typing import Optional
+from typing import Optional, List
+from enum import Enum
 import os
 from dotenv import load_dotenv
 from pathlib import Path
@@ -21,6 +22,8 @@ from pathlib import Path
 import uuid
 import sys
 import io
+import sqlite3
+from datetime import datetime
 
 # Fix encoding for Windows console to support emojis
 if sys.platform == 'win32':
@@ -49,6 +52,57 @@ app = FastAPI(
     version="1.0.0",
     description="AI Marketing Brain API for DeepScan and other modules"
 )
+
+# ---------------------------------------------------------------------------
+# SQLite storage for analysis + feedback
+# ---------------------------------------------------------------------------
+
+DB_PATH = os.getenv("BRAIN_FEEDBACK_DB_PATH") or str(project_root / "brain_feedback.db")
+
+
+def get_db_connection() -> sqlite3.Connection:
+    """Open a SQLite connection (caller must close)."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db() -> None:
+    """Create tables for analysis + feedback if they don't exist."""
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS analysis (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            endpoint TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            request_payload TEXT,
+            response_payload TEXT
+        )
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            analysis_id INTEGER NOT NULL,
+            label TEXT NOT NULL,
+            wrong_issues TEXT,
+            notes TEXT,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (analysis_id) REFERENCES analysis(id)
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
+
+
+@app.on_event("startup")
+async def on_startup() -> None:
+    """Initialize database on startup."""
+    init_db()
 
 # Exception handler for Pydantic validation errors
 @app.exception_handler(ValidationError)
@@ -915,6 +969,33 @@ async def brain_endpoint(request: CognitiveFrictionRequest):
             response.raise_for_status()
             result = response.json()
             print(f"✅ Received analysis from external main brain backend")
+
+            # Store analysis payload + response and attach analysis_id
+            try:
+                conn = get_db_connection()
+                cur = conn.cursor()
+                cur.execute(
+                    """
+                    INSERT INTO analysis (endpoint, created_at, request_payload, response_payload)
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    (
+                        "/api/brain",
+                        datetime.utcnow().isoformat(),
+                        json.dumps(request.model_dump(), ensure_ascii=False),
+                        json.dumps(result, ensure_ascii=False),
+                    ),
+                )
+                analysis_id = cur.lastrowid
+                conn.commit()
+                conn.close()
+                # Attach analysis_id to response so frontend can send feedback later
+                if isinstance(result, dict):
+                    result["analysis_id"] = analysis_id
+            except Exception as db_err:
+                # Don't fail main request if logging fails
+                print(f"⚠️ Failed to persist analysis row: {db_err}")
+
             return result
         except requests.exceptions.RequestException as e:
             error_msg = str(e)
@@ -968,6 +1049,63 @@ Your report should:
 Format your response as plain text, not JSON. Use natural paragraph breaks and section headers if needed."""
 
 
+class FeedbackLabel(str, Enum):
+    accurate = "accurate"
+    partial = "partial"
+    wrong = "wrong"
+
+
+class FeedbackRequest(BaseModel):
+    analysis_id: int
+    label: FeedbackLabel
+    wrong_issues: List[str] = []
+    notes: str = ""
+
+
+@app.post("/api/brain/feedback")
+async def submit_feedback(payload: FeedbackRequest):
+    """
+    Store user feedback for an analysis.
+    """
+    # Validate wrong_issues usage
+    if payload.label != FeedbackLabel.wrong and payload.wrong_issues:
+        raise HTTPException(
+            status_code=400,
+            detail="wrong_issues must be empty unless label is 'wrong'",
+        )
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Ensure analysis_id exists
+    cur.execute("SELECT id FROM analysis WHERE id = ?", (payload.analysis_id,))
+    row = cur.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail=f"analysis_id {payload.analysis_id} not found",
+        )
+
+    cur.execute(
+        """
+        INSERT INTO feedback (analysis_id, label, wrong_issues, notes, created_at)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            payload.analysis_id,
+            payload.label.value,
+            json.dumps(payload.wrong_issues or [], ensure_ascii=False),
+            payload.notes or "",
+            datetime.utcnow().isoformat(),
+        ),
+    )
+    conn.commit()
+    conn.close()
+
+    return {"status": "ok"}
+
+
 @app.post("/api/analyze/url-human")
 async def analyze_url_human(request: UrlHumanRequest):
     """
@@ -1011,8 +1149,13 @@ async def analyze_url_human(request: UrlHumanRequest):
             screenshots = await take_screenshots(url)
             if screenshots:
                 print(f"✅ Screenshots taken: {list(screenshots.keys())}")
+                # Log screenshot data types and sizes
+                for key, value in screenshots.items():
+                    if key != "_errors":
+                        print(f"📸 {key} screenshot: {len(value) if isinstance(value, str) else 'not a string'} chars, starts with: {value[:50] if isinstance(value, str) else type(value)}")
             else:
                 print(f"⚠️ Screenshots failed, continuing without screenshots")
+                print(f"⚠️ take_screenshots() returned empty dict or None")
         except Exception as e:
             print(f"⚠️ Screenshot error (non-fatal): {str(e)}")
             traceback.print_exc()
@@ -1029,14 +1172,23 @@ async def analyze_url_human(request: UrlHumanRequest):
             traceback.print_exc()
             raise HTTPException(status_code=500, detail=f"OpenAI client error: {error_msg}")
         
+        # Truncate content to avoid token limit (gpt-4o-mini has 200k TPM limit)
+        # Estimate: ~4 chars per token, so 4000 chars ≈ 1000 tokens
+        # Keep it safe: use 3000 chars for content to leave room for system prompt and response
+        max_content_chars = 3000
+        truncated_text = raw_text[:max_content_chars]
+        if len(raw_text) > max_content_chars:
+            print(f"⚠️ Content truncated from {len(raw_text)} to {max_content_chars} characters to avoid token limit")
+            truncated_text += "\n\n[... content truncated for token limit ...]"
+        
         # Build prompt
         user_prompt = f"""Analyze this landing page for conversion optimization.
 
 Goal: {goal}
 Locale: {locale}
 
-Page Content:
-{raw_text[:8000]}
+Page Content (first {max_content_chars} chars):
+{truncated_text}
 
 Provide a human-readable conversion optimization report. Write in {"Persian (Farsi)" if locale == "fa" else "English"}.
 
@@ -1047,6 +1199,10 @@ Focus on:
 - Where to make changes
 
 Be practical and conversational. Avoid scores, percentages, or technical metrics."""
+        
+        # Estimate token count (rough: ~4 chars per token)
+        estimated_tokens = len(user_prompt) // 4 + len(HUMAN_REPORT_SYSTEM_PROMPT) // 4
+        print(f"📥 Estimated tokens: ~{estimated_tokens} (limit: 200,000 TPM for gpt-4o-mini)")
         
         # Call OpenAI
         print(f"📥 Calling OpenAI...")
@@ -1115,12 +1271,44 @@ Be practical and conversational. Avoid scores, percentages, or technical metrics
                     print(f"⚠️ No screenshot data to add (screenshots_response is empty)")
             else:
                 print(f"⚠️ Screenshots dict is empty or None")
+
+            # Persist analysis and attach analysis_id for feedback loop
+            try:
+                conn = get_db_connection()
+                cur = conn.cursor()
+                cur.execute(
+                    """
+                    INSERT INTO analysis (endpoint, created_at, request_payload, response_payload)
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    (
+                        "/api/analyze/url-human",
+                        datetime.utcnow().isoformat(),
+                        json.dumps(request.model_dump(), ensure_ascii=False),
+                        json.dumps(response_data, ensure_ascii=False),
+                    ),
+                )
+                analysis_id = cur.lastrowid
+                conn.commit()
+                conn.close()
+                response_data["analysis_id"] = analysis_id
+                print(f"✅ Stored analysis with id={analysis_id}")
+            except Exception as db_err:
+                print(f"⚠️ Failed to persist url-human analysis: {db_err}")
             
             return response_data
         except Exception as e:
             error_msg = str(e) or "Unknown OpenAI API error"
             print(f"❌ OpenAI API error: {error_msg}")
             traceback.print_exc()
+            
+            # Handle rate limit errors specifically
+            if "429" in str(e) or "rate limit" in str(e).lower() or "TPM" in str(e):
+                raise HTTPException(
+                    status_code=429,
+                    detail="OpenAI rate limit exceeded. The page content is too large. Please try a smaller page or wait a moment and try again."
+                )
+            
             raise HTTPException(status_code=500, detail=f"OpenAI API error: {error_msg}")
             
     except HTTPException:

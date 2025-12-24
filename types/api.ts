@@ -12,6 +12,8 @@ export interface BrainAPIResponse {
   mainIssues: string[]
   suggestions: string[]
   quickWins: string[]
+  // Optional ID assigned by backend for feedback loop
+  analysis_id?: number
 }
 
 

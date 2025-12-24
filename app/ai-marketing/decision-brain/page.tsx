@@ -6,7 +6,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import DecisionVisualEvidence from "./DecisionVisualEvidence";
-import { ScreenshotPreviewSectionWrapper, screenshotSrc } from "@/components/ScreenshotPreviewSection";
 import { ScreenshotOnlyATF } from "@/components/ScreenshotOnlyATF";
 import { postJSON, getApiBaseUrl } from "@/lib/api";
 
@@ -298,6 +297,10 @@ export default function DecisionBrainHumanUI() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [feedbackLabel, setFeedbackLabel] = useState<"accurate" | "partial" | "wrong" | null>(null);
+  const [feedbackWrongIssues, setFeedbackWrongIssues] = useState<string[]>([]);
+  const [feedbackNotes, setFeedbackNotes] = useState("");
+  const [feedbackStatus, setFeedbackStatus] = useState<"idle" | "submitting" | "submitted">("idle");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -548,70 +551,6 @@ export default function DecisionBrainHumanUI() {
               {/* Screenshot Panel - ATF only */}
               <ScreenshotOnlyATF data={result as any} />
 
-              {/* Legacy Screenshot Preview (fallback) - disabled now to avoid duplicate screenshots */}
-              {false && (() => {
-                // Extract screenshot data - ONLY use above-the-fold (not full page)
-                // Priority: screenshots.desktop.aboveFold/mobile.aboveFold (new backend format) > screenshots.desktop/mobile > screenshots.desktop_fold/mobile_fold > screenshot.desktop/mobile (legacy)
-                const desktopScreenshot = result?.screenshots?.desktop;
-                const desktopShot = (typeof desktopScreenshot === 'object' && desktopScreenshot !== null && 'aboveFold' in desktopScreenshot)
-                  ? (desktopScreenshot as { aboveFold?: string }).aboveFold
-                  : (typeof desktopScreenshot === 'string' ? desktopScreenshot : undefined) ||
-                    result?.screenshots?.desktop_fold ||
-                    result?.screenshot?.desktop;
-                
-                const mobileScreenshot = result?.screenshots?.mobile;
-                const mobileShot = (typeof mobileScreenshot === 'object' && mobileScreenshot !== null && 'aboveFold' in mobileScreenshot)
-                  ? (mobileScreenshot as { aboveFold?: string }).aboveFold
-                  : (typeof mobileScreenshot === 'string' ? mobileScreenshot : undefined) ||
-                    result?.screenshots?.mobile_fold ||
-                    result?.screenshot?.mobile;
-                
-                // Debug logging
-                console.log("[screenshots-extract]", {
-                  "result.screenshots": result?.screenshots,
-                  "result.screenshot": result?.screenshot,
-                  desktopShot,
-                  mobileShot,
-                  "desktop-src": desktopShot ? screenshotSrc(desktopShot) : "MISSING",
-                  "mobile-src": mobileShot ? screenshotSrc(mobileShot) : "MISSING"
-                });
-                
-                // Only show legacy component if ScreenshotPanel didn't render
-                if (!desktopShot && !mobileShot) {
-                  return null;
-                }
-                
-                // Extract evidence payloads (support both single evidence and separate desktop/mobile)
-                const evidence = result?.evidence;
-                const desktopEvidence = (evidence && 'desktop' in evidence ? evidence.desktop : undefined) || 
-                                      (evidence && 'viewport' in evidence && evidence.viewport === "desktop" ? evidence : undefined);
-                const mobileEvidence = (evidence && 'mobile' in evidence ? evidence.mobile : undefined) || 
-                                     (evidence && 'viewport' in evidence && evidence.viewport === "mobile" ? evidence : undefined);
-                
-                // Get status and error from new schema
-                const desktopStatus = (typeof desktopShot === "object" && desktopShot !== null && 'status' in desktopShot) 
-                  ? (desktopShot as { status?: "ok" | "error" }).status 
-                  : (desktopShot ? "ok" : "error") as "ok" | "error";
-                const mobileStatus = (typeof mobileShot === "object" && mobileShot !== null && 'status' in mobileShot) 
-                  ? (mobileShot as { status?: "ok" | "error" }).status 
-                  : (mobileShot ? "ok" : "error") as "ok" | "error";
-                const desktopError = (typeof desktopShot === "object" && desktopShot !== null && 'error' in desktopShot) 
-                  ? (desktopShot as { error?: string }).error 
-                  : undefined;
-                
-                return (
-                  <ScreenshotPreviewSectionWrapper
-                    desktop={desktopShot}
-                    mobile={mobileShot}
-                    desktopEvidence={desktopEvidence}
-                    mobileEvidence={mobileEvidence}
-                    desktopStatus={desktopStatus as "ok" | "error"}
-                    mobileStatus={mobileStatus as "ok" | "error"}
-                    desktopError={desktopError}
-                  />
-                );
-              })()}
-
               {/* Report */}
               {report ? (
                 <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -642,6 +581,91 @@ export default function DecisionBrainHumanUI() {
                       </details>
                     )}
                   </p>
+                </div>
+              )}
+
+              {/* Feedback Section */}
+              {result?.analysis_id && (
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
+                  <p className="text-sm text-gray-200">Was this analysis accurate?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {(["accurate", "partial", "wrong"] as const).map((label) => (
+                      <button
+                        key={label}
+                        type="button"
+                        onClick={() => {
+                          setFeedbackLabel(label);
+                          if (label !== "wrong") {
+                            setFeedbackWrongIssues([]);
+                          }
+                        }}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
+                          feedbackLabel === label
+                            ? "bg-emerald-500 text-black border-emerald-400"
+                            : "border-white/20 text-white/80 hover:bg-white/10"
+                        }`}
+                      >
+                        {label === "accurate" ? "Accurate" : label === "partial" ? "Partly" : "Wrong"}
+                      </button>
+                    ))}
+                  </div>
+
+                  {feedbackLabel === "wrong" && (
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-300">
+                        Which parts were wrong? (optional, based on issues from the report)
+                      </p>
+                      <textarea
+                        value={feedbackNotes}
+                        onChange={(e) => setFeedbackNotes(e.target.value)}
+                        placeholder="Optional notes to clarify what was wrong..."
+                        className="w-full rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-xs text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-emerald-400"
+                        rows={3}
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      disabled={!feedbackLabel || feedbackStatus === "submitting"}
+                      onClick={async () => {
+                        if (!result?.analysis_id || !feedbackLabel || feedbackStatus === "submitting") return;
+                        setFeedbackStatus("submitting");
+                        try {
+                          const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL;
+                          const url =
+                            `${backendBase?.replace(/\/+$/, "") || ""}/api/brain/feedback`;
+                          const body = {
+                            analysis_id: result.analysis_id,
+                            label: feedbackLabel,
+                            wrong_issues: feedbackLabel === "wrong" ? feedbackWrongIssues : [],
+                            notes: feedbackNotes,
+                          };
+                          const res = await fetch(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(body),
+                          });
+                          if (!res.ok) {
+                            console.error("❌ Feedback submission failed", await res.text());
+                            setFeedbackStatus("idle");
+                            return;
+                          }
+                          setFeedbackStatus("submitted");
+                        } catch (e) {
+                          console.error("❌ Feedback submit error", e);
+                          setFeedbackStatus("idle");
+                        }
+                      }}
+                      className="px-4 py-1.5 rounded-full text-xs font-medium bg-white text-black hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {feedbackStatus === "submitting" ? "Sending..." : "Send feedback"}
+                    </button>
+                    {feedbackStatus === "submitted" && (
+                      <span className="text-xs text-emerald-300">Thanks — feedback saved.</span>
+                    )}
+                  </div>
                 </div>
               )}
             </>

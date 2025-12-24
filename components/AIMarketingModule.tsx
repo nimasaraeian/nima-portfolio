@@ -81,6 +81,10 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<BrainAPIResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle')
+  const [feedbackLabel, setFeedbackLabel] = useState<'accurate' | 'partial' | 'wrong' | null>(null)
+  const [feedbackWrongIssues, setFeedbackWrongIssues] = useState<string[]>([])
+  const [feedbackNotes, setFeedbackNotes] = useState<string>('')
 
   if (!config) return null
 
@@ -184,6 +188,40 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
       screenshots?.mobile?.above_the_fold ??
       screenshots?.mobile?.aboveFold ??
       null;
+
+    const handleFeedbackSubmit = async () => {
+      if (!result?.analysis_id || !feedbackLabel || feedbackStatus === 'submitting') return;
+
+      setFeedbackStatus('submitting');
+      try {
+        const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const url = `${backendBase?.replace(/\/+$/, '') || ''}/api/brain/feedback`;
+
+        const body = {
+          analysis_id: result.analysis_id,
+          label: feedbackLabel,
+          wrong_issues: feedbackLabel === 'wrong' ? feedbackWrongIssues : [],
+          notes: feedbackNotes,
+        };
+
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          console.error('❌ Feedback submission failed', await res.text());
+          setFeedbackStatus('idle');
+          return;
+        }
+
+        setFeedbackStatus('submitted');
+      } catch (e) {
+        console.error('❌ Feedback submit error', e);
+        setFeedbackStatus('idle');
+      }
+    };
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6">
@@ -303,6 +341,89 @@ export default function AIMarketingModule({ moduleId, onClose }: AIMarketingModu
               <div className="rounded-2xl border-2 border-purple-500/20 bg-slate-800 p-5 sm:p-6">
                 <div className="text-sm sm:text-base text-gray-200">
                   No detailed results available.
+                </div>
+              </div>
+            )}
+
+            {/* Feedback Section */}
+            {result.analysis_id && (
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 space-y-3">
+                <p className="text-sm text-gray-300">Was this analysis accurate?</p>
+                <div className="flex flex-wrap gap-2">
+                  {(['accurate', 'partial', 'wrong'] as const).map((label) => (
+                    <button
+                      key={label}
+                      type="button"
+                      onClick={() => {
+                        setFeedbackLabel(label);
+                        if (label !== 'wrong') {
+                          setFeedbackWrongIssues([]);
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
+                        feedbackLabel === label
+                          ? 'bg-emerald-500 text-black border-emerald-400'
+                          : 'border-white/20 text-white/80 hover:bg-white/10'
+                      }`}
+                    >
+                      {label === 'accurate' ? 'Accurate' : label === 'partial' ? 'Partly' : 'Wrong'}
+                    </button>
+                  ))}
+                </div>
+
+                {feedbackLabel === 'wrong' && (
+                  <div className="space-y-2">
+                    <p className="text-xs text-gray-300">
+                      Which parts were wrong? (optional, selects from Main Issues)
+                    </p>
+                    <div className="flex flex-col gap-1">
+                      {result.mainIssues?.map((issue, idx) => {
+                        const id = `issue-${idx}`;
+                        const selected = feedbackWrongIssues.includes(id);
+                        return (
+                          <label
+                            key={id}
+                            className={`flex items-start gap-2 rounded-lg border px-2 py-1.5 text-xs cursor-pointer ${
+                              selected ? 'border-red-400 bg-red-500/10' : 'border-white/10 hover:border-red-300/60'
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              className="mt-0.5"
+                              checked={selected}
+                              onChange={(e) => {
+                                setFeedbackWrongIssues((prev) =>
+                                  e.target.checked ? [...prev, id] : prev.filter((x) => x !== id)
+                                );
+                              }}
+                            />
+                            <span className="text-gray-200">{issue}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <textarea
+                      value={feedbackNotes}
+                      onChange={(e) => setFeedbackNotes(e.target.value)}
+                      placeholder="Optional notes to clarify what was wrong..."
+                      className="w-full rounded-lg border border-white/20 bg-black/30 px-3 py-2 text-xs text-white placeholder-gray-500 outline-none focus:ring-1 focus:ring-emerald-400"
+                      rows={3}
+                    />
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={handleFeedbackSubmit}
+                    disabled={!feedbackLabel || feedbackStatus === 'submitting'}
+                    className="px-4 py-1.5 rounded-full text-xs font-medium bg-white text-black hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {feedbackStatus === 'submitting' ? 'Sending...' : 'Send feedback'}
+                  </button>
+                  {feedbackStatus === 'submitted' && (
+                    <span className="text-xs text-emerald-300">Thanks — feedback saved.</span>
+                  )}
                 </div>
               </div>
             )}

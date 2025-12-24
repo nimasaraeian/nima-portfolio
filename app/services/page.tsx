@@ -226,23 +226,6 @@ export default function ServicesPage() {
           </p>
 
           <div className="space-y-6">
-            {/* Subsection 0 - Conversion Audit */}
-            <Link
-              href="/decision-diagnostic"
-              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
-            >
-              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Conversion Audit
-              </h3>
-              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                A structured decision audit to identify why users hesitate before converting. Get a concise report with top blockers, trust gaps, and prioritized fixes within 48 hours.
-              </p>
-              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Explore conversion audit
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </span>
-            </Link>
-
             {/* Subsection 1 */}
             <Link
               href="/services/decision-friction-diagnosis"

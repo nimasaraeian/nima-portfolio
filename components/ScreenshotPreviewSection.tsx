@@ -90,9 +90,9 @@ export default function ScreenshotPreviewSection({
 
 
   // Determine aspect ratio and container classes based on viewport
-  const isMobile = evidence?.viewport === "mobile" || title.toLowerCase().includes("mobile");
+  const isMobile = evidence?.viewport === "mobile" || title.toLowerCase().includes("mobile") || title.includes("موبایل");
   const aspectClass = isMobile ? "aspect-[9/16]" : "aspect-[16/9]";
-  const containerClass = isMobile ? "w-full max-w-[180px] mx-auto lg:mx-0" : "w-full";
+  const containerClass = isMobile ? "w-full max-w-[280px] mx-auto lg:mx-0" : "w-full";
 
   if (!showImage) {
     // Show placeholder if no valid src
@@ -157,24 +157,28 @@ export function ScreenshotPreviewSectionWrapper({
   const mobileSrc = screenshotSrc(mobile);
   
   return (
-    <div className="mt-6">
-      <div className="flex flex-col lg:flex-row gap-4 items-start justify-center lg:justify-start">
+    <div className="mt-6 w-full">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-start lg:items-start">
         {desktopSrc && (
-          <ScreenshotPreviewSection
-            title="Desktop – Above the fold"
-            src={desktopSrc}
-            evidence={desktopEvidence}
-            status={desktopStatus}
-            error={desktopError}
-          />
+          <div className="w-full lg:flex-1">
+            <ScreenshotPreviewSection
+              title="دسکتاپ – Above the fold"
+              src={desktopSrc}
+              evidence={desktopEvidence}
+              status={desktopStatus}
+              error={desktopError}
+            />
+          </div>
         )}
         {mobileSrc && (
-          <ScreenshotPreviewSection
-            title="Mobile – Above the fold"
-            src={mobileSrc}
-            evidence={mobileEvidence}
-            status={mobileStatus}
-          />
+          <div className="w-full lg:w-auto lg:flex-shrink-0">
+            <ScreenshotPreviewSection
+              title="موبایل – Above the fold"
+              src={mobileSrc}
+              evidence={mobileEvidence}
+              status={mobileStatus}
+            />
+          </div>
         )}
       </div>
     </div>

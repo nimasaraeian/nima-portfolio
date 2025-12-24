@@ -7,7 +7,6 @@ export default function SideMenu() {
     { id: 'home', label: 'Home', href: '/' },
     { id: 'about', label: 'About', href: '/about' },
     { id: 'services', label: 'Services', href: '/services' },
-    { id: 'decision-diagnostic', label: 'Conversion Audit', href: '/decision-diagnostic' },
     { id: 'projects', label: 'Projects', href: '/projects' },
     { id: 'articles', label: 'Articles', href: '/articles' },
     { id: 'research', label: 'Research', href: '/research' },
