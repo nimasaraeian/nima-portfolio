@@ -55,7 +55,7 @@ export default function DecisionEvidenceForm({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: { preventDefault: () => void; currentTarget: HTMLFormElement }) => {
     e.preventDefault();
 
     // Validate based on mode
