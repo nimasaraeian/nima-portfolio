@@ -49,8 +49,13 @@ export default function DecisionReportView({
     return null;
   }
 
+  // Use unified response keys
   const report = formatReport(result.human_report);
   const hasReport = !!report;
+  const mode = result.mode || inputMode;
+  const goal = result.goal;
+  const issues = result.issues || [];
+  const quickWins = result.quick_wins || [];
 
   const handleCopyReport = async () => {
     const textToCopy = report || JSON.stringify(result, null, 2);
@@ -63,10 +68,10 @@ export default function DecisionReportView({
     <div className="mt-8 space-y-6">
       {/* Inputs Analyzed */}
       <div className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70">
-        <span className="font-medium">Inputs analyzed:</span> Mode: {inputMode.toUpperCase()}
-        {result.goal && (
+        <span className="font-medium">Inputs analyzed:</span> Mode: {typeof mode === "string" ? mode.toUpperCase() : inputMode.toUpperCase()}
+        {goal && (
           <span className="ml-2">
-            • Goal: {result.goal}
+            • Goal: {goal}
           </span>
         )}
       </div>
@@ -231,12 +236,41 @@ export default function DecisionReportView({
         </div>
       )}
 
+      {/* Quick Wins List */}
+      {Array.isArray(quickWins) && quickWins.length > 0 && (
+        <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Quick Wins</h3>
+          <div className="space-y-4">
+            {quickWins.map((win: any, index: number) => (
+              <div
+                key={index}
+                className="border-l-4 border-green-500/50 pl-4 py-2"
+              >
+                {win.title && (
+                  <h4 className="text-sm font-medium text-white mb-1">
+                    {win.title}
+                  </h4>
+                )}
+                {win.description && (
+                  <p className="text-sm text-white/80 mb-2">{win.description}</p>
+                )}
+                {win.impact && (
+                  <p className="text-sm text-white/70">
+                    <span className="font-medium">Impact:</span> {win.impact}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Issues List */}
-      {result.issues && Array.isArray(result.issues) && result.issues.length > 0 && (
+      {Array.isArray(issues) && issues.length > 0 && (
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
           <h3 className="text-lg font-semibold text-white mb-4">Issues</h3>
           <div className="space-y-4">
-            {result.issues.map((issue: any, index: number) => (
+            {issues.map((issue: any, index: number) => (
               <div
                 key={index}
                 className="border-l-4 border-yellow-500/50 pl-4 py-2"

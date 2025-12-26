@@ -142,6 +142,17 @@ export default function DecisionBrainHumanUI() {
     setIsMounted(true);
   }, []);
 
+  // Helper function for safe error message extraction
+  function safeErrorMessage(err: unknown): string {
+    if (typeof err === "string") return err;
+    if (err instanceof Error) return err.message;
+    try {
+      return JSON.stringify(err);
+    } catch {
+      return "Unknown error";
+    }
+  }
+
   // Handle evidence form submission
   const handleEvidenceSubmit = async (data: {
     mode: "url" | "image" | "text";
@@ -155,69 +166,48 @@ export default function DecisionBrainHumanUI() {
     setEvidenceInputMode(data.mode);
     setEvidenceLoading(true);
 
-    console.log("[DecisionBrain] POST ->", "/api/proxy/decision-scan");
+    console.log("[DecisionBrain] POST ->", "/api/proxy/analyze-human");
 
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
 
-      let response: Response;
+      // Build FormData for all modes
+      const fd = new FormData();
+      fd.append("goal", data.goal);
 
-      if (data.mode === "image" && data.image) {
-        // Multipart/form-data for image
-        const formData = new FormData();
-        formData.append("mode", "image");
-        formData.append("goal", data.goal);
-        formData.append("locale", "en");
-        formData.append("image", data.image);
-
-        response = await fetch("/api/proxy/decision-scan", {
-          method: "POST",
-          body: formData,
-          signal: controller.signal,
-        });
-      } else {
-        // JSON for URL or text
-        const body: any = {
-          mode: data.mode,
-          goal: data.goal,
-          locale: "en",
-        };
-
-        if (data.mode === "url" && data.url) {
-          body.url = data.url;
-        } else if (data.mode === "text" && data.text) {
-          body.text = data.text;
-        }
-
-        response = await fetch("/api/proxy/decision-scan", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-          signal: controller.signal,
-        });
+      if (data.mode === "url" && data.url) {
+        fd.append("url", data.url);
+      } else if (data.mode === "text" && data.text) {
+        fd.append("text", data.text);
+      } else if (data.mode === "image" && data.image) {
+        fd.append("image", data.image);
       }
+
+      const response = await fetch("/api/proxy/analyze-human", {
+        method: "POST",
+        body: fd,
+        signal: controller.signal,
+      });
 
       clearTimeout(timeoutId);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        let errorDetail: string = errorText;
-        try {
-          const errorJson = JSON.parse(errorText);
-          const detail = errorJson.detail || errorJson.error || errorText;
-          errorDetail = typeof detail === "string" ? detail : JSON.stringify(detail);
-        } catch {
-          // Not JSON, use text as-is
-        }
-        // Ensure errorDetail is a string and limit length
-        const errorMessage = typeof errorDetail === "string" ? errorDetail : String(errorDetail);
-        throw new Error(`API ${response.status}: ${errorMessage.slice(0, 500)}`);
+      const responseText = await response.text();
+      let resultData: any;
+
+      try {
+        resultData = JSON.parse(responseText);
+      } catch {
+        const preview = typeof responseText === "string" ? responseText.slice(0, 200) : String(responseText).slice(0, 200);
+        throw new Error(`Invalid JSON response: ${preview}`);
       }
 
-      const resultData = await response.json();
+      // Check for API-level error status
+      if (!response.ok || resultData?.status === "error") {
+        const errorMsg = resultData?.message || resultData?.detail || resultData?.error || `API ${response.status} error`;
+        throw new Error(errorMsg);
+      }
+
       setEvidenceResult(resultData);
       setEvidenceLoading(false);
     } catch (err) {
@@ -230,10 +220,10 @@ export default function DecisionBrainHumanUI() {
         } else if (err.message.includes("Failed to fetch") || err.message.includes("fetch")) {
           errorMessage = "Network error: Could not connect to the server. Please check your connection and try again.";
         } else {
-          errorMessage = err.message;
+          errorMessage = safeErrorMessage(err);
         }
-      } else if (typeof err === "string") {
-        errorMessage = err;
+      } else {
+        errorMessage = safeErrorMessage(err);
       }
       
       setEvidenceError(errorMessage);
