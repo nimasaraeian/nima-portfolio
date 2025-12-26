@@ -157,12 +157,43 @@ export async function POST(req: Request) {
       );
     }
 
-    const text = await r.text();
+    let text: string;
+    try {
+      text = await r.text();
+    } catch (textError) {
+      console.error("[proxy/decision-scan] Error reading response text:", textError);
+      text = JSON.stringify({
+        status: "error",
+        error: "Failed to read backend response",
+        detail: textError instanceof Error ? textError.message : String(textError),
+      });
+    }
+
+    // If backend returned an error status, ensure it's valid JSON
+    if (!r.ok) {
+      try {
+        // Try to parse as JSON to ensure it's valid
+        const errorData = JSON.parse(text);
+        // Re-stringify to ensure consistent format
+        text = JSON.stringify({
+          status: "error",
+          error: errorData.error || "Backend error",
+          detail: errorData.detail || errorData.message || text,
+        });
+      } catch {
+        // If not JSON, wrap it in a JSON error response
+        text = JSON.stringify({
+          status: "error",
+          error: `Backend returned ${r.status}`,
+          detail: text.length > 1000 ? text.slice(0, 1000) + "..." : text,
+        });
+      }
+    }
 
     // Pass-through
     return new Response(text, {
       status: r.status,
-      headers: { "Content-Type": r.headers.get("content-type") || "application/json" },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("[proxy/decision-scan] Unexpected error:", error);

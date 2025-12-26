@@ -204,14 +204,17 @@ export default function DecisionBrainHumanUI() {
 
       if (!response.ok) {
         const errorText = await response.text();
-        let errorDetail = errorText;
+        let errorDetail: string = errorText;
         try {
           const errorJson = JSON.parse(errorText);
-          errorDetail = errorJson.detail || errorJson.error || errorText;
+          const detail = errorJson.detail || errorJson.error || errorText;
+          errorDetail = typeof detail === "string" ? detail : JSON.stringify(detail);
         } catch {
           // Not JSON, use text as-is
         }
-        throw new Error(`API ${response.status}: ${errorDetail.slice(0, 500)}`);
+        // Ensure errorDetail is a string and limit length
+        const errorMessage = typeof errorDetail === "string" ? errorDetail : String(errorDetail);
+        throw new Error(`API ${response.status}: ${errorMessage.slice(0, 500)}`);
       }
 
       const resultData = await response.json();
