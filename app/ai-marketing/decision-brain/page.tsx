@@ -142,17 +142,6 @@ export default function DecisionBrainHumanUI() {
     setIsMounted(true);
   }, []);
 
-  // Helper function for safe error message extraction
-  function safeErrorMessage(err: unknown): string {
-    if (typeof err === "string") return err;
-    if (err instanceof Error) return err.message;
-    try {
-      return JSON.stringify(err);
-    } catch {
-      return "Unknown error";
-    }
-  }
-
   // Handle evidence form submission
   const handleEvidenceSubmit = async (data: {
     mode: "url" | "image" | "text";
@@ -161,72 +150,59 @@ export default function DecisionBrainHumanUI() {
     text?: string;
     goal: string;
   }) => {
+    setEvidenceLoading(true);
     setEvidenceError(null);
     setEvidenceResult(null);
     setEvidenceInputMode(data.mode);
-    setEvidenceLoading(true);
-
-    console.log("[DecisionBrain] POST ->", "/api/proxy/analyze-human");
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
-
-      // Build FormData for all modes
-      const fd = new FormData();
-      fd.append("goal", data.goal);
+      // Build FormData
+      const formData = new FormData();
+      formData.append("goal", data.goal);
 
       if (data.mode === "url" && data.url) {
-        fd.append("url", data.url);
-      } else if (data.mode === "text" && data.text) {
-        fd.append("text", data.text);
-      } else if (data.mode === "image" && data.image) {
-        fd.append("image", data.image);
+        formData.append("url", data.url);
+      }
+      if (data.image) {
+        formData.append("image", data.image);
+      }
+      if (data.text) {
+        formData.append("text", data.text);
       }
 
-      const response = await fetch("/api/proxy/analyze-human", {
+      // Call proxy endpoint - do NOT set Content-Type header
+      const res = await fetch("/api/proxy/analyze-human", {
         method: "POST",
-        body: fd,
-        signal: controller.signal,
+        body: formData,
       });
 
-      clearTimeout(timeoutId);
+      // Read response as text first
+      const raw = await res.text();
 
-      const responseText = await response.text();
-      let resultData: any;
-
-      try {
-        resultData = JSON.parse(responseText);
-      } catch {
-        const preview = typeof responseText === "string" ? responseText.slice(0, 200) : String(responseText).slice(0, 200);
-        throw new Error(`Invalid JSON response: ${preview}`);
+      // Handle errors
+      if (!res.ok) {
+        let msg = raw || `Request failed (${res.status})`;
+        try {
+          const j = JSON.parse(raw);
+          msg = j?.message || j?.detail?.message || msg;
+        } catch {
+          // If JSON parse fails, use raw text or default message
+        }
+        throw new Error(msg);
       }
 
-      // Check for API-level error status
-      if (!response.ok || resultData?.status === "error") {
-        const errorMsg = resultData?.message || resultData?.detail || resultData?.error || `API ${response.status} error`;
-        throw new Error(errorMsg);
-      }
+      // Parse JSON response
+      const resultData = JSON.parse(raw);
+      console.log("ANALYZE RESULT", resultData);
 
       setEvidenceResult(resultData);
-      setEvidenceLoading(false);
-    } catch (err) {
-      console.error("Evidence submission failed:", err);
-      let errorMessage = "Failed to analyze evidence. Please try again.";
-      
-      if (err instanceof Error) {
-        if (err.name === "AbortError") {
-          errorMessage = "Request timed out. Please try again.";
-        } else if (err.message.includes("Failed to fetch") || err.message.includes("fetch")) {
-          errorMessage = "Network error: Could not connect to the server. Please check your connection and try again.";
-        } else {
-          errorMessage = safeErrorMessage(err);
-        }
-      } else {
-        errorMessage = safeErrorMessage(err);
-      }
-      
+      return resultData;
+    } catch (err: any) {
+      console.error("ANALYZE ERROR", err);
+      const errorMessage = err?.message || "Analyze failed";
       setEvidenceError(errorMessage);
+      throw err;
+    } finally {
       setEvidenceLoading(false);
     }
   };
