@@ -45,8 +45,28 @@ export default function DecisionReportView({
 }: DecisionReportViewProps) {
   const [copySuccess, setCopySuccess] = useState(false);
 
+  // Debug logs
+  console.debug("API response", result);
+  console.debug("Artifacts", result?.capture?.artifacts);
+  console.debug("Quick wins", result?.quick_wins);
+  console.debug("Issues", result?.issues);
+
   if (!result) {
     return null;
+  }
+
+  // Defensive guard: check response status
+  if (result.status && result.status !== "ok") {
+    return (
+      <div className="mt-8 rounded-2xl border border-red-500/30 bg-red-500/10 p-6">
+        <p className="text-sm font-medium text-red-400 mb-2">
+          ⚠️ Error
+        </p>
+        <p className="text-xs text-red-300">
+          {result.message || result.error || "An error occurred while processing your request."}
+        </p>
+      </div>
+    );
   }
 
   // Use unified response keys
@@ -54,8 +74,14 @@ export default function DecisionReportView({
   const hasReport = !!report;
   const mode = result.mode || inputMode;
   const goal = result.goal;
-  const issues = result.issues || [];
-  const quickWins = result.quick_wins || [];
+  const issues = Array.isArray(result.issues) ? result.issues : [];
+  const quickWins = Array.isArray(result.quick_wins) ? result.quick_wins : [];
+
+  // Check if screenshots exist in new path
+  const hasScreenshots = !!(
+    result?.capture?.artifacts?.above_the_fold?.desktop ||
+    result?.capture?.artifacts?.above_the_fold?.mobile
+  );
 
   const handleCopyReport = async () => {
     const textToCopy = report || JSON.stringify(result, null, 2);
@@ -76,10 +102,10 @@ export default function DecisionReportView({
         )}
       </div>
 
-      {/* Screenshots */}
-      {result.screenshots || result.screenshot ? (
+      {/* Screenshots - Use new path: capture.artifacts.above_the_fold */}
+      {hasScreenshots && (
         <ScreenshotOnlyATF data={result} />
-      ) : null}
+      )}
 
       {/* Decision State Card */}
       {result.decision_state && (
@@ -237,96 +263,78 @@ export default function DecisionReportView({
       )}
 
       {/* Quick Wins List */}
-      {Array.isArray(quickWins) && quickWins.length > 0 && (
-        <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Quick Wins</h3>
+      <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">Quick Wins</h3>
+        {quickWins.length > 0 ? (
           <div className="space-y-4">
             {quickWins.map((win: any, index: number) => (
               <div
-                key={index}
+                key={win.id || index}
                 className="border-l-4 border-green-500/50 pl-4 py-2"
               >
-                {win.title && (
+                {win.action && (
                   <h4 className="text-sm font-medium text-white mb-1">
-                    {win.title}
+                    {win.action}
                   </h4>
                 )}
-                {win.description && (
-                  <p className="text-sm text-white/80 mb-2">{win.description}</p>
+                {win.where && (win.where.section || win.where.selector) && (
+                  <p className="text-xs text-white/60 mb-2">
+                    <span className="font-medium">Where:</span>{" "}
+                    {win.where.section || win.where.selector}
+                  </p>
                 )}
-                {win.impact && (
-                  <p className="text-sm text-white/70">
-                    <span className="font-medium">Impact:</span> {win.impact}
+                {win.reason && (
+                  <p className="text-sm text-white/80">
+                    {win.reason}
                   </p>
                 )}
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <p className="text-sm text-white/70 italic">No quick wins detected</p>
+        )}
+      </div>
 
       {/* Issues List */}
-      {Array.isArray(issues) && issues.length > 0 && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Issues</h3>
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">Issues</h3>
+        {issues.length > 0 ? (
           <div className="space-y-4">
             {issues.map((issue: any, index: number) => (
               <div
-                key={index}
-                className="border-l-4 border-yellow-500/50 pl-4 py-2"
+                key={issue.id || index}
+                className={`border-l-4 pl-4 py-2 ${
+                  issue.severity === "error" || issue.severity === "high"
+                    ? "border-red-500/50"
+                    : issue.severity === "warning" || issue.severity === "medium"
+                    ? "border-yellow-500/50"
+                    : "border-yellow-500/30"
+                }`}
               >
-                {issue.title && (
+                {issue.problem && (
                   <h4 className="text-sm font-medium text-white mb-1">
-                    {issue.title}
+                    {issue.problem}
                   </h4>
                 )}
-                {issue.why && (
-                  <p className="text-sm text-white/80 mb-2">{issue.why}</p>
-                )}
-                {issue.fix && (
-                  <p className="text-sm text-white/70">
-                    <span className="font-medium">Fix:</span> {issue.fix}
+                {issue.severity && (
+                  <p className="text-xs text-white/60 mb-2">
+                    <span className="font-medium">Severity:</span> {issue.severity}
                   </p>
                 )}
-                {issue.location && (
-                  <p className="text-xs text-white/60 mt-1">
-                    Location: {issue.location}
+                {issue.why_it_hurts && (
+                  <p className="text-sm text-white/80">
+                    {issue.why_it_hurts}
                   </p>
                 )}
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <p className="text-sm text-white/70 italic">No issues detected</p>
+        )}
+      </div>
 
-      {/* Screenshot URLs (if present as separate fields) */}
-      {result.screenshot_urls && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-lg font-semibold text-white mb-3">Screenshots</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {result.screenshot_urls.desktop && (
-              <div>
-                <p className="text-xs text-white/70 mb-2">Desktop</p>
-                <img
-                  src={toAbsolute(result.screenshot_urls.desktop)}
-                  alt="Desktop screenshot"
-                  className="w-full rounded-lg border border-white/10"
-                />
-              </div>
-            )}
-            {result.screenshot_urls.mobile && (
-              <div>
-                <p className="text-xs text-white/70 mb-2">Mobile</p>
-                <img
-                  src={toAbsolute(result.screenshot_urls.mobile)}
-                  alt="Mobile screenshot"
-                  className="w-full rounded-lg border border-white/10"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

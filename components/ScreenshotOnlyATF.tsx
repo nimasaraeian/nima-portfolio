@@ -51,55 +51,29 @@ const toAbsoluteUrl = (url: string | null | undefined): string | null => {
 };
 
 export function ScreenshotOnlyATF({ data }: { data: any }) {
-  // Extract ATF URLs from multiple possible paths (NEVER use full_page)
-  const desktopATFRaw =
-    data?.capture?.screenshots?.desktop?.above_the_fold ??
-    data?.capture?.screenshots?.desktop?.aboveFold ??
-    (typeof data?.screenshots?.desktop === 'object' && data?.screenshots?.desktop !== null
-      ? (data.screenshots.desktop as any).above_the_fold ?? (data.screenshots.desktop as any).aboveFold
-      : undefined) ??
-    (typeof data?.screenshots?.desktop === 'string' ? data.screenshots.desktop : undefined) ??
-    null;
+  // Extract ATF URLs ONLY from: capture.artifacts.above_the_fold.desktop/mobile
+  // Priority: data_uri first, then url
+  const desktopArtifact = data?.capture?.artifacts?.above_the_fold?.desktop;
+  const mobileArtifact = data?.capture?.artifacts?.above_the_fold?.mobile;
 
-  const mobileATFRaw =
-    data?.capture?.screenshots?.mobile?.above_the_fold ??
-    data?.capture?.screenshots?.mobile?.aboveFold ??
-    (typeof data?.screenshots?.mobile === 'object' && data?.screenshots?.mobile !== null
-      ? (data.screenshots.mobile as any).above_the_fold ?? (data.screenshots.mobile as any).aboveFold
-      : undefined) ??
-    (typeof data?.screenshots?.mobile === 'string' ? data.screenshots.mobile : undefined) ??
-    null;
+  const desktopATFRaw = desktopArtifact?.data_uri ?? desktopArtifact?.url ?? null;
+  const mobileATFRaw = mobileArtifact?.data_uri ?? mobileArtifact?.url ?? null;
 
-  // Convert to absolute URLs
-  const desktopATF = toAbsoluteUrl(desktopATFRaw);
-  const mobileATF = toAbsoluteUrl(mobileATFRaw);
+  // Convert to absolute URLs (for url type, data_uri is already absolute)
+  const desktopATF = desktopATFRaw ? (desktopATFRaw.startsWith('data:') ? desktopATFRaw : toAbsoluteUrl(desktopATFRaw)) : null;
+  const mobileATF = mobileATFRaw ? (mobileATFRaw.startsWith('data:') ? mobileATFRaw : toAbsoluteUrl(mobileATFRaw)) : null;
 
-  // Debug in development
-  if (process.env.NODE_ENV !== "production") {
-    console.log("📸 ScreenshotOnlyATF data paths:", {
-      "capture.desktop.above_the_fold": data?.capture?.screenshots?.desktop?.above_the_fold ? "✅" : "❌",
-      "capture.desktop.aboveFold": data?.capture?.screenshots?.desktop?.aboveFold ? "✅" : "❌",
-      "screenshots.desktop": typeof data?.screenshots?.desktop,
-      "screenshots.desktop.aboveFold": data?.screenshots?.desktop?.aboveFold ? "✅" : "❌",
-      "screenshots.desktop.above_the_fold": data?.screenshots?.desktop?.above_the_fold ? "✅" : "❌",
-      "capture.mobile.above_the_fold": data?.capture?.screenshots?.mobile?.above_the_fold ? "✅" : "❌",
-      "capture.mobile.aboveFold": data?.capture?.screenshots?.mobile?.aboveFold ? "✅" : "❌",
-      "screenshots.mobile": typeof data?.screenshots?.mobile,
-      "screenshots.mobile.aboveFold": data?.screenshots?.mobile?.aboveFold ? "✅" : "❌",
-      "screenshots.mobile.above_the_fold": data?.screenshots?.mobile?.above_the_fold ? "✅" : "❌",
-      "Raw desktopATF": desktopATFRaw ? `${desktopATFRaw.substring(0, 100)}...` : "null",
-      "Raw mobileATF": mobileATFRaw ? `${mobileATFRaw.substring(0, 100)}...` : "null",
-      "Raw desktopATF type": desktopATFRaw ? (desktopATFRaw.startsWith("data:") ? "data URL" : desktopATFRaw.startsWith("http") ? "HTTP URL" : "relative path") : "null",
-      "Raw mobileATF type": mobileATFRaw ? (mobileATFRaw.startsWith("data:") ? "data URL" : mobileATFRaw.startsWith("http") ? "HTTP URL" : "relative path") : "null",
-      "Final desktopATF": desktopATF ? `${desktopATF.substring(0, 100)}...` : "null",
-      "Final mobileATF": mobileATF ? `${mobileATF.substring(0, 100)}...` : "null",
-      "Backend URL": typeof window !== 'undefined' 
-        ? (process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_BRAIN_API_URL || 'Not set')
-        : 'Server-side',
-      "Full data keys": data ? Object.keys(data) : [],
-      "screenshots keys": data?.screenshots ? Object.keys(data.screenshots) : [],
-    });
-  }
+  // Debug logs
+  console.debug("📸 ScreenshotOnlyATF artifacts:", {
+    "capture.artifacts.above_the_fold.desktop": desktopArtifact ? "✅" : "❌",
+    "capture.artifacts.above_the_fold.mobile": mobileArtifact ? "✅" : "❌",
+    "desktop.data_uri": desktopArtifact?.data_uri ? "✅" : "❌",
+    "desktop.url": desktopArtifact?.url ? "✅" : "❌",
+    "mobile.data_uri": mobileArtifact?.data_uri ? "✅" : "❌",
+    "mobile.url": mobileArtifact?.url ? "✅" : "❌",
+    "Final desktopATF": desktopATF ? (desktopATF.startsWith("data:") ? "data URI" : `${desktopATF.substring(0, 50)}...`) : "null",
+    "Final mobileATF": mobileATF ? (mobileATF.startsWith("data:") ? "data URI" : `${mobileATF.substring(0, 50)}...`) : "null",
+  });
 
   // Show component even if only one screenshot is available
   if (!desktopATF && !mobileATF) return null;
