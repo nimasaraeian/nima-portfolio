@@ -156,43 +156,16 @@ export default function DecisionBrainHumanUI() {
     setEvidenceInputMode(data.mode);
 
     try {
-      // Build FormData
-      const formData = new FormData();
-      formData.append("goal", data.goal);
-
-      if (data.mode === "url" && data.url) {
-        formData.append("url", data.url);
-      }
-      if (data.image) {
-        formData.append("image", data.image);
-      }
-      if (data.text) {
-        formData.append("text", data.text);
-      }
-
-      // Call proxy endpoint - do NOT set Content-Type header
-      const res = await fetch("/api/proxy/analyze-human", {
-        method: "POST",
-        body: formData,
+      const { analyzeHuman } = await import("@/lib/decisionApi");
+      
+      // Call FastAPI directly - no proxy
+      const resultData = await analyzeHuman({
+        goal: data.goal,
+        url: data.mode === "url" ? data.url : undefined,
+        image: data.image,
+        text: data.text,
       });
 
-      // Read response as text first
-      const raw = await res.text();
-
-      // Handle errors
-      if (!res.ok) {
-        let msg = raw || `Request failed (${res.status})`;
-        try {
-          const j = JSON.parse(raw);
-          msg = j?.message || j?.detail?.message || msg;
-        } catch {
-          // If JSON parse fails, use raw text or default message
-        }
-        throw new Error(msg);
-      }
-
-      // Parse JSON response
-      const resultData = JSON.parse(raw);
       console.log("ANALYZE RESULT", resultData);
 
       setEvidenceResult(resultData);

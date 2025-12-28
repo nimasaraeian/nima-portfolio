@@ -9,6 +9,7 @@ import CTARecommendationsCard from "@/components/report/CTARecommendationsCard";
 import CostOfInactionCard from "@/components/report/CostOfInactionCard";
 import MindsetPersonasCard from "@/components/report/MindsetPersonasCard";
 import { ScreenshotOnlyATF } from "@/components/ScreenshotOnlyATF";
+import DecisionProfileCard from "@/components/DecisionProfileCard";
 
 type DecisionReportViewProps = {
   result: any;
@@ -83,8 +84,66 @@ export default function DecisionReportView({
     result?.capture?.artifacts?.above_the_fold?.mobile
   );
 
+  // Helper to format Decision Profile for copy
+  const formatDecisionProfileForCopy = (dm: any): string => {
+    if (!dm) return "";
+    
+    const modeMap: Record<string, string> = {
+      Ready_Heuristic: "Fast & Intuitive (Heuristic)",
+      Ready_Analytical: "Slow & Analytical",
+      Overwhelmed: "Overwhelmed / Cognitive Load",
+      Skeptical: "Skeptical / Trust Barrier",
+    };
+    const modeLabel = modeMap[dm.decision_mode] || dm.decision_mode || "Unknown";
+    
+    // Format confidence: if <=1 assume 0..1, if >1 assume already percent
+    let confidence = dm.confidence || 0;
+    if (confidence <= 1) {
+      confidence = Math.round(confidence * 100);
+    } else {
+      confidence = Math.round(confidence);
+    }
+    
+    let text = "=== Decision Profile ===\n";
+    text += `Decision Mode: ${modeLabel}\n`;
+    text += `Confidence: ${confidence}%\n`;
+    
+    if (dm.signals && dm.signals.length > 0) {
+      const displaySignals = dm.signals.slice(0, 6);
+      text += `Primary Signals: ${displaySignals.join(", ")}\n`;
+    }
+    
+    if (dm.lens_scores && Object.keys(dm.lens_scores).length > 0) {
+      text += "Lens Scores:\n";
+      const sortedEntries = Object.entries(dm.lens_scores)
+        .sort(([, a], [, b]) => (b as number || 0) - (a as number || 0))
+        .slice(0, 4);
+      sortedEntries.forEach(([lens, score]) => {
+        const clampedScore = Math.max(0, Math.min(1, score as number || 0));
+        const scorePercent = Math.round(clampedScore * 100);
+        text += `  ${lens}: ${scorePercent}%\n`;
+      });
+    }
+    
+    if (dm.human_explanation) {
+      text += `\nHuman Explanation:\n${dm.human_explanation}\n`;
+    }
+    
+    text += "\n";
+    return text;
+  };
+
   const handleCopyReport = async () => {
-    const textToCopy = report || JSON.stringify(result, null, 2);
+    let textToCopy = "";
+    
+    // Prepend Decision Profile if it exists
+    if (result.decision_machine) {
+      textToCopy += formatDecisionProfileForCopy(result.decision_machine);
+    }
+    
+    // Add the report
+    textToCopy += report || JSON.stringify(result, null, 2);
+    
     await navigator.clipboard.writeText(textToCopy);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000);
@@ -101,6 +160,11 @@ export default function DecisionReportView({
           </span>
         )}
       </div>
+
+      {/* Decision Profile Card - After Inputs analyzed */}
+      {result.decision_machine && (
+        <DecisionProfileCard decision_machine={result.decision_machine} />
+      )}
 
       {/* Screenshots - Use new path: capture.artifacts.above_the_fold */}
       {hasScreenshots && (

@@ -16,6 +16,16 @@ export interface BrainAPIResponse {
   analysis_id?: number
 }
 
+// Decision Machine types for Human Decision Review
+export interface DecisionMachine {
+  decision_mode: string
+  confidence: number
+  lens_scores: Record<string, number>
+  conflicts?: string[]
+  signals: string[]
+  human_explanation: string
+}
+
 
 
 
