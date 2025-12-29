@@ -10,6 +10,7 @@ import CostOfInactionCard from "@/components/report/CostOfInactionCard";
 import MindsetPersonasCard from "@/components/report/MindsetPersonasCard";
 import { ScreenshotOnlyATF } from "@/components/ScreenshotOnlyATF";
 import DecisionProfileCard from "@/components/DecisionProfileCard";
+import { DECISION_MODE_LABEL, BLOCKER_LABEL, BLOCKER_EXPLAIN, BLOCKER_MAP } from "@/lib/decisionCopy";
 
 type DecisionReportViewProps = {
   result: any;
@@ -70,9 +71,13 @@ export default function DecisionReportView({
     );
   }
 
-  // Use unified response keys
-  const report = formatReport(result.human_report);
-  const hasReport = !!report;
+  // Extract v2 fields
+  const decisionModel = result.decision_model;
+  const verdict = result.verdict;
+  const actions = Array.isArray(result.actions) ? result.actions : [];
+  const checks = Array.isArray(result.checks) ? result.checks : [];
+  
+  // Legacy fields (fallback)
   const mode = result.mode || inputMode;
   const goal = result.goal;
   const issues = Array.isArray(result.issues) ? result.issues : [];
@@ -83,6 +88,35 @@ export default function DecisionReportView({
     result?.capture?.artifacts?.above_the_fold?.desktop ||
     result?.capture?.artifacts?.above_the_fold?.mobile
   );
+  
+  // Get Decision Mode (v2) - NEVER use as blocker, only for context
+  const decisionMode = decisionModel?.decision_mode || result.summary?.decision_mode || null;
+  
+  // Get Confidence (v2) - check root level analysis_confidence first, then decisionModel
+  const confidenceRaw = 
+    typeof result.analysis_confidence === "number"
+      ? result.analysis_confidence
+      : typeof decisionModel?.confidence === "number"
+        ? decisionModel.confidence
+        : null;
+  
+  // Convert 0..1 to percent (or keep as-is if already > 1)
+  const confidence = confidenceRaw !== null 
+    ? (confidenceRaw <= 1 ? Math.round(confidenceRaw * 100) : Math.round(confidenceRaw))
+    : null;
+
+  // Determine Primary Blocker - NEVER use decision_mode
+  const primaryBlocker =
+    verdict?.primary_blocker ||
+    issues?.[0]?.type ||
+    actions?.[0]?.where?.section ||
+    "unclear_value";
+
+  // Get blocker info from BLOCKER_MAP or fallback
+  const blockerInfo = BLOCKER_MAP[primaryBlocker] || {
+    title: BLOCKER_LABEL[primaryBlocker] || primaryBlocker,
+    explain: BLOCKER_EXPLAIN[primaryBlocker] || "Users hesitate due to this issue.",
+  };
 
   // Helper to format Decision Profile for copy
   const formatDecisionProfileForCopy = (dm: any): string => {
@@ -141,8 +175,34 @@ export default function DecisionReportView({
       textToCopy += formatDecisionProfileForCopy(result.decision_machine);
     }
     
-    // Add the report
-    textToCopy += report || JSON.stringify(result, null, 2);
+    // Add v2 "Why users hesitate" section
+    textToCopy += "=== Why users hesitate ===\n\n";
+    if (decisionMode) {
+      textToCopy += `Decision style detected: ${DECISION_MODE_LABEL[decisionMode] || decisionMode}.\n`;
+      if (decisionMode === "fast_intuitive") {
+        textToCopy += "This means users need clarity within seconds.\n";
+      }
+      textToCopy += "\n";
+    }
+    textToCopy += "Users make decisions quickly and intuitively on this page.\n";
+    textToCopy += "However, the page does not support fast decisions because:\n\n";
+    textToCopy += `→ ${blockerInfo.title}\n`;
+    textToCopy += `${blockerInfo.explain}\n\n`;
+    
+    // Add actions
+    if (actions.length > 0) {
+      textToCopy += "=== Actions ===\n";
+      actions.slice(0, 3).forEach((action: any, index: number) => {
+        textToCopy += `${index + 1}. ${action.action || action.description || ''}\n`;
+        if (action.reason) textToCopy += `   Reason: ${action.reason}\n`;
+      });
+      textToCopy += "\n";
+    }
+    
+    // Fallback to legacy report if no v2 data
+    if (!verdict?.summary && result.human_report) {
+      textToCopy += result.human_report;
+    }
     
     await navigator.clipboard.writeText(textToCopy);
     setCopySuccess(true);
@@ -164,6 +224,59 @@ export default function DecisionReportView({
       {/* Decision Profile Card - After Inputs analyzed */}
       {result.decision_machine && (
         <DecisionProfileCard decision_machine={result.decision_machine} />
+      )}
+
+      {/* Decision Mode & Confidence (v2) - Context only, not blocker */}
+      {decisionMode && confidence !== null && (
+        <div className="rounded-2xl border border-blue-400/30 bg-blue-400/10 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs text-white/70">Decision Style:</span>
+              <p className="text-lg font-semibold text-white mt-1">
+                {DECISION_MODE_LABEL[decisionMode] || decisionMode.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </p>
+            </div>
+            <div>
+              <span className="text-xs text-white/70">Confidence:</span>
+              <p className="text-2xl font-bold text-white mt-1">
+                {confidence}%
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Decision Flow Bars (v2) */}
+      {decisionModel?.drivers && Array.isArray(decisionModel.drivers) && decisionModel.drivers.length > 0 && (
+        <div className="space-y-4">
+          {decisionModel.drivers.map((driver: any, index: number) => (
+            <div key={index}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-white/70">{BLOCKER_LABEL[driver.id] || driver.id || `Driver ${index + 1}`}</span>
+              </div>
+              <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-400/60 rounded-full"
+                  style={{ width: `${(driver.score || 0) * 100}%` }}
+                />
+              </div>
+            </div>
+          ))}
+          
+          {/* Primary Friction */}
+          {decisionModel.frictions && Array.isArray(decisionModel.frictions) && decisionModel.frictions.length > 0 && (
+            <>
+              <div className="flex justify-center py-2">
+                <div className="text-2xl text-white/40">↓</div>
+              </div>
+              <div className="rounded-2xl border-2 border-blue-400/50 bg-blue-400/10 p-4 text-center">
+                <p className="text-lg font-semibold">
+                  {BLOCKER_LABEL[decisionModel.frictions[0].id] || decisionModel.frictions[0].id || decisionModel.frictions[0]}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
       )}
 
       {/* Screenshots - Use new path: capture.artifacts.above_the_fold */}
@@ -213,93 +326,52 @@ export default function DecisionReportView({
         </div>
       )}
 
-      {/* Human Report */}
-      {hasReport ? (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          <div className="flex items-center justify-between gap-3 mb-4">
-            <h2 className="text-lg font-semibold text-white">Report</h2>
-            <button
-              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 hover:bg-white/10 transition"
-              onClick={handleCopyReport}
-            >
-              {copySuccess ? "Copied!" : "Copy report"}
-            </button>
-          </div>
-
-          {/* Report Summary Anchor Navigation */}
-          {(result.decision_psychology_insight ||
-            result.cta_recommendations ||
-            result.cost_of_inaction ||
-            result.mindset_personas) && (
+      {/* Why users hesitate (v2) - Replaces human_report */}
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-8">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h2 className="text-2xl font-semibold text-white">Why users hesitate</h2>
+          <button
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/80 hover:bg-white/10 transition"
+            onClick={handleCopyReport}
+          >
+            {copySuccess ? "Copied!" : "Copy report"}
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          {/* Decision Mode Context */}
+          {decisionMode && (
             <div className="mb-4 pb-4 border-b border-white/10">
-              <div className="flex flex-wrap gap-2 text-xs">
-                {result.decision_psychology_insight && (
-                  <button
-                    onClick={() => {
-                      document
-                        .getElementById("report-insight")
-                        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }}
-                    className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
-                  >
-                    Insight
-                  </button>
-                )}
-                {result.cta_recommendations && (
-                  <button
-                    onClick={() => {
-                      document
-                        .getElementById("report-ctas")
-                        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }}
-                    className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
-                  >
-                    CTAs
-                  </button>
-                )}
-                {result.cost_of_inaction && (
-                  <button
-                    onClick={() => {
-                      document
-                        .getElementById("report-cost")
-                        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }}
-                    className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
-                  >
-                    Cost
-                  </button>
-                )}
-                {result.mindset_personas &&
-                  result.mindset_personas.length > 0 && (
-                    <button
-                      onClick={() => {
-                        document
-                          .getElementById("report-personas")
-                          ?.scrollIntoView({ behavior: "smooth", block: "start" });
-                      }}
-                      className="px-3 py-1 rounded border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition"
-                    >
-                      Personas
-                    </button>
-                  )}
-              </div>
+              <p className="text-sm text-white/70">
+                Decision style detected: <span className="font-medium text-white">{DECISION_MODE_LABEL[decisionMode] || decisionMode}</span>.
+                {decisionMode === "fast_intuitive" && " This means users need clarity within seconds."}
+              </p>
             </div>
           )}
 
-          <div className="mt-4 text-sm leading-7 text-white/90">
-            <Report text={report} />
+          {/* Main explanation */}
+          <div>
+            <p className="text-lg text-white/80 leading-relaxed mb-4">
+              Users make decisions quickly and intuitively on this page.
+              However, the page does not support fast decisions because:
+            </p>
+            
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <span className="text-xl text-white/60 mt-1">→</span>
+                <div>
+                  <p className="text-lg font-semibold text-white mb-1">
+                    {blockerInfo.title}
+                  </p>
+                  <p className="text-base text-white/80">
+                    {blockerInfo.explain}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      ) : (
-        <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-6">
-          <p className="text-sm font-medium text-yellow-400 mb-2">
-            ⚠️ Report not available
-          </p>
-          <p className="text-xs text-yellow-300">
-            The API response did not include a human-readable report.
-          </p>
-        </div>
-      )}
+      </div>
 
       {/* Signature Layers */}
       {result.decision_psychology_insight && (
@@ -326,10 +398,40 @@ export default function DecisionReportView({
         </div>
       )}
 
-      {/* Quick Wins List */}
-      <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Quick Wins</h3>
-        {quickWins.length > 0 ? (
+      {/* Actions section (v2) */}
+      {actions.length > 0 && (
+        <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Actions</h3>
+          <div className="space-y-4">
+            {actions.slice(0, 3).map((action: any, index: number) => (
+              <div
+                key={action.id || index}
+                className="border-l-4 border-green-500/50 pl-4 py-2"
+              >
+                <h4 className="text-sm font-medium text-white mb-1">
+                  {action.action || action.description || `Action ${index + 1}`}
+                </h4>
+                {action.where && (action.where.section || action.where.selector) && (
+                  <p className="text-xs text-white/60 mb-2">
+                    <span className="font-medium">Where:</span>{" "}
+                    {action.where.section || action.where.selector}
+                  </p>
+                )}
+                {action.reason && (
+                  <p className="text-sm text-white/80">
+                    {action.reason}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Quick Wins List (legacy fallback) */}
+      {actions.length === 0 && quickWins.length > 0 && (
+        <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Quick Wins</h3>
           <div className="space-y-4">
             {quickWins.map((win: any, index: number) => (
               <div
@@ -355,15 +457,27 @@ export default function DecisionReportView({
               </div>
             ))}
           </div>
-        ) : (
-          <p className="text-sm text-white/70 italic">No quick wins detected</p>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Issues List */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Issues</h3>
-        {issues.length > 0 ? (
+      {/* Checks section (v2) - Uncertainty */}
+      {checks.length > 0 && (
+        <div className="rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Uncertainty</h3>
+          <div className="space-y-2">
+            {checks.map((check: any, index: number) => (
+              <p key={index} className="text-sm text-white/80">
+                {typeof check === "string" ? check : JSON.stringify(check)}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Issues List (legacy fallback) */}
+      {issues.length > 0 && (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Issues</h3>
           <div className="space-y-4">
             {issues.map((issue: any, index: number) => (
               <div
@@ -394,10 +508,8 @@ export default function DecisionReportView({
               </div>
             ))}
           </div>
-        ) : (
-          <p className="text-sm text-white/70 italic">No issues detected</p>
-        )}
-      </div>
+        </div>
+      )}
 
     </div>
   );

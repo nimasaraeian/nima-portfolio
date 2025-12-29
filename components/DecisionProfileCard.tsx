@@ -2,6 +2,7 @@
 
 import React from "react";
 import type { DecisionMachine } from "@/app/types/human-analyze";
+import { DECISION_MODE_LABEL } from "@/lib/decisionCopy";
 
 type DecisionProfileCardProps = {
   decision_machine?: DecisionMachine;
@@ -9,15 +10,24 @@ type DecisionProfileCardProps = {
 
 // Map decision_mode to friendly labels
 function getDecisionModeLabel(mode?: string): string {
-  if (!mode) return "Unknown";
+  if (!mode) return "";
   
-  const modeMap: Record<string, string> = {
+  // Use centralized humanization map first
+  if (DECISION_MODE_LABEL[mode]) {
+    return DECISION_MODE_LABEL[mode];
+  }
+  
+  // Legacy fallback mappings
+  const legacyMap: Record<string, string> = {
+    slow_analytical: "Slow & Analytical",
+    overwhelmed: "Overwhelmed / Cognitive Load",
+    skeptical: "Skeptical / Trust Barrier",
     Ready_Heuristic: "Fast & Intuitive (Heuristic)",
     Ready_Analytical: "Slow & Analytical",
     Overwhelmed: "Overwhelmed / Cognitive Load",
     Skeptical: "Skeptical / Trust Barrier",
   };
-  return modeMap[mode] || "Unknown";
+  return legacyMap[mode] || mode.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
 // Map signals to friendly labels

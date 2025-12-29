@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import DecisionEvidenceForm from "@/components/DecisionEvidenceForm";
-import DecisionReportView from "@/components/DecisionReportView";
+import DecisionReportDashboard from "@/components/decision/DecisionReportDashboard";
+import { NormalizedDecisionReport } from "@/lib/normalizeDecisionReport";
+import { analyzeHumanNew } from "@/lib/decisionApi";
 
 // Type definitions
 type ScreenshotSet = {
@@ -131,11 +133,18 @@ type Result = HDRResponse & {
 
 export default function DecisionBrainHumanUI() {
   // Evidence form state
-  const [evidenceResult, setEvidenceResult] = useState<any>(null);
+  const [evidenceResult, setEvidenceResult] = useState<NormalizedDecisionReport | null>(null);
   const [evidenceLoading, setEvidenceLoading] = useState(false);
   const [evidenceError, setEvidenceError] = useState<string | null>(null);
   const [evidenceInputMode, setEvidenceInputMode] = useState<"url" | "image" | "text">("url");
   const [isMounted, setIsMounted] = useState(false);
+  const [lastAnalysisData, setLastAnalysisData] = useState<{
+    mode: "url" | "image" | "text";
+    url?: string;
+    image?: File;
+    text?: string;
+    goal: string;
+  } | null>(null);
 
   // Ensure client-side only rendering
   useEffect(() => {
@@ -156,10 +165,18 @@ export default function DecisionBrainHumanUI() {
     setEvidenceInputMode(data.mode);
 
     try {
-      const { analyzeHuman } = await import("@/lib/decisionApi");
+      // Save analysis data for retry
+      const analysisData = {
+        mode: data.mode,
+        goal: data.goal,
+        url: data.mode === "url" ? data.url : undefined,
+        image: data.image,
+        text: data.text,
+      };
+      setLastAnalysisData(analysisData);
       
-      // Call FastAPI directly - no proxy
-      const resultData = await analyzeHuman({
+      // Call via centralized decisionClient (returns NormalizedDecisionReport)
+      const resultData = await analyzeHumanNew({
         goal: data.goal,
         url: data.mode === "url" ? data.url : undefined,
         image: data.image,
@@ -222,7 +239,26 @@ export default function DecisionBrainHumanUI() {
 
         {/* EVIDENCE REPORT VIEW */}
         {evidenceResult && (
-          <DecisionReportView result={evidenceResult} inputMode={evidenceInputMode} />
+          <DecisionReportDashboard 
+            report={evidenceResult}
+            onRetryCapture={lastAnalysisData ? async () => {
+              if (lastAnalysisData.mode === "url" && lastAnalysisData.url) {
+                setEvidenceLoading(true);
+                setEvidenceError(null);
+                try {
+                  const resultData = await analyzeHumanNew({
+                    goal: lastAnalysisData.goal,
+                    url: lastAnalysisData.url,
+                  });
+                  setEvidenceResult(resultData);
+                } catch (err: any) {
+                  setEvidenceError(err?.message || "Retry failed");
+                } finally {
+                  setEvidenceLoading(false);
+                }
+              }
+            } : undefined}
+          />
         )}
       </div>
     </div>
