@@ -7,8 +7,8 @@ import DecisionReportDashboard from "@/components/decision/DecisionReportDashboa
 import { NormalizedDecisionReport, normalizeDecisionReport } from "@/lib/normalizeDecisionReport";
 import { analyzeHumanNewWithRaw } from "@/lib/decisionApi";
 
-// Backend API base URL
-const REPORTS_BASE = "https://nima-ai-marketing-production-57b4.up.railway.app";
+// Backend API base URL from environment variable
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://nima-ai-marketing-production-57b4.up.railway.app";
 
 // Type definitions
 type ScreenshotSet = {
@@ -187,10 +187,27 @@ export default function DecisionBrainClient() {
       setReportError(null);
       setEvidenceError(null);
       
+      // Validate BASE_URL is configured
+      if (!BASE_URL || BASE_URL.trim() === "") {
+        const errorMsg = "Backend URL not configured.";
+        console.error("[fetch] error:", errorMsg);
+        setReportError(errorMsg);
+        setEvidenceError(errorMsg);
+        setLoadingReport(false);
+        setRidLoaded(true);
+        return;
+      }
+      
+      const reportsUrl = `${BASE_URL}/api/reports/${rid}`;
+      console.log("[fetch] reports url:", reportsUrl);
+      
       try {
         const response = await fetch(
-          `${REPORTS_BASE}/api/reports/${rid}`,
-          { cache: "no-store" }
+          reportsUrl,
+          { 
+            method: "GET",
+            cache: "no-store"
+          }
         );
         
         if (!response.ok) {
