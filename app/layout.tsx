@@ -246,6 +246,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 ))}
               </div>
             </div>
+
+            {/* Privacy Policy Link */}
+            <div className="mt-6">
+              <Link
+                href="/privacy"
+                className="text-xs text-gray-500 hover:text-gray-400 transition-colors underline underline-offset-2"
+              >
+                Privacy Policy
+              </Link>
+            </div>
           </footer>
       </body>
     </html>
