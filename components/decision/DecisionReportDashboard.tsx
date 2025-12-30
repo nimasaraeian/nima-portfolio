@@ -7,13 +7,63 @@ import VisualEvidence from "./VisualEvidence";
 import FixThisFirst from "./FixThisFirst";
 import SupportingEvidence from "./SupportingEvidence";
 import ConfidenceTransparency from "./ConfidenceTransparency";
+import InsufficientSignals from "./InsufficientSignals";
+import AttentionPathCard from "../report/AttentionPathCard";
+import DecisionDriversCard from "../report/DecisionDriversCard";
+import FixThisFirstActions from "../report/FixThisFirstActions";
+import { areActionsSimilar } from "@/lib/evidenceFilter";
 
 type DecisionReportDashboardProps = {
   report: NormalizedDecisionReport;
+  rawBackendResponse?: any;
   onRetryCapture?: () => void;
 };
 
 const DEV_MODE_KEY = "decision_intelligence_dev_mode";
+
+/**
+ * FixThisFirstGroup - Renders Highest and Secondary fixes with de-duplication
+ */
+function FixThisFirstGroup({ report }: { report: any }) {
+  if (!report || !report.fix_factors || !Array.isArray(report.fix_factors) || report.fix_factors.length === 0) {
+    return null;
+  }
+  
+  try {
+    // Find Highest leverage fix
+    const highestFix = report.fix_factors.find((f: any) => f?.leverage === "highest") || report.fix_factors[0];
+    
+    if (!highestFix) {
+      return null;
+    }
+    
+    // Find Secondary leverage fix (must be different driver and action)
+    const secondaryFix = report.fix_factors.find((f: any) => {
+      if (!f || f.leverage !== "secondary") return false;
+      if (f.cause_id === highestFix.cause_id) return false;
+      
+      const fTitle = typeof f.title === 'string' ? f.title : String(f.title || "");
+      const highestTitle = typeof highestFix.title === 'string' ? highestFix.title : String(highestFix.title || "");
+      
+      return !areActionsSimilar(fTitle, highestTitle);
+    });
+    
+    return (
+      <div className="space-y-6">
+        {/* Highest Leverage Fix */}
+        <FixThisFirst report={report} fixFactor={highestFix} />
+        
+        {/* Secondary Leverage Fix - only if it adds new value */}
+        {secondaryFix && (
+          <FixThisFirst report={report} fixFactor={secondaryFix} />
+        )}
+      </div>
+    );
+  } catch (e) {
+    console.error("Error rendering FixThisFirstGroup:", e);
+    return null;
+  }
+}
 
 function generateMarkdownReport(report: NormalizedDecisionReport): string {
   const lines: string[] = [];
@@ -81,7 +131,7 @@ function generateMarkdownReport(report: NormalizedDecisionReport): string {
   return lines.join("\n");
 }
 
-export default function DecisionReportDashboard({ report, onRetryCapture }: DecisionReportDashboardProps) {
+export default function DecisionReportDashboard({ report, rawBackendResponse, onRetryCapture }: DecisionReportDashboardProps) {
   const [showDevMode, setShowDevMode] = useState(false);
   const [showRawJson, setShowRawJson] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -117,6 +167,67 @@ export default function DecisionReportDashboard({ report, onRetryCapture }: Deci
   };
 
   const isDevMode = process.env.NODE_ENV !== "production" || showDevMode;
+  
+  // Check if backend returned status=limited
+  const isLimited = rawBackendResponse?.status === "limited";
+  const missingRequired = rawBackendResponse?.missing_required || [];
+  const limitedMessage = rawBackendResponse?.message || rawBackendResponse?.detail || null;
+
+  // If status is limited, show Insufficient Signals card instead of normal report
+  if (isLimited) {
+    return (
+      <div className="mt-8 space-y-10">
+        {/* Insufficient Signals Card */}
+        <InsufficientSignals 
+          missingRequired={missingRequired}
+          mode={report.mode}
+          onTryAnother={onRetryCapture}
+          message={limitedMessage}
+        />
+
+        {/* Visual Evidence - still show if available */}
+        <VisualEvidence report={report} onRetry={onRetryCapture} />
+
+        {/* F) Dev-only Raw JSON */}
+        {isDevMode && (
+          <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-semibold text-white mb-1">Developer Mode</h2>
+                <p className="text-xs text-white/60">
+                  Raw API response for debugging
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showDevMode}
+                    onChange={toggleDevMode}
+                    className="w-4 h-4 rounded border-white/20 bg-white/5 text-red-500 focus:ring-red-500"
+                  />
+                  <span className="text-sm text-white/70">Enable Developer Mode</span>
+                </label>
+                {showDevMode && (
+                  <button
+                    onClick={() => setShowRawJson(!showRawJson)}
+                    className="text-sm text-white/60 hover:text-white/80"
+                  >
+                    {showRawJson ? "Hide" : "Show"} Raw API Response
+                  </button>
+                )}
+              </div>
+            </div>
+            {showDevMode && showRawJson && (
+              <pre className="text-xs text-white/70 overflow-x-auto max-h-96 overflow-y-auto bg-slate-900/50 p-4 rounded-lg">
+                {rawBackendResponse ? JSON.stringify(rawBackendResponse, null, 2) : (report.raw ? JSON.stringify(report.raw, null, 2) : "No raw response available")}
+              </pre>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="mt-8 space-y-10">
@@ -145,13 +256,29 @@ export default function DecisionReportDashboard({ report, onRetryCapture }: Deci
       </div>
 
       {/* A) Executive Summary */}
-      <ExecutiveSummary report={report} />
+      <ExecutiveSummary report={report} rawBackendResponse={rawBackendResponse} />
+
+      {/* A1) Attention Path - How users see this page */}
+      <AttentionPathCard 
+        attentionPath={report.attention_path} 
+        fallbackFromPageMap={report.page_map}
+      />
+
+      {/* A2) Decision Drivers - Primary + Supporting */}
+      <DecisionDriversCard report={report} pageMap={report.page_map} />
+
+      {/* A3) Fix This First Actions - Up to 3 actions from evidence-based structure */}
+      <FixThisFirstActions report={report} />
 
       {/* B) Visual Evidence */}
       <VisualEvidence report={report} onRetry={onRetryCapture} />
 
-      {/* C) Fix This First */}
-      {report.fix_first && <FixThisFirst report={report} />}
+      {/* C) Fix This First - Detailed fixes with de-duplication */}
+      {report.fix_factors && report.fix_factors.length > 0 ? (
+        <FixThisFirstGroup report={report} />
+      ) : report.fix_first ? (
+        <FixThisFirst report={report} />
+      ) : null}
 
       {/* D) Supporting Evidence */}
       <SupportingEvidence report={report} />
@@ -189,9 +316,9 @@ export default function DecisionReportDashboard({ report, onRetryCapture }: Deci
               )}
             </div>
           </div>
-          {showDevMode && showRawJson && report.raw && (
+          {showDevMode && showRawJson && (
             <pre className="text-xs text-white/70 overflow-x-auto max-h-96 overflow-y-auto bg-slate-900/50 p-4 rounded-lg">
-              {JSON.stringify(report.raw, null, 2)}
+              {rawBackendResponse ? JSON.stringify(rawBackendResponse, null, 2) : (report.raw ? JSON.stringify(report.raw, null, 2) : "No raw response available")}
             </pre>
           )}
         </div>

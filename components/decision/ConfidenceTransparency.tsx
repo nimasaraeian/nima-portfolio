@@ -16,6 +16,11 @@ export default function ConfidenceTransparency({ report }: ConfidenceTransparenc
   }
   
   const { confidence } = report;
+  
+  // Check if we should show contextual explanation
+  const confidencePercent = confidence.percent || 0;
+  const captureStatus = report.raw?.visual?.capture_status || report.raw?.visual?.capture_status;
+  const shouldShowExplanation = confidencePercent <= 60 || captureStatus === "failed";
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -64,6 +69,11 @@ export default function ConfidenceTransparency({ report }: ConfidenceTransparenc
                 <p className="text-lg text-white/90 leading-relaxed">
                   {confidence.explanation}
                 </p>
+                {shouldShowExplanation && (
+                  <p className="text-sm text-white/50 mt-3 italic">
+                    Lower confidence due to limited visual signals. Accuracy improves with live page capture or higher-resolution input.
+                  </p>
+                )}
               </div>
             </div>
           </div>

@@ -217,7 +217,83 @@ function extractExpectedImpact(
 }
 
 /**
- * Get primary blocker from response
+ * Extract dominant causes from decision scores
+ * Returns all causes with score >= (max_score - 0.15)
+ */
+function extractDominantCauses(response: DecisionReportResponse): Array<{ id: string; label: string; score: number }> {
+  const causes: Array<{ id: string; label: string; score: number }> = [];
+  
+  // Try to get scores from decision.scores, decision_model.drivers, or decision_machine.scores
+  let scores: Record<string, number> | null = null;
+  
+  if (response.decision?.scores && typeof response.decision.scores === "object") {
+    scores = response.decision.scores;
+  } else if (response.decision_machine?.scores && typeof response.decision_machine.scores === "object") {
+    scores = response.decision_machine.scores;
+  } else if (response.decision_model?.drivers && Array.isArray(response.decision_model.drivers)) {
+    // Convert drivers array to scores object
+    scores = {};
+    response.decision_model.drivers.forEach(driver => {
+      const factor = driver.factor || driver.name;
+      const score = driver.score ?? driver.weight ?? 0;
+      if (factor && typeof score === "number") {
+        scores![factor] = score;
+      }
+    });
+  }
+  
+  if (scores && Object.keys(scores).length > 0) {
+    // Normalize scores to 0-1 range if they appear to be 0-100
+    const normalizedScores: Record<string, number> = {};
+    Object.entries(scores).forEach(([key, value]) => {
+      normalizedScores[key] = typeof value === "number" && value > 1 ? value / 100 : value;
+    });
+    
+    // Find max score
+    const scoreValues = Object.values(normalizedScores);
+    const maxScore = Math.max(...scoreValues);
+    const threshold = Math.max(0, maxScore - 0.15); // Within 0.15 of max
+    
+    // Get all causes above threshold
+    Object.entries(normalizedScores).forEach(([factor, score]) => {
+      if (score >= threshold && score > 0) {
+        const humanized = humanizePrimaryBlocker(factor);
+        causes.push({
+          id: humanized.id,
+          label: humanized.label,
+          score: score,
+        });
+      }
+    });
+    
+    // Sort by score descending
+    causes.sort((a, b) => b.score - a.score);
+    
+    // Limit to top 3
+    return causes.slice(0, 3);
+  }
+  
+  // Fallback: try to get from secondary causes
+  const secondary = response.decision?.secondary || response.decision_machine?.secondary;
+  if (secondary) {
+    const secondaryArray = Array.isArray(secondary) ? secondary : [secondary];
+    secondaryArray.forEach((item, index) => {
+      if (item && typeof item === "string") {
+        const humanized = humanizePrimaryBlocker(item);
+        causes.push({
+          id: humanized.id,
+          label: humanized.label,
+          score: 0.7 - (index * 0.1), // Decreasing scores for secondary
+        });
+      }
+    });
+  }
+  
+  return causes;
+}
+
+/**
+ * Get primary blocker from response (fallback for single-blocker compatibility)
  */
 function extractPrimaryBlocker(response: DecisionReportResponse): { id: string; label: string } {
   const blocker = 
@@ -358,39 +434,10 @@ function calculateImpactEffort(
  * Get example fixes based on primary blocker
  */
 function getExampleFixes(primaryBlockerId: string, where: string): string[] {
-  const blockerLower = primaryBlockerId.toLowerCase();
-  const whereLower = where.toLowerCase();
-
-  if (blockerLower.includes("trust")) {
-    return [
-      "Customer testimonials with photos",
-      "Trust badges (SSL, certifications, awards)",
-      "Social proof numbers ('Join 10,000+ customers')",
-    ];
-  } else if (blockerLower.includes("cta")) {
-    return [
-      "Clear action verb: 'Get Started', 'Start Free Trial', 'Book a Demo'",
-      "Specific benefit: 'See Results in 30 Days'",
-      "Risk reduction: 'No Credit Card Required'",
-    ];
-  } else if (blockerLower.includes("value")) {
-    return [
-      "Clear headline: 'The fastest way to [achieve goal]'",
-      "Specific numbers: 'Save 10 hours per week'",
-      "Unique differentiator: 'The only tool that [unique feature]'",
-    ];
-  } else if (blockerLower.includes("friction")) {
-    return [
-      "Reduce form fields to only essential information",
-      "Add progress indicator: 'Step 1 of 2'",
-      "Show what happens next: 'We'll send you a link to get started'",
-    ];
-  }
-
-  return [
-    "Clear, benefit-focused messaging",
-    "Specific, actionable language",
-  ];
+  // This function is deprecated - examples should come from evidence via TrustSignalResolver
+  // Return empty array to prevent static templates from being used
+  // The FixThisFirst component now uses resolveTrustSignals() and getContextRecommendation()
+  return [];
 }
 
 /**
@@ -405,23 +452,105 @@ function extractScreenshots(
   available: boolean;
   reason_if_missing?: string;
 } {
-  // Try desktop screenshot - check multiple possible paths
-  const desktopAtf = 
-    response.screenshots?.desktop?.above_the_fold ||
-    response.screenshots?.desktop?.aboveFold ||
-    response.screenshots?.desktop || // Direct string
-    response.screenshot?.desktop || // Old format
-    (typeof response.screenshot === 'object' && response.screenshot?.desktop) ||
-    null;
+  // Helper to safely extract screenshot URL from various formats
+  // Priority order: above_the_fold_data_url > aboveFold/above_the_fold > url > data_url
+  const extractScreenshotValue = (screenshot: any): string | null => {
+    if (!screenshot) return null;
+    
+    // If it's already a string (direct URL or base64 data URL)
+    if (typeof screenshot === "string" && screenshot.length > 0) {
+      return screenshot;
+    }
+    
+    // If it's an object, try to extract the URL in priority order
+    if (typeof screenshot === "object" && screenshot !== null) {
+      // Priority 1: above_the_fold_data_url (new format from backend)
+      if (typeof screenshot.above_the_fold_data_url === "string" && screenshot.above_the_fold_data_url.length > 0) {
+        return screenshot.above_the_fold_data_url;
+      }
+      // Priority 2: aboveFold (camelCase)
+      if (typeof screenshot.aboveFold === "string" && screenshot.aboveFold.length > 0) {
+        return screenshot.aboveFold;
+      }
+      // Priority 3: above_the_fold (snake_case)
+      if (typeof screenshot.above_the_fold === "string" && screenshot.above_the_fold.length > 0) {
+        return screenshot.above_the_fold;
+      }
+      // Priority 4: url property
+      if (typeof screenshot.url === "string" && screenshot.url.length > 0) {
+        return screenshot.url;
+      }
+      // Priority 5: data_url property
+      if (typeof screenshot.data_url === "string" && screenshot.data_url.length > 0) {
+        return screenshot.data_url;
+      }
+    }
+    
+    return null;
+  };
+
+  // Extract screenshots - check multiple possible paths in priority order
+  // Priority A: screenshots.desktop.above_the_fold_data_url
+  // Priority B: screenshots.mobile.above_the_fold_data_url  
+  // Priority C: screenshots.desktop.aboveFold / above_the_fold
+  // Priority D: screenshots.mobile.aboveFold / above_the_fold
+  // Priority E: Old format response.screenshot.desktop/mobile
   
-  // Try mobile screenshot - check multiple possible paths
-  const mobileAtf =
-    response.screenshots?.mobile?.above_the_fold ||
-    response.screenshots?.mobile?.aboveFold ||
-    response.screenshots?.mobile || // Direct string
-    response.screenshot?.mobile || // Old format
-    (typeof response.screenshot === 'object' && response.screenshot?.mobile) ||
-    null;
+  let desktopAtf: string | null = null;
+  let mobileAtf: string | null = null;
+
+  // Check for desktop screenshot in various locations
+  if (response.screenshots) {
+    // Try direct desktop object first
+    desktopAtf = extractScreenshotValue(response.screenshots.desktop);
+    
+    // Try above_the_fold.desktop if desktop object doesn't have the value
+    if (!desktopAtf && response.screenshots.above_the_fold) {
+      desktopAtf = extractScreenshotValue(response.screenshots.above_the_fold.desktop);
+    }
+    if (!desktopAtf && response.screenshots.above_the_fold) {
+      desktopAtf = extractScreenshotValue(response.screenshots.above_the_fold.desktop_url);
+    }
+    
+    // Try mobile screenshot
+    mobileAtf = extractScreenshotValue(response.screenshots.mobile);
+    
+    // Try above_the_fold.mobile if mobile object doesn't have the value
+    if (!mobileAtf && response.screenshots.above_the_fold) {
+      mobileAtf = extractScreenshotValue(response.screenshots.above_the_fold.mobile);
+    }
+    if (!mobileAtf && response.screenshots.above_the_fold) {
+      mobileAtf = extractScreenshotValue(response.screenshots.above_the_fold.mobile_url);
+    }
+  }
+  
+  // Fallback to old format
+  if (!desktopAtf && typeof response.screenshot === 'object' && response.screenshot && 'desktop' in response.screenshot) {
+    desktopAtf = extractScreenshotValue((response.screenshot as any).desktop);
+  }
+  if (!mobileAtf && typeof response.screenshot === 'object' && response.screenshot && 'mobile' in response.screenshot) {
+    mobileAtf = extractScreenshotValue((response.screenshot as any).mobile);
+  }
+
+  // Debug logging
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[extractScreenshots] Debug:", {
+      mode,
+      hasDesktop: !!desktopAtf,
+      hasMobile: !!mobileAtf,
+      desktopPreview: desktopAtf ? desktopAtf.substring(0, 50) + "..." : "NOT FOUND",
+      mobilePreview: mobileAtf ? mobileAtf.substring(0, 50) + "..." : "NOT FOUND",
+      screenshotsStructure: response.screenshots ? Object.keys(response.screenshots) : "NO SCREENSHOTS",
+      desktopType: typeof response.screenshots?.desktop,
+      mobileType: typeof response.screenshots?.mobile,
+      desktopKeys: response.screenshots?.desktop && typeof response.screenshots.desktop === "object" 
+        ? Object.keys(response.screenshots.desktop) : "N/A",
+      mobileKeys: response.screenshots?.mobile && typeof response.screenshots.mobile === "object"
+        ? Object.keys(response.screenshots.mobile) : "N/A",
+      visualCaptureStatus: response.visual?.capture_status,
+      visualMode: response.visual?.mode,
+    });
+  }
   
   // For image mode, try to use uploaded image
   // STEP 6: If response.visual indicates screenshot mode, use uploaded image as screenshot
@@ -483,18 +612,20 @@ function extractScreenshots(
     reason_if_missing,
   };
   
-  if (hasDesktop) {
-    const isDataUrl = safeString(desktopData).startsWith("data:image/");
+  if (hasDesktop && desktopData) {
+    const desktopStr = typeof desktopData === "string" ? desktopData : String(desktopData);
+    const isDataUrl = desktopStr.startsWith("data:image/");
     result.desktop = isDataUrl
-      ? { data_url: desktopData }
-      : { url: desktopData };
+      ? { data_url: desktopStr }
+      : { url: desktopStr };
   }
   
-  if (hasMobile) {
-    const isDataUrl = safeString(mobileData).startsWith("data:image/");
+  if (hasMobile && mobileData) {
+    const mobileStr = typeof mobileData === "string" ? mobileData : String(mobileData);
+    const isDataUrl = mobileStr.startsWith("data:image/");
     result.mobile = isDataUrl
-      ? { data_url: mobileData }
-      : { url: mobileData };
+      ? { data_url: mobileStr }
+      : { url: mobileStr };
   }
   
   return result;
@@ -515,6 +646,12 @@ export function normalizeDecisionReport(
   // Extract core data
   const decisionStyle = response.decision_style || extractDecisionStyle(response);
   const primaryBlocker = extractPrimaryBlocker(response);
+  const dominantCauses = extractDominantCauses(response);
+  
+  // Use dominant causes if available, otherwise fall back to single primary blocker
+  const effectiveCauses = dominantCauses.length > 0 
+    ? dominantCauses 
+    : [{ id: primaryBlocker.id, label: primaryBlocker.label, score: 1.0 }];
   
   // STEP 3: Map confidence from real backend data
   let confidence = extractConfidence(response);
@@ -741,17 +878,77 @@ export function normalizeDecisionReport(
   const validMode: "url" | "image" | "text" | "unknown" = 
     (mode === "url" || mode === "image" || mode === "text") ? mode : "unknown";
   
+  // Extract multiple fixes if we have multiple dominant causes
+  let fixFactors: Array<{
+    title: string;
+    what: string;
+    why: string;
+    where: string;
+    impact: "High" | "Medium" | "Low";
+    effort: "Low" | "Medium" | "High";
+    examples: string[];
+    leverage: "highest" | "secondary";
+    cause_id: string;
+  }> | undefined;
+  
+  if (effectiveCauses.length > 1 && !isLimited) {
+    fixFactors = [];
+    const allActions = response.actions || response.quick_wins || [];
+    
+    effectiveCauses.forEach((cause, index) => {
+      const isHighest = index === 0;
+      // Find action matching this cause or use general action
+      const matchingAction = allActions.find((action: any) => {
+        const actionTitle = safeString(action.title || action.what || "").toLowerCase();
+        const causeLabel = cause.label.toLowerCase();
+        return actionTitle.includes(causeLabel) || causeLabel.includes(actionTitle);
+      }) || allActions[index] || allActions[0];
+      
+      if (matchingAction) {
+        const improved = improveActionCopy(matchingAction, response.page_map, cause.id);
+        const { impact, effort } = calculateImpactEffort(matchingAction, cause.id);
+        const examples = getExampleFixes(cause.id, extractWhereLabel(matchingAction));
+        
+        fixFactors!.push({
+          title: improved.title,
+          what: improved.what,
+          why: improved.why,
+          where: extractWhereLabel(matchingAction),
+          impact,
+          effort,
+          examples,
+          leverage: isHighest ? "highest" : "secondary",
+          cause_id: cause.id,
+        });
+      } else if (fixFirst) {
+        // Fallback: use fixFirst for highest, create generic for secondary
+        fixFactors!.push({
+          ...fixFirst,
+          leverage: isHighest ? "highest" : "secondary",
+          cause_id: cause.id,
+        });
+      }
+    });
+  }
+  
   return {
     mode: validMode,
     goal,
-    primary_blocker: primaryBlocker,
+    primary_blocker: primaryBlocker, // Keep for backward compatibility
+    dominant_causes: effectiveCauses,
     decision_style: decisionStyle,
     confidence,
     expected_impact: expectedImpact,
     screenshots,
     fix_first: fixFirst!,
+    fix_factors: fixFactors,
     supporting,
     raw: response,
+    // Pass through attention_path and drivers for new UI components
+    attention_path: response.attention_path,
+    decision: response.decision,
+    decision_model: response.decision_model,
+    page_map: response.page_map,
   };
 }
 
@@ -761,7 +958,8 @@ export function normalizeDecisionReport(
 export interface NormalizedDecisionReport {
   mode: "url" | "image" | "text" | "unknown";
   goal: string;
-  primary_blocker: { id: string; label: string };
+  primary_blocker: { id: string; label: string }; // Kept for backward compatibility
+  dominant_causes: Array<{ id: string; label: string; score: number }>; // New: multiple causes
   decision_style: { id: string; label: string };
   confidence: {
     score: number;
@@ -790,6 +988,17 @@ export interface NormalizedDecisionReport {
     effort: "Low" | "Medium" | "High";
     examples: string[];
   };
+  fix_factors?: Array<{ // New: multiple fixes for multiple causes
+    title: string;
+    what: string;
+    why: string;
+    where: string;
+    impact: "High" | "Medium" | "Low";
+    effort: "Low" | "Medium" | "High";
+    examples: string[];
+    leverage: "highest" | "secondary";
+    cause_id: string;
+  }>;
   supporting: Array<{
     title: string;
     summary: string;
@@ -797,4 +1006,9 @@ export interface NormalizedDecisionReport {
     priority: "high" | "medium" | "low";
   }>;
   raw: any;
+  // New fields for Evidence-Based Decision Output + Attention Path
+  attention_path?: any;
+  decision?: any;
+  decision_model?: any;
+  page_map?: any;
 }
