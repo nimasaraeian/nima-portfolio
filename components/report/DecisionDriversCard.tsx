@@ -7,8 +7,8 @@ type DecisionDriversCardProps = {
   report: Report | any; // Allow any to work with normalized report
   pageMap?: {
     headline?: string;
-    primary_cta?: string;
-    offer?: string;
+    primary_cta?: string | { text?: string };
+    offer?: string | { value?: string };
     trust_signals?: string[];
   };
 };

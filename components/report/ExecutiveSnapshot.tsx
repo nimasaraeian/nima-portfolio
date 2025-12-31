@@ -98,3 +98,8 @@ export default function ExecutiveSnapshot({ report }: ExecutiveSnapshotProps) {
   );
 }
 
+
+
+
+
+

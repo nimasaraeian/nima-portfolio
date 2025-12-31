@@ -36,15 +36,25 @@ export interface DecisionReportResponse {
     decision_mode?: string;
     confidence?: number;
     primary_blocker?: string;
+    scores?: Record<string, number>; // Multiple scores for different factors
+    secondary?: string | string[]; // Secondary causes
   };
   decision_machine?: {
     decision_mode?: string;
     confidence?: number;
     primary_blocker?: string;
+    scores?: Record<string, number>;
+    secondary?: string | string[];
   };
   decision_model?: {
     decision_mode?: string;
     confidence?: number;
+    drivers?: Array<{
+      factor?: string;
+      name?: string;
+      score?: number;
+      weight?: number;
+    }>;
   };
   analysis_confidence?: number;
   confidence?: number; // Direct confidence value
@@ -95,12 +105,24 @@ export interface DecisionReportResponse {
   }>;
   screenshots?: {
     desktop?: {
+      above_the_fold_data_url?: string; // Priority A: new format from backend
       above_the_fold?: string;
       aboveFold?: string;
-    };
+      url?: string;
+      data_url?: string;
+    } | string; // Can also be a direct string
     mobile?: {
+      above_the_fold_data_url?: string; // Priority B: new format from backend
       above_the_fold?: string;
       aboveFold?: string;
+      url?: string;
+      data_url?: string;
+    } | string; // Can also be a direct string
+    above_the_fold?: {
+      desktop?: string;
+      mobile?: string;
+      desktop_url?: string;
+      mobile_url?: string;
     };
   };
   image?: string; // For image mode - uploaded image as base64

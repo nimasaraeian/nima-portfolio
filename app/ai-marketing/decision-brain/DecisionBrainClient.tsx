@@ -364,14 +364,48 @@ export default function DecisionBrainClient() {
       </div>
       
       <div className="mx-auto max-w-3xl px-4 py-10">
-        <header className="mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight text-white">
-            Human Decision Review
-          </h1>
-          <p className="mt-2 text-sm text-white/70">
-            Paste a URL. You'll get a human-readable conversion report with visual evidence.
-          </p>
-        </header>
+        {/* Landing Hero - Show when no report is loaded */}
+        {!evidenceResult && !loadingReport && !reportError && (
+          <div className="mb-12">
+            <h1 className="text-4xl font-semibold tracking-tight text-white mb-4">
+              Decision Psychology Report for Your Landing Page
+            </h1>
+            <p className="text-lg text-white/70 mb-8">
+              Find why users hesitate — not just what they click.
+            </p>
+            
+            <div className="space-y-3 mb-8">
+              <div className="flex items-start gap-3">
+                <span className="text-white/40 mt-1">•</span>
+                <span className="text-white/80">Detect decision blocks</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-white/40 mt-1">•</span>
+                <span className="text-white/80">Explain user hesitation</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-white/40 mt-1">•</span>
+                <span className="text-white/80">Get actionable fixes</span>
+              </div>
+            </div>
+            
+            <p className="text-sm text-white/50 mb-8">
+              Built for marketers, founders, and CRO specialists.
+            </p>
+          </div>
+        )}
+
+        {/* Standard Header - Show when report is loaded */}
+        {evidenceResult && !loadingReport && !reportError && (
+          <header className="mb-8">
+            <h1 className="text-3xl font-semibold tracking-tight text-white">
+              Human Decision Review
+            </h1>
+            <p className="mt-2 text-sm text-white/70">
+              Paste a URL. You'll get a human-readable conversion report with visual evidence.
+            </p>
+          </header>
+        )}
 
         {/* Banner: Loaded shared report */}
         {currentRid && evidenceResult && !loadingReport && !reportError && (

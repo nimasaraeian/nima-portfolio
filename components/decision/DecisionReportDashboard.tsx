@@ -12,6 +12,8 @@ import AttentionPathCard from "../report/AttentionPathCard";
 import DecisionDriversCard from "../report/DecisionDriversCard";
 import FixThisFirstActions from "../report/FixThisFirstActions";
 import { areActionsSimilar } from "@/lib/evidenceFilter";
+import DecisionScoreCard from "../DecisionScoreCard";
+import { computeDecisionFrictionScore } from "@/lib/decisionScore";
 
 type DecisionReportDashboardProps = {
   report: NormalizedDecisionReport;
@@ -180,7 +182,7 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, on
         {/* Insufficient Signals Card */}
         <InsufficientSignals 
           missingRequired={missingRequired}
-          mode={report.mode}
+          mode={report.mode === "unknown" ? undefined : (report.mode as "url" | "text" | "image" | undefined)}
           onTryAnother={onRetryCapture}
           message={limitedMessage}
         />
@@ -229,6 +231,13 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, on
     );
   }
 
+  // Compute decision friction score - merge report with raw backend response for better data access
+  const reportWithRaw = {
+    ...report,
+    raw: rawBackendResponse || report.raw,
+  };
+  const scoreData = computeDecisionFrictionScore(reportWithRaw);
+
   return (
     <div className="mt-8 space-y-10">
       {/* Copy Report Button */}
@@ -254,6 +263,9 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, on
           )}
         </button>
       </div>
+
+      {/* Decision Friction Score Card */}
+      <DecisionScoreCard data={scoreData} />
 
       {/* A) Executive Summary */}
       <ExecutiveSummary report={report} rawBackendResponse={rawBackendResponse} />

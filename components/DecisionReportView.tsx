@@ -233,7 +233,7 @@ export default function DecisionReportView({
             <div>
               <span className="text-xs text-white/70">Decision Style:</span>
               <p className="text-lg font-semibold text-white mt-1">
-                {DECISION_MODE_LABEL[decisionMode] || decisionMode.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                {DECISION_MODE_LABEL[decisionMode] || decisionMode.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
               </p>
             </div>
             <div>

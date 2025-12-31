@@ -11,9 +11,11 @@ type DecisionEvidenceFormProps = {
     image?: File;
     text?: string;
     goal: string;
+    rawResponse?: any; // Optional: pre-fetched response to avoid duplicate calls
   }) => Promise<void>;
   isLoading: boolean;
   error: string | null;
+  onRequestSent?: () => void; // Callback when request is sent
 };
 
 const GOAL_OPTIONS = [
@@ -27,6 +29,7 @@ export default function DecisionEvidenceForm({
   onSubmit,
   isLoading,
   error,
+  onRequestSent,
 }: DecisionEvidenceFormProps) {
   const [mode, setMode] = useState<EvidenceMode>("url");
   const [url, setUrl] = useState("");
@@ -35,6 +38,8 @@ export default function DecisionEvidenceForm({
   const [customGoal, setCustomGoal] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
+  const [isRequestSent, setIsRequestSent] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,29 +60,149 @@ export default function DecisionEvidenceForm({
     }
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void; currentTarget: HTMLFormElement }) => {
-    e.preventDefault();
-
-    // Validate based on mode
-    if (mode === "url" && !url.trim()) {
-      return;
-    }
-    if (mode === "text" && !text.trim()) {
-      return;
-    }
-    if (mode === "image" && !imageFile) {
-      return;
-    }
+  // Direct analyze handler with explicit fetch calls and logging
+  const handleAnalyze = async () => {
+    setLocalError(null);
+    setIsRequestSent(false);
 
     const finalGoal = customGoal.trim() || goal;
+    const trimmedUrl = url.trim();
+    const trimmedText = text.trim();
 
-    await onSubmit({
+    // Log start
+    console.log("[ANALYZE] start", {
       mode,
-      url: mode === "url" ? url.trim() : undefined,
-      text: mode === "text" ? text.trim() : undefined,
-      image: mode === "image" ? imageFile || undefined : undefined,
+      url: mode === "url" ? trimmedUrl : undefined,
       goal: finalGoal,
+      hasImage: mode === "image" ? !!imageFile : false,
+      hasText: mode === "text" ? trimmedText.length : 0,
+      urlLength: trimmedUrl.length,
+      textLength: trimmedText.length,
     });
+
+    // Validate inputs
+    if (mode === "url") {
+      if (!trimmedUrl || trimmedUrl.length <= 5) {
+        const errorMsg = "URL must be at least 5 characters long";
+        console.log("[ANALYZE] invalid state - URL too short", { urlLength: trimmedUrl.length });
+        setLocalError(errorMsg);
+        return;
+      }
+    } else if (mode === "image") {
+      if (!imageFile) {
+        const errorMsg = "Please select an image file";
+        console.log("[ANALYZE] invalid state - no image file");
+        setLocalError(errorMsg);
+        return;
+      }
+    } else if (mode === "text") {
+      if (!trimmedText || trimmedText.length <= 10) {
+        const errorMsg = "Text must be at least 10 characters long";
+        console.log("[ANALYZE] invalid state - text too short", { textLength: trimmedText.length });
+        setLocalError(errorMsg);
+        return;
+      }
+    }
+
+    // Set request sent state
+    setIsRequestSent(true);
+    if (onRequestSent) {
+      onRequestSent();
+    }
+
+    try {
+      let endpoint: string;
+      let requestBody: any;
+      let headers: HeadersInit = {};
+
+      // Determine endpoint and prepare request
+      if (mode === "url") {
+        endpoint = "/api/proxy/decision-scan";
+        requestBody = {
+          url: trimmedUrl,
+          goal: finalGoal,
+          locale: "en",
+        };
+        headers["Content-Type"] = "application/json";
+        console.log("[ANALYZE] request", { endpoint, body: { url: trimmedUrl, goal: finalGoal, locale: "en" } });
+      } else if (mode === "image") {
+        endpoint = "/api/proxy/analyze-human";
+        const formData = new FormData();
+        formData.append("goal", finalGoal);
+        formData.append("image", imageFile!);
+        requestBody = formData;
+        // Don't set Content-Type header for FormData - browser sets it with boundary
+        console.log("[ANALYZE] request", { endpoint, body: { goal: finalGoal, imageFileName: imageFile!.name, imageSize: imageFile!.size } });
+      } else {
+        // text mode
+        endpoint = "/api/proxy/analyze-human";
+        const formData = new FormData();
+        formData.append("goal", finalGoal);
+        formData.append("text", trimmedText);
+        requestBody = formData;
+        console.log("[ANALYZE] request", { endpoint, body: { goal: finalGoal, textLength: trimmedText.length } });
+      }
+
+      // Make the fetch request
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers,
+        body: mode === "url" ? JSON.stringify(requestBody) : requestBody,
+      });
+
+      console.log("[ANALYZE] response status", res.status, res.statusText);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        let errorDetail: string;
+        try {
+          const errorJson = JSON.parse(errorText);
+          errorDetail = errorJson.detail || errorJson.error || errorText;
+        } catch {
+          errorDetail = errorText || `HTTP ${res.status}: ${res.statusText}`;
+        }
+        throw new Error(errorDetail);
+      }
+
+      const responseData = await res.json();
+      console.log("[ANALYZE] response success", { 
+        status: res.status, 
+        hasData: !!responseData,
+        keys: responseData ? Object.keys(responseData) : []
+      });
+
+      // Call the parent onSubmit handler with the data and pre-fetched response
+      // This avoids duplicate API calls since we've already fetched the data
+      await onSubmit({
+        mode,
+        url: mode === "url" ? trimmedUrl : undefined,
+        text: mode === "text" ? trimmedText : undefined,
+        image: mode === "image" ? imageFile || undefined : undefined,
+        goal: finalGoal,
+        rawResponse: responseData, // Pass the response to avoid duplicate fetch
+      });
+
+    } catch (err: any) {
+      console.error("[ANALYZE] failed", err);
+      const errorMessage = err?.message || String(err) || "Analyze failed";
+      setLocalError(errorMessage);
+      setIsRequestSent(false);
+      // Re-throw so parent can handle it too
+      throw err;
+    } finally {
+      setIsRequestSent(false);
+    }
+  };
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      await handleAnalyze();
+    } catch (err) {
+      // Error already handled in handleAnalyze (localError set)
+      // Re-throw so parent can also handle it
+      throw err;
+    }
   };
 
   const handleModeChange = (newMode: EvidenceMode) => {
@@ -214,25 +339,33 @@ export default function DecisionEvidenceForm({
 
         {/* Submit Button */}
         <button
-          type="submit"
-          disabled={isLoading}
+          type="button"
+          onClick={handleAnalyze}
+          disabled={isLoading || isRequestSent}
           className="w-full inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-medium bg-white text-black hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed transition"
         >
-          {isLoading ? "Analyzing…" : "Analyze"}
+          {isRequestSent ? "Request sent…" : isLoading ? "Analyzing…" : "Analyze"}
         </button>
 
+        {/* Request Sent Indicator */}
+        {isRequestSent && !isLoading && (
+          <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 px-4 py-3">
+            <p className="text-sm text-blue-300">Request sent to server. Waiting for response...</p>
+          </div>
+        )}
+
         {/* Error Message */}
-        {error && (
+        {(error || localError) && (
           <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3">
             <p className="text-sm font-medium text-red-400 mb-2">Error</p>
             <div className="text-sm text-red-300 whitespace-pre-wrap break-words">
-              {typeof error === "string"
-                ? error.split("\n").map((line, index) => (
+              {typeof (error || localError) === "string"
+                ? (error || localError || "").split("\n").map((line, index) => (
                     <p key={index} className={index > 0 ? "mt-2" : ""}>
                       {line}
                     </p>
                   ))
-                : String(error)}
+                : String(error || localError)}
             </div>
           </div>
         )}

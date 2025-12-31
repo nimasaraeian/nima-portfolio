@@ -28,8 +28,8 @@ function groupInsights(report: UiReport) {
       category: "Trust Gaps",
       icon: "🛡️",
       items: trustItems.map(item => ({
-        title: item.title || item.explanation.split(".")[0],
-        explanation: item.explanation || item.why || "",
+        title: item.title || ("explanation" in item ? item.explanation.split(".")[0] : ""),
+        explanation: ("explanation" in item ? item.explanation : "") || ("why" in item ? item.why : "") || "",
         where: "whereLabel" in item ? item.whereLabel : undefined,
       })),
     });
@@ -45,8 +45,8 @@ function groupInsights(report: UiReport) {
       category: "CTA Clarity Issues",
       icon: "🎯",
       items: ctaItems.map(item => ({
-        title: item.title || item.explanation.split(".")[0],
-        explanation: item.explanation || item.why || "",
+        title: item.title || ("explanation" in item ? item.explanation.split(".")[0] : ""),
+        explanation: ("explanation" in item ? item.explanation : "") || ("why" in item ? item.why : "") || "",
         where: "whereLabel" in item ? item.whereLabel : undefined,
       })),
     });
@@ -62,8 +62,8 @@ function groupInsights(report: UiReport) {
       category: "Cognitive Overload",
       icon: "🧠",
       items: overloadItems.map(item => ({
-        title: item.title || item.explanation.split(".")[0],
-        explanation: item.explanation || item.why || "",
+        title: item.title || ("explanation" in item ? item.explanation.split(".")[0] : ""),
+        explanation: ("explanation" in item ? item.explanation : "") || ("why" in item ? item.why : "") || "",
         where: "whereLabel" in item ? item.whereLabel : undefined,
       })),
     });
@@ -87,8 +87,8 @@ function groupInsights(report: UiReport) {
       category: "Other Insights",
       icon: "💡",
       items: otherItems.map(item => ({
-        title: item.title || item.explanation.split(".")[0],
-        explanation: item.explanation || item.why || "",
+        title: item.title || ("explanation" in item ? item.explanation.split(".")[0] : ""),
+        explanation: ("explanation" in item ? item.explanation : "") || ("why" in item ? item.why : "") || "",
         where: "whereLabel" in item ? item.whereLabel : undefined,
       })),
     });

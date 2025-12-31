@@ -80,16 +80,16 @@ export default function DecisionIntelligenceDashboard() {
       // Step 2: Predict decision
       const predictionPayload = {
         evidence: reportData.evidence,
-        decision_model: reportData.decision_model,
+        decision_model: reportData.raw?.decision_model || null,
       };
       const predictionData = await predictDecision(predictionPayload);
       setPrediction(predictionData);
 
       // Step 3: Get recommendation (optional, may not be needed if report already contains recommendations)
-      if (reportData.report_id && !reportData.quick_wins) {
+      if (reportData.raw?.report_id && !reportData.raw?.quick_wins) {
         try {
           const recommendationPayload = {
-            report_id: reportData.report_id,
+            report_id: reportData.raw.report_id,
             max_actions: 3,
           };
           const recommendationData = await recommendDecision(recommendationPayload);
@@ -98,9 +98,9 @@ export default function DecisionIntelligenceDashboard() {
           // Recommendation API may not exist, that's OK
           console.warn("Recommendation API not available:", err);
         }
-      } else if (reportData.quick_wins) {
+      } else if (reportData.raw?.quick_wins) {
         // Use quick_wins from report as recommendations
-        setRecommendation({ primary_recommendation: reportData.quick_wins[0] });
+        setRecommendation({ primary_recommendation: reportData.raw.quick_wins[0] });
       }
     } catch (err: any) {
       setError(err.message || "Failed to analyze. Please try again.");

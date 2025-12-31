@@ -65,7 +65,7 @@ export default function DecisionReport({ result }: DecisionReportProps) {
       <DecisionSummary primaryBlocker={primaryBlocker} />
 
       {/* B. Why Users Hesitate */}
-      <WhyUsersHesitate decisionMode={decisionMode} primaryBlocker={primaryBlocker} />
+      <WhyUsersHesitate report={result} />
 
       {/* C. Primary Actions */}
       <PrimaryActions actions={actions} />

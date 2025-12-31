@@ -29,8 +29,45 @@ export async function analyzeHumanNew(data: {
     apiResponse = await analyzeText({ text: data.text, goal: data.goal });
   }
 
+  // Log raw backend response for debugging
+  console.log("RAW_BACKEND_RESPONSE", apiResponse);
+
   // Normalize response to NormalizedDecisionReport
   return normalizeDecisionReport(apiResponse, mode);
+}
+
+/**
+ * Analyze human decision and return both normalized report and raw response
+ * For debugging purposes
+ */
+export async function analyzeHumanNewWithRaw(data: {
+  goal: string;
+  url?: string;
+  image?: File;
+  text?: string;
+}): Promise<{ normalized: NormalizedDecisionReport; raw: any }> {
+  const mode: "url" | "image" | "text" = data.url ? "url" : data.image ? "image" : "text";
+  
+  let apiResponse: any;
+  
+  if (mode === "url") {
+    if (!data.url) throw new Error("URL is required for URL mode");
+    apiResponse = await analyzeUrl({ url: data.url, goal: data.goal });
+  } else if (mode === "image") {
+    if (!data.image) throw new Error("Image is required for image mode");
+    apiResponse = await analyzeImage({ image: data.image, goal: data.goal });
+  } else {
+    if (!data.text) throw new Error("Text is required for text mode");
+    apiResponse = await analyzeText({ text: data.text, goal: data.goal });
+  }
+
+  // Log raw backend response for debugging
+  console.log("RAW_BACKEND_RESPONSE", apiResponse);
+
+  // Normalize response to NormalizedDecisionReport
+  const normalized = normalizeDecisionReport(apiResponse, mode);
+  
+  return { normalized, raw: apiResponse };
 }
 
 /**

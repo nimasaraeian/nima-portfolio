@@ -79,3 +79,8 @@ export default function DecisionFrictionDiagnosis({ report }: DecisionFrictionDi
   );
 }
 
+
+
+
+
+
