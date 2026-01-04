@@ -142,12 +142,14 @@ export default function DecisionBrainClient() {
   const [evidenceError, setEvidenceError] = useState<string | null>(null);
   const [evidenceInputMode, setEvidenceInputMode] = useState<"url" | "image" | "text">("url");
   const [isMounted, setIsMounted] = useState(false);
+  const [expertMode, setExpertMode] = useState(false);
   const [lastAnalysisData, setLastAnalysisData] = useState<{
     mode: "url" | "image" | "text";
     url?: string;
     image?: File;
     text?: string;
     goal: string;
+    expertMode?: boolean;
   } | null>(null);
   // Raw backend response for debugging
   const [rawResponse, setRawResponse] = useState<any>(null);
@@ -265,12 +267,18 @@ export default function DecisionBrainClient() {
     text?: string;
     goal: string;
     rawResponse?: any;
+    expertMode?: boolean;
   }): Promise<void> => {
     setEvidenceLoading(true);
     setEvidenceError(null);
     setEvidenceResult(null);
 
     try {
+      // Save expert mode state
+      if (data.expertMode !== undefined) {
+        setExpertMode(data.expertMode);
+      }
+      
       // Save analysis data for retry
       const analysisData = {
         mode: data.mode,
@@ -278,6 +286,7 @@ export default function DecisionBrainClient() {
         url: data.mode === "url" ? data.url : undefined,
         image: data.image,
         text: data.text,
+        expertMode: data.expertMode,
       };
       setLastAnalysisData(analysisData);
       
@@ -447,6 +456,7 @@ export default function DecisionBrainClient() {
               onSubmit={handleEvidenceSubmit}
               isLoading={evidenceLoading}
               error={evidenceError}
+            expertMode={expertMode}
             />
           </div>
         )}
@@ -457,20 +467,61 @@ export default function DecisionBrainClient() {
             <DecisionReportDashboard 
               report={evidenceResult}
               rawBackendResponse={rawResponse}
+              expertMode={expertMode}
               onRetryCapture={lastAnalysisData ? async () => {
                 setEvidenceLoading(true);
                 setEvidenceError(null);
                 setEvidenceResult(null);
                 setRawResponse(null);
                 try {
-                  const { normalized: resultData, raw: rawApiResponse } = await analyzeHumanNewWithRaw({
-                    goal: lastAnalysisData.goal,
-                    url: lastAnalysisData.mode === "url" ? lastAnalysisData.url : undefined,
-                    image: lastAnalysisData.mode === "image" ? lastAnalysisData.image : undefined,
-                    text: lastAnalysisData.mode === "text" ? lastAnalysisData.text : undefined,
+                  // Retry with recapture=true parameter
+                  const mode = lastAnalysisData.mode;
+                  let endpoint: string;
+                  let requestBody: any;
+                  let headers: HeadersInit = {};
+
+                  if (mode === "url") {
+                    endpoint = `/api/analyze/url-human-advanced?expert=true&verbosity=full&recapture=true`;
+                    requestBody = {
+                      url: lastAnalysisData.url,
+                      goal: lastAnalysisData.goal,
+                      locale: "en",
+                    };
+                    headers["Content-Type"] = "application/json";
+                  } else if (mode === "image") {
+                    endpoint = `${BASE_URL}/api/analyze/human?recapture=true`; // unchanged for image/text
+                    const formData = new FormData();
+                    formData.append("goal", lastAnalysisData.goal);
+                    if (lastAnalysisData.image) {
+                      formData.append("image", lastAnalysisData.image);
+                    }
+                    requestBody = formData;
+                  } else {
+                    // text mode
+                    endpoint = `${BASE_URL}/api/analyze/human?recapture=true`;
+                    const formData = new FormData();
+                    formData.append("goal", lastAnalysisData.goal);
+                    if (lastAnalysisData.text) {
+                      formData.append("text", lastAnalysisData.text);
+                    }
+                    requestBody = formData;
+                  }
+
+                  const res = await fetch(endpoint, {
+                    method: "POST",
+                    headers,
+                    body: mode === "url" ? JSON.stringify(requestBody) : requestBody,
                   });
-                  setEvidenceResult(resultData);
-                  setRawResponse(rawApiResponse);
+
+                  if (!res.ok) {
+                    throw new Error(`Retry failed: ${res.status} ${res.statusText}`);
+                  }
+
+                  const responseData = await res.json();
+                  const normalizedReport = normalizeDecisionReport(responseData, mode);
+                  
+                  setEvidenceResult(normalizedReport);
+                  setRawResponse(responseData);
                 } catch (err: any) {
                   setEvidenceError(err?.message || "Retry failed");
                 } finally {

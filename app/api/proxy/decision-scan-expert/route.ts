@@ -6,8 +6,8 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 /**
- * Proxy endpoint for /api/proxy/analyze-human
- * Forwards image/text analysis requests to FastAPI backend
+ * Proxy endpoint for /api/proxy/decision-scan-expert
+ * Forwards URL analysis requests to FastAPI backend with expert mode
  */
 export async function POST(req: NextRequest) {
   try {
@@ -25,21 +25,23 @@ export async function POST(req: NextRequest) {
 
     // Get query parameters
     const searchParams = req.nextUrl.searchParams;
+    const expert = searchParams.get('expert') || 'true';
+    const verbosity = searchParams.get('verbosity') || 'full';
     const recapture = searchParams.get('recapture') || 'false';
     
-    // Forward to FastAPI /api/analyze/human endpoint (standard mode)
-    // Check if request has text field (text mode) or image field (image mode)
-    const formData = await req.formData();
-    const hasText = formData.has('text');
+    // Forward to FastAPI /api/analyze/url-human-advanced endpoint
+    const backendEndpoint = `${backendUrl}/api/analyze/url-human-advanced?expert=${expert}&verbosity=${verbosity}&recapture=${recapture}`;
     
-    // Use human endpoint for both modes in standard mode
-    const backendEndpoint = `${backendUrl}/api/analyze/human${recapture === 'true' ? '?recapture=true' : ''}`;
+    const body = await req.json();
     
     let backendResponse: Response;
     try {
       backendResponse = await fetch(backendEndpoint, {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
       });
     } catch (fetchError: any) {
       console.error('❌ Failed to connect to backend:', backendEndpoint, fetchError.message);
@@ -75,13 +77,14 @@ export async function POST(req: NextRequest) {
     return jsonResponse(backendData);
     
   } catch (error: any) {
-    console.error('❌ Error in /api/proxy/analyze-human:', error);
+    console.error('❌ Error in /api/proxy/decision-scan-expert:', error);
     return jsonResponse(
       {
         error: error.message || 'An error occurred while processing your request',
-        detail: 'Failed to process human analysis.',
+        detail: 'Failed to process expert decision scan.',
       },
       { status: 500 }
     );
   }
 }
+

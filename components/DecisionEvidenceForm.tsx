@@ -12,6 +12,7 @@ type DecisionEvidenceFormProps = {
     text?: string;
     goal: string;
     rawResponse?: any; // Optional: pre-fetched response to avoid duplicate calls
+    expertMode?: boolean;
   }) => Promise<void>;
   isLoading: boolean;
   error: string | null;
@@ -30,6 +31,7 @@ export default function DecisionEvidenceForm({
   isLoading,
   error,
   onRequestSent,
+  expertMode = false,
 }: DecisionEvidenceFormProps) {
   const [mode, setMode] = useState<EvidenceMode>("url");
   const [url, setUrl] = useState("");
@@ -117,11 +119,13 @@ export default function DecisionEvidenceForm({
 
       // Determine endpoint and prepare request
       if (mode === "url") {
-        endpoint = "/api/proxy/decision-scan";
+        const expertParam = expertMode ? "true" : "false";
+        endpoint = `/api/analyze/url-human-advanced?expert=${expertParam}&verbosity=full`;
         requestBody = {
           url: trimmedUrl,
           goal: finalGoal,
           locale: "en",
+          custom_goal: customGoal.trim(),
         };
         headers["Content-Type"] = "application/json";
         console.log("[ANALYZE] request", { endpoint, body: { url: trimmedUrl, goal: finalGoal, locale: "en" } });
@@ -164,12 +168,35 @@ export default function DecisionEvidenceForm({
         throw new Error(errorDetail);
       }
 
-      const responseData = await res.json();
-      console.log("[ANALYZE] response success", { 
-        status: res.status, 
-        hasData: !!responseData,
-        keys: responseData ? Object.keys(responseData) : []
-      });
+      const responseText = await res.text();
+      let responseData: any;
+      try {
+        responseData = responseText ? JSON.parse(responseText) : null;
+      } catch {
+        responseData = responseText;
+      }
+
+      if (res.status !== 200) {
+        const errorPayload =
+          typeof responseData === "object" && responseData !== null
+            ? responseData.detail || responseData.error
+            : responseData;
+        const errorMessage =
+          errorPayload || `HTTP ${res.status}: ${res.statusText}`;
+        throw new Error(errorMessage);
+      }
+
+      // Dev-only diagnostics for endpoint + payload size
+      if (process.env.NODE_ENV !== "production") {
+        const responseString = responseText;
+        console.log("[ANALYZE] response success", { 
+          status: res.status, 
+          hasData: !!responseData,
+          keys: responseData && typeof responseData === "object" ? Object.keys(responseData) : [],
+          endpoint,
+          responseBytes: responseString ? responseString.length : 0,
+        });
+      }
 
       // Call the parent onSubmit handler with the data and pre-fetched response
       // This avoids duplicate API calls since we've already fetched the data
@@ -180,6 +207,7 @@ export default function DecisionEvidenceForm({
         image: mode === "image" ? imageFile || undefined : undefined,
         goal: finalGoal,
         rawResponse: responseData, // Pass the response to avoid duplicate fetch
+        expertMode,
       });
 
     } catch (err: any) {

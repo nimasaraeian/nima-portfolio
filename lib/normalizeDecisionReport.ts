@@ -100,7 +100,8 @@ function extractDecisionStyle(response: DecisionReportResponse): { id: string; l
 }
 
 /**
- * Get confidence from response with fallbacks
+ * Get confidence from response - FRONTEND ONLY, use backend confidence_label directly
+ * NO CLIENT-SIDE COMPUTATION of confidence labels
  */
 function extractConfidence(response: DecisionReportResponse): {
   score: number;
@@ -108,7 +109,15 @@ function extractConfidence(response: DecisionReportResponse): {
   label: "Low" | "Medium" | "High";
   explanation: string;
 } {
-  // Try multiple sources
+  // Priority 1: Use confidence_label from backend directly (NO computation)
+  const backendConfidenceLabel = 
+    response.confidence_label ||
+    response.decision?.confidence_label ||
+    response.decision_model?.confidence_label ||
+    response.decision_machine?.confidence_label ||
+    null;
+
+  // Priority 2: Extract confidence score for percent calculation
   let confidenceScore = 
     response.analysis_confidence ||
     response.decision_machine?.confidence ||
@@ -116,7 +125,7 @@ function extractConfidence(response: DecisionReportResponse): {
     response.decision_model?.confidence ||
     null;
   
-  // Convert 0-1 to 0-100 if needed, or use as-is if already 0-100
+  // Convert 0-1 to 0-100 if needed
   if (confidenceScore !== null && confidenceScore !== undefined) {
     if (confidenceScore <= 1) {
       confidenceScore = confidenceScore * 100;
@@ -130,19 +139,35 @@ function extractConfidence(response: DecisionReportResponse): {
   const score = safeNumber(confidenceScore, 0, 100, 35);
   const percent = Math.round(score);
   
-  // Determine label
+  // Use backend confidence_label if available, otherwise derive from score (presentation only)
   let label: "Low" | "Medium" | "High";
   let explanation: string;
   
-  if (score < 45) {
-    label = "Low";
-    explanation = "Lower confidence. Treat these as hypotheses to test rather than definitive answers. User testing is essential.";
-  } else if (score < 75) {
-    label = "Medium";
-    explanation = "Moderately confident. Use this as directional guidance, but prioritize validating these findings with user research.";
+  if (backendConfidenceLabel) {
+    // Use backend label directly
+    const labelLower = String(backendConfidenceLabel).toLowerCase();
+    if (labelLower === "high") {
+      label = "High";
+      explanation = "Very confident. This decision intelligence assessment is highly certain about these findings. You can proceed with confidence, but still validate with real user testing.";
+    } else if (labelLower === "medium") {
+      label = "Medium";
+      explanation = "Moderately confident. Use this as directional guidance, but prioritize validating these findings with user research.";
+    } else {
+      label = "Low";
+      explanation = "Lower confidence. Treat these as hypotheses to test rather than definitive answers. User testing is essential.";
+    }
   } else {
-    label = "High";
-    explanation = "Very confident. This decision intelligence assessment is highly certain about these findings. You can proceed with confidence, but still validate with real user testing.";
+    // Fallback: derive from score (presentation layer only, should not happen if backend provides label)
+    if (score < 45) {
+      label = "Low";
+      explanation = "Lower confidence. Treat these as hypotheses to test rather than definitive answers. User testing is essential.";
+    } else if (score < 75) {
+      label = "Medium";
+      explanation = "Moderately confident. Use this as directional guidance, but prioritize validating these findings with user research.";
+    } else {
+      label = "High";
+      explanation = "Very confident. This decision intelligence assessment is highly certain about these findings. You can proceed with confidence, but still validate with real user testing.";
+    }
   }
   
   return {
@@ -930,6 +955,13 @@ export function normalizeDecisionReport(
       }
     });
   }
+
+  // Advanced / verbose data passthrough for UI rendering
+  const humanReportRaw = response.human_report;
+  const decisionMachineRaw = response.decision_machine;
+  const supportingEvidenceRaw = Array.isArray(response.supporting_evidence) ? response.supporting_evidence : [];
+  const visualRaw = response.visual;
+  const fixFirstRaw = response.fix_first || response.human_report?.fix_first;
   
   return {
     mode: validMode,
@@ -944,6 +976,11 @@ export function normalizeDecisionReport(
     fix_factors: fixFactors,
     supporting,
     raw: response,
+    human_report: humanReportRaw,
+    decision_machine: decisionMachineRaw,
+    supporting_evidence: supportingEvidenceRaw,
+    visual: visualRaw,
+    fix_first_raw: fixFirstRaw,
     // Pass through attention_path and drivers for new UI components
     attention_path: response.attention_path,
     decision: response.decision,
@@ -1006,6 +1043,11 @@ export interface NormalizedDecisionReport {
     priority: "high" | "medium" | "low";
   }>;
   raw: any;
+  human_report?: any;
+  decision_machine?: any;
+  supporting_evidence?: any[];
+  visual?: any;
+  fix_first_raw?: any;
   // New fields for Evidence-Based Decision Output + Attention Path
   attention_path?: any;
   decision?: any;

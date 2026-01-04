@@ -128,10 +128,72 @@ export default function VisualEvidence({ report, onRetry }: VisualEvidenceProps)
     return filterEvidenceBullets(bullets);
   };
 
+  // Check screenshot status from raw response
+  const screenshotsStatus = report.raw?.screenshots?.status;
+  const screenshotsFailed = screenshotsStatus && screenshotsStatus !== "ok";
+  
   // If no actual screenshots exist and not captured, show smart fallback card
   if (!hasActualScreenshots && !isCaptured) {
     const inferredSignals = generateInferredSignals();
-    const captureFailed = captureStatus === "failed";
+    const captureFailed = captureStatus === "failed" || screenshotsFailed;
+    
+    // Show clear banner if screenshot capture failed
+    if (captureFailed || screenshotsFailed) {
+      return (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-2xl font-semibold text-white mb-4">Visual Evidence</h2>
+          
+          {/* Clear banner for screenshot capture failure */}
+          <div className="rounded-lg border border-orange-500/30 bg-orange-500/10 p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div className="flex-1">
+                <h3 className="text-base font-semibold text-orange-300 mb-1">Visual capture failed</h3>
+                <p className="text-sm text-orange-200/90 leading-relaxed">
+                  Retry capture or use Text mode for detailed analysis. The full text analysis is still available based on page content.
+                </p>
+              </div>
+            </div>
+            {mode === "url" && onRetry && (
+              <div className="mt-4">
+                <button
+                  onClick={onRetry}
+                  className="rounded-lg border border-orange-500/30 bg-orange-500/20 px-4 py-2 text-sm font-medium text-orange-200 hover:bg-orange-500/30 transition"
+                >
+                  Retry capture
+                </button>
+              </div>
+            )}
+          </div>
+          
+          {/* Show inferred signals if available */}
+          {inferredSignals.length > 0 && (
+            <div className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-2">Inferred Visual Signals</h3>
+                  <ul className="space-y-2 mb-3">
+                    {inferredSignals.map((bullet, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="text-white/40 mt-1.5">•</span>
+                        <p className="text-sm text-white/80 flex-1">
+                          {bullet}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <span className="text-xs px-2 py-1 rounded-full bg-blue-500/30 text-blue-200 border border-blue-400/30 whitespace-nowrap ml-4">
+                  AI-Inferred
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
     
     // Only show if we have at least 1 bullet after filtering
     if (inferredSignals.length === 0) {

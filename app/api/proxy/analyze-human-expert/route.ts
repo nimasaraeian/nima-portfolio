@@ -6,8 +6,8 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 /**
- * Proxy endpoint for /api/proxy/analyze-human
- * Forwards image/text analysis requests to FastAPI backend
+ * Proxy endpoint for /api/proxy/analyze-human-expert
+ * Forwards image/text analysis requests to FastAPI backend with expert mode
  */
 export async function POST(req: NextRequest) {
   try {
@@ -25,15 +25,27 @@ export async function POST(req: NextRequest) {
 
     // Get query parameters
     const searchParams = req.nextUrl.searchParams;
+    const expert = searchParams.get('expert') || 'true';
+    const verbosity = searchParams.get('verbosity') || 'full';
     const recapture = searchParams.get('recapture') || 'false';
     
-    // Forward to FastAPI /api/analyze/human endpoint (standard mode)
-    // Check if request has text field (text mode) or image field (image mode)
+    // Get FormData from request
     const formData = await req.formData();
     const hasText = formData.has('text');
+    const hasImage = formData.has('image');
     
-    // Use human endpoint for both modes in standard mode
-    const backendEndpoint = `${backendUrl}/api/analyze/human${recapture === 'true' ? '?recapture=true' : ''}`;
+    // Determine endpoint based on input type
+    let backendEndpoint: string;
+    if (hasText) {
+      // Text mode: use human-advanced endpoint
+      backendEndpoint = `${backendUrl}/api/analyze/human-advanced?expert=${expert}&verbosity=${verbosity}&recapture=${recapture}`;
+    } else if (hasImage) {
+      // Image mode: use image-human-advanced endpoint (if available) or human-advanced
+      backendEndpoint = `${backendUrl}/api/analyze/image-human-advanced?expert=${expert}&verbosity=${verbosity}&recapture=${recapture}`;
+    } else {
+      // Fallback to human-advanced
+      backendEndpoint = `${backendUrl}/api/analyze/human-advanced?expert=${expert}&verbosity=${verbosity}&recapture=${recapture}`;
+    }
     
     let backendResponse: Response;
     try {
@@ -75,13 +87,14 @@ export async function POST(req: NextRequest) {
     return jsonResponse(backendData);
     
   } catch (error: any) {
-    console.error('❌ Error in /api/proxy/analyze-human:', error);
+    console.error('❌ Error in /api/proxy/analyze-human-expert:', error);
     return jsonResponse(
       {
         error: error.message || 'An error occurred while processing your request',
-        detail: 'Failed to process human analysis.',
+        detail: 'Failed to process expert human analysis.',
       },
       { status: 500 }
     );
   }
 }
+

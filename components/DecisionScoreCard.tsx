@@ -6,9 +6,11 @@ type DecisionScoreCardProps = {
   data: {
     score: number;
     label: string;
-    confidence: "High" | "Medium" | "Low";
+    confidence: string; // From backend confidence_label
     primaryBlock?: string;
     topDrivers: string[];
+    hesitationDetected?: boolean;
+    isFriction?: boolean;
   };
 };
 
@@ -41,10 +43,11 @@ export default function DecisionScoreCard({ data }: DecisionScoreCardProps) {
     return "text-green-400";
   };
   
-  // Determine confidence badge color
+  // Determine confidence badge color (using backend confidence_label directly)
   const getConfidenceColor = () => {
-    if (data.confidence === "High") return "bg-green-500/20 text-green-400 border-green-500/30";
-    if (data.confidence === "Medium") return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+    const conf = String(data.confidence).toLowerCase();
+    if (conf === "high") return "bg-green-500/20 text-green-400 border-green-500/30";
+    if (conf === "medium") return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
     return "bg-orange-500/20 text-orange-400 border-orange-500/30";
   };
   
@@ -71,6 +74,24 @@ export default function DecisionScoreCard({ data }: DecisionScoreCardProps) {
             {data.primaryBlock && (
               <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium border border-white/20 bg-white/5 text-white/70">
                 Primary block: {data.primaryBlock}
+              </span>
+            )}
+            {data.hesitationDetected !== undefined && (
+              <span className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium border ${
+                data.hesitationDetected 
+                  ? "bg-orange-500/20 text-orange-400 border-orange-500/30" 
+                  : "bg-green-500/20 text-green-400 border-green-500/30"
+              }`}>
+                Hesitation: {data.hesitationDetected ? "Detected" : "None"}
+              </span>
+            )}
+            {data.isFriction !== undefined && (
+              <span className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-medium border ${
+                data.isFriction 
+                  ? "bg-red-500/20 text-red-400 border-red-500/30" 
+                  : "bg-green-500/20 text-green-400 border-green-500/30"
+              }`}>
+                Friction: {data.isFriction ? "Yes" : "No"}
               </span>
             )}
           </div>

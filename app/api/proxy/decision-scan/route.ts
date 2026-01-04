@@ -23,8 +23,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Forward to FastAPI /api/analyze/url-human endpoint
-    const backendEndpoint = `${backendUrl}/api/analyze/url-human`;
+    // Get query parameters
+    const searchParams = req.nextUrl.searchParams;
+    const recapture = searchParams.get('recapture') || 'false';
+
+    // Forward to FastAPI /api/analyze/url-human-advanced with expert + full verbosity
+    const backendEndpointUrl = new URL(`${backendUrl}/api/analyze/url-human-advanced`);
+    backendEndpointUrl.searchParams.set('expert', 'true');
+    backendEndpointUrl.searchParams.set('verbosity', 'full');
+    if (recapture === 'true') {
+      backendEndpointUrl.searchParams.set('recapture', 'true');
+    }
+    const backendEndpoint = backendEndpointUrl.toString();
     
     const body = await req.json();
     

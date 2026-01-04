@@ -14,17 +14,27 @@ type DecisionDriversCardProps = {
 };
 
 export default function DecisionDriversCard({ report, pageMap }: DecisionDriversCardProps) {
-  // Determine drivers list from multiple possible sources
+  // FRONTEND ONLY - Extract factors from backend decision.factors (normalized values)
+  // Priority: decision.factors > decision_model.drivers > decision.drivers
   let drivers: Driver[] = [];
   
-  if (report?.decision?.drivers && Array.isArray(report.decision.drivers)) {
-    drivers = report.decision.drivers;
-  } else if (report?.decision_model?.drivers && Array.isArray(report.decision_model.drivers)) {
+  // Priority 1: decision.factors (normalized backend values)
+  if (report?.decision?.factors && Array.isArray(report.decision.factors)) {
+    drivers = report.decision.factors;
+  } else if (report?.raw?.decision?.factors && Array.isArray(report.raw.decision.factors)) {
+    drivers = report.raw.decision.factors;
+  }
+  // Priority 2: decision_model.drivers (fallback)
+  else if (report?.decision_model?.drivers && Array.isArray(report.decision_model.drivers)) {
     drivers = report.decision_model.drivers;
-  } else if (report?.raw?.decision?.drivers && Array.isArray(report.raw.decision.drivers)) {
-    drivers = report.raw.decision.drivers;
   } else if (report?.raw?.decision_model?.drivers && Array.isArray(report.raw.decision_model.drivers)) {
     drivers = report.raw.decision_model.drivers;
+  }
+  // Priority 3: decision.drivers (legacy fallback)
+  else if (report?.decision?.drivers && Array.isArray(report.decision.drivers)) {
+    drivers = report.decision.drivers;
+  } else if (report?.raw?.decision?.drivers && Array.isArray(report.raw.decision.drivers)) {
+    drivers = report.raw.decision.drivers;
   }
 
   // If no drivers found, don't render the card (fallback to existing UI)
@@ -32,15 +42,18 @@ export default function DecisionDriversCard({ report, pageMap }: DecisionDrivers
     return null;
   }
 
-  // Normalize driver structure - ensure they have id, score, role
+  // Normalize driver structure - use backend normalized values directly (NO computation)
+  // Backend provides: score (0-1 normalized), name/factor, role
   const normalizedDrivers: Driver[] = drivers.map((driver: any, index: number) => {
     const id = driver.id || driver.factor || driver.name || `driver_${index}`;
-    const score = typeof driver.score === 'number' ? driver.score : (driver.weight || 0);
+    // Use backend normalized score directly (0-1 range from backend)
+    const score = typeof driver.score === 'number' ? driver.score : 0;
+    // Use backend role if available, otherwise infer from position
     const role = driver.role || (index === 0 ? "primary" : "secondary");
     
     return {
       id,
-      score,
+      score, // Backend normalized value (0-1)
       role,
       evidence: driver.evidence || [],
       actions: driver.actions || [],

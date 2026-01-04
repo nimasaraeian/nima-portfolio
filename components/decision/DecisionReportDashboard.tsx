@@ -13,11 +13,15 @@ import DecisionDriversCard from "../report/DecisionDriversCard";
 import FixThisFirstActions from "../report/FixThisFirstActions";
 import { areActionsSimilar } from "@/lib/evidenceFilter";
 import DecisionScoreCard from "../DecisionScoreCard";
-import { computeDecisionFrictionScore } from "@/lib/decisionScore";
+import { extractDecisionFrictionScore } from "@/lib/decisionScore";
+import DecisionEngineV2 from "./DecisionEngineV2";
+import FullReportSection from "./FullReportSection";
+import DecisionMachinePanel from "./DecisionMachinePanel";
 
 type DecisionReportDashboardProps = {
   report: NormalizedDecisionReport;
   rawBackendResponse?: any;
+  expertMode?: boolean;
   onRetryCapture?: () => void;
 };
 
@@ -67,7 +71,7 @@ function FixThisFirstGroup({ report }: { report: any }) {
   }
 }
 
-function generateMarkdownReport(report: NormalizedDecisionReport): string {
+function generateMarkdownReport(report: NormalizedDecisionReport, rawBackendResponse?: any): string {
   const lines: string[] = [];
   
   // Safe accessors with fallbacks
@@ -88,6 +92,84 @@ function generateMarkdownReport(report: NormalizedDecisionReport): string {
   lines.push(`- **Confidence:** ${confidencePercent}% (${confidenceLabel})`);
   lines.push(`- **Expected Impact:** ${expectedImpactLabel}`);
   lines.push("");
+  
+  // Add summary if available
+  if (rawBackendResponse?.summary) {
+    lines.push("## Summary");
+    lines.push("");
+    if (typeof rawBackendResponse.summary === 'string') {
+      lines.push(rawBackendResponse.summary);
+    } else if (rawBackendResponse.summary.message) {
+      lines.push(rawBackendResponse.summary.message);
+    } else if (rawBackendResponse.summary.verdict) {
+      lines.push(rawBackendResponse.summary.verdict);
+    }
+    lines.push("");
+  }
+
+  // Add human_report if available
+  if (rawBackendResponse?.human_report && typeof rawBackendResponse.human_report === 'string') {
+    lines.push("## Full Human Report");
+    lines.push("");
+    lines.push(rawBackendResponse.human_report);
+    lines.push("");
+  }
+  
+  // Add decision_machine narrative if available
+  const decisionMachine = rawBackendResponse?.decision_machine;
+  if (decisionMachine) {
+    lines.push("## Decision Machine Analysis");
+    lines.push("");
+    
+    if (decisionMachine.summary) {
+      lines.push(`### Summary`);
+      lines.push(decisionMachine.summary);
+      lines.push("");
+    }
+    
+    if (decisionMachine.human_verdict) {
+      lines.push(`### Human Verdict`);
+      lines.push(decisionMachine.human_verdict);
+      lines.push("");
+    }
+    
+    if (decisionMachine.why_matters_now) {
+      lines.push(`### Why This Matters Now`);
+      lines.push(decisionMachine.why_matters_now);
+      lines.push("");
+    }
+    
+    if (decisionMachine.quick_actions && Array.isArray(decisionMachine.quick_actions)) {
+      lines.push(`### Quick Actions`);
+      decisionMachine.quick_actions.forEach((action: any, idx: number) => {
+        const actionText = typeof action === 'string' ? action : action.title || action.text || JSON.stringify(action);
+        lines.push(`${idx + 1}. ${actionText}`);
+      });
+      lines.push("");
+    }
+    
+    if (decisionMachine.lens_scores && typeof decisionMachine.lens_scores === 'object') {
+      lines.push(`### Lens Scores`);
+      Object.entries(decisionMachine.lens_scores).forEach(([key, value]) => {
+        lines.push(`- **${key.replace(/_/g, ' ')}:** ${value}`);
+      });
+      lines.push("");
+    }
+    
+    if (decisionMachine.evidence) {
+      lines.push(`### Evidence`);
+      if (decisionMachine.evidence.input_mode) {
+        lines.push(`- **Input Mode:** ${decisionMachine.evidence.input_mode}`);
+      }
+      if (decisionMachine.evidence.confidence_signals) {
+        lines.push(`- **Confidence Signals:** ${JSON.stringify(decisionMachine.evidence.confidence_signals, null, 2)}`);
+      }
+      if (decisionMachine.evidence.key_observations) {
+        lines.push(`- **Key Observations:** ${JSON.stringify(decisionMachine.evidence.key_observations, null, 2)}`);
+      }
+      lines.push("");
+    }
+  }
   
   if (report.fix_first && report.fix_first.title) {
     lines.push(`## Fix This First`);
@@ -124,6 +206,47 @@ function generateMarkdownReport(report: NormalizedDecisionReport): string {
     });
   }
   
+  // Add issues if available
+  if (rawBackendResponse?.issues && Array.isArray(rawBackendResponse.issues) && rawBackendResponse.issues.length > 0) {
+    lines.push(`## Issues`);
+    rawBackendResponse.issues.forEach((issue: any, idx: number) => {
+      lines.push(`### ${idx + 1}. ${issue.title || issue.name || `Issue ${idx + 1}`}`);
+      if (issue.description) lines.push(`- ${issue.description}`);
+      if (issue.explanation) lines.push(`- **Explanation:** ${issue.explanation}`);
+      if (issue.why) lines.push(`- **Why:** ${issue.why}`);
+      if (issue.severity) lines.push(`- **Severity:** ${issue.severity}`);
+      lines.push("");
+    });
+  }
+
+  // Add quick_wins if available
+  if (rawBackendResponse?.quick_wins && Array.isArray(rawBackendResponse.quick_wins) && rawBackendResponse.quick_wins.length > 0) {
+    lines.push(`## Quick Wins`);
+    rawBackendResponse.quick_wins.forEach((win: any, idx: number) => {
+      lines.push(`### ${idx + 1}. ${win.title || win.name || `Quick Win ${idx + 1}`}`);
+      if (win.description) lines.push(`- ${win.description}`);
+      if (win.why) lines.push(`- **Why:** ${win.why}`);
+      if (win.where) {
+        const whereText = typeof win.where === 'string' ? win.where : win.where.section || JSON.stringify(win.where);
+        lines.push(`- **Where:** ${whereText}`);
+      }
+      if (win.priority) lines.push(`- **Priority:** ${win.priority}`);
+      lines.push("");
+    });
+  }
+
+  // Add supporting_evidence from raw response if available
+  if (rawBackendResponse?.supporting_evidence && Array.isArray(rawBackendResponse.supporting_evidence)) {
+    lines.push(`## Additional Supporting Evidence`);
+    rawBackendResponse.supporting_evidence.forEach((item: any, idx: number) => {
+      lines.push(`### ${idx + 1}. ${item.title || `Evidence ${idx + 1}`}`);
+      if (item.summary) lines.push(`- ${item.summary}`);
+      if (item.why) lines.push(`- **Why:** ${item.why}`);
+      if (item.where) lines.push(`- **Where:** ${item.where}`);
+      lines.push("");
+    });
+  }
+  
   lines.push(`## Confidence & Transparency`);
   lines.push(`**Confidence:** ${confidencePercent}% (${confidenceLabel})`);
   lines.push(`**Explanation:** ${confidenceExplanation}`);
@@ -133,10 +256,30 @@ function generateMarkdownReport(report: NormalizedDecisionReport): string {
   return lines.join("\n");
 }
 
-export default function DecisionReportDashboard({ report, rawBackendResponse, onRetryCapture }: DecisionReportDashboardProps) {
+export default function DecisionReportDashboard({ report, rawBackendResponse, expertMode = false, onRetryCapture }: DecisionReportDashboardProps) {
   const [showDevMode, setShowDevMode] = useState(false);
   const [showRawJson, setShowRawJson] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+
+  // Advanced response fields (full human report + decision machine)
+  const humanReportText = typeof rawBackendResponse?.human_report === "string"
+    ? rawBackendResponse.human_report
+    : typeof report.human_report === "string"
+      ? report.human_report
+      : typeof rawBackendResponse?.human_report?.text === "string"
+        ? rawBackendResponse.human_report.text
+        : null;
+  const decisionMachine = rawBackendResponse?.decision_machine || report.decision_machine;
+  const fixFirstRaw = rawBackendResponse?.fix_first || report.fix_first_raw;
+  const supportingEvidenceRaw = rawBackendResponse?.supporting_evidence || report.supporting_evidence;
+  const visualRaw = rawBackendResponse?.visual || report.visual;
+  const hasAdvancedBlocks = Boolean(
+    humanReportText ||
+    (decisionMachine && Object.keys(decisionMachine).length > 0) ||
+    (Array.isArray(supportingEvidenceRaw) && supportingEvidenceRaw.length > 0) ||
+    fixFirstRaw ||
+    visualRaw
+  );
 
   // Load dev mode preference from localStorage
   useEffect(() => {
@@ -158,9 +301,14 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, on
   };
 
   const handleCopyReport = async () => {
-    const markdown = generateMarkdownReport(report);
+    const markdown = generateMarkdownReport(report, rawBackendResponse);
     try {
-      await navigator.clipboard.writeText(markdown);
+      // In expert/full mode prefer copying the full human report directly
+      if (expertMode && humanReportText) {
+        await navigator.clipboard.writeText(humanReportText);
+      } else {
+        await navigator.clipboard.writeText(markdown);
+      }
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
@@ -231,12 +379,12 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, on
     );
   }
 
-  // Compute decision friction score - merge report with raw backend response for better data access
+  // Extract decision friction score from backend - NO computation, only extraction
   const reportWithRaw = {
     ...report,
     raw: rawBackendResponse || report.raw,
   };
-  const scoreData = computeDecisionFrictionScore(reportWithRaw);
+  const scoreData = extractDecisionFrictionScore(reportWithRaw);
 
   return (
     <div className="mt-8 space-y-10">
@@ -263,6 +411,134 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, on
           )}
         </button>
       </div>
+
+      {/* Advanced Human Decision Report (full verbatim data) */}
+      {hasAdvancedBlocks && (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Human Decision Report</h2>
+              <p className="text-xs text-white/60">Full expert output (human narrative + decision machine)</p>
+            </div>
+          </div>
+
+          {humanReportText && (
+            <div className="space-y-3">
+              <div className="text-xs text-white/60 uppercase tracking-wide">Human Report</div>
+              <div className="space-y-3 text-sm text-white/80 leading-relaxed">
+                {humanReportText
+                  .split(/\n\s*\n/)
+                  .filter(Boolean)
+                  .map((paragraph, idx) => (
+                    <p key={idx} className="whitespace-pre-wrap">
+                      {paragraph.trim()}
+                    </p>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {decisionMachine && Object.keys(decisionMachine).length > 0 && (
+            <div className="space-y-3">
+              <div className="text-xs text-white/60 uppercase tracking-wide">Decision Machine</div>
+              <div className="space-y-3 text-sm text-white/80 leading-relaxed">
+                {decisionMachine.summary && (
+                  <div>
+                    <div className="text-white font-semibold mb-1">Summary</div>
+                    <p>{decisionMachine.summary}</p>
+                  </div>
+                )}
+                {decisionMachine.human_verdict && (
+                  <div>
+                    <div className="text-white font-semibold mb-1">Human Verdict</div>
+                    <p>{decisionMachine.human_verdict}</p>
+                  </div>
+                )}
+                {decisionMachine.why_matters_now && (
+                  <div>
+                    <div className="text-white font-semibold mb-1">Why This Matters Now</div>
+                    <p>{decisionMachine.why_matters_now}</p>
+                  </div>
+                )}
+                {decisionMachine.quick_actions && Array.isArray(decisionMachine.quick_actions) && decisionMachine.quick_actions.length > 0 && (
+                  <div>
+                    <div className="text-white font-semibold mb-1">Quick Actions</div>
+                    <ul className="space-y-2">
+                      {decisionMachine.quick_actions.map((action: any, idx: number) => {
+                        const actionText = typeof action === 'string'
+                          ? action
+                          : action.title || action.text || action.label || JSON.stringify(action);
+                        return (
+                          <li key={idx} className="flex items-start gap-2">
+                            <span className="text-white/40 mt-1">•</span>
+                            <span className="text-sm text-white/80 flex-1">{actionText}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {fixFirstRaw && (
+            <div className="space-y-2">
+              <div className="text-xs text-white/60 uppercase tracking-wide">Fix First</div>
+              <div className="rounded-lg border border-white/10 bg-white/5 p-4 space-y-2">
+                <div className="text-white font-semibold text-sm">{fixFirstRaw.title || "Fix this first"}</div>
+                {fixFirstRaw.what && <div className="text-sm text-white/80">{fixFirstRaw.what}</div>}
+                {fixFirstRaw.why && <div className="text-xs text-white/60">Why: {fixFirstRaw.why}</div>}
+                <div className="text-xs text-white/50 flex gap-4">
+                  {fixFirstRaw.where && <span>Where: {fixFirstRaw.where}</span>}
+                  {fixFirstRaw.impact && <span>Impact: {fixFirstRaw.impact}</span>}
+                  {fixFirstRaw.effort && <span>Effort: {fixFirstRaw.effort}</span>}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {Array.isArray(supportingEvidenceRaw) && supportingEvidenceRaw.length > 0 && (
+            <div className="space-y-3">
+              <div className="text-xs text-white/60 uppercase tracking-wide">Supporting Evidence</div>
+              <div className="space-y-3">
+                {supportingEvidenceRaw.map((item: any, idx: number) => (
+                  <div key={idx} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                    <div className="text-sm font-semibold text-white">{item.title || `Evidence ${idx + 1}`}</div>
+                    {item.summary && <div className="text-sm text-white/80 mt-1">{item.summary}</div>}
+                    <div className="text-xs text-white/50 flex gap-3 mt-1">
+                      {item.why && <span>Why: {item.why}</span>}
+                      {item.where && <span>Where: {item.where}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {visualRaw && (
+            <div className="space-y-2">
+              <div className="text-xs text-white/60 uppercase tracking-wide">Visual Evidence</div>
+              <div className="text-sm text-white/80">
+                {visualRaw.capture_status && (
+                  <div>
+                    <span className="text-white/60">Capture Status: </span>
+                    <span className={visualRaw.capture_status === "ok" ? "text-green-400" : "text-orange-300"}>
+                      {visualRaw.capture_status}
+                    </span>
+                  </div>
+                )}
+                {visualRaw.mode && (
+                  <div>
+                    <span className="text-white/60">Mode: </span>
+                    <span>{visualRaw.mode}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Decision Friction Score Card */}
       <DecisionScoreCard data={scoreData} />
@@ -296,9 +572,20 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, on
       <SupportingEvidence report={report} />
 
       {/* E) Confidence & Transparency */}
-      <ConfidenceTransparency report={report} />
+      <ConfidenceTransparency report={report} rawBackendResponse={rawBackendResponse} />
 
-      {/* F) Dev-only Raw JSON */}
+      {/* F) Decision Machine Panel - Show when decision_machine exists */}
+      {rawBackendResponse?.decision_machine && (
+        <DecisionMachinePanel decisionMachine={rawBackendResponse.decision_machine} />
+      )}
+
+      {/* F1) Decision Engine (v2) */}
+      <DecisionEngineV2 rawBackendResponse={rawBackendResponse} />
+
+      {/* F2) Full Report Section - Auto-expand if expert mode */}
+      <FullReportSection rawBackendResponse={rawBackendResponse} defaultExpanded={expertMode} />
+
+      {/* G) Dev-only Raw JSON */}
       {isDevMode && (
         <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6">
           <div className="flex items-center justify-between mb-4">

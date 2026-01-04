@@ -3,6 +3,7 @@
 import React from "react";
 import { NormalizedDecisionReport } from "@/lib/normalizeDecisionReport";
 import { formatPct } from "@/lib/normalizeDecisionReport";
+import { getConfidenceSourceOfTruth } from "@/lib/confidenceSelector";
 
 type ExecutiveSummaryProps = {
   report: NormalizedDecisionReport;
@@ -24,6 +25,12 @@ export default function ExecutiveSummary({ report, rawBackendResponse }: Executi
     return null; // Will be handled by InsufficientSignals component
   }
 
+  // Get single source of truth for confidence
+  const confidenceSource = getConfidenceSourceOfTruth(rawBackendResponse);
+  const confidencePercent = confidenceSource.percent;
+  const confidenceLabel = confidenceSource.label;
+  const isV2 = confidenceSource.isV2;
+
   // Defensive checks with fallbacks
   const primary_blocker = (report.primary_blocker && typeof report.primary_blocker === 'object' && report.primary_blocker.label) 
     ? report.primary_blocker 
@@ -32,9 +39,6 @@ export default function ExecutiveSummary({ report, rawBackendResponse }: Executi
   const decision_style = (report.decision_style && typeof report.decision_style === 'object' && report.decision_style.label)
     ? report.decision_style
     : { id: "unknown", label: "Unknown" };
-  const confidence = (report.confidence && typeof report.confidence === 'object' && report.confidence.percent !== undefined)
-    ? report.confidence
-    : { score: 0.35, percent: 35, label: "Medium" as const, explanation: "Confidence data not available." };
   const expected_impact = (report.expected_impact && typeof report.expected_impact === 'object' && report.expected_impact.label)
     ? report.expected_impact
     : { min: 3, max: 8, label: "+3% to +8%", note: "Directional estimate" };
@@ -43,7 +47,6 @@ export default function ExecutiveSummary({ report, rawBackendResponse }: Executi
   // Use dominant causes if available, otherwise fall back to single primary blocker
   const hasMultipleCauses = dominant_causes.length > 1;
   const causes = dominant_causes.length > 0 ? dominant_causes : [{ id: primary_blocker.id, label: primary_blocker.label, score: 1.0 }];
-  const confidencePercent = confidence.percent || 35;
   
   // Generate headline based on whether we have multiple causes
   let title: string;
@@ -149,19 +152,28 @@ export default function ExecutiveSummary({ report, rawBackendResponse }: Executi
           <div className="text-xs text-purple-300/70 mb-1 font-medium">Confidence</div>
           <div className="flex items-center gap-2">
             <span className="text-base font-semibold text-white">
-              {formatPct(confidence.percent)}
+              {formatPct(confidencePercent)}
             </span>
-            {confidencePercent < 40 ? (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-200 border border-purple-400/30">
-                Exploratory Signal
+            {confidenceLabel && (
+              <span
+                className={`text-xs px-2 py-0.5 rounded-full border ${
+                  confidenceLabel === "High"
+                    ? "bg-green-500/30 text-green-200 border-green-400/30"
+                    : confidenceLabel === "Medium"
+                    ? "bg-blue-500/30 text-blue-200 border-blue-400/30"
+                    : "bg-purple-500/30 text-purple-200 border-purple-400/30"
+                }`}
+              >
+                {confidenceLabel === "High" ? "High Confidence" : confidenceLabel === "Medium" ? "Validated Signal" : "Exploratory Signal"}
               </span>
-            ) : confidencePercent < 75 ? (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/30 text-blue-200 border border-blue-400/30">
-                Validated Signal
+            )}
+            {isV2 ? (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                v2
               </span>
             ) : (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/30 text-green-200 border border-green-400/30">
-                High Confidence
+              <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-300 border border-gray-400/30">
+                legacy
               </span>
             )}
           </div>
@@ -187,13 +199,13 @@ export default function ExecutiveSummary({ report, rawBackendResponse }: Executi
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-white/70">Confidence</span>
             <span className="text-sm font-semibold text-white">
-              {formatPct(confidence.percent)}
+              {formatPct(confidencePercent)}
             </span>
           </div>
           <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
             <div
               className="h-full bg-purple-500 transition-all"
-              style={{ width: `${confidence.percent}%` }}
+              style={{ width: `${confidencePercent}%` }}
             ></div>
           </div>
         </div>

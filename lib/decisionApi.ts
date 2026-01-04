@@ -86,7 +86,12 @@ export async function analyzeHuman(data: {
   
   if (mode === "url") {
     // URL mode: use decision-scan proxy
-    const res = await fetch("/api/proxy/decision-scan", {
+    const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL;
+    if (!apiBase) {
+      throw new Error("Backend URL is not configured (NEXT_PUBLIC_BACKEND_URL missing)");
+    }
+    const endpoint = `${apiBase}/api/analyze/url-human-advanced?expert=true&verbosity=full`;
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,6 +99,7 @@ export async function analyzeHuman(data: {
       body: JSON.stringify({
         url: data.url,
         goal: data.goal,
+        locale: "en",
       }),
     });
 

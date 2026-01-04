@@ -35,13 +35,26 @@ export interface DecisionReportResponse {
   decision?: {
     decision_mode?: string;
     confidence?: number;
+    confidence_label?: string; // Backend-provided confidence label (High/Medium/Low)
     primary_blocker?: string;
     scores?: Record<string, number>; // Multiple scores for different factors
     secondary?: string | string[]; // Secondary causes
+    factors?: Array<{ // Normalized decision factors from backend
+      name?: string;
+      factor?: string;
+      score?: number; // Normalized 0-1 value
+      weight?: number;
+      role?: string;
+    }>;
+    hesitation_detected?: boolean; // Separate signal from backend
+    is_friction?: boolean; // Separate signal from backend
+    friction_score?: number; // Friction score 0-10 from backend
+    friction_label?: string; // Friction label from backend
   };
   decision_machine?: {
     decision_mode?: string;
     confidence?: number;
+    confidence_label?: string;
     primary_blocker?: string;
     scores?: Record<string, number>;
     secondary?: string | string[];
@@ -49,6 +62,7 @@ export interface DecisionReportResponse {
   decision_model?: {
     decision_mode?: string;
     confidence?: number;
+    confidence_label?: string;
     drivers?: Array<{
       factor?: string;
       name?: string;
@@ -58,6 +72,22 @@ export interface DecisionReportResponse {
   };
   analysis_confidence?: number;
   confidence?: number; // Direct confidence value
+  confidence_label?: string; // Backend-provided confidence label
+  friction_score?: number; // Friction score 0-10 from backend
+  friction_label?: string; // Friction label from backend
+  hesitation_detected?: boolean; // Separate signal from backend
+  is_friction?: boolean; // Separate signal from backend
+  // New Engine: decision_diagnostics + decision_context
+  decision_diagnostics?: {
+    primary_blocker?: string;
+    friction_score?: number; // 0-10
+    is_friction?: boolean;
+    hesitation_detected?: boolean;
+    confidence_label?: string; // High/Medium/Low from backend
+  };
+  decision_context?: {
+    [key: string]: any; // Flexible structure for context data
+  };
   expected_impact?: {
     range?: [number, number];
     min?: number;
@@ -180,9 +210,14 @@ export interface DecisionReportResponse {
  */
 export async function analyzeUrl(request: AnalyzeUrlRequest): Promise<DecisionReportResponse> {
   const isClient = typeof window !== 'undefined';
+  const clientBase = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (isClient && !clientBase) {
+    throw new Error("Backend URL is not configured (NEXT_PUBLIC_BACKEND_URL missing)");
+  }
+
   const endpoint = isClient 
-    ? '/api/proxy/decision-scan'  // Use Next.js proxy for CORS
-    : `${API_BASE}/api/analyze/url-human`;  // Direct call from server
+    ? `${clientBase}/api/analyze/url-human-advanced?expert=true&verbosity=full`
+    : `${API_BASE}/api/analyze/url-human-advanced?expert=true&verbosity=full`;
 
   const response = await fetch(endpoint, {
     method: 'POST',
@@ -192,6 +227,7 @@ export async function analyzeUrl(request: AnalyzeUrlRequest): Promise<DecisionRe
     body: JSON.stringify({
       url: request.url,
       goal: request.goal || 'leads',
+      locale: 'en',
     }),
   });
 
