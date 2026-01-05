@@ -17,6 +17,7 @@ type DecisionEvidenceFormProps = {
   isLoading: boolean;
   error: string | null;
   onRequestSent?: () => void; // Callback when request is sent
+  expertMode?: boolean;
 };
 
 const GOAL_OPTIONS = [
@@ -119,8 +120,8 @@ export default function DecisionEvidenceForm({
 
       // Determine endpoint and prepare request
       if (mode === "url") {
-        const expertParam = expertMode ? "true" : "false";
-        endpoint = `/api/analyze/url-human-advanced?expert=${expertParam}&verbosity=full`;
+        // Force the stable proxy endpoint (avoids older decision-scan path)
+        endpoint = `/api/analyze/url-human-advanced?expert=true&verbosity=full`;
         requestBody = {
           url: trimmedUrl,
           goal: finalGoal,
@@ -207,7 +208,7 @@ export default function DecisionEvidenceForm({
         image: mode === "image" ? imageFile || undefined : undefined,
         goal: finalGoal,
         rawResponse: responseData, // Pass the response to avoid duplicate fetch
-        expertMode,
+        expertMode: true,
       });
 
     } catch (err: any) {
