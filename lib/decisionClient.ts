@@ -231,9 +231,25 @@ export async function analyzeUrl(request: AnalyzeUrlRequest): Promise<DecisionRe
     }),
   });
 
+  // Normalize backend errors to avoid "[object Object]" surfaces
+  let errText = `HTTP ${response.status}`;
+  let errJson: any = null;
+
+  try {
+    errJson = await response.clone().json();
+    if (errJson?.detail?.message) errText = errJson.detail.message;
+    if (errJson?.detail?.request_id) errText += ` (rid: ${errJson.detail.request_id})`;
+  } catch {
+    try {
+      const t = await response.clone().text();
+      if (t) errText = t;
+    } catch {
+      // ignore
+    }
+  }
+
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Failed to analyze URL: ${response.status} ${errorText}`);
+    throw new Error(errText);
   }
 
   return response.json();
