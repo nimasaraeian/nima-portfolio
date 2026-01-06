@@ -456,7 +456,7 @@ export default function DecisionBrainClient() {
               onSubmit={handleEvidenceSubmit}
               isLoading={evidenceLoading}
               error={evidenceError}
-            expertMode={expertMode}
+              expertMode={expertMode}
             />
           </div>
         )}

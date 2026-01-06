@@ -429,7 +429,7 @@ export default function DecisionReportDashboard({ report, rawBackendResponse, ex
                 {humanReportText
                   .split(/\n\s*\n/)
                   .filter(Boolean)
-                  .map((paragraph, idx) => (
+                  .map((paragraph: string, idx: number) => (
                     <p key={idx} className="whitespace-pre-wrap">
                       {paragraph.trim()}
                     </p>
