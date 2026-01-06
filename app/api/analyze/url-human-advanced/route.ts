@@ -5,6 +5,11 @@ const DEV_BACKEND_URL = "http://127.0.0.1:8000";
 function resolveBackendBase(): string | null {
   const preferred = process.env.BRAIN_BACKEND_URL;
   if (preferred) return preferred.replace(/\/+$/, "");
+
+  // Fallbacks: try public envs if the private one is missing
+  const shared = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (shared) return shared.replace(/\/+$/, "");
+
   const publicFallback = process.env.NEXT_PUBLIC_BRAIN_BACKEND_URL;
   if (publicFallback) return publicFallback.replace(/\/+$/, "");
   if (process.env.NODE_ENV === "development") {
