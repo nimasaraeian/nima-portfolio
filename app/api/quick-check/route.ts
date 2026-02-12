@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonResponse } from "@/lib/jsonResponse";
+import { safeToFixed } from "@/lib/format";
 
 export async function POST(req: NextRequest) {
   try {
@@ -61,7 +62,12 @@ export async function POST(req: NextRequest) {
     console.log("📧 Quick Decision Check Submission:");
     console.log("Message:", message);
     if (file && file instanceof File) {
-      console.log("File:", file.name, file.type, `${(file.size / 1024).toFixed(2)}KB`);
+      console.log(
+        "File:",
+        file.name,
+        file.type,
+        `${safeToFixed(file.size / 1024, 2, "0.00")}KB`
+      );
     }
 
     // Example email sending (you'll need to implement this):

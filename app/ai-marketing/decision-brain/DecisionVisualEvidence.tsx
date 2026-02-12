@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { safeToFixed } from "@/lib/format";
 import {
   RadarChart,
   PolarGrid,
@@ -78,9 +79,12 @@ const hasAny = (obj?: Record<string, any>) =>
   !!obj && Object.values(obj).some((v) => v !== null && v !== undefined && v !== "");
 
 // Metric formatters
-const ms = (v?: number) => (typeof v === "number" ? `${(v / 1000).toFixed(1)}s` : "—");
-const num = (v?: number) => (typeof v === "number" ? v.toString() : "—");
-const cls = (v?: number) => (typeof v === "number" ? v.toFixed(2) : "—");
+const ms = (v?: number) =>
+  typeof v === "number" ? `${safeToFixed(v / 1000, 1, "0.0")}s` : "—";
+const num = (v?: number) =>
+  typeof v === "number" ? v.toString() : "—";
+const cls = (v?: number) =>
+  typeof v === "number" ? safeToFixed(v, 2, "-") : "—";
 
 export default function DecisionVisualEvidence({ 
   screenshots, 

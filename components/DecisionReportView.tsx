@@ -11,6 +11,7 @@ import MindsetPersonasCard from "@/components/report/MindsetPersonasCard";
 import { ScreenshotOnlyATF } from "@/components/ScreenshotOnlyATF";
 import DecisionProfileCard from "@/components/DecisionProfileCard";
 import { DECISION_MODE_LABEL, BLOCKER_LABEL, BLOCKER_EXPLAIN, BLOCKER_MAP } from "@/lib/decisionCopy";
+import { safeToFixed } from "@/lib/format";
 
 type DecisionReportViewProps = {
   result: any;
@@ -302,7 +303,7 @@ export default function DecisionReportView({
                 <span className="text-sm text-white/70">Confidence:</span>
                 <span className="text-sm font-medium text-white">
                   {typeof result.decision_state.confidence === "number"
-                    ? `${(result.decision_state.confidence * 100).toFixed(1)}%`
+                    ? `${safeToFixed(result.decision_state.confidence * 100, 1, "0.0")}%`
                     : result.decision_state.confidence}
                 </span>
               </div>

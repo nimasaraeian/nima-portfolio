@@ -1929,7 +1929,7 @@ export default function CognitiveFrictionAICROPage() {
                     <td className="py-3 pr-4">{row.scores.Px}</td>
                     <td className="py-3 pr-4">{row.scores.Sx}</td>
                     <td className="py-3 pr-4">{row.scores.Fx}</td>
-                    <td className="py-3 pr-4">{row.cfsf.toFixed(1)}</td>
+                    <td className="py-3 pr-4">{typeof row.cfsf === "number" ? row.cfsf.toFixed(1) : row.cfsf}</td>
                     <td className="py-3">{row.predicted}</td>
                   </tr>
                 ))}

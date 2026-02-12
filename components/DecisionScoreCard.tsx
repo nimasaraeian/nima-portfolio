@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { safeToFixed } from "@/lib/format";
 
 type DecisionScoreCardProps = {
   data: {
@@ -58,7 +59,7 @@ export default function DecisionScoreCard({ data }: DecisionScoreCardProps) {
         <div className="flex-1">
           <div className="flex items-baseline gap-3 mb-2">
             <span className={`text-5xl font-bold ${getScoreColor()}`}>
-              {data.score.toFixed(1)}
+              {safeToFixed(data.score, 1, "0.0")}
             </span>
             <span className="text-2xl font-semibold text-white/60">/10</span>
           </div>

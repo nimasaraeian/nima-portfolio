@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import OpenAI from 'openai';
 import { jsonResponse } from '@/lib/jsonResponse';
+import { safeToFixed } from '@/lib/format';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -109,7 +110,7 @@ export async function POST(req: NextRequest) {
       return jsonResponse(
         {
           error: 'file_too_large',
-          detail: `File size (${(file.size / 1024 / 1024).toFixed(2)}MB) exceeds maximum allowed size of 10MB.`,
+          detail: `File size (${safeToFixed(file.size / 1024 / 1024, 2, "0.00")}MB) exceeds maximum allowed size of 10MB.`,
         },
         { status: 400 }
       );

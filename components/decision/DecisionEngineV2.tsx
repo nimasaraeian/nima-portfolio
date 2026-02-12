@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { safeToFixed } from "@/lib/format";
 
 type DecisionEngineV2Props = {
   rawBackendResponse?: any;
@@ -47,9 +48,7 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                 <div>
                   <div className="text-xs text-white/70 mb-1">Baseline Trust</div>
                   <div className="text-base font-medium text-white">
-                    {typeof decisionContext.baseline_trust === "number"
-                      ? decisionContext.baseline_trust.toFixed(2)
-                      : String(decisionContext.baseline_trust)}
+                    {safeToFixed(decisionContext.baseline_trust, 2, "-")}
                   </div>
                 </div>
               )}
@@ -132,8 +131,8 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                     <div className="text-xs text-white/70">Friction Score</div>
                     <div className="text-sm font-semibold text-white">
                       {typeof decisionDiagnostics.friction_score === "number"
-                        ? decisionDiagnostics.friction_score.toFixed(1)
-                        : String(decisionDiagnostics.friction_score)} / 10
+                        ? `${safeToFixed(decisionDiagnostics.friction_score, 1, "0.0")} / 10`
+                        : String(decisionDiagnostics.friction_score)}
                     </div>
                   </div>
                   <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
@@ -158,9 +157,9 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                     <div className="text-xs text-white/70">Confidence</div>
                     <div className="text-sm font-semibold text-white">
                       {typeof decisionDiagnostics.confidence === "number"
-                        ? (decisionDiagnostics.confidence <= 1
-                            ? (decisionDiagnostics.confidence * 100).toFixed(1)
-                            : decisionDiagnostics.confidence.toFixed(1))
+                        ? decisionDiagnostics.confidence <= 1
+                          ? safeToFixed(decisionDiagnostics.confidence * 100, 1, "-")
+                          : safeToFixed(decisionDiagnostics.confidence, 1, "-")
                         : String(decisionDiagnostics.confidence)}
                       {typeof decisionDiagnostics.confidence === "number" &&
                         decisionDiagnostics.confidence <= 1 && (
@@ -240,7 +239,7 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                             <div className="flex items-center justify-between mb-1">
                               <div className="text-sm text-white/90">{factorName}</div>
                               <div className="text-xs text-white/60">
-                                {(normalizedScore * 100).toFixed(0)}%
+                                {safeToFixed(normalizedScore * 100, 0, "0")}%
                               </div>
                             </div>
                             <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
@@ -270,7 +269,7 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                     <div className="text-xs text-white/70">Trust Signals</div>
                     <div className="text-sm font-semibold text-white">
                       {typeof rawSignals.trust_signals === "number"
-                        ? rawSignals.trust_signals.toFixed(2)
+                        ? safeToFixed(rawSignals.trust_signals, 2, "-")
                         : String(rawSignals.trust_signals)}
                     </div>
                   </div>
@@ -297,7 +296,7 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                     <div className="text-xs text-white/70">CTA Clarity</div>
                     <div className="text-sm font-semibold text-white">
                       {typeof rawSignals.cta_clarity === "number"
-                        ? rawSignals.cta_clarity.toFixed(2)
+                        ? safeToFixed(rawSignals.cta_clarity, 2, "-")
                         : String(rawSignals.cta_clarity)}
                     </div>
                   </div>
@@ -324,7 +323,7 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                     <div className="text-xs text-white/70">Value Clarity</div>
                     <div className="text-sm font-semibold text-white">
                       {typeof rawSignals.value_clarity === "number"
-                        ? rawSignals.value_clarity.toFixed(2)
+                        ? safeToFixed(rawSignals.value_clarity, 2, "-")
                         : String(rawSignals.value_clarity)}
                     </div>
                   </div>
@@ -351,7 +350,7 @@ export default function DecisionEngineV2({ rawBackendResponse }: DecisionEngineV
                     <div className="text-xs text-white/70">Visual Noise</div>
                     <div className="text-sm font-semibold text-white">
                       {typeof rawSignals.visual_noise === "number"
-                        ? rawSignals.visual_noise.toFixed(2)
+                        ? safeToFixed(rawSignals.visual_noise, 2, "-")
                         : String(rawSignals.visual_noise)}
                     </div>
                   </div>

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import DecisionEvidenceForm from "@/components/DecisionEvidenceForm";
 import DecisionReportDashboard from "@/components/decision/DecisionReportDashboard";
+import AnalysisErrorBoundary from "@/components/decision/AnalysisErrorBoundary";
 import { NormalizedDecisionReport, normalizeDecisionReport } from "@/lib/normalizeDecisionReport";
 import { analyzeHumanNewWithRaw } from "@/lib/decisionApi";
 
@@ -464,11 +465,12 @@ export default function DecisionBrainClient() {
         {/* EVIDENCE REPORT VIEW */}
         {evidenceResult && !loadingReport && (
           <div id="report-section">
-            <DecisionReportDashboard 
-              report={evidenceResult}
-              rawBackendResponse={rawResponse}
-              expertMode={expertMode}
-              onRetryCapture={lastAnalysisData ? async () => {
+            <AnalysisErrorBoundary>
+              <DecisionReportDashboard 
+                report={evidenceResult}
+                rawBackendResponse={rawResponse}
+                expertMode={expertMode}
+                onRetryCapture={lastAnalysisData ? async () => {
                 setEvidenceLoading(true);
                 setEvidenceError(null);
                 setEvidenceResult(null);
@@ -528,7 +530,8 @@ export default function DecisionBrainClient() {
                   setEvidenceLoading(false);
                 }
               } : undefined}
-            />
+              />
+            </AnalysisErrorBoundary>
           </div>
         )}
       </div>

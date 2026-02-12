@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { NormalizedDecisionReport } from "@/lib/normalizeDecisionReport";
 import { filterEvidenceBullets } from "@/lib/evidenceFilter";
+import { safeToFixed } from "@/lib/format";
 
 type VisualEvidenceProps = {
   report: NormalizedDecisionReport;
@@ -81,8 +82,13 @@ export default function VisualEvidence({ report, onRetry }: VisualEvidenceProps)
       bullets.push(`CTA is ${ctaCount} (${visualHierarchy.cta_visibility > 0 ? "1" : "0"} CTA detected).`);
     }
     if (visualHierarchy.noise !== undefined) {
-      const noiseLevel = visualHierarchy.noise < 0.3 ? "Low" : visualHierarchy.noise < 0.6 ? "Moderate" : "High";
-      bullets.push(`${noiseLevel} visual noise (noise ~${visualHierarchy.noise.toFixed(1)}) ${visualHierarchy.noise < 0.3 ? "supports clarity" : "may distract"}.`);
+      const noise = typeof visualHierarchy.noise === "number" ? visualHierarchy.noise : Number(visualHierarchy.noise);
+      const noiseLevel = noise < 0.3 ? "Low" : noise < 0.6 ? "Moderate" : "High";
+      bullets.push(
+        `${noiseLevel} visual noise (noise ~${safeToFixed(noise, 1, "0.0")}) ${
+          noise < 0.3 ? "supports clarity" : "may distract"
+        }.`
+      );
     }
 
     // From copy_snippets
