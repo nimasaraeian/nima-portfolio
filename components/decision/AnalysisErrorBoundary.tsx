@@ -1,38 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { Component, ErrorInfo, ReactNode } from "react";
 
-type AnalysisErrorBoundaryProps = {
-  children: React.ReactNode;
-};
+interface Props {
+  children: ReactNode;
+}
 
-type AnalysisErrorBoundaryState = {
+interface State {
   hasError: boolean;
-};
+}
 
-export default class AnalysisErrorBoundary extends React.Component<
-  AnalysisErrorBoundaryProps,
-  AnalysisErrorBoundaryState
-> {
-  constructor(props: AnalysisErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
+export default class AnalysisErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+  };
 
-  static getDerivedStateFromError(): AnalysisErrorBoundaryState {
+  public static getDerivedStateFromError(_: Error): State {
     return { hasError: true };
   }
 
-  componentDidCatch(error: any, info: any) {
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error but prevent full-page crash
     // eslint-disable-next-line no-console
     console.error("[AnalysisErrorBoundary] Caught error rendering analysis view:", {
       error,
-      info,
+      errorInfo,
     });
   }
 
-  render() {
+  public render() {
     if (this.state.hasError) {
       return (
         <div className="mt-8 rounded-2xl border border-red-500/30 bg-red-500/10 p-6">
