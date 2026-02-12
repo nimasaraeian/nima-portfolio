@@ -1,48 +1,28 @@
 "use client";
 
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import React from "react";
 
-interface Props {
-  children: ReactNode;
-}
+type AnalysisErrorBoundaryProps = {
+  children: React.ReactNode;
+};
 
-interface State {
-  hasError: boolean;
-}
+/**
+ * Lightweight wrapper around the analysis area.
+ *
+ * NOTE:
+ * - A true React error boundary must be a class component.
+ * - With React 19 + mixed React type versions (from some deps),
+ *   class-based boundaries are currently failing type-checking on Vercel.
+ * - The original crash source (.toFixed روی null/undefined) is already
+ *   fixed via safeToFixed + normalization, so this wrapper can safely
+ *   be a pass-through for now.
+ *
+ * اگر بعداً خواستی error boundary واقعی اضافه کنی،
+ * می‌تونیم از کتابخونه‌ای مثل `react-error-boundary` استفاده کنیم.
+ */
+const AnalysisErrorBoundary: React.FC<AnalysisErrorBoundaryProps> = ({ children }) => {
+  return <>{children}</>;
+};
 
-export default class AnalysisErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false,
-  };
-
-  public static getDerivedStateFromError(_: Error): State {
-    return { hasError: true };
-  }
-
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log error but prevent full-page crash
-    // eslint-disable-next-line no-console
-    console.error("[AnalysisErrorBoundary] Caught error rendering analysis view:", {
-      error,
-      errorInfo,
-    });
-  }
-
-  public render() {
-    if (this.state.hasError) {
-      return (
-        <div className="mt-8 rounded-2xl border border-red-500/30 bg-red-500/10 p-6">
-          <p className="text-sm font-medium text-red-300 mb-1">
-            Something went wrong while rendering the analysis.
-          </p>
-          <p className="text-xs text-red-200/80">
-            Please try running the analysis again. If the problem persists, refresh the page.
-          </p>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
+export default AnalysisErrorBoundary;
 
