@@ -36,9 +36,7 @@ export default function SideMenu() {
 
         {/* SELPHLYZE Link */}
         <Link
-          href="https://www.selphlyze.com"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/ai-marketing"
           className="group relative block flex-shrink-0"
         >
           <span 

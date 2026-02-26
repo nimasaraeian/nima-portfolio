@@ -12,7 +12,7 @@ export default function Navigation() {
     { name: 'Projects', href: '/projects' },
     { name: 'Articles', href: '/articles' },
     { name: 'Research', href: '/research' },
-    { name: 'SELPHLYZE', href: 'https://www.selphlyze.com', external: true },
+    { name: 'SELPHLYZE', href: '/ai-marketing' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ];
@@ -38,8 +38,6 @@ export default function Navigation() {
               <Link
                 key={link.name}
                 href={link.href}
-                target={link.external ? '_blank' : undefined}
-                rel={link.external ? 'noopener noreferrer' : undefined}
                 className="text-gray-300 hover:text-white transition-colors duration-200 font-medium text-lg"
                 style={{ fontFamily: 'Times New Roman, serif' }}
               >
@@ -68,8 +66,6 @@ export default function Navigation() {
               <Link
                 key={link.name}
                 href={link.href}
-                target={link.external ? '_blank' : undefined}
-                rel={link.external ? 'noopener noreferrer' : undefined}
                 onClick={() => setMenuOpen(false)}
                 className="text-gray-300 hover:text-white transition-colors duration-200 font-medium text-base"
                 style={{ fontFamily: 'Times New Roman, serif' }}
