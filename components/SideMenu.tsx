@@ -34,16 +34,18 @@ export default function SideMenu() {
           </Link>
         ))}
 
-        {/* AI Marketing Link */}
+        {/* SELPHLYZE Link */}
         <Link
-          href="/ai-marketing"
+          href="https://www.selphlyze.com"
+          target="_blank"
+          rel="noopener noreferrer"
           className="group relative block flex-shrink-0"
         >
           <span 
             className="text-white font-medium text-[9px] xs:text-[10px] sm:text-xs md:text-sm lg:text-base group-hover:text-blue-200 transition-colors duration-300 px-1 xs:px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-0.5 sm:py-1 md:py-1.5 lg:py-2 rounded hover:bg-white/10 whitespace-nowrap"
             style={{ fontFamily: 'Times New Roman, Times, serif' }}
           >
-            AI Marketing
+            SELPHLYZE
           </span>
         </Link>
 

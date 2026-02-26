@@ -171,6 +171,51 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SELPHLYZE Section - Prominent Feature */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 lg:px-12 lg:py-24">
+        <div className="rounded-3xl border-2 border-blue-500/30 bg-gradient-to-br from-blue-950/20 via-black to-purple-950/20 p-8 sm:p-12 shadow-2xl">
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-6">
+              <Image
+                src="/image/SELPHLYZE_LOGO_HIGH_RES.png"
+                alt="Selphlyze Logo"
+                width={120}
+                height={120}
+                className="h-24 w-24 sm:h-28 sm:w-28 object-contain"
+              />
+            </div>
+            <p className="text-sm uppercase tracking-[0.4em] text-blue-300/90 mb-4">
+              Cognitive & Emotional AI Platform
+            </p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-white mb-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              SELPHLYZE
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              AI-powered psychometric engine that analyzes personality signals, cognitive styles, emotional patterns, and aesthetic preferences to decode what truly motivates people beneath their visible behavior.
+            </p>
+            <p className="text-base text-gray-400 max-w-2xl mb-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              Validated with 500+ participants across diverse cultures, Selphlyze combines behavioral psychology, AI modeling, and predictive analytics to transform human complexity into actionable marketing intelligence.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+              <Link
+                href="https://www.selphlyze.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto rounded-full bg-blue-600 hover:bg-blue-500 px-8 py-4 text-center text-sm font-semibold text-white transition shadow-lg hover:shadow-blue-500/50"
+              >
+                Explore Selphlyze Platform
+              </Link>
+              <Link
+                href="/about"
+                className="w-full sm:w-auto rounded-full border-2 border-blue-500/50 hover:border-blue-400 px-8 py-4 text-center text-sm font-semibold text-white transition hover:bg-blue-500/10"
+              >
+                Learn More About the Ecosystem
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
         <div className="space-y-6 mb-12">
           <h2 className="text-2xl font-semibold text-white sm:text-3xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
