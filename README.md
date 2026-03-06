@@ -1,8 +1,18 @@
-Nima Saraeian — AI Behavioral Marketing Strategist & System Builder
+# Nima Saraeian — AI Marketing Strategy Website
 
-This is the official website of Nima Saraeian (نیما سرائیان), an AI Marketing Strategist specializing in the intersection of artificial intelligence, consumer psychology, and digital branding. The website showcases business examples, marketing strategies, and AI-driven solutions across various industries.
+This repository contains the source code of my personal website and AI marketing portfolio.
 
-**Live Site**: [https://www.nimasaraeian.com](https://www.nimasaraeian.com)
+The project demonstrates how artificial intelligence can be integrated into marketing strategy, decision systems, and content automation.
+
+Website:
+https://www.nimasaraeian.com
+
+Technologies used:
+- Next.js
+- TypeScript
+- Tailwind CSS
+- FastAPI
+- AI content automation system
 
 ## Features
 
@@ -14,6 +24,52 @@ This is the official website of Nima Saraeian (نیما سرائیان), an AI M
 - 📱 **Responsive Design**: Optimized for all devices
 - 🔍 **SEO Optimized**: Full meta tags, structured data, and sitemaps
 - 🌐 **Persian & English**: Bilingual content support
+
+## Key Features
+
+- AI Marketing Strategy Articles
+- AI Content Generation System
+- Decision Brain API Integration
+- SEO Optimized Blog Structure
+- AI-based Marketing Insights
+- Performance Marketing Guides
+
+## Tech Stack
+
+Frontend:
+- Next.js
+- React
+- TypeScript
+- TailwindCSS
+
+Backend:
+- FastAPI
+- Python
+
+AI Layer:
+- OpenAI API
+- AI Content Generation Engine
+
+Deployment:
+- Vercel
+- Railway
+
+## About the Author
+
+Nima Saraeian  
+AI Behavioral Marketing Strategist
+
+Specialized in:
+- AI Marketing Strategy
+- Behavioral Consumer Analysis
+- AI Decision Systems
+- Marketing Automation
+
+Website:
+https://www.nimasaraeian.com
+
+LinkedIn:
+https://linkedin.com/in/nimasaraeian
 
 ## Purpose
 
