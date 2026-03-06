@@ -55,7 +55,19 @@ npm run content-manual
 
 ## Website Preview
 
-![Website Screenshot](doc/Screenshot_6-3-2026_184525_nimasaraeian.com.jpeg)
+![Screenshot](doc/Screenshot_6-3-2026_184525_nimasaraeian.com.jpeg)
+
+![Screenshot](doc/Screenshot_6-3-2026_184628_nimasaraeian.com.jpeg)
+
+![Screenshot](doc/Screenshot_6-3-2026_184653_nimasaraeian.com.jpeg)
+
+![Screenshot](doc/Screenshot_6-3-2026_18466_nimasaraeian.com.jpeg)
+
+![Screenshot](doc/Screenshot_6-3-2026_184715_nimasaraeian.com.jpeg)
+
+![Screenshot](doc/Screenshot_6-3-2026_184719_nimasaraeian.com.jpeg)
+
+![Screenshot](doc/Screenshot_6-3-2026_184737_nimasaraeian.com.jpeg)
 
 To learn more about the content generation system, see:
 
