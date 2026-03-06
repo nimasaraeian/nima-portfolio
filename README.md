@@ -53,6 +53,10 @@ npm run generate-content
 npm run content-manual
 ```
 
+## Website Preview
+
+![Website Screenshot](docs/website-preview.png)
+
 ## Learn More
 
 To learn more about the content generation system, see:
