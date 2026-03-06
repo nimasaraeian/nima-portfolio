@@ -55,8 +55,7 @@ npm run content-manual
 
 ## Website Preview
 
-![Website Screenshot](docs/website-preview.png)
-
+Screenshot_6-3-2026_184525_nimasaraeian.com.jpeg
 ## Learn More
 
 To learn more about the content generation system, see:
