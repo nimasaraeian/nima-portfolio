@@ -1,4 +1,4 @@
-# Nima Saraeian - AI Marketing Strategist Website
+Nima Saraeian — AI Behavioral Marketing Strategist & System Builder
 
 This is the official website of Nima Saraeian (نیما سرائیان), an AI Marketing Strategist specializing in the intersection of artificial intelligence, consumer psychology, and digital branding. The website showcases business examples, marketing strategies, and AI-driven solutions across various industries.
 
@@ -14,6 +14,23 @@ This is the official website of Nima Saraeian (نیما سرائیان), an AI M
 - 📱 **Responsive Design**: Optimized for all devices
 - 🔍 **SEO Optimized**: Full meta tags, structured data, and sitemaps
 - 🌐 **Persian & English**: Bilingual content support
+
+## Purpose
+
+This website represents my professional portfolio and personal brand as an AI behavioral marketing strategist.
+
+It showcases projects, research ideas, and AI-driven marketing systems focused on decision intelligence and human-centered analytics.
+
+## Key Projects
+
+### Selphlyze
+AI-powered behavioral intelligence platform combining psychology and artificial intelligence.
+
+### AI Marketing Intelligence
+System for detecting friction points and trust signals in landing pages.
+
+### Atieh AI
+Smart scheduling and financial intelligence system for clinics.
 
 ## Content Generation System
 
