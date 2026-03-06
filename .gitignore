@@ -42,6 +42,20 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# local cache / artifacts
+front_like.json
+proxy.json
+
 # vercel
 .vercel
 
