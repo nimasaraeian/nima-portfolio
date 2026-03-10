@@ -5,15 +5,15 @@ import { getCanonicalUrl } from '@/app/lib/seo';
 import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/structured-data';
 
 export const metadata: Metadata = {
-  title: 'Contact AI Marketing Consultant | Remote & Istanbul Marketing Consulting | Nima Saraeian',
-  description: 'Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting, Istanbul-based services, and marketing collaboration. Available for consultations, speaking engagements, and strategic partnerships.',
+  title: 'Contact Nima Saraeian | AI Decision Systems Builder | Behavioral AI & Decision Intelligence',
+  description: 'Contact Nima Saraeian to discuss AI systems, decision intelligence, behavioral analysis, and automation projects. Available for AI systems design and consulting.',
   alternates: {
     canonical: getCanonicalUrl('/contact'),
   },
-  keywords: 'NIMA SARAEIAN contact, نیما سرائیان, AI psychology consultant, digital psychology expert, psychometric analysis, consumer behavior specialist, speaking engagements, AI consulting',
+  keywords: 'Nima Saraeian contact, AI decision systems, decision intelligence, behavioral analytics, AI systems builder, behavioral AI, automation, CRO',
   openGraph: {
-    title: 'Contact AI Marketing Consultant | Remote & Istanbul Marketing Consulting | Nima Saraeian',
-    description: 'Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting, Istanbul-based services, and marketing collaboration.',
+    title: 'Contact Nima Saraeian | AI Decision Systems Builder',
+    description: 'Contact Nima Saraeian to discuss AI systems, decision intelligence, behavioral analysis, and automation projects.',
     url: getCanonicalUrl('/contact'),
     siteName: 'Nima Saraeian',
     images: [
@@ -21,15 +21,15 @@ export const metadata: Metadata = {
         url: 'https://nimasaraeian.com/image/nima-bw.jpg',
         width: 1200,
         height: 630,
-        alt: 'Contact Nima Saraeian - AI Marketing Consultant',
+        alt: 'Contact Nima Saraeian - AI Decision Systems Builder',
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Contact AI Marketing Consultant | Remote & Istanbul Marketing Consulting',
-    description: 'Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting and marketing collaboration.',
+    title: 'Contact Nima Saraeian | AI Decision Systems Builder',
+    description: 'Contact Nima Saraeian to discuss AI systems, decision intelligence, and behavioral analysis.',
     images: ['https://nimasaraeian.com/image/nima-bw.jpg'],
   },
 };
@@ -38,8 +38,8 @@ export default function ContactPage() {
   const canonicalUrl = getCanonicalUrl('/contact');
   
   const webPageSchema = generateWebPageSchema({
-    name: "Contact AI Marketing Consultant",
-    description: "Contact AI Marketing Consultant Nima Saraeian for remote marketing consulting and marketing collaboration.",
+    name: "Contact Nima Saraeian",
+    description: "Contact Nima Saraeian to discuss AI systems, decision intelligence, behavioral analysis, and automation projects.",
     url: canonicalUrl,
   });
 
@@ -62,10 +62,13 @@ export default function ContactPage() {
         {/* Header */}
         <header className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold mb-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Contact AI Marketing Consultant
+            Contact Nima Saraeian
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Remote Marketing Consulting | Istanbul-Based Services | Marketing Collaboration
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            AI Decision Systems Builder · Behavioral AI & Decision Intelligence
+          </p>
+          <p className="text-gray-300 text-base max-w-2xl mx-auto" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Discuss AI systems, decision intelligence, behavioral analysis, or automation projects.
           </p>
         </header>
 
@@ -120,6 +123,24 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-start space-x-4">
+                  <div className="text-2xl">💻</div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">GitHub</h3>
+                    <a 
+                      href="https://github.com/nimasaraeian"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      github.com/nimasaraeian
+                    </a>
+                    <p className="text-gray-400 text-sm mt-1">
+                      Explore my AI systems, automation tools, and decision intelligence projects.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
                   <div className="text-2xl">🌍</div>
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Location</h3>
@@ -132,22 +153,30 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Services</h3>
                     <ul className="text-gray-300 space-y-1">
-                      <li>• UX Design & Research (12+ years experience)</li>
-                      <li>• AI-Powered User Behavior Analysis</li>
-                      <li>• Consumer Psychology & Digital Marketing</li>
-                      <li>• User-Centered Design (UCD) & Usability Testing</li>
-                      <li>• Wireframing, Prototyping & Information Architecture</li>
-                      <li>• Cross-Cultural User Research (500+ participants)</li>
-                      <li>• Neuromarketing & Behavioral Design</li>
-                      <li>• Data Science & A/B Testing</li>
-                      <li>• Strategic Management & Business Consulting</li>
-                      <li>• International Training & Workshops</li>
-                      <li>• Portfolio Development & Brand Strategy</li>
-                      <li>• Research Collaboration & Innovation</li>
+                      <li>• AI Decision Systems Design</li>
+                      <li>• Behavioral Analytics & Decision Intelligence</li>
+                      <li>• Workflow Automation & AI Tools</li>
+                      <li>• CRO & Conversion Diagnostics</li>
+                      <li>• AI Systems Architecture Consulting</li>
+                      <li>• Behavioral AI Research Collaboration</li>
                     </ul>
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Typical Collaborations */}
+            <div className="bg-gray-900 p-8 rounded-lg border border-gray-700">
+              <h2 className="text-xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Typical Collaborations
+              </h2>
+              <p className="text-gray-300 mb-4">Typical collaborations include:</p>
+              <ul className="text-gray-300 space-y-2">
+                <li>• startups building AI-driven products</li>
+                <li>• clinics optimizing operations with AI</li>
+                <li>• teams seeking behavioral CRO insights</li>
+                <li>• founders exploring decision intelligence systems</li>
+              </ul>
             </div>
 
             {/* Professional Image */}
@@ -165,8 +194,8 @@ export default function ContactPage() {
               </h3>
               <p className="text-gray-400 mb-4">نیما سرائیان</p>
               <p className="text-sm text-gray-300">
-                AI & Digital Psychology Expert<br />
-                International Speaker & Consultant
+                AI Decision Systems Builder<br />
+                Behavioral AI & Decision Intelligence
               </p>
             </div>
           </div>
@@ -275,31 +304,31 @@ export default function ContactPage() {
         {/* Additional Information */}
         <div className="mt-16 bg-gray-900 p-8 rounded-lg border border-gray-700">
           <h2 className="text-2xl font-bold mb-6 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Why Work With NIMA SARAEIAN?
+            Why Work With Me
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-4xl mb-4">🧠</div>
-              <h3 className="text-lg font-semibold mb-2">AI Psychology Expertise</h3>
+              <h3 className="text-lg font-semibold mb-2">AI Systems Expertise</h3>
               <p className="text-gray-400 text-sm">
-                Deep knowledge in artificial intelligence applications for psychological analysis and consumer behavior.
+                Designing decision intelligence systems that translate behavioral data into operational insights.
               </p>
             </div>
             
             <div className="text-center">
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-lg font-semibold mb-2">Data-Driven Insights</h3>
+              <h3 className="text-lg font-semibold mb-2">Behavioral Intelligence</h3>
               <p className="text-gray-400 text-sm">
-                Evidence-based approaches using psychometric analysis and behavioral analytics for optimal results.
+                Combining psychology, data analysis, and AI to understand why users make decisions.
               </p>
             </div>
             
             <div className="text-center">
-              <div className="text-4xl mb-4">🌍</div>
-              <h3 className="text-lg font-semibold mb-2">International Experience</h3>
+              <div className="text-4xl mb-4">⚙️</div>
+              <h3 className="text-lg font-semibold mb-2">Systems Thinking</h3>
               <p className="text-gray-400 text-sm">
-                Proven track record of successful projects and speaking engagements across global markets.
+                Building automation and AI-powered workflows that scale operational intelligence.
               </p>
             </div>
           </div>

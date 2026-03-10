@@ -34,14 +34,14 @@ export default function ProjectsPage() {
     const canonicalUrl = getCanonicalUrl('/projects');
     
     const webPageSchema = generateWebPageSchema({
-      name: "AI Marketing Projects",
-      description: "AI Marketing Projects including case studies, marketing dashboards, and real-world experiments.",
+      name: "AI Systems & Decision Intelligence Projects",
+      description: "AI systems portfolio: decision intelligence, behavioral analysis, content optimization, and automation. Selphlyze, Contlyze, and related systems.",
       url: canonicalUrl,
     });
 
     const breadcrumbSchema = generateBreadcrumbSchema([
       { name: "Home", url: getCanonicalUrl('/') },
-      { name: "AI Marketing Projects", url: canonicalUrl },
+      { name: "Projects", url: canonicalUrl },
     ]);
 
     // Inject schemas into page
@@ -64,73 +64,87 @@ export default function ProjectsPage() {
   const projects: Project[] = [
     {
       id: 1,
-      icon: '🧠',
-      title: 'Selphlyze',
-      subtitle: 'AI-Powered Psychometric Platform - Developed & Operated by Artificial Intelligence',
+      icon: '🏥',
+      title: 'Dental Clinic AI',
+      subtitle: 'AI-powered scheduling, financial intelligence, and patient prioritization system for clinics',
       description:
-        'Selphlyze is a revolutionary AI-powered psychometric platform that analyzes personality, emotional patterns, and cognitive behaviors through advanced artificial intelligence algorithms. This platform is entirely developed and operated by AI systems, providing users with deep psychological insights, personality profiling, and behavioral analysis. Create your unique SelfCode and discover comprehensive insights about your psychological makeup, cognitive style, decision-making patterns, and emotional intelligence through our sophisticated AI-driven assessment tools.',
+        'A practical AI system designed to help clinics improve scheduling decisions, identify higher-value patient opportunities, and structure operational data into actionable intelligence.',
       features: [
-        'ShadowTrace AI Algorithm - Deep personality analysis',
-        'EmoConnect System - Emotional intelligence mapping', 
-        'PsyClock Analysis - Cognitive tempo assessment',
-        'AI-Generated Personality Profiling',
-        'Behavioral Pattern Recognition by AI',
-        'Real-time Psychological Insights',
-        'Comprehensive SelfCode Generation',
-        'AI-Powered Decision Making Analysis'
+        'Intelligent scheduling support',
+        'Patient prioritization by value and urgency',
+        'Financial-value-aware analysis',
+        'Workflow support for clinic teams',
+        'Structured outputs for operational decisions',
+        'Decision support from operational data'
       ],
-      technologies: ['Advanced AI/ML', 'Deep Learning', 'Psychology', 'React', 'Node.js', 'MongoDB', 'Neural Networks'],
-      status: 'In Development',
+      technologies: ['Python', 'SQLite', 'APIs', 'Decision Logic', 'Structured Data'],
+      status: 'Prototype',
     },
     {
       id: 2,
+      icon: '🧠',
+      title: 'Selphlyze',
+      subtitle: 'AI-powered psychometric and behavioral decision intelligence system',
+      description:
+        'A behavioral AI platform designed to analyze personality signals, emotional patterns, and cognitive decision tendencies to support marketing, product, and business intelligence systems.',
+      features: [
+        'ShadowTrace — personality and cognitive style analysis',
+        'EmoConnect — emotional pattern mapping',
+        'PsyClock — cognitive tempo assessment',
+        'SelfCode generation for downstream decision systems',
+        'Behavioral signal extraction for segmentation',
+        'Psychometric data pipeline for ML models'
+      ],
+      technologies: ['AI/ML', 'Psychology', 'React', 'Node.js', 'MongoDB'],
+      status: 'In Development',
+    },
+    {
+      id: 3,
       icon: '📊',
       title: 'Contlyze',
-      subtitle: 'AI-Powered Content Analysis & Optimization Platform',
+      subtitle: 'Content & behavioral intelligence platform for CRO and growth',
       description:
-        'Contlyze is an advanced AI-driven content analysis platform that helps businesses and content creators optimize their digital content strategy. Using sophisticated natural language processing and machine learning algorithms, Contlyze analyzes content performance, audience engagement, and competitive landscapes to provide actionable insights. The platform empowers users to create data-driven content strategies, improve SEO performance, and maximize audience engagement through intelligent content recommendations and real-time analytics.',
+        'Contlyze is an AI-driven content and behavioral intelligence system that analyzes content performance, audience engagement, and competitive landscapes. It surfaces patterns that inform CRO, content strategy, and growth decisions — turning raw behavioral and content data into actionable optimization signals.',
       features: [
-        'AI-Powered Content Analysis',
-        'SEO Optimization Recommendations',
-        'Competitive Content Intelligence',
-        'Audience Engagement Metrics',
-        'Content Performance Tracking',
-        'Real-time Analytics Dashboard',
-        'Multi-platform Content Monitoring',
-        'AI-Generated Content Insights'
+        'Content performance and engagement analysis',
+        'Competitive and market intelligence',
+        'Behavioral signal extraction for CRO',
+        'SEO and content optimization signals',
+        'Multi-platform monitoring and analytics',
+        'Data pipeline for growth and conversion optimization'
       ],
-      technologies: ['AI/ML', 'NLP', 'Data Analytics', 'React', 'Python', 'TensorFlow', 'Cloud Infrastructure'],
+      technologies: ['AI/ML', 'NLP', 'Data Analytics', 'React', 'Python', 'Cloud Infrastructure'],
       status: 'In Development',
     },
   ];
 
   const stats: Stat[] = [
-    { number: '6+', label: 'Active Projects', icon: '🚀' },
+    { number: '3', label: 'Featured Systems', icon: '🚀' },
     { number: '12+', label: 'Years Experience', icon: '⏰' },
     { number: '4', label: 'Research Areas', icon: '🔬' },
-    { number: '∞', label: 'Innovation Potential', icon: '💡' },
+    { number: '—', label: 'AI Systems Focus', icon: '⚙️' },
   ];
 
   const researchAreas: ResearchArea[] = [
     {
-      title: 'AI-Enhanced Psychometrics',
-      description: 'Advanced algorithms for psychological profiling.',
+      title: 'AI Decision Systems',
+      description: 'Systems that diagnose decision friction and optimize conversion paths.',
       icon: '🧮',
     },
     {
-      title: 'Consumer Behavior Analytics',
-      description: 'Analyzing digital consumer patterns.',
+      title: 'Behavioral Intelligence',
+      description: 'Psychometric and behavioral signal extraction for segmentation.',
       icon: '📈',
     },
     {
-      title: 'Cross-Cultural UX Research',
-      description: 'Cultural influences on UI/UX design.',
-      icon: '🌐',
+      title: 'Content & CRO Analysis',
+      description: 'Content performance and conversion optimization intelligence.',
+      icon: '📊',
     },
     {
-      title: 'Ethical AI Development',
-      description: 'Responsible AI that prioritizes human well-being.',
-      icon: '⚖️',
+      title: 'Automation & Product Architecture',
+      description: 'Scalable pipelines for behavioral analysis and growth automation.',
+      icon: '⚙️',
     },
   ];
 
@@ -155,9 +169,9 @@ export default function ProjectsPage() {
     <main className="min-h-screen bg-black text-white pt-20 px-6">
         <div className="max-w-screen-xl mx-auto">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI Marketing Projects</h1>
+            <h1 className="text-5xl font-bold mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI Systems & Decision Intelligence</h1>
             <p className="text-gray-400 max-w-xl mx-auto text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Exploring the intersection of AI marketing, psychology, and human behavior through innovative digital solutions and AI-powered platforms.
+              Systems for behavioral analysis, decision intelligence, CRO, content optimization, and automation. Built to connect psychometrics, content data, and market signals to business outcomes.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link href="/services" className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-gray-300 hover:border-white/30 hover:text-white transition-colors">
@@ -225,7 +239,7 @@ export default function ProjectsPage() {
                   <p className="text-gray-400 italic mb-6 text-lg group-hover:text-gray-300 transition-colors duration-500" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.subtitle}</p>
                   <p className="text-gray-300 mb-6 leading-relaxed text-sm group-hover:text-gray-200 transition-colors duration-500" style={{ fontFamily: 'Times New Roman, Times, serif' }}>{project.description}</p>
                   <div className="mb-6">
-                    <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>AI-Powered Features:</strong>
+                    <strong style={{ fontFamily: 'Times New Roman, Times, serif' }}>System Capabilities:</strong>
                     <ul className="list-disc list-inside text-gray-400 mt-2 space-y-1 text-sm">
                       {project.features.map((f, i) => (
                         <li key={i} style={{ fontFamily: 'Times New Roman, Times, serif' }}>{f}</li>
@@ -254,20 +268,34 @@ export default function ProjectsPage() {
                   <div className="mt-6 text-center">
                     {project.title === 'Selphlyze' && (
                       <>
-                        <a
-                          href="https://www.selphlyze.com"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          href="/systems/selphlyze"
                           className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-full hover:from-blue-700 hover:to-purple-700 transition-all duration-500 transform hover:scale-110 hover:shadow-2xl hover:shadow-blue-500/30 text-base group/btn"
                           style={{ fontFamily: 'Times New Roman, Times, serif' }}
                         >
                           <span className="group-hover/btn:animate-pulse">🧠</span>
-                          <span className="ml-2">Experience Selphlyze</span>
+                          <span className="ml-2">View Case Study</span>
+                        </Link>
+                        <a
+                          href="https://www.selphlyze.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-gray-400 mt-2 hover:text-white transition-colors inline-block"
+                          style={{ fontFamily: 'Times New Roman, Times, serif' }}
+                        >
+                          Experience Selphlyze →
                         </a>
-                        <p className="text-xs text-gray-400 mt-2" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                          Discover your psychological profile through AI
-                        </p>
                       </>
+                    )}
+                    {project.title === 'Dental Clinic AI' && (
+                      <Link
+                        href="/systems/dental-clinic-ai"
+                        className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-full hover:from-emerald-700 hover:to-teal-700 transition-all duration-500 transform hover:scale-110 hover:shadow-2xl hover:shadow-emerald-500/30 text-base group/btn"
+                        style={{ fontFamily: 'Times New Roman, Times, serif' }}
+                      >
+                        <span className="group-hover/btn:animate-pulse">🏥</span>
+                        <span className="ml-2">View Case Study</span>
+                      </Link>
                     )}
                     {project.title === 'Contlyze' && (
                       <>
@@ -282,7 +310,7 @@ export default function ProjectsPage() {
                           <span className="ml-2">Explore Contlyze</span>
                         </a>
                         <p className="text-xs text-gray-400 mt-2" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                          Optimize your content with AI-powered insights
+                          Content and behavioral intelligence for CRO
                         </p>
                       </>
                     )}

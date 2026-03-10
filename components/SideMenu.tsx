@@ -7,10 +7,12 @@ export default function SideMenu() {
     { id: 'home', label: 'Home', href: '/' },
     { id: 'about', label: 'About', href: '/about' },
     { id: 'services', label: 'Services', href: '/services' },
-    { id: 'projects', label: 'Projects', href: '/projects' },
+    { id: 'framework', label: 'Framework', href: '/decision-intelligence' },
+    { id: 'process', label: 'Process', href: '/ai-system-design' },
+    { id: 'projects', label: 'Systems', href: '/projects' },
     { id: 'articles', label: 'Articles', href: '/articles' },
     { id: 'research', label: 'Research', href: '/research' },
-    { id: 'seminars', label: 'Seminars', href: '/seminars' },
+    { id: 'seminars', label: 'Speaking', href: '/seminars' },
     { id: 'contact', label: 'Contact', href: '/contact' }
   ];
 

@@ -2,23 +2,23 @@ import { Metadata } from "next";
 import { SITE } from "../lib/site";
 
 export const metadata: Metadata = {
-  title: "AI Marketing & Content Strategy Services | Nima Saraeian",
+  title: "AI Systems & Services | Decision Intelligence, Automation, CRO | Nima Saraeian",
   description:
-    "Strategic, AI-powered services across content creation, marketing, automation, consumer psychology and branding. Data-driven, psychology-backed, outcomes focused.",
+    "AI Decision Systems Builder: decision systems, workflow automation, CRO, behavioral analysis, and custom AI tools. Diagnosis first, then systems.",
   alternates: { canonical: `${SITE.baseUrl}/services` },
   openGraph: {
-    title: "AI Marketing & Content Strategy Services | Nima Saraeian",
+    title: "AI Systems & Services | Decision Intelligence, Automation, CRO | Nima Saraeian",
     description:
-      "Strategic, AI-powered services across content creation, marketing, automation, consumer psychology and branding.",
+      "AI Decision Systems Builder: decision systems, workflow automation, CRO, behavioral analysis, and custom AI tools.",
     url: `${SITE.baseUrl}/services`,
     type: "website",
     images: [{ url: `${SITE.baseUrl}${SITE.ogImage}` }]
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Marketing & Content Strategy Services | Nima Saraeian",
+    title: "AI Systems & Services | Decision Intelligence, Automation, CRO | Nima Saraeian",
     description:
-      "Strategic, AI-powered services across content creation, marketing, automation, consumer psychology and branding.",
+      "AI Decision Systems Builder: decision systems, workflow automation, CRO, behavioral analysis, and custom AI tools.",
     images: [`${SITE.baseUrl}${SITE.ogImage}`]
   }
 };

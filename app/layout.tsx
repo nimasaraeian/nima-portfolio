@@ -18,9 +18,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nimasaraeian.com'),
-  title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
-  description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
-  keywords: ['Nima Saraeian', 'AI Marketing', 'Marketing Strategy', 'Selflyzer', 'Consumer Behavior', 'AI-Driven Marketing', 'Digital Marketing', 'Marketing Analytics', 'Behavioral Analytics', 'Data Science'],
+  title: 'Nima Saraeian | AI Systems Builder — Decision Intelligence & CRO',
+  description: 'AI Systems Builder: decision intelligence, behavioral AI, CRO, and automation. Systems that diagnose conversion friction and drive growth.',
+  keywords: ['Nima Saraeian', 'AI Systems Builder', 'AI Decision Systems', 'Behavioral AI', 'CRO', 'Conversion Optimization', 'Automation', 'Selphlyze', 'Behavioral Analytics'],
   authors: [{ name: 'Nima Saraeian' }],
   creator: 'Nima Saraeian',
   publisher: 'Nima Saraeian',
@@ -42,22 +42,22 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://nimasaraeian.com',
     siteName: 'Nima Saraeian',
-    title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
-    description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
+    title: 'Nima Saraeian | AI Systems Builder — Decision Intelligence & CRO',
+    description: 'AI Systems Builder: decision intelligence, behavioral AI, CRO, and automation. Systems that diagnose conversion friction and drive growth.',
     images: [
       {
         url: 'https://nimasaraeian.com/nima-pic.png',
         width: 512,
         height: 512,
-        alt: 'Nima Saraeian — AI Marketing Strategist',
+        alt: 'Nima Saraeian — AI Systems Builder',
         type: 'image/png',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nima Saraeian | AI Marketing Specialist & Behavioral Marketing Strategist',
-    description: 'Nima Saraeian is an AI Marketing Specialist who builds AI-powered marketing systems that combine consumer psychology, data, and automation to predict behavior and drive measurable growth.',
+    title: 'Nima Saraeian | AI Systems Builder — Decision Intelligence & CRO',
+    description: 'AI Systems Builder: decision intelligence, behavioral AI, CRO, and automation. Systems that diagnose conversion friction and drive growth.',
     images: ['https://nimasaraeian.com/nima-pic.png'],
     creator: '@nimasaraeian',
   },
@@ -102,15 +102,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       "https://nimasaraeian.com/image/nima-pic.png",
       "https://nimasaraeian.com/image/nima-bw.jpg"
     ],
-    "jobTitle": "AI Marketing Strategist",
-    "description": "AI Marketing Strategist and researcher at the intersection of artificial intelligence and digital marketing. Founder of Selflyzer platform.",
+    "jobTitle": "AI Decision Systems Builder",
+    "description": "AI Systems Builder at the intersection of behavioral psychology, decision intelligence, and automation. Founder of Selphlyze and Contlyze.",
     "knowsAbout": [
-      "Artificial Intelligence",
-      "Digital Marketing", 
-      "Consumer Behavior",
-      "Marketing Strategy",
-      "Data Science",
-      "Behavioral Analytics"
+      "AI Decision Systems",
+      "Behavioral Analysis",
+      "Conversion Optimization",
+      "Decision Intelligence",
+      "Workflow Automation",
+      "Business Intelligence"
     ],
     "founder": {
       "@type": "Organization",
@@ -229,6 +229,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               />
             </div>
 
+            <p className="text-sm text-gray-400 uppercase tracking-[0.2em] mt-4">AI Decision Systems Builder · Behavioral AI & Decision Intelligence</p>
             <div className="mt-6 flex flex-col items-center gap-3">
               <p className="text-sm text-gray-400 uppercase tracking-[0.3em]">Social</p>
               <div className="flex items-center gap-4 sm:gap-5">

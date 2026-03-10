@@ -6,20 +6,18 @@ import { generateWebPageSchema, generateBreadcrumbSchema } from '@/app/lib/struc
 import { getCanonicalUrl } from '@/app/lib/seo';
 
 export const metadata: Metadata = {
-  title: "AI Marketing Services | CRO & Performance Marketing Strategy Consulting | Nima Saraeian",
+  title: "AI Systems & Services | Decision Intelligence, Automation, CRO | Nima Saraeian",
   description:
-    "AI Marketing Services including CRO strategy, performance marketing consulting, and conversion optimization. Data-driven services that transform user hesitation into measurable growth through behavioral psychology and AI-driven optimization.",
+    "AI Systems Builder: decision systems, workflow automation, CRO, behavioral analysis, and custom AI tools for operations and growth. Practical systems for companies.",
   keywords: [
-    "AI Marketing Strategist",
-    "CRO Strategist",
-    "Growth Marketing",
+    "AI Systems Builder",
+    "AI Decision Systems",
+    "Workflow Automation",
+    "CRO",
+    "Behavioral Analysis",
+    "Business Intelligence",
     "Conversion Optimization",
-    "Behavioral AI",
-    "Decision Psychology",
-    "Cognitive Friction",
-    "Trust Gap Analysis",
-    "Hesitation Mapping",
-    "AI Marketing",
+    "AI Automation",
   ],
   alternates: {
     canonical: getCanonicalUrl('/services'),
@@ -27,9 +25,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${SITE.baseUrl}/services`,
-    title: "AI Marketing Strategist (CRO & Growth) | Behavioral AI, Decision Psychology & Conversion Optimization",
+    title: "AI Systems & Services | Decision Intelligence, Automation, CRO | Nima Saraeian",
     description:
-      "AI Marketing Strategist specializing in CRO, growth, behavioral psychology, decision friction analysis, and AI-driven optimization.",
+      "AI Systems Builder: decision systems, workflow automation, CRO, behavioral analysis, and custom AI tools for operations and growth.",
     siteName: "Nima Saraeian",
   },
 };
@@ -37,13 +35,13 @@ export const metadata: Metadata = {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-  name: "AI Marketing Strategy (CRO & Growth)",
+  name: "AI Systems & Services (Decision Intelligence, Automation, CRO)",
     description:
-    "AI Marketing Strategist specializing in conversion optimization, growth marketing, behavioral psychology, decision friction analysis, and AI-driven marketing systems.",
+    "AI Systems Builder offering decision systems design, workflow automation, CRO, behavioral analysis, and custom AI tools for operations and growth.",
     provider: {
       "@type": "Person",
       name: "Nima Saraeian",
-    jobTitle: "AI Marketing Strategist",
+    jobTitle: "AI Systems Builder",
     url: SITE.baseUrl,
     },
     areaServed: { "@type": "Place", name: "Global" },
@@ -54,14 +52,14 @@ export default function ServicesPage() {
   const canonicalUrl = getCanonicalUrl('/services');
   
   const webPageSchema = generateWebPageSchema({
-    name: "AI Marketing Services",
-    description: "AI Marketing Services including CRO strategy, performance marketing consulting, and conversion optimization.",
+    name: "AI Systems & Services",
+    description: "AI Systems Builder: decision systems, workflow automation, CRO, behavioral analysis, and custom AI tools for operations and growth.",
     url: canonicalUrl,
   });
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: getCanonicalUrl('/') },
-    { name: "AI Marketing Services", url: canonicalUrl },
+    { name: "Services", url: canonicalUrl },
   ]);
 
   return (
@@ -87,29 +85,29 @@ export default function ServicesPage() {
             {/* Text Content */}
             <div>
               <h1 className="mb-6 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl text-white tracking-tight" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                AI Marketing Services for Conversion, CRO & Performance Growth
+                AI Systems & Services
       </h1>
 
               <p className="mb-6 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                I deliver AI marketing services focused on conversion growth—combining CRO strategy, performance marketing, and behavioral psychology to reduce decision friction and increase revenue. These services are built around trust signals, user hesitation diagnosis, and AI-driven optimization.
+                I build and consult on AI systems for decision intelligence, workflow automation, CRO, and business intelligence. Practical systems for companies that need clarity before scale.
               </p>
 
               <h2 className="mb-10 text-lg sm:text-xl text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Behavioral AI–driven strategy focused on conversion optimization, decision friction analysis, trust psychology, and AI-powered marketing systems.
+                Decision systems, automation, behavioral analysis, and custom AI tools — designed for operations, conversion, and growth.
               </h2>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Link
-                  href="/contact?utm_source=services&utm_medium=hero_cta&utm_campaign=behavioral_diagnosis"
+                  href="/contact?utm_source=services&utm_medium=hero_cta&utm_campaign=systems"
                   className="inline-flex items-center justify-center rounded-lg bg-white text-black px-8 py-4 text-base font-medium hover:bg-gray-100 transition-colors"
                 >
-                  Request a Behavioral Diagnosis
+                  Discuss a Project
                 </Link>
                 <Link
-                  href="/contact?utm_source=services&utm_medium=hero_cta&utm_campaign=growth_cro_project"
+                  href="/services/decision-friction-diagnosis"
                   className="inline-flex items-center justify-center rounded-lg border border-white/50 bg-transparent text-white px-8 py-4 text-base font-medium hover:bg-white/10 transition-colors"
                 >
-                  Discuss a Growth & CRO Project
+                  Start with Diagnosis
                 </Link>
               </div>
             </div>
@@ -118,8 +116,8 @@ export default function ServicesPage() {
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-emerald-500/5 bg-black/40">
                 <Image
                 src="/image/nima-saraeian-ai-marketing-strategist.png"
-                alt="Nima Saraeian - AI Marketing Strategist (CRO & Growth) | Behavioral AI, Decision Psychology & Cognitive Friction"
-                title="Nima Saraeian - AI Marketing Strategist"
+                alt="Nima Saraeian - AI Systems Builder"
+                title="Nima Saraeian - AI Systems Builder"
                   fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -139,12 +137,29 @@ export default function ServicesPage() {
           </h2>
 
           <ul className="space-y-4 text-lg text-gray-300 leading-relaxed ml-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            <li>Lead AI marketing and CRO strategy for websites and funnels</li>
-            <li>Analyze conversion drops, trust issues, and user hesitation</li>
-            <li>Optimize landing pages, content, and funnels using behavioral psychology</li>
-            <li>Apply AI to diagnose and improve marketing performance</li>
-            <li>Support growth, revenue, and user decision KPIs</li>
-            <li>Improve funnel performance, conversion rates, and revenue-related KPIs through behavioral analysis, testing, and iteration. See <Link href="/projects" className="underline text-emerald-300 hover:text-emerald-200">real case studies</Link> and <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">behavioral conversion frameworks</Link>.</li>
+            <li>Design AI decision systems that diagnose conversion friction and user hesitation</li>
+            <li>Build workflow automation for lead gen, content, and operations</li>
+            <li>Deliver CRO and behavioral analysis for landing pages and funnels</li>
+            <li>Implement AI-powered business intelligence from behavioral and content data</li>
+            <li>Develop custom AI tools for operations and growth — see <Link href="/projects" className="underline text-emerald-300 hover:text-emerald-200">systems portfolio</Link> and <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">decision frameworks</Link></li>
+          </ul>
+        </div>
+      </section>
+
+      {/* SECTION 1.6 — WHO THIS IS FOR */}
+      <section className="relative border-b border-white/10 py-16 sm:py-20">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Who This Is For
+          </h2>
+          <p className="text-lg text-gray-300 leading-relaxed mb-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Typical clients include:
+          </p>
+          <ul className="space-y-3 text-lg text-gray-300 leading-relaxed ml-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            <li>Founders building AI-first products</li>
+            <li>Clinics and service businesses scaling operations</li>
+            <li>Marketing teams needing behavioral CRO insights</li>
+            <li>Startups needing decision intelligence systems</li>
           </ul>
         </div>
       </section>
@@ -153,23 +168,23 @@ export default function ServicesPage() {
       <section className="relative border-b border-white/10 py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Most marketing fails before conversion — inside the mind.
+            Conversion and efficiency break when decisions and workflows aren't systematized.
           </h2>
 
           <div className="space-y-4 mb-8">
             <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Users don't hesitate randomly.
+              Users don't hesitate randomly — there are diagnosable patterns.
             </p>
             <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Trust breaks for specific psychological reasons.
+              Operations scale poorly when they depend on manual workflows.
             </p>
             <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Decisions fail long before copy or design is blamed.
+              Data only becomes actionable when it's structured and modeled.
             </p>
           </div>
 
           <p className="text-xl font-semibold text-gray-200 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            My work starts before tactics — with diagnosis.
+            The work starts with diagnosis — then systems.
           </p>
         </div>
       </section>
@@ -178,89 +193,104 @@ export default function ServicesPage() {
       <section className="relative border-b border-white/10 py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-12" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Behavioral AI–Driven Marketing Strategy (CRO & Growth Focus)
+            Service Offerings
                 </h2>
 
           <div className="space-y-12">
-            {/* Block 1 */}
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold text-emerald-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Decision Friction Analysis
+                AI Decision Systems
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Identify where users feel uncertainty, overload, or risk.
+                Systems that diagnose where users hesitate, feel uncertainty, or abandon decisions — and surface actionable interventions.
                 </p>
             </div>
 
-            {/* Block 2 */}
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold text-emerald-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Trust & Hesitation Mapping
+                Workflow Automation Systems
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Psychological + visual + cognitive signals extracted with AI.
+                Lead handling, content pipelines, and operations — diagnosis first, then automation. Built for clarity and scale.
               </p>
             </div>
 
-            {/* Block 3 */}
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold text-emerald-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                AI-Driven Intervention Design
+                Behavioral CRO & Conversion Diagnostics
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Clear actions to realign content, structure, and flow.
+                Diagnose conversion blockers, then optimize. Landing pages, funnels, and trust signals using behavioral analysis.
               </p>
-                </div>
-                </div>
-              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-2xl font-semibold text-emerald-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                AI-Powered Business Intelligence
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Structured insights from behavioral, content, and market data to inform product, positioning, and growth.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-2xl font-semibold text-emerald-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Custom AI Systems & Tools
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Bespoke systems for scheduling, recommendations, content analysis, or internal operations — built for specific business needs.
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* SECTION 3.5 — WAYS I SOLVE DECISION PROBLEMS */}
+      {/* SECTION 3.5 — WAYS I SOLVE PROBLEMS */}
       <section className="relative border-b border-white/10 py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Ways I Solve Decision Problems
+            Entry Points
           </h2>
+          <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Projects rarely start with technology. They start with diagnosing constraints.
+          </p>
           <p className="text-lg text-gray-300 leading-relaxed mb-12" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Different projects require different entry points — depending on where the user decision breaks.
+            Different projects start at different points — depending on where the constraint or opportunity lies.
           </p>
 
           <div className="space-y-6">
-            {/* Subsection 1 */}
             <Link
               href="/services/decision-friction-diagnosis"
               className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
             >
               <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Decision Friction Diagnosis
+                AI Decision Systems
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Identify why users hesitate, delay, or abandon decisions despite strong offers or traffic.
+                Diagnose why users hesitate or abandon decisions — and surface interventions.
               </p>
               <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Explore decision friction diagnosis
+                Decision friction diagnosis
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </span>
             </Link>
 
-            {/* Subsection 2 */}
             <Link
               href="/services/behavioral-cro-strategy"
               className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
             >
               <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Behavioral Conversion & CRO Strategy
+                CRO & Behavioral Analysis
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Redesign conversion paths using behavioral psychology, decision logic, and structured experimentation.
+                Redesign conversion paths using behavioral analysis and structured experimentation.
               </p>
               <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Explore behavioral CRO strategy
+                Behavioral CRO strategy
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </span>
             </Link>
 
-            {/* Subsection 3 */}
             <Link
               href="/services/trust-perception-optimization"
               className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
@@ -269,47 +299,61 @@ export default function ServicesPage() {
                 Trust & Perception Optimization
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Analyze and correct trust breakdowns caused by visual signals, language, risk perception, and emotional cues.
+                Fix trust breakdowns from visual signals, language, and risk perception.
               </p>
               <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Explore trust & perception work
+                Explore trust optimization
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </span>
             </Link>
 
-            {/* Subsection 4 */}
             <Link
               href="/services/ai-driven-funnel-systems"
               className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
             >
               <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                AI-Driven Funnel & Content Systems
+                Workflow Automation
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Build AI-assisted content and funnel systems only after behavioral clarity is established.
+                AI-assisted content and funnel systems — built after behavioral clarity.
               </p>
               <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Explore AI-driven funnels
+                AI-driven funnel systems
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </span>
             </Link>
 
-            {/* Subsection 5 */}
-              <Link
+            <Link
               href="/services/predictive-consumer-modeling"
               className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
             >
               <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Predictive Consumer & Market Modeling
+                AI-Powered Business Intelligence
               </h3>
               <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Model consumer behavior and market shifts to inform product, positioning, and growth strategy.
+                Consumer and market modeling for product, positioning, and growth.
               </p>
               <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Explore predictive modeling
+                Predictive modeling
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </span>
-              </Link>
+            </Link>
+
+            <Link
+              href="/contact?utm_source=services&utm_medium=entry_points&utm_campaign=custom_tools"
+              className="block border-l-4 border-emerald-500/30 pl-6 py-6 hover:border-emerald-500/60 transition-colors group"
+            >
+              <h3 className="text-2xl font-semibold text-emerald-300 mb-3 group-hover:text-emerald-200 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Custom AI Tools
+              </h3>
+              <p className="text-lg text-gray-300 leading-relaxed mb-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Bespoke tools for scheduling, recommendations, content analysis, or internal operations.
+              </p>
+              <span className="text-emerald-400 group-hover:text-emerald-300 font-medium inline-flex items-center gap-2 transition-colors" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+                Discuss custom build
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </span>
+            </Link>
           </div>
         </div>
       </section>
@@ -318,7 +362,7 @@ export default function ServicesPage() {
       <section className="relative border-b border-white/10 py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            How strategy turns into action
+            How this shows up
           </h2>
 
           <p className="text-sm uppercase tracking-wider text-gray-400 mb-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
@@ -328,25 +372,25 @@ export default function ServicesPage() {
           <div className="space-y-6">
             <div className="border-l-4 border-emerald-500/30 pl-6">
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Content that removes hesitation (AI-assisted)
+                AI-assisted content and decision support
               </p>
             </div>
 
             <div className="border-l-4 border-emerald-500/30 pl-6">
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                CRO copy guided by decision psychology
+                CRO and behavioral analysis
               </p>
             </div>
 
             <div className="border-l-4 border-emerald-500/30 pl-6">
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Funnels aligned with real human behavior
+                Funnels and workflows aligned with behavior
               </p>
             </div>
 
             <div className="border-l-4 border-emerald-500/30 pl-6">
               <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Automation used only after clarity
+                Automation built after diagnosis and clarity
               </p>
             </div>
           </div>
@@ -357,24 +401,23 @@ export default function ServicesPage() {
       <section className="relative border-b border-white/10 py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            This is not generic AI marketing.
+            Grounded in systems, not hype.
           </h2>
 
           <div className="space-y-6">
             <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              As an AI Marketing Strategist, I specialize in behavioral psychology, decision friction analysis, and AI-driven optimization. This work is grounded in research-backed frameworks detailed in my <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">cognitive friction guide</Link> and <Link href="/research" className="underline text-emerald-300 hover:text-emerald-200">academic research</Link>:
+              I build on behavioral models, decision psychology, and diagnostic frameworks — detailed in my <Link href="/articles/ai/cognitive-friction-ai-cro" className="underline text-emerald-300 hover:text-emerald-200">cognitive friction guide</Link> and <Link href="/research" className="underline text-emerald-300 hover:text-emerald-200">research</Link>:
         </p>
 
             <ul className="space-y-3 text-lg text-gray-300 leading-relaxed ml-6" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              <li>Behavioral models</li>
-              <li>Cognitive friction</li>
-              <li>Trust signals</li>
-              <li>Decision psychology</li>
+              <li>Behavioral and decision models</li>
+              <li>Cognitive friction and trust signals</li>
               <li>AI diagnostic systems</li>
+              <li>Workflow and automation architecture</li>
             </ul>
 
             <p className="text-lg text-gray-300 leading-relaxed mt-8" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              No buzzwords or automation-first tactics — only diagnostic clarity that leads to measurable conversion and growth outcomes.
+              No buzzwords — clarity first, then systems. Measurable outcomes.
         </p>
       </div>
         </div>
@@ -384,19 +427,27 @@ export default function ServicesPage() {
       <section className="relative py-16 sm:py-20">
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 z-10">
           <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8 text-center" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            If your users hesitate, the problem is not traffic.
+            Start with diagnosis. Then build.
           </h2>
 
           <div className="text-center space-y-6">
-        <Link
-              href="/contact?utm_source=services&utm_medium=final_cta&utm_campaign=behavioral_diagnosis"
-              className="inline-flex items-center justify-center rounded-lg bg-white text-black px-8 py-4 text-base font-medium hover:bg-gray-100 transition-colors"
-        >
-              Start with a Behavioral Diagnosis
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/contact?utm_source=services&utm_medium=final_cta&utm_campaign=systems"
+                className="inline-flex items-center justify-center rounded-lg bg-white text-black px-8 py-4 text-base font-medium hover:bg-gray-100 transition-colors"
+              >
+                Discuss a Project
+              </Link>
+              <Link
+                href="/services/decision-friction-diagnosis"
+                className="inline-flex items-center justify-center rounded-lg border border-white/50 bg-transparent text-white px-8 py-4 text-base font-medium hover:bg-white/10 transition-colors"
+              >
+                Start with Diagnosis
+              </Link>
+            </div>
 
-            <p className="text-sm text-gray-400" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Not a tool. Not automation. A decision analysis.
+            <p className="text-sm text-gray-400 mt-4" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+              Diagnosis first. Systems after.
             </p>
           </div>
         </div>

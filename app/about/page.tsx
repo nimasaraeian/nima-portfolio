@@ -5,26 +5,26 @@ import { getCanonicalUrl } from '@/app/lib/seo';
 
 const journeyHighlights = [
   'cognitive psychology',
-  'neuromarketing',
+  'behavioral analysis',
   'UX research',
-  'AI-driven behavior modeling',
-  'Selphlyze & Contlyze ecosystem creation',
+  'AI decision systems',
+  'Selphlyze & Contlyze ecosystem',
 ];
 
 const pillars = [
   {
-    title: 'Psychology & Behavior',
+    title: 'Decision Intelligence & Behavioral Analysis',
     description:
-      'Understanding cognitive patterns, emotional triggers, motivations, and decision-making paths in digital environments — beyond simple demographics or clicks.',
+      'Systems that decode why users hesitate, where conversion friction occurs, and how behavioral signals map to decisions.',
   },
   {
-    title: 'AI & Data Intelligence',
-    description: 'Transforming raw behavioral signals, user journeys, and market data into predictive insights using AI-powered models and structured analysis.',
+    title: 'CRO & Growth Intelligence',
+    description: 'Frameworks that diagnose conversion blockers, optimize funnel performance, and connect behavioral data to outcomes.',
   },
   {
-    title: 'Human-Centered Design & Strategy',
+    title: 'Automation & AI Product Architecture',
     description:
-      'Designing systems, journeys, and products that feel intuitive, culturally aware, and behaviorally effective — so strategy is not only intelligent, but also deeply human-centered.',
+      'Systems that automate behavioral analysis, content intelligence, and decision diagnostics — built for scale.',
   },
 ];
 
@@ -32,58 +32,58 @@ const ecosystem = [
   {
     name: 'Selphlyze',
     tag: 'Cognitive & Emotional AI Layer',
-    description: 'Analyzes personality signals, cognitive styles, emotional patterns, and aesthetic preferences to decode what truly motivates people beneath their visible behavior.',
+    description: 'Psychometric engine that analyzes personality signals, cognitive styles, and emotional patterns to decode what motivates users beneath observable behavior.',
   },
   {
     name: 'Contlyze',
     tag: 'Content, Behavior & Market Intelligence',
     description:
-      'Maps consumer behavior, social engagement, content performance, market trends, and competitive positioning to reveal where attention and growth really come from.',
+      'Behavioral and content intelligence platform that maps engagement patterns, market trends, and competitive dynamics to growth and conversion opportunities.',
   },
 ];
 
 const ecosystemBenefits = [
   'why users behave the way they do',
-  'what content resonates',
-  'how markets shift',
+  'what content converts',
+  'where markets and attention shift',
   'how to optimize decisions with data',
-  'how to build intelligent growth systems',
+  'how to scale behavioral analysis through automation',
 ];
 
 const capabilities = [
-  'AI Marketing Strategy',
-  'Performance Marketing & CRO',
-  'Behavioral & Psychometric Analysis',
-  'AI-Driven Content Systems',
-  'UX Research & Product Design',
-  'Social Media Behavior Mapping',
-  'Predictive Consumer Modeling',
-  'Automation Systems for Clinics & Service Businesses',
+  'AI Decision Systems Design',
+  'CRO & Conversion Intelligence',
+  'Behavioral Analysis & Psychometrics',
+  'AI Content & Funnel Systems',
+  'Growth Automation',
+  'Decision Friction Diagnosis',
+  'Predictive Behavior Modeling',
+  'Business-Focused AI Product Strategy',
 ];
 
 const researchFocus = [
   'Cognitive psychology',
-  'Aesthetic perception',
-  'Behavioral data',
-  'AI-driven decision modeling',
+  'Behavioral data & decision modeling',
+  'AI-driven conversion systems',
+  'Aesthetic & perceptual signals',
 ];
 
 const projects = [
   {
     name: 'Selphlyze',
-    description: 'AI-powered cognitive & emotional psychometric engine.',
+    description: 'AI-powered cognitive & emotional psychometric engine for behavioral analysis.',
     href: 'https://www.selphlyze.com',
     logo: '/image/SELPHLYZE_LOGO_HIGH_RES.png',
   },
   {
     name: 'Contlyze',
-    description: 'Behavioral, content & market intelligence platform for data-driven growth.',
+    description: 'Behavioral, content & market intelligence platform for growth and CRO.',
     href: 'https://www.contlyze.com',
     logo: '/image/contlyze.png',
   },
   {
     name: 'Lotus Business School',
-    description: 'Training in digital psychology, consumer behavior, and strategic decision-making.',
+    description: 'Training in behavioral psychology, consumer decisions, and strategic systems.',
     href: 'https://lotusbusinessschool.com',
     logo: '/image/lotuslogo.png',
   },
@@ -93,8 +93,8 @@ export default function AboutPage() {
   const canonicalUrl = getCanonicalUrl('/about');
   
   const webPageSchema = generateWebPageSchema({
-    name: "Nima Saraeian | AI Marketing Background",
-    description: "Learn about Nima Saraeian, AI & performance marketing strategist with extensive background in behavioral marketing and strategic consulting.",
+    name: "Nima Saraeian | AI Systems Builder",
+    description: "Learn about Nima Saraeian, AI Systems Builder with expertise in decision systems, behavioral analysis, CRO, and growth automation. Founder of Selphlyze & Contlyze.",
     url: canonicalUrl,
   });
 
@@ -107,8 +107,8 @@ export default function AboutPage() {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Nima Saraeian",
-    "jobTitle": "AI Marketing & Performance Marketing Strategist",
-    "image": "https://nimasaraeian.com/image/nima-saraeian-ai-marketing-strategist.jpg",
+    "jobTitle": "AI Systems Builder",
+    "image": "https://nimasaraeian.com/image/nima-bw.jpg",
     "url": "https://nimasaraeian.com/",
     "sameAs": [
       "https://www.linkedin.com/in/nimasaraian/",
@@ -137,40 +137,36 @@ export default function AboutPage() {
           <div className="flex-1 text-center md:text-left">
             <p className="text-sm uppercase tracking-[0.4em] text-blue-200/80">About Nima Saraeian</p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl md:text-6xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              AI Marketing & Performance Marketing Strategist
+              AI Decision Systems Builder
             </h1>
             <p className="mt-4 text-lg text-gray-300 sm:text-xl" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              Behavioral strategist focused on decision psychology, AI-driven performance systems, and human-centered design.
-            </p>
-            <p className="mt-2 text-sm text-gray-400" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-              UX Researcher · Founder of Selphlyze & Contlyze
+              AI Systems Builder · Decision Intelligence & Behavioral Analytics
             </p>
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
               <Link
                 href="/contact"
                 className="w-full rounded-full bg-white px-6 py-3 text-center text-sm font-semibold text-black transition hover:bg-gray-200 sm:w-auto"
               >
-                Work With Me
+                Discuss a Project
               </Link>
               <Link
                 href="/services"
                 className="w-full rounded-full border border-white/50 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
               >
-                View AI Marketing Services
+                Start with Diagnosis
               </Link>
             </div>
           </div>
           <div className="flex-1">
-            <div className="relative mx-auto max-w-xs overflow-hidden rounded-[46%] border border-white/10 bg-white/5 p-4 shadow-2xl">
+            <div className="relative mx-auto w-64 sm:w-72 md:w-80 aspect-square overflow-hidden rounded-full border-2 border-white/20 shadow-2xl">
               <Image
-                src="/image/nima-saraeian-ai-marketing-strategist.jpg"
-                alt="Nima Saraeian – AI Marketing & Performance Marketing Strategist"
-                title="Nima Saraeian, AI Marketing & Performance Marketing Strategist"
-                width={360}
-                height={360}
-                className="h-auto w-full grayscale"
+                src="/image/nima-bw.jpg"
+                alt="Nima Saraeian – AI Systems Builder"
+                title="Nima Saraeian, AI Systems Builder"
+                fill
+                className="object-cover object-[50%_35%] grayscale"
                 priority
-                sizes="(max-width: 640px) 260px, (max-width: 1024px) 320px, 360px"
+                sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
               />
             </div>
           </div>
@@ -180,13 +176,13 @@ export default function AboutPage() {
       <section className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 lg:px-12 lg:py-20">
         <div className="space-y-4 text-lg leading-relaxed text-gray-300 mb-12" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
           <p>
-            I'm Nima Saraeian — an AI and performance marketing strategist working at the intersection of behavioral psychology, CRO, and human-centered design.
+            I'm Nima Saraeian — an AI Systems Builder with a background in behavioral analysis, cognitive psychology, and business strategy.
           </p>
           <p>
-            I design AI-powered systems that <Link href="/ai-marketing/decision-brain" className="underline text-blue-300 hover:text-blue-200">diagnose decision friction</Link> and turn behavioral signals into measurable growth.
+            My work sits at the intersection of behavioral psychology, AI systems, and decision intelligence — building tools that explain why people act, not just what they do.
           </p>
           <p>
-            This page outlines my background, approach, and the Selphlyze & Contlyze ecosystem behind my work.
+            I design and build systems for <Link href="/ai-marketing/decision-brain" className="underline text-blue-300 hover:text-blue-200">decision friction diagnosis</Link>, conversion optimization, and behavioral automation. This page outlines my background, approach, and the Selphlyze & Contlyze ecosystem I founded.
           </p>
         </div>
       </section>
@@ -197,13 +193,16 @@ export default function AboutPage() {
             ✅ My Journey
           </p>
           <p>
-            I began my career in marketing and business strategy, leading teams, designing campaigns, and closely observing how people respond to digital experiences, stories, and interfaces.
+            I started in marketing and business strategy, leading teams and observing how people respond to digital experiences and interfaces.
           </p>
           <p>
-            But one question kept pushing me further: "What truly shapes digital behavior beneath clicks, metrics, and surface-level data?"
+            Over time, I realized that most businesses optimize metrics but rarely understand the behavioral mechanisms behind decisions.
           </p>
           <p>
-            That question led me into cognitive psychology, neuromarketing, UX research, and AI-driven behavior modeling — and eventually into building Selphlyze & Contlyze, a dual AI ecosystem that connects deep psychometrics with real market behavior.
+            A central question drove the work: "What actually shapes digital behavior beneath clicks and surface-level metrics?"
+          </p>
+          <p>
+            That led into cognitive psychology, behavioral analysis, UX research, and AI-driven decision modeling — and into building Selphlyze & Contlyze, a dual AI ecosystem that connects psychometrics with market and content intelligence.
           </p>
           <p>
             ✅ My Approach: Three Pillars
@@ -220,10 +219,10 @@ export default function AboutPage() {
         </div>
 
         <p className="mt-8 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-          This combination allows me to design AI-driven marketing strategies and UX frameworks that are both intelligent and emotionally aligned.
+          This combination supports how I build AI decision systems — combining behavioral rigor with business outcomes.
         </p>
         <p className="mt-4 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-          Together, these pillars shape how I approach <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI-driven performance marketing</Link> and decision-based conversion optimization.
+          Together, these pillars inform how I approach <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI systems</Link> for conversion optimization, growth intelligence, and automation.
         </p>
       </section>
 
@@ -235,10 +234,10 @@ export default function AboutPage() {
                 ✅ What I Do
               </h2>
               <p className="mt-4 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                I design <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI-powered systems</Link> and strategies for companies that want to understand their users deeply, improve digital experiences, and grow with intelligent automation.
+                I build <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI systems</Link> for decision intelligence, conversion optimization, and behavioral automation — designed for measurable business impact.
               </p>
               <p className="mt-4 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                Learn more about my <Link href="/research" className="underline text-blue-300 hover:text-blue-200">research</Link> and <Link href="/ai-marketing/decision-brain" className="underline text-blue-300 hover:text-blue-200">decision friction analysis</Link> approaches.
+                See my <Link href="/research" className="underline text-blue-300 hover:text-blue-200">research</Link> and <Link href="/ai-marketing/decision-brain" className="underline text-blue-300 hover:text-blue-200">decision friction</Link> work.
               </p>
             </div>
             <ul className="grid gap-4">
@@ -258,7 +257,7 @@ export default function AboutPage() {
             ✅ Selphlyze & Contlyze Ecosystem (Founder)
           </h2>
           <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            Selphlyze and Contlyze operate together as a dual AI ecosystem that merges deep psychometrics with real-time market intelligence. Validated with 500+ participants across diverse cultures, they help me translate human complexity into clear, measurable marketing strategy.
+            Selphlyze and Contlyze form a dual AI ecosystem that merges psychometrics with market and content intelligence. Validated with 500+ participants across cultures, they underpin how I build decision systems and behavioral analytics at scale.
           </p>
           <div className="mt-8 grid gap-6 sm:grid-cols-3">
             {ecosystem.map(({ name, tag, description }) => (
@@ -280,7 +279,7 @@ export default function AboutPage() {
             ))}
           </ul>
           <p className="mt-6 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            This ecosystem is the backbone of how I design <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI-driven marketing strategies</Link> for businesses, clinics, creators, and global brands.
+            This ecosystem is the backbone of how I design <Link href="/ai-marketing" className="underline text-blue-300 hover:text-blue-200">AI systems</Link> for decision intelligence, CRO, and behavioral automation — for businesses, clinics, and brands.
           </p>
         </div>
       </section>
@@ -293,7 +292,7 @@ export default function AboutPage() {
                 ✅ Research Background
               </h2>
               <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-                My <Link href="/research" className="underline text-blue-300 hover:text-blue-200">research</Link> integrates cognitive psychology, aesthetic perception, behavioral data, and AI-driven decision modeling. I'm designing a unified framework that explains and predicts digital consumer decisions across cultures using real-world datasets, AI models, and long-term behavioral patterns.
+                My <Link href="/research" className="underline text-blue-300 hover:text-blue-200">research</Link> connects cognitive psychology, behavioral data, and AI-driven decision modeling. I work on frameworks that explain and predict digital decisions using real-world datasets and long-term behavioral patterns — feeding directly into how I build systems.
               </p>
             </div>
             <div>
@@ -343,10 +342,10 @@ export default function AboutPage() {
             ✅ Mission
           </h2>
           <p className="mt-6 text-lg text-gray-300" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            To bridge human psychology, AI, and design — creating AI-powered marketing systems that are intelligent, emotionally aligned, and deeply human-centered.
+            To build AI systems that connect behavioral insight with business outcomes — decision intelligence, conversion optimization, and automation that scale.
           </p>
           <blockquote className="mt-8 rounded-3xl border border-white/10 bg-white/5 px-6 py-8 text-lg italic text-white" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            “The future of digital strategy belongs to those who understand both behavior and AI.”
+            “Systems that understand both behavior and business.”
           </blockquote>
         </div>
       </section>
@@ -356,20 +355,20 @@ export default function AboutPage() {
           ✅ Let's Connect
         </h2>
         <p className="mt-4 text-base text-gray-300 sm:text-lg" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-          If you're exploring the future of AI-driven marketing, behavioral strategy, or human-centered design, I'd love to collaborate.
+          If you're building or evaluating AI decision systems, CRO, or behavioral automation, I'd like to hear from you.
         </p>
-        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/contact"
             className="w-full rounded-full bg-white px-8 py-3 text-center text-sm font-semibold text-black transition hover:bg-gray-200 sm:w-auto"
           >
-            Work With Me
+            Discuss a Project
           </Link>
           <Link
             href="/services"
             className="w-full rounded-full border border-white/50 px-8 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
           >
-            View AI Marketing Services
+            Start with Diagnosis
           </Link>
         </div>
         <div className="mt-12 pt-8 border-t border-white/10">
